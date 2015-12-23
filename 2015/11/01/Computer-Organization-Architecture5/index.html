@@ -1,0 +1,789 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Never mind" />
+
+
+
+  <meta name="keywords" content="计算机组成与体系结构," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="What Happened ?" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="存储器类型和层次结构，高速缓存，虚拟存储器，有效组合方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计组与体系结构笔记（五）">
+<meta property="og:url" content="http://forec.github.io/2015/11/01/Computer-Organization-Architecture5/index.html">
+<meta property="og:site_name" content="What Happened ?">
+<meta property="og:description" content="存储器类型和层次结构，高速缓存，虚拟存储器，有效组合方法。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/存储器层次结构.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/直接映射的高速缓存.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/分页存储器演示.png">
+<meta property="og:updated_time" content="2015-11-01T10:32:28.828Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计组与体系结构笔记（五）">
+<meta name="twitter:description" content="存储器类型和层次结构，高速缓存，虚拟存储器，有效组合方法。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 计组与体系结构笔记（五） | What Happened ? </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">What Happened ?</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              计组与体系结构笔记（五）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-11-01T16:48:06+08:00" content="2015-11-01">
+            2015-11-01
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/计算机理论基础/" itemprop="url" rel="index">
+                  <span itemprop="name">计算机理论基础</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/11/01/Computer-Organization-Architecture5/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/01/Computer-Organization-Architecture5/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>存储器类型和层次结构，高速缓存，虚拟存储器，有效组合方法。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="u5B58_u50A8_u5668_u7C7B_u578B"><a href="#u5B58_u50A8_u5668_u7C7B_u578B" class="headerlink" title="存储器类型"></a>存储器类型</h1><ul>
+<li><strong>高速缓存</strong>：小容量、高速度、高价格。在频繁存取数据的过程中充当一个缓冲器，高性能的高速缓存存储器会掩盖掉较慢速度的存储器系统的作用。</li>
+<li><strong>随机存储器</strong>（random access memory，RAM）：主存储器（primary memory），在执行程序时用来存储程序或数据。<strong>RAM是易失性存储器</strong>，存储器系统掉点时RAM中信息会全部丢失。现代计算机系统通常采用<strong>静态随机存储器</strong>（SRAM）和<strong>动态随机存储器</strong>（DRAM）存储器芯片来构造大规模RAM存储器。动态RAM由一个小电容构成，因为电容会泄露电荷，因此每隔几毫秒就需要为DRAM充电， 而静态RAM只要电源供电不断就可以维持所需要的数据。<strong>SRAM由类似D触发器的电路组成，速度比DRAM更快，价格更高。但DRAM的存储密度更高（单块芯片存储更多的位数），消耗功耗更低，比SRAM产生的热量小得多。</strong>通常将两种技术组合，<strong>DRAM用作主存储器，SRAM用作高速缓存存储器</strong>。DRAM可分多层结构的DRAM（MDRAM）、快速翻页模式（FPM）的DRAM、扩展数据输出（EDO）的DRAM、并发EDO DRAM、同步动态随机存储器（SDRAM）、同步连接的（SL）DRAM、双倍数据传送率（DDR）SDRAM以及直接RAM总线的（DR）DRAM等，其基本操作都相同。SRAM可分异步SRAM、同步SRAM和流水线并发体系结构的SRAM等。</li>
+<li><strong>只读存储器</strong>（read-only memory，ROM）：<strong>ROM为非易失性存储器，采用硬连线</strong>，可长久保持所存放的数据，也可应用于嵌入式系统、计算机外围设备等，如激光打印机采用ROM保存打印字符点阵。基本的ROM可分五种不同类型：ROM、PROM、EPROM、EEPROM和闪存。PROM为可编程只读存储器，内部有熔断丝，通过烧断熔断丝对芯片编程，一旦编程完成所有数据和指令都不能更改。EPROM为可擦除PROM，用发射紫外线的特殊工具将原有芯片内容擦除再重新编程。EEPROM是电可擦出PROM，芯片上的信息擦除只要施加一个电场，无需特殊工具，并且可以只擦除部分信息（一次擦除一个字节）。闪存本质为EEPROM，但可按块擦写数据，速度比EEPROM快。</li>
+</ul>
+<hr>
+<h1 id="u5B58_u50A8_u5668_u5C42_u6B21_u7ED3_u6784"><a href="#u5B58_u50A8_u5668_u5C42_u6B21_u7ED3_u6784" class="headerlink" title="存储器层次结构"></a>存储器层次结构</h1><blockquote>
+<p>采用存储器的分层组织结构，使不同层次的存储器具有不同的访问速度和存储容量。存储器分层结构系统基本类型包括：寄存器、高速缓存、主存储器、辅助存储器（硬盘、可移动存储介质等）。<strong>按存储器离开处理器的距离对存储器分类</strong>，距离按照访问存储器所需要的机器周期数目测量。存储器的技术和速度与成本一致，由于价格限制，速度快的存储器的使用数量比速度慢的存储器要少。</p>
+</blockquote>
+<ul>
+<li>名词解释<ul>
+<li><strong>命中</strong>（hit）：CPU请求的数据驻留在要访问的存储器层中。通常只在存储器的较高层才关注命中率问题。</li>
+<li><strong>缺失</strong>（miss）：CPU请求的数据不在要访问的存储器层。</li>
+<li><strong>命中率</strong>（hit rate）：访问某个特定存储器层，CPU找到所需数据的百分比。</li>
+<li><strong>缺失率</strong>（miss rate）：1 - 命中率。</li>
+<li><strong>命中时间</strong>（hit time）：在某个特定的存储器层，CPU取得所请求信息所需要的时间。</li>
+<li><strong>缺失损失</strong>（miss penalty）：CPU处理一次缺失时间所需要的时间，包括利用新数据块取代上层某个数据块所需要的时间、所需数据传递给处理器需要的附加时间。通常处理一次缺失事件花费的时间要比命中事件更多。</li>
+</ul>
+</li>
+<li>层次结构<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/存储器层次结构.png" alt="存储器体系结构"><br>如上图所示，寄存器、1级、2级缓存和主存储器都为系统存储层，寄存器访问时间在1～2ns，1级缓存3～10ns，2级缓存25～50ns，主存储器30～90ns；硬盘为在线存储，访问速度5～20ms。除了上图表示的存储层之外，优化磁盘为近线存储，访问速度100ms～5s；磁带为离线存储，访问速度10s～3min。对于任何给定数据，处理器将访问数据请求传送给存储器中速度最快、规模最小的最高层，通常是高速缓存而不是寄存器，因为寄存器有专用用途。核心思想为：<strong>较低层的存储器系统会响应较高层的存储器对位于存储器单元X处的数据请求，同时低层存储器也会将包含地址X的整个数据块返回较高层的存储器系统</strong>。</li>
+<li><strong>引用的局部性</strong>：处理器倾向于以规范的方式访问存储器，例如当没有分支转移时，PC会在每次提取一条指令后自动增量+1。如果处理器在t时刻访问了存储器单元X，则很有可能在t+1时刻访问X+1。因为计算机程序对存储器引用通常有集中成组成簇的形式，所以低层存储器会将包含X的整个数据块返回高层存储器系统。如果返回的额外数据在不久的将来被引用，就可以很快装入CPU。引用的局部性有：<ul>
+<li><strong>时间局部性</strong>（Temporal locality）：最近访问过的内容在不久的将来可能再次被访问。</li>
+<li><strong>空间局部性</strong>（Spatial locality）：对存储器地址空间的访问形成团簇的集中倾向（如数组或循环操作）。</li>
+<li><strong>顺序局部性</strong>（Sequential locality）：访问存储器的指令倾向于按顺序执行。<br>总结：局部性原理使系统在任意给定时刻只需要访问整个存储空间中非常小的部分，而且存储在该位置的数值会被重复读取。将大量信息存储在巨大的低成本的存储器中，再将部分数据复制到容量小、速度快的高层存储器中，就可以获得与高层存储器几乎相同的访问速度。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="u9AD8_u901F_u7F13_u5B58"><a href="#u9AD8_u901F_u7F13_u5B58" class="headerlink" title="高速缓存"></a>高速缓存</h1><blockquote>
+<p>不同计算机的高速缓存容量有较大差别，通常PC机的L2大小为256或512KB，位于CPU和主存储器之间。L1为32KB（以i74790为例），集成在CPU中，分数据缓存和指令缓存。<strong>高速缓存存储器不通过地址访问，而是按照内容进行存取</strong>，因此又称按内容寻址的存储器（content addressable memory，CAM），在大部分高速缓存映射策略方案中，要检查或搜索高速缓存的入口确定所需数值是否存放在告诉缓存中。</p>
+</blockquote>
+<h2 id="u6620_u5C04_u6A21_u5F0F_u548C_u6570_u636E_u8BBF_u95EE_u8FC7_u7A0B"><a href="#u6620_u5C04_u6A21_u5F0F_u548C_u6570_u636E_u8BBF_u95EE_u8FC7_u7A0B" class="headerlink" title="映射模式和数据访问过程"></a>映射模式和数据访问过程</h2><ul>
+<li>主存储器块远多于高速缓存块，主存储器块需要竞争才能获取高速缓存中的对应位置。通过<strong>对主存储器地址的各个位划分并规定特殊意义来实现地址转换</strong>，将地址的二进制位分为不同的组（2～3个地址域）。主要有直接映射、全关联、组关联等。  </li>
+<li>数据访问过程：主存储器和高速缓存的存储空间都会被划分成相同大小的字块，当生成一个存储器地址时，CPU首先搜索高速缓存存储器判断需求的数据块是否存在，找不到则将主存储器中该字所在的整个块装入高速缓存。CPU使用主存储器地址的其中一个地址域，直接给出已驻留在高速缓存的请求数据的位置，称为<strong>高速缓存命中</strong>（Cache hit）；CPU对没有驻留在高速缓存的数据，会指示出数据将要存放在高速缓存中的位置，称为<strong>高速缓存缺失</strong>（Cache miss）。接下来，CPU将检查高速缓存块的一个有效位，验证所引用的高速缓存块的合法性，若有效位合法，表示引用数据块正确，可能产生高速缓存命中，否则CPU访问主存储器。之后，CPU还会将属于改高速缓存块的标记和主存储器的标记域（主存储器地址中划分的一组二进制位，标记与对应数据块一起存放到高速缓存中）比对，匹配则产生高速缓存命中。</li>
+<li><strong>直接映射</strong>高速缓存<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/直接映射的高速缓存.png" width="400px" alt="直接映射"><br>二进制的主存储器地址被划分为表格中的几个域<table><tbody><tr><td width="50px">标记</td><td width="50px">块</td><td width="50px">字（偏移量）</td></tr></tbody></table><br>举例：存储器由2^14个字组成，高速缓存有16个存储空间块，每个块包含8个字，因此存储器共被分为2^11个块，每个存储器地址为14位二进制数。14位地址中，最右边三位为字域，中间4位指定高速缓存数据块（2^4=16），高7位为标记域。<table><tbody><tr><td width="50px">标记（7位）</td><td width="50px">块（4位）</td><td width="50px">字（偏移量），3位</td></tr></tbody></table>每个块的标记都和该块一起存放在高速缓存中，本例中主存储器的第0、2^4、…、2^(4+k)块都要映射到高速缓存中的第0块，映射时提取主存储器的块域即可决定高速缓存的位置，而标记域可以区分高速缓存的第0块是主存储器中的哪一块。整个过程无需搜索，成本低于其它种类高速缓存。缺陷：假设主存储器中的0块和16块循环调用，则每次都会产生高速缓存缺失。</li>
+<li><strong>全关联</strong>高速缓存：不为主存储器中的数据块唯一指定在高速缓存中的存放位置，允许主存储器的数据块存放到高速缓存的任意位置。要找到某个数据块必须搜索全部高速缓存，因此整个高速缓存需要按照关联存储器（associative memory）模式构建，以便CPU可以执行平行搜索，也就是说每次搜索操作 都需要把请求的标记与所有存放在高速缓存中的标记比对，其实现需要特殊硬件，成本较高。关联映射需要把主存储器的地址划分为标记域和字域两部分，仍然以上例举例，标记域为11位，字域为3位。对于全关联映射，如果高速缓存已满，需要一种置换算法决定从高速缓存中丢弃哪个数据块。被丢弃的块称为<strong>牺牲块</strong>。最简单的置换方法是<strong>先进先出</strong>，但现在已经较少使用。</li>
+<li><strong>组关联</strong>高速缓存：考虑直接映射的缺陷和全关联高速缓存的成本，将其组合成<strong>N路的组关联高速缓存映射</strong>（N-way set associative Cache mapping），映射方法类似直接映射，区别在于不是将数据块映射到高速缓存中的某一个空间块，而是映射到由几个高速缓存块组成的某个块组中。同一个高速缓存的所有组的大小必须相同。在组关联高速缓存中，主存储器地址分为标记域、组域和字域，作用类似。一个N路的组关联高速缓存，每组包含N个高速缓存块。在每组内使用关联映射方式，搜索组内全部数据，与标记域比对。</li>
+<li><strong>置换策略</strong>：最佳算法的目标是替换掉在未来最长时间段内不再使用的高速缓存块。实际上无法预测未来，但当某个程序运行过一次之后，就可以应用最佳算法（最佳算法无法实现，只能寻找接近最佳算法的算法）。考虑时间局部性，可以跟踪每个高速缓存块上次访问的时间，选择最近最少被使用的高速缓存块作为牺牲块，这种算法称为<strong>LRU</strong>（least recently used）算法，LRU需要系统保留每个高速缓存块的历史访问记录，因此需要较大存储空间，拖慢速度。上文的先进先出（FIFO）选取存放在高速缓存中时间最长的块作为牺牲块。<strong>随机选择</strong>可以解决LRU和FIFO遇到的“简并引用”问题，即对某个高速缓存块的重复移入移出操作，但随机选择可能将即将需要的数据丢弃，降低平均性能，并且很难有真正意义的随机置换。</li>
+</ul>
+<h2 id="u6709_u6548_u5B58_u53D6_u65F6_u95F4_u548C_u547D_u4E2D_u51E0_u7387"><a href="#u6709_u6548_u5B58_u53D6_u65F6_u95F4_u548C_u547D_u4E2D_u51E0_u7387" class="headerlink" title="有效存取时间和命中几率"></a>有效存取时间和命中几率</h2><ul>
+<li>分层存储器系统采用<strong>有效存取时间</strong>（EAT）量度。EAT = 命中率与相连存储器层次的相对访问时间产生的加权平均。例如假设高速缓存L2为10ns，主存储器为200ns，L2的命中率为99%，则EAT = 10×99% + 200 × 1% = 9.9ns + 2ns = 11.9ns。公式可以推广到多级存储器结构。由此可见，虽然存储器大部分采用200ns的慢速技术，但整体类似一个高效的大存储器。</li>
+<li><strong>高速缓存失效</strong>：如果程序的局部性不好，高速缓存会失效，并导致存储器的层次结构性能很差，尤其是面向对象编程可能导致程序的局部性不是最佳（原因待补充）。举例：访问二维数组时，数组元素通常按照行优先顺序存储，假设有一个5×4数组，数组的一个行刚好可以存放在一个高速缓存块中，而高速缓存不足以同时存放该数组所有元素，则对该数组超过20次的顺序访问中会产生5次缺失和15次命中（每次访问行首元素会导致缺失）。如果该数组是列优先存储，则会产生20次高速缓存缺失。</li>
+<li><strong>写策略</strong>：对高速缓存<strong>脏块</strong>的处理方案，脏块指高速缓存中已被修改过的数据块。两种基本的些策略：<strong>写通</strong>策略在每次对高速缓存的写操作时，处理器同步更新主存储器中对应的数据块。写通策略速度比回写速度满，但可以保证高速缓存与主存储器的数据始终一致。实际应用中，因为大多数存储器访问都是读操作，因此可以忽略写通策略对主存储器的写操作带来的系统速度减慢。<strong>回写</strong>策略指只有某个高速缓存块被选择为牺牲块而必须从高速缓存移出时，处理器才更新主存储器中对应的数据块。缺点在于两者数值的不同步，如果某个进程在回写主存储器之前发生中断（或崩溃），则高速缓存中数据可能丢失。</li>
+<li>提高高速缓存命中率可以使用更好的映射算法（约+20%）、更好的写操作技巧（+15%潜在命中能力）、更好的置换算法（+10%至多）和更好的程序编码方案。例如访问二维数组，按行访问的编码方案要比按列访问的编码方案增加30%命中率。简单增加高速缓存容量大小可以增加1～4%命中率，但无法保证始终如此。</li>
+</ul>
+<hr>
+<h1 id="u865A_u62DF_u5B58_u50A8_u5668"><a href="#u865A_u62DF_u5B58_u50A8_u5668" class="headerlink" title="虚拟存储器"></a>虚拟存储器</h1><blockquote>
+<p>虚拟存储器使用硬盘作为RAM的扩充，增加了进程可以使用的有效地址空间。通过在硬盘开设一个区域（页文件），保持主存储器的信息块。最常用实现方法是<strong>分页机制</strong>，将主存储器和程序都划分为相同大小的块，将程序块根据需要存放到存储器块中（<strong>程序各个块可以无序存储，并且主存储器只需要存在特定片段就可以运行程序，暂时不用的程序部分存储在硬盘页文件中</strong>），因此程序的虚拟地址一旦由CPU生成，就需要转换成主存储器的物理地址。</p>
+</blockquote>
+<ul>
+<li>名词解释<ul>
+<li>虚拟地址（virtual address）：进程使用的逻辑地址或程序地址。CPU生成的地址即对应虚拟地址空间。</li>
+<li>物理地址（physical address）：物理存储器的实际地址。</li>
+<li>映射（mapping）：将虚拟地址转换为物理地址，类似高速缓存映射。</li>
+<li>页帧（page frame）：由主存储器分成的相等大小的信息块或数据块。</li>
+<li>页（pages）：由虚拟存储器（逻辑地址空间）划分成的信息块或数据块，每页大小与一个页帧相同。在硬盘上存储虚拟页，供进程使用。</li>
+<li>分页（paging）：将一个虚拟页从硬盘复制到主存储器的某个页帧。</li>
+<li>存储碎片（fragmentation）：变得不能使用的存储器单元。</li>
+<li>缺页（page fault）：当一个请求页在主存储器中没有找到时发生的事件。</li>
+</ul>
+</li>
+</ul>
+<h2 id="u5206_u9875"><a href="#u5206_u9875" class="headerlink" title="分页"></a>分页</h2><ul>
+<li>概念：按照固定大小的页帧为各个进程分配物理存储空间，用页表跟踪每个虚拟页的物理位置，<strong>每个进程都有自己的页表，页表驻留在主存储器中</strong>。页表有N行，N为该进程的虚拟页的页码数。若当前进程的某些页不在主存储器中，页表会将该页的有效位置零。通常页表还会附加一些内容，如<strong>修正位</strong>指示页中内容是否发生了改变，提高CPU进行返回页内容到硬盘的操作效率；<strong>使用位</strong>指示页的使用情况，如果处理器访问过某一页则置1，一定时间后会置零，若长时间保持0，则将该页从主存储器移出。如果程序进程并不正好占用几个页，或进程本身全部内容小于一个页的大小，则分页后会产生潜在的<strong>内部碎片</strong>，进程占用的最后一个页帧的剩余空间将被浪费。</li>
+<li>工作原理：进程生成一个虚拟地址时，操作系统必须动态将虚拟地址转换成数据实际驻留的存储器物理地址。为简化问题，假设不存在高速缓存，从程序角度看，一个10字节程序的最后一个字节会存放在地址9，而实际可能驻留在物理存储器的1239位置（程序从1230位置开始装入）。将虚拟地址分为<strong>页域</strong>和<strong>偏移量</strong>，偏移量表示数据在页内位置。与高速缓存类似，页面大小为2的次幂，简化提取页码和偏移量的操作。<br>流程如下：1.从虚拟地址提取页码，2.从虚拟地址提取偏移量，3.访问页表将页码转换为对应的物理页帧数，首先在页表中查找页码，之后检查该页的有效位：若有效位为0，说明产生了缺页事件，操作系统介入，在磁盘上查找到对应的页，在主存储器寻找到一个空帧（如果主存储器满，则使用置换算法移除一个牺牲页，并将牺牲页复制到硬盘），将要使用的页复制到空页帧内，并更新页表（牺牲页置零，移入页置一）；若有效位为1，则查找的页已在主存储器中，使用实际物理页帧数代替虚拟页码，加上偏移量产生物理地址。</li>
+<li>举例：以一个真实的小系统为例，不涉及高速缓存。假设长度为15字节的程序需要访问一个按字节编址的8字节存储器，每一页的长度是两个字。程序执行时，按照以下地址引用：0，1，2，3，6，7，14。假设另一个进程正在占用主存储器的第0帧和第1帧，当请求地址0时，产生缺页事件，因此第0页中的地址0和地址1都被复制到主存储器的第2帧。请求地址1时，页1已经存在于主存储器中，因此产生一次命中。假设此时占用主存储器前两帧的进程已经结束，接着引用地址2，产生缺页事件，地址2和3所在的页1会被复制到存储器的第0帧。继续进行到访问14之前，此时主存储器已满，页表情况如图所示。<img src="http://7xktmz.com1.z0.glb.clouddn.com/分页存储器演示.png" alt="分页存储器演示">最后访问地址14将产生某个牺牲页，将牺牲页替换后，主存储器中即产生了内部碎片，该页帧的第二个字节并没有被使用。<br>假设一个更大规模的存储器系统，不考虑高速缓存。虚拟地址空间长度位为8KB字，物理存储器大小4KB字，按字节寻址，物理存储器页的大小为1KB字。虚拟存储器大小为8KB=2^13，因此虚拟地址13位，其中3位地址用作页域，共8页，每页有2^10个偏移量，对应每页有2^10个字节。物理存储器大小4KB，12位地址，2位地址作为地址域，有2^2=4个页帧。地址转换即将虚拟存储器的3位页域转换成物理存储器的2位页帧域。<h2 id="u5206_u9875_u6709_u6548_u5B58_u53D6_u65F6_u95F4"><a href="#u5206_u9875_u6709_u6548_u5B58_u53D6_u65F6_u95F4" class="headerlink" title="分页有效存取时间"></a>分页有效存取时间</h2></li>
+<li>处理器每次对虚拟存储器的访问都必须至少执行两次对物理存储器的访问操作，一次引用页表，一次访问要请求的实际数据。假设访问一次主存储器时间200ns，产生的缺页率为1%，处理缺页的时间为10ms，包括将缺页转移到存储器，更新页表以及引用数据所需要的总时间。该存储器的EAT = 0.99 ×（200ns+200ns）+ 0.01 ×（10ms + 200ns）= 100398ns。即使缺页率为0，有效存取时间仍为400ns，是存储器访问时间的两倍，原因在于页表存储在主存储器中。</li>
+<li><strong>转换旁视缓冲器</strong>（translation look-aside buffer，TLB）：存放最近的页查询数据值，可以加速页表查询时间。每个TLB入口目录由一个虚拟页页码和对应的物理页帧帧数组成，使用关联高速缓存实现TLB。使用TLB的一个查询过程为：1.从虚拟地址提取页码和偏移量，2.在TLB中搜索虚拟页码，3.如TLB中找到虚拟页码和物理帧数对，则将偏移量加上物理帧数产生实际物理地址，直接访问该存储单元，4.如发生TLB缺失，则处理器重复分页存储器的流程，并更新TLB。</li>
+<li>分页虚拟存储的优缺点：查找页表实现地址转换需要较大开销，需要额外空间存储页表，需要专门的硬件和操作系统支持。优点在于可以允许系统运行虚拟地址空间比实际物理存储器空间大的多得程序，允许进程和进程自身分享物理存储器，使用固定大小的页帧简化存储器空间的分配和地址安排问题。</li>
+</ul>
+<h2 id="u5206_u6BB5"><a href="#u5206_u6BB5" class="headerlink" title="分段"></a>分段</h2><ul>
+<li>分段机制不把虚拟地址空间和物理地址空间划分为相等的固定大小的页和页帧，而是将虚拟地址空间划分为多个可变长度的逻辑单元，称为段。物理存储器不再进行实际的空间分割。当需要将某个段复制到物理存储器时，操作系统查找<strong>足够大的自由存储空间存储整个段</strong>。每个段都有<strong>一个表示该段在存储器中位置的基地址和一个指示段的大小的界限</strong>。每个程序由若干个段组成，每个程序也有一个相应的段表，段表包含每个段的基地址和界限对的集合，只要提供段的基地址和段内偏移量即可转换存储器访问。<strong>使用分段更容易实现存储空间的保护和共享</strong>：例如一个程序的虚拟地址空间可以分为代码段、数据段、堆栈段和符号表段，每个段大小长度各不相同，用户可以很方便的选择数据段共享出去。</li>
+<li><strong>外部碎片</strong>：分段机制不存在内部碎片问题，但在分段配置和解除分段时，存储器中的自由空间块会变的残缺不完整，最后存储器会留下许多长度较小的自由空间块，不足以存放一个整程序段。但对于外部碎片，存储器上总的空间足够分配给一个程序进程使用，但这个存储空间是不连续的，因此可以通过<strong>碎片收集</strong>，对存储空间上已经占用的信息块进行重新调整。而对于内部碎片，无法使用多余的空间。</li>
+<li>分段和分页组合：使用分页更容易管理，不存在外部碎片问题，但需要更多系统开销；使用分段可以避免内部碎片问题，支持段的共享和保护。在组合方式中，虚拟地址空间被分割为长度可变的段，段内分为固定大小的页面，主存储器的物理空间对等的划分为相等大小的帧。每个段都有一个页表，每个程序有多个页表，系统的物理地址划分为三个域，段域指示系统对应段表，页域用作进入页表的偏移量，第三个域为页内偏移量。</li>
+</ul>
+<hr>
+<h1 id="u5B58_u50A8_u5668_u7BA1_u7406"><a href="#u5B58_u50A8_u5668_u7BA1_u7406" class="headerlink" title="存储器管理"></a>存储器管理</h1><blockquote>
+<p>奔腾处理器的存储器管理：奔腾为32位虚拟地址和32位物理地址，分页大小为4KB或4MB，采用分页和分段管理机制的不同组合：包括没有分段和分页的存储器，只有分页的存储器，只有分段的存储器以及二者兼有的存储器。其采用两级高速缓存：L1和L2，都使用一个32位大小的存储区块。L1靠近处理器，L2位于处理器和存储器之间。L1被分割为保存指令的高速缓存（I-Cache）和保存数据的高速缓存（D-Cache）。两个L1 Cache都使用一个LRU位处理置换操作。每个L1有一个TLB，D-Cache的TLB有64个入口目录，I-Cache只有32个入口目录。两个TLB都采用4路的组关联映射方式。L2的规模从512KB（早期）增加到1MB（后期型号）。L2 Cache和两个L1 Cache都采用2路组关联映射方式，都采用MESI高速缓存的一致性协议，每一路高速缓存线都使用2位二进制数存储下列MESI状态中的一种：1）M：高速缓存中数据被修改，与主存储器中不同，2）E：独占的，高速缓存数据没有被修改过，与主存储器相同，3）S：共享的，高速缓存的线/块可以呵其他高速缓存的线/块共享，4）I：无效的，所请求的线/块不在高速缓存中。</p>
+</blockquote>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/11/01/Computer-Organization-Architectur5/">原始出处</a>(<a href="http://forec.github.io/2015/11/01/Computer-Organization-Architecture5/">http://forec.github.io/2015/11/01/Computer-Organization-Architecture5/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机组成与体系结构/" rel="tag">#计算机组成与体系结构</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/14/Computer-Organization-Architecture6/" rel="prev">计组与体系结构笔记（六）</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/27/Computer-Organization-Architecture4/" rel="next">计组与体系结构笔记（四）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/11/01/Computer-Organization-Architecture5/"
+                   data-title="计组与体系结构笔记（五）" data-url="http://forec.github.io/2015/11/01/Computer-Organization-Architecture5/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Never mind</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gitcafe.com/forec" target="_blank">gitcafe</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forect@hotmail.com" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u5B58_u50A8_u5668_u7C7B_u578B"><span class="nav-number">1.</span> <span class="nav-text">存储器类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u5B58_u50A8_u5668_u5C42_u6B21_u7ED3_u6784"><span class="nav-number">2.</span> <span class="nav-text">存储器层次结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u9AD8_u901F_u7F13_u5B58"><span class="nav-number">3.</span> <span class="nav-text">高速缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u6620_u5C04_u6A21_u5F0F_u548C_u6570_u636E_u8BBF_u95EE_u8FC7_u7A0B"><span class="nav-number">3.1.</span> <span class="nav-text">映射模式和数据访问过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6709_u6548_u5B58_u53D6_u65F6_u95F4_u548C_u547D_u4E2D_u51E0_u7387"><span class="nav-number">3.2.</span> <span class="nav-text">有效存取时间和命中几率</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u865A_u62DF_u5B58_u50A8_u5668"><span class="nav-number">4.</span> <span class="nav-text">虚拟存储器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u5206_u9875"><span class="nav-number">4.1.</span> <span class="nav-text">分页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5206_u9875_u6709_u6548_u5B58_u53D6_u65F6_u95F4"><span class="nav-number">4.2.</span> <span class="nav-text">分页有效存取时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5206_u6BB5"><span class="nav-number">4.3.</span> <span class="nav-text">分段</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u5B58_u50A8_u5668_u7BA1_u7406"><span class="nav-number">5.</span> <span class="nav-text">存储器管理</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

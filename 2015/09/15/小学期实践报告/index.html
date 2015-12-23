@@ -1,0 +1,993 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Never mind" />
+
+
+
+  <meta name="keywords" content="C++," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="What Happened ?" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="摘要
+文档是我的小学期C++实践报告，push上来。代码有问题请留言。可以参考，不要copy。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小学期实践报告">
+<meta property="og:url" content="http://forec.github.io/2015/09/15/小学期实践报告/index.html">
+<meta property="og:site_name" content="What Happened ?">
+<meta property="og:description" content="摘要
+文档是我的小学期C++实践报告，push上来。代码有问题请留言。可以参考，不要copy。">
+<meta property="og:updated_time" content="2015-11-01T10:06:48.975Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小学期实践报告">
+<meta name="twitter:description" content="摘要
+文档是我的小学期C++实践报告，push上来。代码有问题请留言。可以参考，不要copy。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 小学期实践报告 | What Happened ? </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">What Happened ?</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              小学期实践报告
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-15T21:10:46+08:00" content="2015-09-15">
+            2015-09-15
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Code/" itemprop="url" rel="index">
+                  <span itemprop="name">Code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/09/15/小学期实践报告/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/15/小学期实践报告/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="u6458_u8981"><a href="#u6458_u8981" class="headerlink" title="摘要"></a>摘要</h1><blockquote>
+<p>文档是我的小学期C++实践报告，push上来。代码有问题请留言。可以参考，不要copy。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="u9762_u5411_u5BF9_u8C61_u7A0B_u5E8F_u8BBE_u8BA1_u4E0E_u5B9E_u8DF5"><a href="#u9762_u5411_u5BF9_u8C61_u7A0B_u5E8F_u8BBE_u8BA1_u4E0E_u5B9E_u8DF5" class="headerlink" title="面向对象程序设计与实践"></a>面向对象程序设计与实践</h1><blockquote>
+<p><strong>北京邮电大学 计算机学院</strong><br><strong>2014级 网络工程</strong><br><strong>Forec 2014211…</strong></p>
+</blockquote>
+<h2 id="u7D22_u5F15"><a href="#u7D22_u5F15" class="headerlink" title="索引"></a>索引</h2><ol>
+<li><a href="http://forec.github.io/2015/09/15/小学期实践报告/#1">猜价格游戏</a></li>
+<li><a href="http://forec.github.io/2015/09/15/小学期实践报告/#2">矩形</a></li>
+<li><a href="http://forec.github.io/2015/09/15/小学期实践报告/#3">友元</a></li>
+<li><a href="http://forec.github.io/2015/09/15/小学期实践报告/#4">矩阵（一）</a></li>
+<li><a href="http://forec.github.io/2015/09/15/小学期实践报告/#5">矩阵（二）</a></li>
+<li><a href="http://forec.github.io/2015/09/15/小学期实践报告/#6">矩阵（三）</a></li>
+<li><a href="http://forec.github.io/2015/09/15/小学期实践报告/#7">形状（一）</a></li>
+<li><a href="http://forec.github.io/2015/09/15/小学期实践报告/#8">形状（二）</a></li>
+<li><a href="http://forec.github.io/2015/09/15/小学期实践报告/#9">重载运算符</a></li>
+<li><a href="http://forec.github.io/2015/09/15/小学期实践报告/#10">流式IO（一）</a></li>
+<li><a href="http://forec.github.io/2015/09/15/小学期实践报告/#11">流式IO（二）</a></li>
+<li><a href="http://forec.github.io/2015/09/15/小学期实践报告/#12">电话本</a></li>
+</ol>
+<h2 id="u8BBE_u5907_u73AF_u5883"><a href="#u8BBE_u5907_u73AF_u5883" class="headerlink" title="设备环境"></a>设备环境</h2><ul>
+<li>Linux Kernel 4.1.6 64Bits</li>
+<li>gcc 5.1.1</li>
+</ul>
+<hr>
+<h1 id="1">猜价格游戏</h1>
+
+<h2 id="Problem"><a href="#Problem" class="headerlink" title="Problem"></a>Problem</h2><blockquote>
+<p>编写C++程序完成以下功能：<br>（1） 假定有一件商品，程序用随机数指定该商品的价格（1-1000的整数）;<br>（2） 提示用户猜价格，并输入：若用户猜的价格比商品价格高或低，对用户作出相应的提示；<br>（3） 直到猜对为止，并给出提示。</p>
+</blockquote>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	srand(<span class="keyword">unsigned</span>(time(<span class="literal">NULL</span>)));				<span class="comment">/* set random seed  */</span></span><br><span class="line">  	<span class="keyword">unsigned</span> <span class="keyword">short</span> num = ( rand() * <span class="number">113</span> ) % <span class="number">1000</span> + <span class="number">1</span> ;	 <span class="comment">/* multiply by a prime can ensure randomicity */</span></span><br><span class="line">  	<span class="built_in">cout</span> &lt;&lt; num &lt;&lt; endl;</span><br><span class="line">  	<span class="keyword">int</span> guess;</span><br><span class="line">  	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Enter your guess : "</span> ;</span><br><span class="line">  	<span class="keyword">while</span> ( <span class="built_in">cin</span> &gt;&gt; guess &amp;&amp; guess != num ) &#123;</span><br><span class="line">  		<span class="keyword">if</span> ( guess &lt; num )</span><br><span class="line">  			<span class="built_in">cout</span> &lt;&lt; guess &lt;&lt; <span class="string">" is too small"</span> &lt;&lt; endl;</span><br><span class="line">  		<span class="keyword">else</span> </span><br><span class="line">  			<span class="built_in">cout</span> &lt;&lt; guess &lt;&lt; <span class="string">" is too big"</span> &lt;&lt; endl;</span><br><span class="line">  		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Enter your guess : "</span> ;</span><br><span class="line">  	&#125;</span><br><span class="line">  	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Congratulations, the right number is "</span> &lt;&lt; guess &lt;&lt; endl;</span><br><span class="line">  	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h2><ul>
+<li>默认rand()产生从0～RAND_MAX-1之间的随机数，随机数种子为系统时间时，多次运行程序产生的随机数可能递增。将rand的结果和一个较大素数相乘可以改善这种情况。</li>
+</ul>
+<hr>
+<h1 id="2">矩形</h1>
+
+<h2 id="Problem-1"><a href="#Problem-1" class="headerlink" title="Problem"></a>Problem</h2><blockquote>
+<p>编写C++程序完成以下功能：<br>（1） 定义一个Point类，其属性包括点的坐标，提供计算两点之间距离的方法；<br>（2） 定义一个矩形类，其属性包括左上角和右下角两个点，提供计算面积的方法；<br>（3） 创建一个矩形对象，提示用户输入矩形左上角和右下角的坐标；<br>（4） 观察矩形对象以及Point类成员的构造函数与析构函数的调用；<br>（5） 计算其面积，并输出。</p>
+</blockquote>
+<h2 id="Code-1"><a href="#Code-1" class="headerlink" title="Code"></a>Code</h2><ul>
+<li><p>point.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span> </span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Point&#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">int</span> x;</span><br><span class="line">		<span class="keyword">int</span> y;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Point();</span><br><span class="line">		Point( <span class="keyword">int</span>, <span class="keyword">int</span> );</span><br><span class="line">		~Point();</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setPoint</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getDist</span><span class="params">(Point)</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">getX</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">getY</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Point::Point()&#123;</span><br><span class="line">	x = <span class="number">0</span>;</span><br><span class="line">	y = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Point builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Point::Point( <span class="keyword">int</span> x, <span class="keyword">int</span> y )&#123;</span><br><span class="line">	setPoint( x, y );</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Point builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Point::~Point()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Point destructor"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Point::setPoint( <span class="keyword">int</span> x, <span class="keyword">int</span> y )&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;x = x;</span><br><span class="line">	<span class="keyword">this</span>-&gt;y = y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Point::getDist( Point p )&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">sqrt</span>( ( x - p.x ) * ( x - p.x ) + ( y - p.y ) * ( y - p.y ) );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> Point::getX()&#123;</span><br><span class="line">	<span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> Point::getY()&#123;</span><br><span class="line">	<span class="keyword">return</span> y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>rect.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> Rect&#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		Point leftUp;</span><br><span class="line">		Point rightDown;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Rect();</span><br><span class="line">		Rect( Point, Point );</span><br><span class="line">		Rect( <span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">int</span> );</span><br><span class="line">		~Rect();</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setRect</span><span class="params">( Point, Point )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setRect</span><span class="params">( <span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">int</span> )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">getArea</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Rect::Rect()&#123;</span><br><span class="line">	setRect( <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> );</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Rect builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Rect::Rect( Point x, Point y )&#123;</span><br><span class="line">	setRect( x, y );</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Rect builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Rect::Rect( <span class="keyword">int</span> x1, <span class="keyword">int</span> y1, <span class="keyword">int</span> x2, <span class="keyword">int</span> y2 )&#123;</span><br><span class="line">	setRect( x1, y1, x2, y2 );</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Rect builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Rect::~Rect()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Rect destructor"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Rect::setRect( Point x, Point y )&#123;</span><br><span class="line">	leftUp = x;</span><br><span class="line">	rightDown = y; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Rect::setRect( <span class="keyword">int</span> x1, <span class="keyword">int</span> y1, <span class="keyword">int</span> x2, <span class="keyword">int</span> y2 )&#123;</span><br><span class="line">	leftUp = Point( x1, y1 );	</span><br><span class="line">	<span class="comment">/* First, built a point with x1 and y1.</span><br><span class="line">	   Then passed a copy of the point to leftUp.</span><br><span class="line">	   The process of copy invoked Point builder again. */</span></span><br><span class="line">	rightDown = Point( x2, y2 );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> Rect::getArea()&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">std</span>::<span class="built_in">abs</span>( ( rightDown.getX() - leftUp.getX() ) * ( leftUp.getY() - rightDown.getY() ) );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>run.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"point.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"rect.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Build a new rectangle"</span> &lt;&lt; endl;</span><br><span class="line">	Rect rect;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Enter the coordinate in form \"x1 y1 x2 y2\" :"</span> ;</span><br><span class="line">	<span class="keyword">int</span> x1, y1, x2, y2;</span><br><span class="line">	<span class="built_in">cin</span> &gt;&gt; x1 &gt;&gt; y1 &gt;&gt; x2 &gt;&gt; y2;</span><br><span class="line">	rect.setRect( x1, y1, x2, y2 );</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"The area of this rectangle is "</span> &lt;&lt; rect.getArea() &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Attention-1"><a href="#Attention-1" class="headerlink" title="Attention"></a>Attention</h2><ul>
+<li>成员函数参数中应传递对象的引用，避免无用copy，当不需要修改时置为const防止修改内容。</li>
+<li>矩形计算面积时abs距离，防止输入两点位置相反。</li>
+<li>类的定义有分号。</li>
+</ul>
+<hr>
+<p></p><h1 id="3">友元</h1><p></p>
+<h2 id="Problem-2"><a href="#Problem-2" class="headerlink" title="Problem"></a>Problem</h2><blockquote>
+<p>编写C++程序完成以下功能：<br>（1） 定义一个Boat和Car两个类，他们都具有私用属性——重量；<br>（2） 编写一个函数，计算两者的重量和。<br>    <code>double TotalWeight(Boat&amp; b, Car&amp; c);</code></p>
+</blockquote>
+<h2 id="Code-2"><a href="#Code-2" class="headerlink" title="Code"></a>Code</h2><ul>
+<li>friend.cpp<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Car;</span><br><span class="line"><span class="keyword">class</span> Boat;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Car&#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">double</span> weight;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Car( <span class="keyword">double</span> w )&#123;</span><br><span class="line">			weight = w;</span><br><span class="line">		&#125;;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getWeight</span><span class="params">()</span></span>&#123;</span><br><span class="line">			<span class="keyword">return</span> weight;</span><br><span class="line">		&#125;;</span><br><span class="line">		<span class="function"><span class="keyword">friend</span> <span class="keyword">double</span> <span class="title">TotalWeight</span><span class="params">( Boat &amp; b, Car &amp; c )</span></span>;	<span class="comment">// declare the friend function in class Car</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Boat&#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">double</span> weight;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Boat( <span class="keyword">double</span> w )&#123;</span><br><span class="line">			weight = w;</span><br><span class="line">		&#125;;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getWeight</span><span class="params">()</span></span>&#123;</span><br><span class="line">			<span class="keyword">return</span> weight;</span><br><span class="line">		&#125;;</span><br><span class="line">		<span class="function"><span class="keyword">friend</span> <span class="keyword">double</span> <span class="title">TotalWeight</span><span class="params">( Boat &amp; b, Car &amp; c )</span></span>;	<span class="comment">// declare the same friend function in class Boat</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">TotalWeight</span><span class="params">( Boat &amp; b, Car &amp; c )</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> b.weight + c.weight;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="function">Boat <span class="title">b</span><span class="params">( <span class="number">20</span> )</span></span>;</span><br><span class="line">	<span class="function">Car <span class="title">c</span><span class="params">( <span class="number">10</span> )</span></span>;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; b.getWeight() &lt;&lt; <span class="string">"( b.weight ) + "</span> &lt;&lt;</span><br><span class="line">				 c.getWeight() &lt;&lt; <span class="string">"( c.weight ) = "</span> &lt;&lt;</span><br><span class="line">				 TotalWeight( b, c ) &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Attention-2"><a href="#Attention-2" class="headerlink" title="Attention"></a>Attention</h2><ul>
+<li>前置声明Boat类，在Car中不能访问Boat的细节。</li>
+<li>友元函数在两个类中分别声明。</li>
+<li>需要注意的：(1)友元关系不能被继承，(2)友元关系是单向的，不具有交换性。若类B是类A的友元，类A不一定是类B的友元，要看在类中是否有相应的声明，(3)友元关系不具有传递性。若类B是类A的友元，类C是B的友元，类C不一定是类A的友元，同样要看类中是否有相应的申明。 </li>
+<li>采用类的机制后实现了数据的隐藏与封装，类的数据成员一般定义为私有成员，成员函数一般定义为公有的，依此提供类与外界间的通信接口。但是，有时需要定义一些函数，这些函数不是类的一部分，但又需要频繁地访问类的数据成员，这时可以将这些函数定义为该函数的友元函数。除了友元函数外，还有友元类，两者统称为友元。友元的作用是提高了程序的运行效率（即减少了类型检查和安全性检查等都需要时间开销），但它破坏了类的封装性和隐藏性，使得非成员函数可以访问类的私有成员。</li>
+</ul>
+<hr>
+<p></p><h1 id="4">矩阵1</h1><p></p>
+<h2 id="Problem-3"><a href="#Problem-3" class="headerlink" title="Problem"></a>Problem</h2><blockquote>
+<p>编写C++程序完成以下功能：<br>（1） 假定矩阵大小为4×5（整型数组表示）；<br>（2） 定义矩阵初始化函数，可以从cin中输入矩阵元素；<br>（3） 定义矩阵输出函数，将矩阵格式化输出到cout；<br>（4） 定义矩阵相加的函数，实现两个矩阵相加的功能,结果保存在另一个矩阵中；<br>（5） 定义矩阵相减的函数，实现两个矩阵相减的功能,结果保存在另一个矩阵中；<br>（6） 定义三个矩阵：A1、A2、A3；<br>（7） 初始化A1、A2；<br>（8） 计算并输出：A3 = A1加A2，A3 = A1减A2。</p>
+</blockquote>
+<h2 id="Code-3"><a href="#Code-3" class="headerlink" title="Code"></a>Code</h2><ul>
+<li><p>matrix.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Matrix&#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">int</span> matrix[<span class="number">4</span>][<span class="number">5</span>];</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">friend</span> Matrix <span class="title">plus</span><span class="params">( Matrix &amp; m1, Matrix &amp; m2 )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">friend</span> Matrix <span class="title">sub</span><span class="params">( Matrix &amp; m1, Matrix &amp; m2 )</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Matrix::init()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Enter the matrix : "</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">4</span> ; i++ )</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; <span class="number">5</span> ; j++ )</span><br><span class="line">			<span class="built_in">std</span>::<span class="built_in">cin</span> &gt;&gt; matrix[i][j];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Matrix::print()&#123;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">4</span> ; i++ )&#123;</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; <span class="number">5</span> ; j++ )</span><br><span class="line">			<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; matrix[i][j] &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Matrix <span class="title">plus</span><span class="params">( Matrix &amp; m1, Matrix &amp; m2 )</span></span>&#123;</span><br><span class="line">	Matrix temp;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">4</span> ; i++ )</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; <span class="number">5</span> ; j++ )</span><br><span class="line">			temp.matrix[i][j] = m1.matrix[i][j] + m2.matrix[i][j];</span><br><span class="line">	<span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Matrix <span class="title">sub</span><span class="params">( Matrix &amp;m1, Matrix &amp; m2 )</span></span>&#123;</span><br><span class="line">	Matrix temp;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">4</span> ; i++ )</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; <span class="number">5</span> ; j++ )</span><br><span class="line">			temp.matrix[i][j] = m1.matrix[i][j] - m2.matrix[i][j];</span><br><span class="line">	<span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>run.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span> </span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"matrix.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	Matrix A1, A2, A3;</span><br><span class="line">	A1.init();</span><br><span class="line">	A2.init();</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"The sum of A and B is :"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	A3 = plus( A1, A2 );</span><br><span class="line">	A3.print();</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"The difference of A and B is :"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	A3 = sub( A1, A2 );</span><br><span class="line">	A3.print();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Attention-3"><a href="#Attention-3" class="headerlink" title="Attention"></a>Attention</h2><ul>
+<li>每次构造时已为matrix数组分配内存，return时默认的浅拷贝就可以保证数据不丢失。</li>
+</ul>
+<hr>
+<p></p><h1 id="5">矩阵2</h1><p></p>
+<h2 id="Problem-4"><a href="#Problem-4" class="headerlink" title="Problem"></a>Problem</h2><blockquote>
+<p>编写C++程序完成以下功能：<br>（1） 假定矩阵大小为4×5（整型）；<br>（2） 矩阵空间采用new动态申请，保存在指针中；<br>（3） 定义矩阵初始化函数，可以从cin中输入矩阵元素；<br>（4） 定义矩阵输出函数，将矩阵格式化输出到cout；<br>（5） 定义矩阵相加的函数，实现两个矩阵相加的功能,结果保存在另一个矩阵中；<br>（6） 定义矩阵相减的函数，实现两个矩阵相减的功能,结果保存在另一个矩阵中；<br>（7） 动态申请三个矩阵：A1、A2、A3；<br>（8） 初始化A1、A2；<br>（9） 计算并输出A3 = A1加A2，A3 = A1减A2；<br>（10） 释放矩阵空间。</p>
+</blockquote>
+<h2 id="Code-4"><a href="#Code-4" class="headerlink" title="Code"></a>Code</h2><ul>
+<li><p>matrix.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Matrix&#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">int</span> ** matrix;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Matrix();</span><br><span class="line">		Matrix( <span class="keyword">const</span> Matrix &amp; m );</span><br><span class="line">		~Matrix();</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">friend</span> <span class="keyword">void</span> <span class="title">plus</span><span class="params">( Matrix &amp; m1, Matrix &amp; m2, Matrix &amp; sum )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">friend</span> <span class="keyword">void</span> <span class="title">sub</span><span class="params">( Matrix &amp; m1, Matrix &amp; m2, Matrix &amp; sub )</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Matrix::Matrix()&#123;</span><br><span class="line">	matrix = <span class="keyword">new</span> <span class="keyword">int</span>*[<span class="number">4</span>];</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">4</span> ; i++ )</span><br><span class="line">		matrix[i] = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">5</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Matrix::~Matrix()&#123;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">4</span> ; i++ )</span><br><span class="line">		<span class="keyword">delete</span> []matrix[i];</span><br><span class="line">	<span class="keyword">delete</span> []matrix;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Matrix::init()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Enter the matrix : "</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">4</span> ; i++ )</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; <span class="number">5</span> ; j++ )</span><br><span class="line">			<span class="built_in">std</span>::<span class="built_in">cin</span> &gt;&gt; matrix[i][j];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Matrix::print()&#123;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">4</span> ; i++ )&#123;</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; <span class="number">5</span> ; j++ )</span><br><span class="line">			<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; matrix[i][j] &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">plus</span><span class="params">( Matrix &amp; m1, Matrix &amp; m2, Matrix &amp; sum )</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">4</span> ; i++ )</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; <span class="number">5</span> ; j++ )</span><br><span class="line">			sum.matrix[i][j] = m1.matrix[i][j] + m2.matrix[i][j];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">sub</span><span class="params">( Matrix &amp;m1, Matrix &amp; m2, Matrix &amp; sub )</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">4</span> ; i++ )</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; <span class="number">5</span> ; j++ )</span><br><span class="line">			sub.matrix[i][j] = m1.matrix[i][j] - m2.matrix[i][j];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>run.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span> </span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"matrix.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	Matrix *A1 = <span class="keyword">new</span> Matrix;</span><br><span class="line">	Matrix *A2 = <span class="keyword">new</span> Matrix;</span><br><span class="line">	Matrix *A3 = <span class="keyword">new</span> Matrix;</span><br><span class="line">	A1-&gt;init();</span><br><span class="line">	A2-&gt;init();</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"The sum of A1 and A2 is :"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	plus( *A1, *A2, *A3 );</span><br><span class="line">	A3-&gt;print();</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"The difference of A1 and A2 is :"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	sub( *A1, *A2, *A3 );</span><br><span class="line">	A3-&gt;print();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Attention-4"><a href="#Attention-4" class="headerlink" title="Attention"></a>Attention</h2><ul>
+<li>在构造函数中对二位数组首地址分配首列内存，之后对其中的每一维分配内存。析构函数中顺序相反。</li>
+<li>友元函数如果用成员函数取代（matrixA.sum(matrixB)），需要增加深拷贝（题6），否则return可能返回野指针。</li>
+</ul>
+<hr>
+<p></p><h1 id="6">矩阵2</h1><p></p>
+<h2 id="Problem-5"><a href="#Problem-5" class="headerlink" title="Problem"></a>Problem</h2><blockquote>
+<p>编写C++程序完成以下功能：<br>（1） 用类来实现矩阵，定义一个矩阵的类，属性包括：<br> 矩阵大小，用 lines, rows（行、列来表示）；<br> 存贮矩阵的数组指针，根据矩阵大小动态申请（new）。<br>（2） 矩阵类的方法包括：<br> 构造函数，参数是矩阵大小，需要动态申请存贮矩阵的数组；<br> 析构函数，需要释放矩阵的数组指针；<br> 拷贝构造函数，需要申请和复制数组；<br> 输入，可以从cin中输入矩阵元素；<br> 输出，将矩阵格式化输出到cout；<br> 矩阵相加的函数，实现两个矩阵相加的功能,结果保存在另一个矩阵类，但必须矩阵大小相同；<br> 矩阵相减的函数，实现两个矩阵相减的功能,结果保存在另一个矩阵类，但必须矩阵大小相同。<br>（3） 定义三个矩阵：A1、A2、A3；<br>（4） 初始化A1、A2；<br>（5） 计算并输出A3 = A1加A2，A3=A1减A2；<br>（6） 用new动态创建三个矩阵类的对象：pA1、pA1、pA3；<br>（7） 初始化pA1、pA2；<br>（8） 计算并输出pA3=pA1加pA2，pA3=pA1减pA2；<br>（9） 释放pA1、pA1、pA3。</p>
+</blockquote>
+<h2 id="Code-5"><a href="#Code-5" class="headerlink" title="Code"></a>Code</h2><ul>
+<li><p>matrix.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Matrix&#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">int</span> lines;</span><br><span class="line">		<span class="keyword">int</span> rows;</span><br><span class="line">		<span class="keyword">int</span> ** matrix;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Matrix( <span class="keyword">int</span>, <span class="keyword">int</span> );</span><br><span class="line">		Matrix( <span class="keyword">const</span> Matrix &amp; m );</span><br><span class="line">		~Matrix();</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">friend</span> <span class="keyword">void</span> <span class="title">plus</span><span class="params">( Matrix &amp; m1, Matrix &amp; m2, Matrix &amp; sum )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">friend</span> <span class="keyword">void</span> <span class="title">sub</span><span class="params">( Matrix &amp; m1, Matrix &amp; m2, Matrix &amp; sub )</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Matrix::Matrix( <span class="keyword">int</span> lines, <span class="keyword">int</span>  rows )&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;lines = lines;</span><br><span class="line">	<span class="keyword">this</span>-&gt;rows = rows;</span><br><span class="line">	matrix = <span class="keyword">new</span> <span class="keyword">int</span>*[lines];</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; lines ; i++ )</span><br><span class="line">		matrix[i] = <span class="keyword">new</span> <span class="keyword">int</span>[rows];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Matrix::Matrix( <span class="keyword">const</span> Matrix &amp; m )&#123;			<span class="comment">// Deep copy</span></span><br><span class="line">	lines = m.lines;</span><br><span class="line">	rows = m.rows;</span><br><span class="line">	matrix = <span class="keyword">new</span> <span class="keyword">int</span>*[lines];</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; lines ; i++ )&#123;</span><br><span class="line">		matrix[i] = <span class="keyword">new</span> <span class="keyword">int</span>[rows];</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; rows ; j++ )</span><br><span class="line">			matrix[i][j] = m.matrix[i][j];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Matrix::~Matrix()&#123;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; lines ; i++ )</span><br><span class="line">		<span class="keyword">delete</span> []matrix[i];</span><br><span class="line">	<span class="keyword">delete</span> []matrix;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Matrix::init()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Enter the matrix : "</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; lines ; i++ )</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; rows ; j++ )</span><br><span class="line">			<span class="built_in">std</span>::<span class="built_in">cin</span> &gt;&gt; matrix[i][j];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Matrix::print()&#123;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; lines ; i++ )&#123;</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; rows ; j++ )</span><br><span class="line">			<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; matrix[i][j] &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">plus</span><span class="params">( Matrix &amp; m1, Matrix &amp; m2, Matrix &amp; sum )</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; sum.lines ; i++ )</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; sum.rows ; j++ )</span><br><span class="line">			sum.matrix[i][j] = m1.matrix[i][j] + m2.matrix[i][j];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">sub</span><span class="params">( Matrix &amp;m1, Matrix &amp; m2, Matrix &amp; sub )</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; sub.lines ; i++ )</span><br><span class="line">		<span class="keyword">for</span> ( <span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; sub.rows ; j++ )</span><br><span class="line">			sub.matrix[i][j] = m1.matrix[i][j] - m2.matrix[i][j];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>run.cpp</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt; </span><br><span class="line">#include "matrix.h"</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">	Matrix A1(4, 5), A2(4, 5), A3(4, 5);</span><br><span class="line">	A1.init();</span><br><span class="line">	A2.init();</span><br><span class="line">	std::cout &lt;&lt; "The sum of A1 and A2 is :" &lt;&lt; std::endl;</span><br><span class="line">	plus( A1, A2, A3 );</span><br><span class="line">	A3.print();</span><br><span class="line">	std::cout &lt;&lt; "The difference of A1 and A2 is :" &lt;&lt; std::endl;</span><br><span class="line">	sub( A1, A2, A3 );</span><br><span class="line">	A3.print();</span><br><span class="line">	</span><br><span class="line">	Matrix *pA1 = new Matrix(3, 4);</span><br><span class="line">	Matrix *pA2 = new Matrix(3, 4);</span><br><span class="line">	Matrix *pA3 = new Matrix(3, 4);</span><br><span class="line"> 	pA1-&gt;init();</span><br><span class="line">	pA2-&gt;init();</span><br><span class="line">	std::cout &lt;&lt; "The sum of A1 and A2 is :" &lt;&lt; std::endl;</span><br><span class="line">	plus( *pA1, *pA2, *pA3 );</span><br><span class="line">	pA3-&gt;print();</span><br><span class="line">	std::cout &lt;&lt; "The difference of A1 and A2 is :" &lt;&lt; std::endl;</span><br><span class="line">	sub( *pA1, *pA2, *pA3 );</span><br><span class="line">	pA3-&gt;print();</span><br><span class="line">	delete pA1;</span><br><span class="line">	delete pA2;</span><br><span class="line">	delete pA3;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Attention-5"><a href="#Attention-5" class="headerlink" title="Attention"></a>Attention</h2><ul>
+<li>深拷贝复制矩阵数据，避免内存回收产生野指针。</li>
+<li>两个友元函数可以定义为成员函数，或重载运算符。</li>
+<li>如果友元函数变成成员函数返回一个Matrix类，或重载运算符，在main函数中A3 = A1 + A2时需要重载’=’运算符，否则只会执行系统的缺省赋值函数’=’，不会拷贝数据，造成野指针。<strong>构造函数在对象构造的时起作用（对象在声明的同时立刻初始化），=号运算符的重载，是在对象已经有了的时候对对象进行赋值时使用（对象声明之后进行的赋值运算）。</strong><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Matrix &amp; Matrix::<span class="keyword">operator</span> = ( <span class="keyword">const</span> Matrix &amp; m)&#123;  <span class="comment">// 支持链式赋值</span></span><br><span class="line">   <span class="comment">//注意：此处应返回对象的引用，否则返回后内存释放</span></span><br><span class="line">   <span class="keyword">if</span>(<span class="keyword">this</span>==&amp;a)</span><br><span class="line">      <span class="keyword">return</span> *<span class="keyword">this</span>;           <span class="comment">// 优化a=a</span></span><br><span class="line">   copy...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果<code>void Matrix::operator = ( const Matrix &amp; m )</code>，不支持链式赋值。</p>
+<ul>
+<li>几个注意点：<ol>
+<li>如果对象有内部指针指向动态分配的堆内存，不要把对象按值传递给函数，要按引用传递。若函数不能改变参数对象的状态和目标对象的状态，要使用const修饰符。</li>
+<li>如果赋值函数返回的是类对象本身，则过程如下：1.释放目标对象原来的堆资源，2.重新为目标对象申请堆空间，3.拷贝源的值到目标对象的堆空间的值，<strong>4.调用临时对象拷贝函数创建一个copy，并返回copy</strong>，5.最后调用copy的析构函数，释放其内存。如果在上面的拷贝过程中，没有overload而是使用了缺省拷贝函数，则在调用copy的析构函数时释放了和目标对象同样的堆空间，当目标对象再次析构时将产生错误。</li>
+<li>如果赋值函数返回的是对象的引用，则过程如下：1.释放掉目标对象原本占有的堆空间，申请一块新的堆内存，2.将源对象的堆内存的值copy给新的堆内存，3.返回源对象的引用。此时不会调用拷贝构造函数。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<p></p><h1 id="7">形状1</h1><p></p>
+<h2 id="Problem-6"><a href="#Problem-6" class="headerlink" title="Problem"></a>Problem</h2><blockquote>
+<p>编写C++程序完成以下功能：<br>（1） 声明一个基类Shape（形状），其中包含一个方法来计算面积；<br>（2） 从Shape派生两个类矩形和圆形；<br>（3） 从矩形派生正方形；<br>（4） 分别实现派生类构造函数、析构函数和其他方法；<br>（5） 创建派生类的对象，观察构造函数、析构函数调用次序；<br>（6） 不同对象计算面积。  </p>
+</blockquote>
+<h2 id="Code-6"><a href="#Code-6" class="headerlink" title="Code"></a>Code</h2><ul>
+<li><p>shape.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Shape&#123;</span><br><span class="line">	<span class="keyword">protected</span>:</span><br><span class="line">		<span class="keyword">double</span> area;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Shape();	</span><br><span class="line">		Shape( <span class="keyword">double</span> );</span><br><span class="line">		<span class="keyword">virtual</span> ~Shape();</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setArea</span><span class="params">( <span class="keyword">double</span>)</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getArea</span><span class="params">()</span></span>&#123; </span><br><span class="line">			<span class="keyword">return</span> area; </span><br><span class="line">		&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Shape::Shape()&#123;</span><br><span class="line">	area = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Shape builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Shape::Shape( <span class="keyword">double</span> area )&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;area = area;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Shape builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Shape::~Shape()&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking ~Shape()"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Shape::setArea( <span class="keyword">double</span> area )&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;area = area;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>rect.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Rect: <span class="keyword">public</span> Shape&#123;</span><br><span class="line">	<span class="keyword">protected</span>:</span><br><span class="line">		<span class="keyword">double</span> width;</span><br><span class="line">		<span class="keyword">double</span> height;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Rect();</span><br><span class="line">		Rect( <span class="keyword">double</span>, <span class="keyword">double</span> );</span><br><span class="line">		<span class="keyword">virtual</span> ~Rect();</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setWidth</span><span class="params">( <span class="keyword">double</span> )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setHeight</span><span class="params">( <span class="keyword">double</span> )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getWidth</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getHeight</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getArea</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Rect::Rect():Shape()&#123;</span><br><span class="line">	width = height = area = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Rect builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Rect::Rect( <span class="keyword">double</span> width, <span class="keyword">double</span> height ):Shape()&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;width = width;</span><br><span class="line">	<span class="keyword">this</span>-&gt;height = height;</span><br><span class="line">	area = width * height;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Rect builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Rect::~Rect()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking ~Rect()"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Rect::setWidth( <span class="keyword">double</span> width )&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;width = width;</span><br><span class="line">	area = width * height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Rect::setHeight( <span class="keyword">double</span> height ) &#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;height = height;</span><br><span class="line">	area = height * width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Rect::getWidth()&#123;</span><br><span class="line">	<span class="keyword">return</span> width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Rect::getHeight()&#123;</span><br><span class="line">	<span class="keyword">return</span> height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Rect::getArea()&#123;</span><br><span class="line">	<span class="keyword">return</span> Shape::getArea();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>circ.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Circ : <span class="keyword">public</span> Shape&#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">double</span> r;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		<span class="keyword">const</span> <span class="keyword">static</span> <span class="keyword">double</span> Pi = <span class="number">3.14159265357</span>;</span><br><span class="line">		Circ();</span><br><span class="line">		Circ( <span class="keyword">double</span> r );</span><br><span class="line">		~Circ();</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setRadii</span><span class="params">( <span class="keyword">double</span> r )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getRadii</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getArea</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Circ::Circ():Shape()&#123;</span><br><span class="line">	r = area = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Circ builder "</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Circ::Circ( <span class="keyword">double</span> r ):Shape()&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;r = r;</span><br><span class="line">	area = Pi * r * r;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Circ builder "</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Circ::~Circ()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking ~Circ() "</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Circ::setRadii( <span class="keyword">double</span> r )&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;r = r;</span><br><span class="line">	area = Pi * r * r;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Circ::getRadii()&#123;</span><br><span class="line">	<span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Circ::getArea()&#123;</span><br><span class="line">	<span class="keyword">return</span> Shape::getArea();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>square.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Square : <span class="keyword">protected</span> Rect&#123;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Square();</span><br><span class="line">		Square( <span class="keyword">double</span> ); </span><br><span class="line">		~Square();</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setSidelen</span><span class="params">( <span class="keyword">double</span> )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getSidelen</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getArea</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Square::Square():Rect()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Square builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Square::Square( <span class="keyword">double</span> sidelen ):Rect()&#123;</span><br><span class="line">	width = height = sidelen;</span><br><span class="line">	area = sidelen * sidelen;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Square builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Square::~Square()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking ~Square()"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Square::setSidelen( <span class="keyword">double</span> sidelen )&#123;</span><br><span class="line">	width = height = sidelen;</span><br><span class="line">	area = sidelen * sidelen;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Square::getSidelen()&#123;</span><br><span class="line">	<span class="keyword">return</span> width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Square::getArea()&#123;</span><br><span class="line">	<span class="keyword">return</span> Rect::getArea();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>run.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"shape.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"rect.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"circ.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"square.h"</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	Rect *rect = <span class="keyword">new</span> Rect(<span class="number">10</span>, <span class="number">20</span>);</span><br><span class="line">	Circ *cir = <span class="keyword">new</span> Circ(<span class="number">10</span>);</span><br><span class="line">	Square *squa = <span class="keyword">new</span> Square(<span class="number">10</span>);</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Rect Area : "</span> &lt;&lt; rect-&gt;getArea() &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Circle Area : "</span> &lt;&lt; cir-&gt;getArea() &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Square Area : "</span> &lt;&lt; squa-&gt;getArea() &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	<span class="keyword">delete</span> rect;</span><br><span class="line">	<span class="keyword">delete</span> cir;</span><br><span class="line">	<span class="keyword">delete</span> squa;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Attention-6"><a href="#Attention-6" class="headerlink" title="Attention"></a>Attention</h2><ul>
+<li>派生类构造时如果不指定调用父类的某个构造函数会由系统指定。</li>
+<li>基类的析构函数最好声明为虚函数，在子类中实现。</li>
+<li>为了能够访问rect类中的保护变量同时维护数据的封闭，square保护继承rect。</li>
+</ul>
+<hr>
+<p></p><h1 id="8">形状3</h1><p></p>
+<h2 id="Problem-7"><a href="#Problem-7" class="headerlink" title="Problem"></a>Problem</h2><blockquote>
+<p>（1） 将【 形状（一）】 中的基类计算面积的方法定义为虚函数，比较与【形状（一）】程序的差异；<br>  （2） 将【 形状（一）】中的基类定义抽象类，比较与【形状（一）】程序的差异。</p>
+</blockquote>
+<h2 id="Code-7"><a href="#Code-7" class="headerlink" title="Code"></a>Code</h2><ul>
+<li><p>shape.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Shape&#123;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Shape();	</span><br><span class="line">		<span class="keyword">virtual</span> ~Shape();</span><br><span class="line">		<span class="function"><span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">getArea</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Shape::Shape()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Shape builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Shape::~Shape()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking ~Shape()"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>rect.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Rect: <span class="keyword">public</span> Shape&#123;</span><br><span class="line">	<span class="keyword">protected</span>:</span><br><span class="line">		<span class="keyword">double</span> width;</span><br><span class="line">		<span class="keyword">double</span> height;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Rect();</span><br><span class="line">		Rect( <span class="keyword">double</span>, <span class="keyword">double</span> );</span><br><span class="line">		<span class="keyword">virtual</span> ~Rect();</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setWidth</span><span class="params">( <span class="keyword">double</span> )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setHeight</span><span class="params">( <span class="keyword">double</span> )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getWidth</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getHeight</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getArea</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Rect::Rect():Shape()&#123;</span><br><span class="line">	width = height = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Rect builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Rect::Rect( <span class="keyword">double</span> width, <span class="keyword">double</span> height ):Shape()&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;width = width;</span><br><span class="line">	<span class="keyword">this</span>-&gt;height = height;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Rect builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Rect::~Rect()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking ~Rect()"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Rect::setWidth( <span class="keyword">double</span> width )&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;width = width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Rect::setHeight( <span class="keyword">double</span> height ) &#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;height = height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Rect::getWidth()&#123;</span><br><span class="line">	<span class="keyword">return</span> width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Rect::getHeight()&#123;</span><br><span class="line">	<span class="keyword">return</span> height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Rect::getArea()&#123;</span><br><span class="line">	<span class="keyword">return</span> height * width;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>square.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Square : <span class="keyword">protected</span> Rect&#123;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Square();</span><br><span class="line">		Square( <span class="keyword">double</span> ); </span><br><span class="line">		~Square();</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setSidelen</span><span class="params">( <span class="keyword">double</span> )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getSidelen</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getArea</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Square::Square():Rect()&#123;</span><br><span class="line">	width = height = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Square builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Square::Square( <span class="keyword">double</span> sidelen ):Rect()&#123;</span><br><span class="line">	width = height = sidelen;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Square builder"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Square::~Square()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking ~Square()"</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Square::setSidelen( <span class="keyword">double</span> sidelen )&#123;</span><br><span class="line">	width = height = sidelen;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Square::getSidelen()&#123;</span><br><span class="line">	<span class="keyword">return</span> width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Square::getArea()&#123;</span><br><span class="line">	<span class="keyword">return</span> Rect::getArea();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>circ.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Circ : <span class="keyword">public</span> Shape&#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">double</span> r;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		<span class="keyword">const</span> <span class="keyword">static</span> <span class="keyword">double</span> Pi = <span class="number">3.14159265357</span>;</span><br><span class="line">		Circ();</span><br><span class="line">		Circ( <span class="keyword">double</span> r );</span><br><span class="line">		~Circ();</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setRadii</span><span class="params">( <span class="keyword">double</span> r )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getRadii</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">getArea</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Circ::Circ():Shape()&#123;</span><br><span class="line">	r = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Circ builder "</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Circ::Circ( <span class="keyword">double</span> r ):Shape()&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;r = r;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking Circ builder "</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Circ::~Circ()&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"invoking ~Circ() "</span> &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Circ::setRadii( <span class="keyword">double</span> r )&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;r = r;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Circ::getRadii()&#123;</span><br><span class="line">	<span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> Circ::getArea()&#123;</span><br><span class="line">	<span class="keyword">return</span> Pi * r * r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>run.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"shape.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"rect.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"circ.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"square.h"</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	Rect *rect = <span class="keyword">new</span> Rect(<span class="number">10</span>, <span class="number">20</span>);</span><br><span class="line">	Circ *cir = <span class="keyword">new</span> Circ(<span class="number">10</span>);</span><br><span class="line">	Square *squa = <span class="keyword">new</span> Square(<span class="number">10</span>);</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Rect Area : "</span> &lt;&lt; rect-&gt;getArea() &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Circle Area : "</span> &lt;&lt; cir-&gt;getArea() &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Square Area : "</span> &lt;&lt; squa-&gt;getArea() &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line">	<span class="keyword">delete</span> rect;</span><br><span class="line">	<span class="keyword">delete</span> cir;</span><br><span class="line">	<span class="keyword">delete</span> squa;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Attention-7"><a href="#Attention-7" class="headerlink" title="Attention"></a>Attention</h2><ul>
+<li>与形状（一）中的区别：删除了Shape类中的area域，在派生类中实现area方法。</li>
+</ul>
+<hr>
+<p></p><h1 id="9">重载运算符</h1><p></p>
+<h2 id="Problem-8"><a href="#Problem-8" class="headerlink" title="Problem"></a>Problem</h2><blockquote>
+<p> 编写C++程序完成以下功能：<br>（1） Point类的属性包括点的坐标（x，y）；<br>（2） 实现 Point类重载＋＋和――运算符：++p，–p，p++，p–（＋＋和――分别表示x，y增加或减少1）。</p>
+</blockquote>
+<h2 id="Code-8"><a href="#Code-8" class="headerlink" title="Code"></a>Code</h2><ul>
+<li><p>point.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Point&#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">int</span> x;</span><br><span class="line">		<span class="keyword">int</span> y;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Point();</span><br><span class="line">		Point( <span class="keyword">int</span>, <span class="keyword">int</span> );</span><br><span class="line">		Point( <span class="keyword">const</span> Point &amp; p );</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setX</span><span class="params">( <span class="keyword">int</span> )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setY</span><span class="params">( <span class="keyword">int</span> )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">getX</span><span class="params">()</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">getY</span><span class="params">()</span></span>;</span><br><span class="line">		Point <span class="keyword">operator</span>++(); <span class="comment">// ++Point</span></span><br><span class="line">		<span class="keyword">friend</span> Point <span class="keyword">operator</span>--( Point &amp; ); <span class="comment">// --Point</span></span><br><span class="line">		Point <span class="keyword">operator</span>++( <span class="keyword">int</span> ); <span class="comment">// Point++</span></span><br><span class="line">		<span class="keyword">friend</span> Point <span class="keyword">operator</span>--( Point &amp;, <span class="keyword">int</span> );  <span class="comment">// Point--</span></span><br><span class="line">		<span class="keyword">friend</span> <span class="built_in">std</span>::ostream &amp; <span class="keyword">operator</span>&lt;&lt;( <span class="built_in">std</span>::ostream &amp;, <span class="keyword">const</span> Point &amp; );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Point Point::<span class="keyword">operator</span>++()&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;x++;</span><br><span class="line">	<span class="keyword">this</span>-&gt;y++;</span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Point <span class="keyword">operator</span>--( Point &amp; p )&#123;</span><br><span class="line">	p.x--;</span><br><span class="line">	p.y--;</span><br><span class="line">	<span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Point Point::<span class="keyword">operator</span>++( <span class="keyword">int</span> )&#123;</span><br><span class="line">	<span class="function">Point <span class="title">temp</span><span class="params">( *<span class="keyword">this</span> )</span></span>;</span><br><span class="line">	<span class="keyword">this</span>-&gt;x++;</span><br><span class="line">	<span class="keyword">this</span>-&gt;y++;</span><br><span class="line">	<span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Point <span class="keyword">operator</span>--( Point &amp; p, <span class="keyword">int</span> )&#123;</span><br><span class="line">	<span class="function">Point <span class="title">temp</span><span class="params">( p )</span></span>;</span><br><span class="line">	p.x--;</span><br><span class="line">	p.y--;</span><br><span class="line">	<span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::ostream &amp; <span class="keyword">operator</span>&lt;&lt;( <span class="built_in">std</span>::ostream &amp; os, <span class="keyword">const</span> Point &amp; p )&#123;</span><br><span class="line">	os &lt;&lt; <span class="string">"( "</span> &lt;&lt; p.x &lt;&lt; <span class="string">", "</span> &lt;&lt; p.y &lt;&lt; <span class="string">" )"</span>;</span><br><span class="line">	<span class="keyword">return</span> os;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Point::Point()&#123;</span><br><span class="line">	x = y = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Point::Point( <span class="keyword">int</span> x, <span class="keyword">int</span> y )&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;x = x;</span><br><span class="line"> 	<span class="keyword">this</span>-&gt;y = y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Point::Point( <span class="keyword">const</span> Point &amp; p )&#123;</span><br><span class="line">	x = p.x;</span><br><span class="line">	y = p.y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Point::setX( <span class="keyword">int</span> x )&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;x = x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Point::setY( <span class="keyword">int</span> y )&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;y = y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> Point::getX()&#123;</span><br><span class="line">	<span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> Point::getY()&#123;</span><br><span class="line">	<span class="keyword">return</span> y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>run.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"point.h"</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="function">Point <span class="title">p</span><span class="params">(<span class="number">1</span>, <span class="number">3</span>)</span></span>;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; p++ &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; ++p &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; p-- &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; --p &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Attention-8"><a href="#Attention-8" class="headerlink" title="Attention"></a>Attention</h2><ul>
+<li>分别用成员函数和友元函数实现前置和后置的自增自减操作，前置和后置区别在参数列表中额外增加int。</li>
+<li>重载了输出流的运算符。</li>
+</ul>
+<hr>
+<p></p><h1 id="10">流式IO（一）</h1><p></p>
+<h2 id="Problem-9"><a href="#Problem-9" class="headerlink" title="Problem"></a>Problem</h2><blockquote>
+<p>编写C++程序完成以下功能：<br>（1） 使用ofstream 向一个文本文件中输出各种类型的数据，并打开文件观察结果：整数、无符号整型、长整型、浮点型、字符串、……<br>（2） 用十进制、八进制、十六进制方式向文本文件中输出整数；<br>（3） 使用控制符和成员函数来控制输出的格式：set（） precision() …</p>
+</blockquote>
+<h2 id="Code-9"><a href="#Code-9" class="headerlink" title="Code"></a>Code</h2><ul>
+<li>io1.cpp<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iomanip&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	ofstream out;</span><br><span class="line">	out.open( <span class="string">"output.txt"</span>, ios::out );</span><br><span class="line">	<span class="keyword">int</span> intv = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> uintv = <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">long</span> longv = <span class="number">3</span>;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> ulongv = <span class="number">4</span>;</span><br><span class="line">	<span class="keyword">float</span> floatv = <span class="number">5.0</span>;</span><br><span class="line">	<span class="keyword">double</span> doublev = <span class="number">6.0</span>;</span><br><span class="line">	<span class="keyword">char</span> charv[<span class="number">101</span>] = <span class="string">"output test char[]"</span>;</span><br><span class="line">	<span class="built_in">string</span> stringv = <span class="string">"output test string"</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// print different types below</span></span><br><span class="line">	out &lt;&lt; <span class="string">"int : "</span> &lt;&lt; intv &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; <span class="string">"unsigned int : "</span> &lt;&lt; uintv &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; <span class="string">"long : "</span> &lt;&lt; longv &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; <span class="string">"unsigned long : "</span> &lt;&lt; ulongv &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; <span class="string">"float : "</span> &lt;&lt; floatv &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; <span class="string">"double : "</span> &lt;&lt; doublev &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; <span class="string">"char[] : "</span> &lt;&lt; charv &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; <span class="string">"string : "</span> &lt;&lt; stringv &lt;&lt; endl;</span><br><span class="line">	</span><br><span class="line">	out &lt;&lt; endl &lt;&lt; endl;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">int</span> base = <span class="number">31</span>;</span><br><span class="line">	<span class="keyword">float</span> basef = <span class="number">31.55</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Using instruction characters below</span></span><br><span class="line">	out &lt;&lt; <span class="string">"Using instruction characters :"</span> &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; setiosflags( ios::showpos ) &lt;&lt; </span><br><span class="line">		<span class="string">"// setiosflags : showpose "</span> &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; <span class="string">"Dec : "</span> &lt;&lt; dec &lt;&lt; base &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; <span class="string">"Oct : "</span> &lt;&lt; oct &lt;&lt; base &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; <span class="string">"Hex : "</span> &lt;&lt; setiosflags( ios::uppercase ) &lt;&lt; hex &lt;&lt; </span><br><span class="line">		base &lt;&lt; dec &lt;&lt; <span class="string">"  // setiosflags : uppercase"</span> &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; setfill(<span class="string">'x'</span>) &lt;&lt; setw(<span class="number">10</span>) &lt;&lt; base &lt;&lt; </span><br><span class="line">		<span class="string">"  // width = 10, fill character = 'x'"</span> &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; setw(<span class="number">20</span>) &lt;&lt; setiosflags( ios::left | ios::fixed ) &lt;&lt; basef &lt;&lt; </span><br><span class="line">		<span class="string">"  // width = 20, setiosflags : left | fixed"</span> &lt;&lt; endl;</span><br><span class="line">	out &lt;&lt; setprecision(<span class="number">10</span>) &lt;&lt; basef &lt;&lt; </span><br><span class="line">		<span class="string">"  // setprecision : 10 "</span> &lt;&lt;endl;</span><br><span class="line">	out &lt;&lt; setfill(<span class="string">' '</span>) &lt;&lt; resetiosflags( ios::showpos | ios::right ) &lt;&lt;</span><br><span class="line">		resetiosflags( ios::fixed ) &lt;&lt; setprecision(<span class="number">6</span>) &lt;&lt;</span><br><span class="line">		<span class="string">"// reset all iosflags "</span> &lt;&lt; endl;</span><br><span class="line">	</span><br><span class="line">	out &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Using member functions below</span></span><br><span class="line">	out &lt;&lt; <span class="string">"Using member functions :"</span> &lt;&lt; endl;</span><br><span class="line">	out.setf( ios::showpos | ios::showpoint );</span><br><span class="line">	out &lt;&lt; <span class="string">"// setf : showpos | showpoint "</span> &lt;&lt; endl;</span><br><span class="line">	out.setf( ios::dec );</span><br><span class="line">	out &lt;&lt; <span class="string">"Dec : "</span> &lt;&lt; base &lt;&lt; endl;</span><br><span class="line">	out.unsetf( ios::dec );</span><br><span class="line">	out.setf( ios::oct );	</span><br><span class="line">	out &lt;&lt; <span class="string">"Oct : "</span> &lt;&lt; base &lt;&lt; endl;</span><br><span class="line">	out.unsetf( ios::oct );</span><br><span class="line">	out.setf( ios::hex );</span><br><span class="line">	out &lt;&lt; <span class="string">"Hex : "</span> &lt;&lt; base &lt;&lt; <span class="string">"  // out.setf : uppercase"</span> &lt;&lt; endl;</span><br><span class="line">	out.unsetf( ios::hex );</span><br><span class="line">	out.fill(<span class="string">'x'</span>);</span><br><span class="line">	out.width(<span class="number">10</span>);</span><br><span class="line">	out &lt;&lt; base &lt;&lt; <span class="string">"  // out.width : 10, fill character = 'x'"</span> &lt;&lt; endl;</span><br><span class="line">	out.width(<span class="number">20</span>);</span><br><span class="line">	out.setf( ios::left | ios::fixed );</span><br><span class="line">	out &lt;&lt; basef &lt;&lt; <span class="string">"  // out.width : 20, setf : left | fixed"</span> &lt;&lt; endl;</span><br><span class="line">	out.precision(<span class="number">10</span>);</span><br><span class="line">	out &lt;&lt; basef &lt;&lt; <span class="string">"  // precision : 10 "</span> &lt;&lt; endl;</span><br><span class="line">	out.unsetf( ios::left | ios::fixed | ios::showpos | ios::showpoint );</span><br><span class="line">	out.fill(<span class="string">' '</span>);</span><br><span class="line">	out.precision(<span class="number">6</span>);</span><br><span class="line">	out &lt;&lt; <span class="string">"// reset all iosflags "</span> &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Attention-9"><a href="#Attention-9" class="headerlink" title="Attention"></a>Attention</h2><ul>
+<li>第一部分向指定文件输出不同类型的数据</li>
+<li>第二部分使用控制符输出不同格式的数据，最后reset格式。</li>
+<li>第三部分使用成员函数输出不同格式的数据，最后reset格式。</li>
+<li>使用iomanip中的控制符：  <ul>
+<li>dec 置基数为10  </li>
+<li>hex 置基数为16</li>
+<li>oct 置基数为8</li>
+<li>setfill(c) 设填充字符为c</li>
+<li>setprecision(n)   设显示小数精度为n位</li>
+<li>setw(n) 设域宽为n个字符</li>
+<li>setioflags(ios::fixed)</li>
+<li>一些常用的格式标志<table><tbody><tr><th>格式标志</th><th>作用</th></tr><tr><td>ios::left</td><td>输出数据在本域宽范围内向左对齐</td></tr><tr><td>ios::right</td><td>输出数据在本域宽范围内向右对齐</td></tr><tr><td>ios::internal</td><td>数值的符号位在域宽内左对齐，数值右对齐，中间由填充字符填充</td></tr><tr><td>ios::dec</td><td>设置整数的基数为10</td></tr><tr><td>ios::oct</td><td>设置整数的基数为8</td></tr><tr><td>ios::hex</td><td>设置整数的基数为16</td></tr><tr><td>ios::showbase</td><td>强制输出整数的基数(八进制数以0打头，十六进制数以0x打头)</td></tr><tr><td>ios::showpoint</td><td>强制输出浮点数的小点和尾数0</td></tr><tr><td>ios::uppercase</td><td>在以科学记数法格式E和以十六进制输出字母时以大写表示</td></tr><tr><td>ios::showpos</td><td>对正数显示“+”号</td></tr><tr><td>ios::scientific</td><td>浮点数以科学记数法格式输出</td></tr><tr><td>ios::fixed</td><td>浮点数以定点格式(小数形式)输出</td></tr><tr><td>ios::unitbuf</td><td>每次输出之后刷新所有的流</td></tr><tr><td>ios::stdio</td><td>每次输出之后清除stdout,&nbsp;stderr</td></tr></tbody></table></li>
+</ul>
+</li>
+</ul>
+<hr>
+<p></p><h1 id="11">流式IO（三）</h1><p></p>
+<h2 id="Problem-10"><a href="#Problem-10" class="headerlink" title="Problem"></a>Problem</h2><blockquote>
+<p>编写C++程序完成以下功能：<br>（1） 输入一个文本文件名；<br>（2） 打开文件名，在该文件的每一行前面加上一个行号，保存在另外一个文本文件中。</p>
+</blockquote>
+<h2 id="Code-10"><a href="#Code-10" class="headerlink" title="Code"></a>Code</h2><ul>
+<li>io3.cpp<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">( <span class="keyword">int</span> argc, <span class="keyword">char</span> *args[] )</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	ifstream in;</span><br><span class="line">	ofstream out;</span><br><span class="line">	<span class="built_in">string</span> buf;</span><br><span class="line">	<span class="keyword">int</span> line = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">char</span> inputFilename[<span class="number">101</span>];</span><br><span class="line">	<span class="keyword">char</span> outputFilename[<span class="number">101</span>] = &#123; <span class="string">'\0'</span> &#125;;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Enter filename : "</span>;</span><br><span class="line">	getline( <span class="built_in">cin</span>, buf );</span><br><span class="line">	<span class="built_in">strcpy</span>( inputFilename, buf.c_str() );</span><br><span class="line">	<span class="built_in">strcpy</span>( outputFilename, inputFilename );</span><br><span class="line">	<span class="built_in">strcat</span>( outputFilename, <span class="string">"_"</span> );</span><br><span class="line"></span><br><span class="line">	in.open( inputFilename, ios::in );</span><br><span class="line">	<span class="keyword">if</span> ( !in )&#123;</span><br><span class="line">		<span class="built_in">cerr</span> &lt;&lt; <span class="string">"Unable to open "</span> &lt;&lt; inputFilename &lt;&lt; endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	out.open( outputFilename, ios::out );</span><br><span class="line">	<span class="keyword">if</span> ( !out )&#123;</span><br><span class="line">		<span class="built_in">cerr</span> &lt;&lt; <span class="string">"Unable to create "</span> &lt;&lt; outputFilename &lt;&lt; endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> ( getline( in, buf ) != <span class="number">0</span> )</span><br><span class="line">		out &lt;&lt; line++ &lt;&lt; <span class="string">" "</span> + buf &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	in.close();</span><br><span class="line">	out.close();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Attention-10"><a href="#Attention-10" class="headerlink" title="Attention"></a>Attention</h2><ul>
+<li>注意判断文件读写流是否正确。</li>
+<li>每次getline读入到buf中，输出时加入行号即可。</li>
+</ul>
+<hr>
+<p></p><h1 id="12">电话本</h1><p></p>
+<h2 id="Problem-11"><a href="#Problem-11" class="headerlink" title="Problem"></a>Problem</h2><blockquote>
+<p>编写C++程序完成以下功能：<br>（1） 实现简单电话本功能，用姓名来搜索电话号码；<br>（2） 用户输入姓名，程序查找并输出结果；<br>（3） 用户可以通过输入，添加姓名和电话号码；<br>（4） 用户可以删除姓名和电话号码；<br>（5） 电话本可以保存在指定文件中；<br>（6） 电话可被从指定文件中读入到内存。</p>
+</blockquote>
+<h2 id="Code-11"><a href="#Code-11" class="headerlink" title="Code"></a>Code</h2><ul>
+<li><p>record.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span> </span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Record&#123;</span><br><span class="line">	<span class="keyword">private</span>:	</span><br><span class="line">		<span class="built_in">string</span> * name;</span><br><span class="line">		<span class="built_in">string</span> * number;</span><br><span class="line">		Record * next;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Record();</span><br><span class="line">		Record( <span class="keyword">const</span> <span class="built_in">string</span> &amp;, <span class="keyword">const</span> <span class="built_in">string</span> &amp; );</span><br><span class="line">		~Record();</span><br><span class="line">		<span class="function"><span class="built_in">string</span> <span class="title">getName</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> * name; &#125;;</span><br><span class="line">		<span class="function"><span class="built_in">string</span> <span class="title">getNum</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> * number; &#125;;</span><br><span class="line">		<span class="function">Record * <span class="title">getNext</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> next; &#125;;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setName</span><span class="params">( <span class="keyword">const</span> <span class="built_in">string</span> &amp; )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setNum</span><span class="params">( <span class="keyword">const</span> <span class="built_in">string</span> &amp; )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setNext</span><span class="params">( Record * r )</span></span>&#123; next = r; &#125;;</span><br><span class="line">		<span class="keyword">friend</span> ostream &amp; <span class="keyword">operator</span>&lt;&lt;( ostream &amp;,<span class="keyword">const</span> Record &amp; );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Record::Record()&#123;</span><br><span class="line">	name = <span class="keyword">new</span> <span class="built_in">string</span>(<span class="string">"unnamed"</span>);</span><br><span class="line">	number = <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Record::Record( <span class="keyword">const</span> <span class="built_in">string</span> &amp; name, <span class="keyword">const</span> <span class="built_in">string</span> &amp; num )&#123;</span><br><span class="line">	<span class="keyword">this</span>-&gt;name = <span class="keyword">new</span> <span class="built_in">string</span>(name);</span><br><span class="line">	<span class="keyword">this</span>-&gt;number = <span class="keyword">new</span> <span class="built_in">string</span>( num );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Record::~Record()&#123;</span><br><span class="line">	<span class="keyword">delete</span> name;</span><br><span class="line">	<span class="keyword">delete</span> number;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Record::setName( <span class="keyword">const</span> <span class="built_in">string</span> &amp; name )&#123;</span><br><span class="line">	*(<span class="keyword">this</span>-&gt;name) = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Record::setNum( <span class="keyword">const</span> <span class="built_in">string</span> &amp; num )&#123;</span><br><span class="line">	*(<span class="keyword">this</span>-&gt;number) = num;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">ostream &amp; <span class="keyword">operator</span>&lt;&lt;( ostream &amp; os, <span class="keyword">const</span> Record &amp; record )&#123;</span><br><span class="line">	os &lt;&lt; <span class="string">"Name: "</span> &lt;&lt; *(record.name) &lt;&lt; <span class="string">"   Number: "</span> &lt;&lt; *(record.number) &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">return</span> os;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>book.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iomanip&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"record.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Book&#123;</span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		Record * src;</span><br><span class="line">		<span class="keyword">int</span> count;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		Book()&#123;</span><br><span class="line">			src = <span class="literal">NULL</span>;</span><br><span class="line">			count = <span class="number">0</span>;</span><br><span class="line">		&#125;;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> count; &#125;;</span><br><span class="line">		<span class="function">Record * <span class="title">getSrc</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> src; &#125;;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setSrc</span><span class="params">( Record * r )</span> </span>&#123; src = r; &#125;;</span><br><span class="line">		<span class="function">Record * <span class="title">getElementbyName</span><span class="params">( <span class="keyword">const</span> <span class="built_in">string</span> &amp; )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">insertElement</span><span class="params">( Record * )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">bool</span> <span class="title">deleteElementbyName</span><span class="params">( <span class="keyword">const</span> <span class="built_in">string</span> &amp; )</span></span>; </span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setNumbyName</span><span class="params">( <span class="keyword">const</span> <span class="built_in">string</span> &amp;, <span class="keyword">const</span> <span class="built_in">string</span> &amp; )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">bool</span> <span class="title">read</span><span class="params">( <span class="keyword">const</span> <span class="built_in">string</span> &amp; )</span></span>;		</span><br><span class="line">		<span class="function"><span class="keyword">bool</span> <span class="title">save</span><span class="params">( <span class="keyword">const</span> <span class="built_in">string</span> &amp; )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">( ostream &amp; out )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">printfile</span><span class="params">( ostream &amp; out )</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">printElementbyName</span><span class="params">( <span class="keyword">const</span> <span class="built_in">string</span> &amp; )</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Record * Book::getElementbyName( <span class="keyword">const</span> <span class="built_in">string</span> &amp; name )&#123;</span><br><span class="line">	Record * temp = src;</span><br><span class="line">	<span class="keyword">while</span> ( temp != <span class="literal">NULL</span> )&#123;</span><br><span class="line">		<span class="keyword">if</span> ( !temp-&gt;getName().compare(name) )</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		temp = temp-&gt;getNext();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> temp;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Book::printElementbyName( <span class="keyword">const</span> <span class="built_in">string</span> &amp; name )&#123;</span><br><span class="line">	Record * temp = src;</span><br><span class="line">	<span class="keyword">bool</span> flag = <span class="literal">true</span>;</span><br><span class="line">	<span class="keyword">while</span> ( temp != <span class="literal">NULL</span> )&#123;</span><br><span class="line">		<span class="keyword">if</span> ( !temp-&gt;getName().compare(name) )&#123;</span><br><span class="line">			<span class="built_in">cout</span> &lt;&lt; *temp ;</span><br><span class="line">			flag = <span class="literal">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		temp = temp-&gt;getNext();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> ( flag )</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Not Found."</span> &lt;&lt; endl;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Book::insertElement( Record * r )&#123;</span><br><span class="line">	r-&gt;setNext( src );</span><br><span class="line">	src = r;</span><br><span class="line">	count++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> Book::deleteElementbyName( <span class="keyword">const</span> <span class="built_in">string</span> &amp; name )&#123;</span><br><span class="line">	Record * temp = src, * pre = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="keyword">while</span> ( temp != <span class="literal">NULL</span> )&#123;</span><br><span class="line">		<span class="keyword">if</span> ( !temp-&gt;getName().compare(name) )</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		pre = temp;</span><br><span class="line">		temp = temp-&gt;getNext();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> ( temp != <span class="literal">NULL</span> )&#123;</span><br><span class="line">		<span class="keyword">if</span> ( temp == src )</span><br><span class="line">			src = src-&gt;getNext();</span><br><span class="line">		<span class="keyword">else</span> </span><br><span class="line">			pre-&gt;setNext( temp-&gt;getNext() );</span><br><span class="line">		<span class="keyword">delete</span> temp;</span><br><span class="line">		count--;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> </span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Book::setNumbyName( <span class="keyword">const</span> <span class="built_in">string</span> &amp; name, <span class="keyword">const</span> <span class="built_in">string</span> &amp; num )&#123;</span><br><span class="line">	Record * temp = getElementbyName( name );</span><br><span class="line">	temp-&gt;setNum( num );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> Book::read( <span class="keyword">const</span> <span class="built_in">string</span> &amp; pos )&#123;</span><br><span class="line">	ifstream in;</span><br><span class="line">	in.open( pos.c_str(), ios::in );</span><br><span class="line">	<span class="keyword">if</span> ( !in )&#123;</span><br><span class="line">		<span class="built_in">cerr</span> &lt;&lt; <span class="string">"Unable to read "</span> &lt;&lt; pos &lt;&lt; endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Reading..."</span>&lt;&lt;endl;</span><br><span class="line">	<span class="built_in">string</span> namet, numbert;</span><br><span class="line">	<span class="keyword">while</span> ( getline( in, namet ) &amp;&amp; !in.eof() )&#123;</span><br><span class="line">		getline( in, numbert );</span><br><span class="line">		insertElement( <span class="keyword">new</span> Record( namet, numbert ) );</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Readed successfully."</span> &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> Book::save( <span class="keyword">const</span> <span class="built_in">string</span> &amp; pos )&#123;</span><br><span class="line">	ofstream out;</span><br><span class="line">	out.open( pos.c_str(), ios::out );</span><br><span class="line">	<span class="keyword">if</span> ( !out )&#123;</span><br><span class="line">		<span class="built_in">cerr</span> &lt;&lt; <span class="string">"Unable to create "</span> &lt;&lt; pos &lt;&lt; <span class="string">"."</span> &lt;&lt; endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125; </span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Saving..."</span> &lt;&lt; endl;</span><br><span class="line">	printfile( out );</span><br><span class="line">	out.close();</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Saved successfully."</span> &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Book::print( ostream &amp; out )&#123;</span><br><span class="line">	Record * temp = src;</span><br><span class="line">	<span class="keyword">while</span> ( temp != <span class="literal">NULL</span> )&#123;</span><br><span class="line">		out &lt;&lt; setw(<span class="number">15</span>) &lt;&lt; setiosflags( ios::left) &lt;&lt; temp-&gt;getName();</span><br><span class="line">		out &lt;&lt; setw(<span class="number">0</span>) &lt;&lt; temp-&gt;getNum() &lt;&lt; endl;</span><br><span class="line">		temp = temp-&gt;getNext();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Book::printfile( ostream &amp; out )&#123;</span><br><span class="line">	Record * temp = src;</span><br><span class="line">	<span class="keyword">while</span> ( temp != <span class="literal">NULL</span> )&#123;</span><br><span class="line">		out &lt;&lt; temp-&gt;getName() &lt;&lt; endl;</span><br><span class="line">		out &lt;&lt; temp-&gt;getNum() &lt;&lt; endl;</span><br><span class="line">		temp = temp-&gt;getNext();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>run.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iomanip&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"book.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	Book b;</span><br><span class="line">	<span class="built_in">string</span> namet, numbert;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Press I to create a new record, W to look for an existed record by name, D to delete an existed record by name, R to read a file into this book, S to save this book to a local file and E to exit."</span> &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Input your command..."</span> &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">char</span> command;</span><br><span class="line">	Record * temp;</span><br><span class="line">	<span class="keyword">while</span> ( command = getchar() )&#123;</span><br><span class="line">		getchar();</span><br><span class="line">		temp = <span class="literal">NULL</span>;</span><br><span class="line">		<span class="keyword">switch</span> ( command )&#123;</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'E'</span>:</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'e'</span>: b.save( <span class="built_in">string</span>(<span class="string">"backup.txt"</span>) );</span><br><span class="line">				  <span class="built_in">cout</span> &lt;&lt; <span class="string">"Exit..."</span> &lt;&lt; endl;</span><br><span class="line">				  <span class="built_in">exit</span>(<span class="number">0</span>);	</span><br><span class="line">			          <span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'I'</span>:</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'i'</span>: <span class="built_in">cout</span> &lt;&lt; <span class="string">"Input name: "</span>;</span><br><span class="line">				  getline( <span class="built_in">cin</span>, namet );</span><br><span class="line">				  <span class="built_in">cout</span> &lt;&lt; <span class="string">"Input number: "</span>;</span><br><span class="line">				  getline( <span class="built_in">cin</span>, numbert );</span><br><span class="line">				  b.insertElement( <span class="keyword">new</span> Record( namet, numbert ) );</span><br><span class="line">			          <span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'W'</span>:</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'w'</span>: <span class="built_in">cout</span> &lt;&lt; <span class="string">"Input name to watch: "</span>;</span><br><span class="line">				  getline( <span class="built_in">cin</span>, namet );</span><br><span class="line">				  b.printElementbyName( namet );</span><br><span class="line">			          <span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'D'</span>:</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'d'</span>: <span class="built_in">cout</span> &lt;&lt; <span class="string">"Input name to delete: "</span>;</span><br><span class="line">				  getline( <span class="built_in">cin</span>, namet );</span><br><span class="line">				  <span class="keyword">if</span> ( b.deleteElementbyName( namet ) )</span><br><span class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">"Deleted successfully."</span> &lt;&lt; endl;</span><br><span class="line">				  <span class="keyword">else</span> </span><br><span class="line">					<span class="built_in">cout</span> &lt;&lt; <span class="string">"Not Found."</span> &lt;&lt; endl;</span><br><span class="line">			          <span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'R'</span>:</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'r'</span>: <span class="built_in">cout</span> &lt;&lt; <span class="string">"Input Filename to read: "</span>;</span><br><span class="line">				  getline( <span class="built_in">cin</span>, namet );</span><br><span class="line">			          b.read( namet );</span><br><span class="line">			          <span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'A'</span>:</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'a'</span>: <span class="built_in">cout</span> &lt;&lt; b.getCount() &lt;&lt; <span class="string">" records: "</span> &lt;&lt; endl;</span><br><span class="line">				  b.print( <span class="built_in">cout</span> );</span><br><span class="line">				  <span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'S'</span>:</span><br><span class="line">			<span class="keyword">case</span> <span class="string">'s'</span>: <span class="built_in">cout</span> &lt;&lt; <span class="string">"Input Filename to save: "</span>;</span><br><span class="line">				  getline( <span class="built_in">cin</span>, namet );</span><br><span class="line">				  b.save( namet );</span><br><span class="line">			          <span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">default</span>: <span class="built_in">cout</span> &lt;&lt; <span class="string">"Input Error. Try again. "</span> &lt;&lt; endl;</span><br><span class="line">				 <span class="keyword">while</span> ( (command = getchar()) != <span class="string">'\n'</span> &amp;&amp; command != EOF );  </span><br><span class="line">				 <span class="keyword">break</span>;	  </span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Input your command..."</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Attention-11"><a href="#Attention-11" class="headerlink" title="Attention"></a>Attention</h2><ul>
+<li>record类为每一条通讯录，通过链表动态分配内存。对其重载了输出流，并包含方法：getNext()用于获取下一条记录，setNext()用于设定链式结构，等。</li>
+<li>book类为电话簿，包含方法：<ul>
+<li>getCount()获取当前电话簿内通讯录数目；</li>
+<li>getSrc()获取电话簿内通讯录链表的头指针；</li>
+<li>setSrc( Record * r )设置头指针；</li>
+<li>getElementbyName( const string &amp; )用于根据用户输入的姓名获取通讯录；</li>
+<li>insertElement( Record * )用于插入；</li>
+<li>deleteElementbyName( const string &amp; )用于删除已有通讯录，成功返回true，否则返回false；</li>
+<li>setNumbyName( const string &amp;, const string &amp; )用于根据输入的姓名修改电话号码；</li>
+<li>read( const string &amp; )用于从指定文件读取，成功返回true，否则false；</li>
+<li>save( const string &amp; )用于输出到指定文件，成功返回true，否则false；</li>
+<li>print( ostream &amp; out )用于向指定输出流输出当前电话簿所有信息，每条信息之间用回车隔开；</li>
+<li>printfile( ostream &amp; out )用于向指定输出流输出电话簿所有信息，姓名和电话号码之间也用回车隔开；</li>
+<li>printElementbyName( const string &amp; )用于打印指定的通讯录。</li>
+</ul>
+</li>
+<li>主函数中使用switch判断输入，指令如下：<ul>
+<li>W/w 用于输入姓名查看对应的号码；</li>
+<li>I/i 用于插入一条电话簿；</li>
+<li>S/s 用于保存到指定文件；</li>
+<li>R/r 用于从指定文件读取信息；</li>
+<li>E/e 用于退出，推出前会自动保存到backup.txt中；</li>
+<li>A/a 用于输出当前所有电话簿信息到标准输出流中；</li>
+<li>D/d 用于删除指定用户信息。</li>
+</ul>
+</li>
+<li>部分细节有待实现，例如同名用户多条号码链式存储到同一个record对象中，以及GUI界面的实现。</li>
+<li>从文件中读取时注意getline和eof的顺序，否则可能将文件尾的一条数据多次读入。</li>
+<li>标准输入流中的控制指令输入错误时，清空输入流（不能使用fflush(stdin)），用一个while循环的getchar()解决。</li>
+</ul>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/09/15/小学期实践报告/">原始出处</a>(<a href="http://forec.github.io/2015/09/15/小学期实践报告/">http://forec.github.io/2015/09/15/小学期实践报告/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag">#C++</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/19/Graph-Algorithms3/" rel="prev">强连通分量</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/13/Graph-Algorithms2/" rel="next">图的遍历和拓扑排序</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/09/15/小学期实践报告/"
+                   data-title="小学期实践报告" data-url="http://forec.github.io/2015/09/15/小学期实践报告/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Never mind</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gitcafe.com/forec" target="_blank">gitcafe</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forect@hotmail.com" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u6458_u8981"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u9762_u5411_u5BF9_u8C61_u7A0B_u5E8F_u8BBE_u8BA1_u4E0E_u5B9E_u8DF5"><span class="nav-number">2.</span> <span class="nav-text">面向对象程序设计与实践</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u7D22_u5F15"><span class="nav-number">2.1.</span> <span class="nav-text">索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u8BBE_u5907_u73AF_u5883"><span class="nav-number">2.2.</span> <span class="nav-text">设备环境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1"><span class="nav-number">3.</span> <span class="nav-text">猜价格游戏</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem"><span class="nav-number">3.1.</span> <span class="nav-text">Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code"><span class="nav-number">3.2.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention"><span class="nav-number">3.3.</span> <span class="nav-text">Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2"><span class="nav-number">4.</span> <span class="nav-text">矩形</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-1"><span class="nav-number">4.1.</span> <span class="nav-text">Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-1"><span class="nav-number">4.2.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-1"><span class="nav-number">4.3.</span> <span class="nav-text">Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3"><span class="nav-number">5.</span> <span class="nav-text">友元</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-2"><span class="nav-number">5.1.</span> <span class="nav-text">Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-2"><span class="nav-number">5.2.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-2"><span class="nav-number">5.3.</span> <span class="nav-text">Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4"><span class="nav-number">6.</span> <span class="nav-text">矩阵1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-3"><span class="nav-number">6.1.</span> <span class="nav-text">Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-3"><span class="nav-number">6.2.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-3"><span class="nav-number">6.3.</span> <span class="nav-text">Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5"><span class="nav-number">7.</span> <span class="nav-text">矩阵2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-4"><span class="nav-number">7.1.</span> <span class="nav-text">Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-4"><span class="nav-number">7.2.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-4"><span class="nav-number">7.3.</span> <span class="nav-text">Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6"><span class="nav-number">8.</span> <span class="nav-text">矩阵2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-5"><span class="nav-number">8.1.</span> <span class="nav-text">Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-5"><span class="nav-number">8.2.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-5"><span class="nav-number">8.3.</span> <span class="nav-text">Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7"><span class="nav-number">9.</span> <span class="nav-text">形状1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-6"><span class="nav-number">9.1.</span> <span class="nav-text">Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-6"><span class="nav-number">9.2.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-6"><span class="nav-number">9.3.</span> <span class="nav-text">Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8"><span class="nav-number">10.</span> <span class="nav-text">形状3</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-7"><span class="nav-number">10.1.</span> <span class="nav-text">Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-7"><span class="nav-number">10.2.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-7"><span class="nav-number">10.3.</span> <span class="nav-text">Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9"><span class="nav-number">11.</span> <span class="nav-text">重载运算符</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-8"><span class="nav-number">11.1.</span> <span class="nav-text">Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-8"><span class="nav-number">11.2.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-8"><span class="nav-number">11.3.</span> <span class="nav-text">Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10"><span class="nav-number">12.</span> <span class="nav-text">流式IO（一）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-9"><span class="nav-number">12.1.</span> <span class="nav-text">Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-9"><span class="nav-number">12.2.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-9"><span class="nav-number">12.3.</span> <span class="nav-text">Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11"><span class="nav-number">13.</span> <span class="nav-text">流式IO（三）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-10"><span class="nav-number">13.1.</span> <span class="nav-text">Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-10"><span class="nav-number">13.2.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-10"><span class="nav-number">13.3.</span> <span class="nav-text">Attention</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12"><span class="nav-number">14.</span> <span class="nav-text">电话本</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-11"><span class="nav-number">14.1.</span> <span class="nav-text">Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-11"><span class="nav-number">14.2.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-11"><span class="nav-number">14.3.</span> <span class="nav-text">Attention</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,782 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Never mind" />
+
+
+
+  <meta name="keywords" content="计算机组成与体系结构," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="What Happened ?" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="摘录一些概念，作备忘。正在看的教材是Linda Null和Julia Lobur的《The Essentials of Computer Organization and Architecture》（机械工业出版社，2006年）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计组与体系结构笔记（一）">
+<meta property="og:url" content="http://forec.github.io/2015/10/12/Computer-Organization-Architecture1/index.html">
+<meta property="og:site_name" content="What Happened ?">
+<meta property="og:description" content="摘录一些概念，作备忘。正在看的教材是Linda Null和Julia Lobur的《The Essentials of Computer Organization and Architecture》（机械工业出版社，2006年）。">
+<meta property="og:updated_time" content="2015-11-30T10:37:34.100Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计组与体系结构笔记（一）">
+<meta name="twitter:description" content="摘录一些概念，作备忘。正在看的教材是Linda Null和Julia Lobur的《The Essentials of Computer Organization and Architecture》（机械工业出版社，2006年）。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 计组与体系结构笔记（一） | What Happened ? </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">What Happened ?</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              计组与体系结构笔记（一）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-12T20:01:59+08:00" content="2015-10-12">
+            2015-10-12
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/计算机理论基础/" itemprop="url" rel="index">
+                  <span itemprop="name">计算机理论基础</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/12/Computer-Organization-Architecture1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/12/Computer-Organization-Architecture1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>摘录一些概念，作备忘。正在看的教材是Linda Null和Julia Lobur的《The Essentials of Computer Organization and Architecture》（机械工业出版社，2006年）。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="u57FA_u7840_u6982_u5FF5_u548C_u53D1_u5C55_u5386_u53F2"><a href="#u57FA_u7840_u6982_u5FF5_u548C_u53D1_u5C55_u5386_u53F2" class="headerlink" title="基础概念和发展历史"></a>基础概念和发展历史</h1><ol>
+<li><strong>计算机组成</strong>（computer organization）：计算机组成强调的是有关控制信号（怎样控制计算机）、信号传递方式以及存储器类型等问题，涵盖了有关计算机系统的物理构成的各个方面。此部分可以回答“计算机怎样工作？”。</li>
+<li><strong>计算机体系结构</strong>（computer architecture）：集中讨论计算机系统的结构和行为，主要涉及程序员熟悉的系统实现的逻辑方面内容。其包括许多基本要素，如指令集和指令格式、操作码、数据类型、寄存器的数目和类型、寻址方式、主存储器的访问方式和各种I/O机制等。对于某个特定的计算机，计算机体系结构就是其各硬件部分的组合，再加上其<strong>指令集体系结构</strong>（ISA，instruction set architecture）。ISA是在机器上运行的所有软件和执行这些软件的硬件之间的协定接口，实现了人机对话。此部分可以回答“怎样设计一台计算机”。</li>
+<li><strong>硬件和软件等效原理</strong>：任何可以利用软件实现的工作可以利用硬件来实现，反之，任何可以通过硬件来实现的事件也同样可以利用软件来实现。此原理说明，可以用不同的选择来实现相同的计算机功能，如对于微波炉的控制系统，一个简单的嵌入式系统会比一个复杂的计算机程序性能好的多。</li>
+<li><strong>计算机三种基本组成部分</strong>：1）用来解释和执行程序的处理器，2）用来存储数据和程序的存储器，3）与外界进行数据传输的机制。</li>
+<li><strong>通用前缀</strong><table><tbody><tr><td>Kilo-(k)   ( 1 thousand = 10^3 ≈ 2^10 )</td><td>Milli-(m)   ( 1 thousandth = 10^-3 ≈ 2^-10 )</td></tr><tr><td>Mega-(M)   ( 1 million = 10^6 ≈ 2^20 )</td><td>Micro-(μ)   ( 1 millionth = 10^-6 ≈ 2^-20 )</td></tr><tr><td>Giga-(G)   ( 1 billion = 10^9 ≈ 2^30 )</td><td>Nano-(n)   ( 1 billionth = 10^-6 ≈ 2^-30 )</td></tr><tr><td>Tera-(T)   ( 1 trillion = 10^12 ≈ 2^40 )</td><td>Pico-(p)   ( 1 trillionth = 10^-12 ≈ 2^-40 )</td></tr><tr><td>Peta-(P)   ( 1 quadrillion = 10^15 ≈ 2^50 )</td><td>Femto-(f)   ( 1 quadrillionth = 10^-15 ≈ 2^-50 )</td></tr></tbody></table></li>
+<li><strong>系统时钟</strong>：系统时钟在每秒钟内发射的脉冲数目是时钟的频率，单位赫兹。每条计算机指令的执行需要若干个固定的时钟周期，大多数指令需要的时间都多于一个时钟周期。一个微处理器每秒钟实际执行的指令数目与微处理器的系统时钟的速度成正比。</li>
+<li><strong>几个协会</strong>：<ul>
+<li>电子与电气工程师协会（Institute of Electrical and Electrnoic Engineers，IEEE）是致力于电子工程和计算机工程专业进步的组织，积极推动全球范围内工程领域的合作，出版大量的技术文献。IEEE同时为各种计算机部件、信号传送协议和数据表示方法制定标准和各种技术命名。</li>
+<li>国际电信联合会（International Telecommunication Union，ITU），设立在日内瓦，前身为电话电报国际咨询委员会（CCITT）。其关注通信系统的协同性，包括电话、电报和数据通信系统。ITU建立了许多通信方面的标准，以ITU-T或CCITT为前缀开头。</li>
+<li>美国国家标准学会（American National Standards Institute，ANSI），英国标准协会（British Standards Institution，BSI），欧洲标准化委员会（Comite Europeen de Normal，CEN）。</li>
+<li>国际标准化组织（International Organization for Standardization，ISO），协调世界范围内各种标准化发展，包括协调ANSI和BSI在其他组织中的活动。ISO源于希腊词“isos”（相等的事物）。</li>
+</ul>
+</li>
+<li><strong>发展史</strong><ul>
+<li>0代：机械计算器。“计算之父”巴贝奇（Charles Babbage）1822年制造了差分机，之后设计了分析机，其中分析机包含现代计算机的部分部件：一个算术逻辑部件，一个存储器，以及I/O设备。设计中包括了条件转移操作，即下一条指令由前一个操作的结果来决定。分析机输入使用穿孔卡片（应用时间最长的计算机输入方法），霍尔瑞斯（创建了IBM前身），设计过80行穿孔卡片，作为数据自动数据处理的主要产品流行了50多年。</li>
+<li>1代：真空管计算机。1）20世纪30年代，德国人Konrad Zusse在Babbage的设计中加入电学技术和其他改进，制造出一台电动计算器Z1。Z1是可编程的，并且配有一个存储器，一个算术部件和控制部件。2）John Atanasoff建造了第一台完整的电子计算机系统，Atanasoff Berry计算机（ABC）是使用真空管建造的二进制机器。3）John Mauchly和J. Presper Eckert于1946年公布ENIAC，被公认为世界上第一台全电子通用数字计算机，最初设计为军方计算弹道表。</li>
+<li>2代：晶体管计算机。1948年贝尔实验室的John Bardeen、Walter Brattain和William Shockley发明晶体管，与真空管相比，晶体管体积更小，功耗更低，工作温度更低使得工作性能更加可靠，推动了计算机发展进入新时代（1954-1965）。期间，IBM、数字仪器公司（DEC）和Univac（现在称作Unisys）主导当时的计算机产业，控制数据公司（CDC）建造了世界上第一台超级计算机CDC6600。</li>
+<li>3代：集成电路计算机。Jack Kilby发明了集成电路（IC），集成电路集成了几百到几百万个微型晶体管，推动计算机进入快速发展时期。IC时代还引入了分时共享、多道程序处理的概念（多人同时使用一台计算机的能力）。</li>
+<li>4代：超大规模集成电路计算机。集成电路技术发展分为：小规模集成电路（SSI，每块芯片上有10-100个元件），中规模集成电路（MSI，100-1000），大规模集成电路（LSI，1000-10000）和超大规模集成电路（VLSI，超过10000）。超大规模集成电路标志着第四代计算机开始。1997年为纪念ENIAC诞生50周年，宾夕法尼亚大学的学生将ENIAC组装到一个单芯片中。1971年，Intel公司创造出世界上第一个微处理器4004（4位，工作频率108KHz），并且引进了随机存储器（RAM）芯片，单芯片上可以存储4K位的存储器。VLSI技术催生了微型计算机，最早的微型计算机是微型仪器和遥感技术公司（MITS）在1975年推出的Alstair 8800,随后涌现了Apple I，Apple II，Commodore公司的PET和Vic 20等。到1981年，IBM公司推出了个人计算机。IBM的PC机构思设计采用“开放式”体系结构，即尽可能多的使用“非定制的”通用部件，因此PC机的体系结构很少有专利产品的成分，但这种公开性让IBM公司为计算机工业制定了行业标准。</li>
+<li>5代： ？。并行处理、网络应用和单用户工作站的广泛普及，神经网络，DNA，光学计算机/量子计算机。</li>
+</ul>
+</li>
+<li><strong>摩尔定律</strong>：硅芯片的密度每18个月翻一番（—— Intel公司奠基人Gordon Moore）。摩尔定律的推论<strong>Rock定律</strong>：制造半导体集成电路所需要的主要设备的成本每4年就要翻一番。二者不可能同时成立。按照目前的技术，摩尔定律不可能永远保持，除非计算机制造采取全新的技术，如量子计算机。</li>
+<li><strong>计算机的分层组织结构</strong>：假设计算机按照不同的层次结构建造，每个层次具有某项特定功能，并具有一个特定的假想机器与之对应。对应计算机的每一个层次的这种假想的这种计算机称为<strong>虚拟机</strong>。每一层的虚拟机都执行自己特有的指令集，必要时还可以调用较低层次的虚拟机来完成各种工作任务。<table><tbody><tr><td>第六层</td><td>用户</td><td>执行的程序</td></tr><tr><td>第五层</td><td>高级语言</td><td>C++、Java、Python等</td></tr><tr><td>第四层</td><td>汇编语言</td><td>汇编语言代码</td></tr><tr><td>第三层</td><td>系统软件</td><td>操作系统、库代码</td></tr><tr><td>第二层</td><td>机器</td><td>指令集体系结构ISA</td></tr><tr><td>第一层</td><td>控制系统</td><td>微代码或硬导线连接</td></tr><tr><td>第零层</td><td>数字逻辑电路</td><td>电子线路、逻辑门等</td></tr></tbody></table>在控制系统层，控制单元将确保正确的译码并执行指令，并适时将数据传送到正确位置。控制单元的设计有两种方式，一种是导线直接连接（硬连线），控制信号由数字逻辑部件的电路模块发送，一旦设计完成就很难修改。另一种方式是使用一个微程序执行指令，微程序是一个利用某种低级语言编写的程序，可以由硬件直接执行。在机器层生成的机器指令会被输入到这个微程序中，由微程序解释并激活硬件执行原始指令。一条机器层的指令通常被翻译成几个微代码指令，由于增加了额外的翻译过程，因此这种方法的执行速度会比较慢。</li>
+<li><strong>冯·诺伊曼模型</strong>：早期电子计算机的编程通过各种导线接插连线。在ENIAC完成前，John W. Mauchly和J. Presper Eckert构思设计了一种可以改变计算机运行状态的简易方法，依赖于一种利用汞延迟线形式的存储设备，可以提供一种存储程序指令的方法，从而在每次求解新问题或者对原来的问题进行调试时不必对系统进行重新连线。由于置身于二战研究ENIAC计划中，二人被禁止发表这个构想，暂时将这个想法写成文字计划。匈牙利数学家冯·诺伊曼（计算机之父）在阅读了计划书后，将这种存储器思想发表公开，并为世人公认。现在，所有的存储程序的计算机都被称为使用冯·诺伊曼体系结构（Von Neumman architecture）的冯·诺伊曼系统。<ul>
+<li>冯·诺伊曼系统满足如下基本特征：1）由三大硬件系统组成：一个中央处理器（central processing unit，CPU），其中包含一个控制单元，一个算数逻辑单元（arithmetic logic unit，ALU），若干个寄存器（register，一些小的存储单元）和一个程序计数器；一个主存储器系统（main-memory system），用来保存控制计算机操作的各种程序；一个I/O系统。2）具有执行顺序指令的处理能力。3）在主存储器系统和CPU的控制单元之间，包含一条物理上的或者是逻辑上的单一通道，可以强制改变指令和执行的周期，这种单一通道称作<strong>冯·诺伊曼瓶颈</strong>（Von Neumman bottleneck）。</li>
+<li>冯·诺伊曼系统中的I/O通过算数逻辑单元连接（实际通过累加器连接，累加器是ALU的一部分）。这种体系结构按着一种称为冯·诺伊曼执行周期（Von Neumman execution cycle）的方式运行，这种计算机工作原理又称为<strong>取指-译码-执行周期</strong>（fetch-decode-execute cycle），该周期的一个循环过程如下：1）控制单元从计算机的存储器中提取下一条程序指令，并利用程序计数器来决定这条指令所在的位置；2）对提取的指令进行译码，变成ALU能够理解的一种语言；3）从存储器中取出执行指令所需要的各种操作数的数据，并把它们放入CPU的寄存器中；4）ALU执行指令，并将执行的结果存放到寄存器或者存储器中。</li>
+<li>冯·诺伊曼体系结构的思想已经得到了很大发展：<strong>系统总线模型</strong>。计算机系统中的数据总线将数据从主存储器中传递到CPU的寄存器中，反之亦然；地址总线负责保持数据总线正在访问的数据地址；控制总线传送各种必要的控制信号，以指定信息传输发生的方式。其它方面的一些改进包括：采用变址寄存器进行编址，增加了浮点数据，使用中断和异步的I/O结构，增加了虚拟存储器，通用寄存器等。</li>
+</ul>
+</li>
+<li><strong>非冯·诺伊曼模型</strong>：神经网络（利用人脑模型的思想作为计算范式），基因算法（利用生物学和DNA演化的思想开发），量子计算和并行计算机。并行计算的概念目前最为流行。根据<strong>Amdahl定律</strong>，对于某种特定的系统改进，系统性能增强的可能性受到那些被改进的特征部位的使用次数的限制。其含义在于，每种算法都有顺序执行的部分，顺序执行的部分最终会限制利用多处理器执行时所能获得的加速，因此要尽量减少使用系统中最慢的部分。</li>
+</ol>
+<hr>
+<h1 id="u6570_u636E_u8868_u793A_u65B9_u6CD5"><a href="#u6570_u636E_u8868_u793A_u65B9_u6CD5" class="headerlink" title="数据表示方法"></a>数据表示方法</h1><ol>
+<li>最基本的信息单元称为<strong>一位</strong>（bit），是二进制数（binary digit）的英文缩写。8个位为一组作为计算机存储器编址的基本单元<strong>字节</strong>（byte），计算机的<strong>字</strong>由两个或多个相邻字节构成，有时用来对存储器编址，将字作为一个集合处理。字的大小（word size）表示了一个特定计算机体系结构能够处理的最有效的数据大小。8位字节可以对半分为两个4位，称为<strong>半字节</strong>，包含最小值二进制数字的半字节称为低半字节，另外半个字节为高半字节。</li>
+<li><strong>位置编码系统</strong>（positional numbering systems）：任意数字的值都可以通过表示成某个基数（或称为底，radix）的乘幂形式。也称为<strong>权重编码系统</strong>（weighted numbering system），数的每一个位置都是基数的幂次方。</li>
+<li>无符号整数的进制转换两种方法：重复减法，除法-余数。一个N位的二进制数可以表示从0～2^N-1范围内的无符号十进制整数。当对无符号的二进制数进行算数预算，结果超出给定位数的二进制数所能表示的数值范围，称作<strong>溢出</strong>。<br>分数进制转换：用基数的负指数幂近似表示分数。两种方法：重复减法，以及乘法-整数。在某个进制中小数点右边包含循环重复的数字船的分数，在另一种进制的表示中不一定具有重复的数字序列。如2/3在十进制中是无限循环小数，而在三进制中则表示为0.2(3)，不再有数字循环。<br>进制相互转换：除一2的指数幂组成的基数之间的数字转换（直接按位分组展开或合并，不足的部分整数左补0，小数右补0）外，其他情况通常先把数字转换为以10为基的数，再将其转换为所要求的基数。<br><strong>倍乘转换法</strong>：假如原始进制为r，要转换为十进制。r进制的各位中，每个后面的位的r的次幂为前面一位的r的次幂的r倍。从最高位开始，将第一位乘r加到第二位上，得到的和再乘以r加上第三位，依此类推直到最右边的位。</li>
+<li>带符号整数（正整数和负整数的集合）的表示方法：<ul>
+<li><strong>符号幅值表示法</strong>：最高位为符号位，其余位用来表示数值的幅值。N位能够表示的范围为-2^(N-1)+1~2^(N-1)-1，八位字可表示整数范围-127～127。其算术规则为：1）如果符号相同，大小相加，结果取相同的符号；2）如果符号相反，先比较幅值的大小，符号位由幅值较大的操作数决定，幅值为大幅值减去小幅值；3）从右往左算术运算，加法可能进位，减法可能借位，如果最高位有进位则说明发生了溢出。通过这种方法表示0会有两种可能：10000000或00000000，造成逻辑和电路上的复杂性。</li>
+<li><strong>反码</strong>：在r进制中，如果规定有d位数字，则数字N的反码定义为（r^d - 1）- N。对于十进制数，r=10，则2468的反码就是10^4 - 1 - 2468 = 7531。对于二进制来说，只需要将所有位翻转。其算术运算规则遵循高低两端进位循环（end carry-around）：如果最高位有进位（0或1），就把进位加到最低位上。</li>
+<li><strong>补码</strong>：2的补码（two’s complement）是补码体系的特例。假设在基数为r，位数为d的计数体系中，如果N ≠ 0，N的补码定义为r^d - N，如果N = 0，则N的补码就是0。补码比反码更直观，补码 = 反码 + 1。求一个二进制数的补码（取补）只需要将每位翻转再加1。这种处理简化了加减法运算，免除了高低两端进位循环问题。在补码表示法中，两个同符号数相加可能产生溢出，而符号相反的数相加不会产生溢出，判断溢出的简单法则是：<strong>如果进入符号位和移出符号位的进位相等，则没有溢出发生，如果不同则发生溢出</strong>。N位二进制数采用补码表示法所表示的数值范围具有非对称性，可表示-2^(N-1)～2^(N-1)-1，如4位二进制补码表示法可以表示十进制-8～7之间的数。</li>
+</ul>
+</li>
+<li><strong>乘除运算</strong>：乘法运算与竖式类似，设置一个指针指向乘数的最低位，从右向左读，指针每向左移动一位，被乘数也整体左移一位。结果初始化时为0，根据指针指向的乘数当前位是否为1决定是否加上被乘数。除法运算（整数除法和浮点除法有显著区别）可能引起计算机系统崩溃，如尝试除以0，或者两个操作数大小相差悬殊。当除数远小于被除数时，会产生“除法下溢”，即被等效视为被0除。</li>
+<li><strong>浮点表示法</strong>：采用浮点仿真（floating-point emulation），浮点数由三部分组成，符号位、指数部分、小数部分（有效数，significand）。对于14位模型，最高位为符号位，之后5位为指数位，最后8位为有效数。例如表示10进制17，17 = 0.17 × 10^2 = 0.10001(2) × 2^5。因此14位模型为0 00101 10001000。如果要表示分数，需要使用负指数，通常采用<strong>偏移</strong>指数来表示。如对于14位模型，指数部分有5步，因此可以表示0～31，取偏移指数为16，指数部分减去16的结果是实际的指数值。一种惯例是<strong>规格化</strong>（normalization）：将有效数的最左边的位总是设置为1，好处在于最左边的1对于有效数给出了一位额外的精度。</li>
+<li><strong>浮点算法</strong>：对于加减法，先将参与运算的两个数表示成具有同一基数的相同指数形式，然后通过移位将两个数对齐，得到的结果重新进行规格化处理，保留较大的指数。乘法和除法采用与十进制相同的法则。通过浮点仿真模型存储的数据可能会出现浮点误差，并且无论这个系统设计的多么大，用有限的系统表示实数集必然会引入不同程度的<strong>浮点误差</strong>。IEEE制订了关于浮点数的表示标准IEEE-754，单精度标准采用8位指数和23位有效数，偏移量127，当指数为255时表示正负无穷大或NaN（一个非实数的值，通常用作错误标识）；双精度标准采用11位指数和52位有效数字，偏移量1023，指数为2047时表示NaN。无论单双精度都有两种表示0的方法，当指数部分和有效数都为0时，无论符号位都是0。</li>
+</ol>
+<hr>
+<h1 id="u6570_u636E_u7F16_u7801_u65B9_u6CD5"><a href="#u6570_u636E_u7F16_u7801_u65B9_u6CD5" class="headerlink" title="数据编码方法"></a>数据编码方法</h1><ol>
+<li>字符编码<ul>
+<li><strong>二进制编码的十进制数</strong>（binary-coded decimal，BCD）：最初在IBM主流机型和中间过渡机型上使用，将每个十进制数字编码成一个4位的二进制数形式。如果按照8位字节的形式存储，则高4位称为区位（zone），低四位称为数字（digit）。主流BCD包含属于位置编码系统的8421码，5421码，2421码，以及非位置编码系统的余3码，格雷码。8位存储时的区位分别为1111（无符号数），1100（正数），1101（负数）。因为BCD编码数的数字只占半字节，因此多个相连的数字放入相邻的半字节时只需要留下一个5位的半字节作为符号，这个过程称为压缩。</li>
+<li><strong>EBCDIC</strong>：在开发IBM System/360前，IBM一直使用6位BCD编码表示字符和数字。为保证兼容性，后来采取了<strong>扩展的二-十进制编码的交换代码</strong>，将6位拓展到8位。</li>
+<li><strong>ASCII</strong>：美国信息交换标准代码（American Standard Code for Information Interchange）是从电传打字设备的编码方案中直接衍生出来的，20世纪60年代，ISO设计了一种7位的编码方案，称为第5国际字母。1967年成为官方标准。</li>
+<li><strong>统一字符编码标准</strong>：1991年，统一字符编码协会建立了新的国际信息交换代码Unicode，为16位编码字母表，可以向下兼容ASCII码和拉丁-1字符集，并与ISO/IEC 10646-1国际字母表相一致，能够对全世界所使用的每一种语言的大多数字符进行编码。统一字符编码目前是美式计算机系统唯一使用的字符编码。</li>
+</ul>
+</li>
+<li>用于数据记录和传递的编码方式（在把宿舍写入到某种类型的记录介质如磁带或磁盘，或者将数据进行长距离传送时，二进制信号可能会变得模糊不清，尤其是一长串的0或1）：<ul>
+<li><strong>不归零编码</strong>（non-return-to-zero，NRZ）：用高电压表示1，低电压表示0。对于长串的0或1，如果接收器同步较慢或者定时系统发生错位，很容易丢失编码。</li>
+<li><strong>反转不归零编码</strong>（non-return-to-zero-invert，NRZI）：采用信号的转变，或者从高到低，或者从低到高的变化表示二进制的1，没有变化则表示0。虽然消除了二进制数1的丢失问题，但仍面临长串0的问题。</li>
+<li><strong>相位调制编码</strong>（phase modulation，PM），对编码的每一位都提供一个信号转变，二进制1由上升转变的信号给出，0则伴随一个下降转变的信号（如果需要，还会在每个位单元的边界提供一个额外的信号转变）。相位调制编码通常用于数据传送，如局域网，但不足以运用于数据存储，因为PM需要两倍于NRZ编码的位数。</li>
+<li><strong>频率调制编码</strong>（frequency modulation，FM），类似于相位调制编码，在每个位单元中至少提供一个信号跃变，这些同步的跃变发生在每个位单元的开始处，除此之外如果对二进制1编码，还要在位单元的中间提供一个额外的信号跃变。相对于数据存储而言，FM只是比PM好一点。FM可以延伸出一种<strong>改进的频率调制</strong>（MFM），这种方法只对具有连续的0的编码才在位单元的边界提供信号跃变。因为MFM编码需要的信号跃变数比PM少，比NRZ多；错误控制和经济角度又较为高效，因此多年来MFM编码是硬盘存储中使用的唯一编码方式。</li>
+<li><strong>运行长度限制编码</strong>（Run-Length-Limited，RLL）是一种对由字符编码组成的字进行分块的编码方式。比如把ASCII码或EBCDIC码翻译成一族特殊设计的编码字，限制连续0出现的数目，如RLL（d，k）编码允许在任何一对相邻的1之间出现最少d个，最多k个0。显然RLL编码字必须包含比原来的字符编码更多的位数，但RLL在磁盘上采用NRZI方式编码，因此RLL编码的数据在磁介质上占更少的空间，因为<strong>这种编码涉及到的磁通量的转变少的多</strong>。RLL（2,7）是磁盘系统中使用的主流编码方式，它是一个8位的ASCII或EBCDIC字符的16位映射，但比MFM编码高出50%的存储效率。理论上，RL是一种Huffman编码的数据压缩形式，核心思想是<strong>使用最短的编码字的位组合方式来对尽可能多的信息位的组合方式进行编码</strong>。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h1 id="u9519_u8BEF_u68C0_u6D4B_u4E0E_u6821_u6B63"><a href="#u9519_u8BEF_u68C0_u6D4B_u4E0E_u6821_u6B63" class="headerlink" title="错误检测与校正"></a>错误检测与校正</h1><ol>
+<li><strong>循环冗余码校验</strong>（cyclic redundancy check，CRC）可以决定在一大块或者一长串信息字中是否出现一个错误，要检测的数据字块的规模越大，要求的校验和就越大，并且需要对求校验和的方法提供某种适当的保护，求校验和的方法以及CRC方法都是一种<strong>系统性的误差检测</strong>（systematic error detection）方案，即将错误校验位夹在原始信息数据位的后面。组成错误校验位的位组合称为<strong>校正子</strong>。CRC采用模2算术，假设信息字节为I = 1001011（可以是任意大小的字节），发送器和接收器都对某个任意的二进制位组合模式达成协议，如P=1011（如该位组合模式的开始和结束位都是1则效果最好），记P的位数为n = 4，将I左移n-1位，并用新的I作为被除数，P作为除数进行模2除法，得到余数r，将余数r加到移位后的I上，组成要发送的信息M。在本例中，r = 100，I + r = M = 1001011100。接受端将M使用模2除法除以P，如果无法严格整除则传送过程中有错误发生。常用的P可以为CRC-CCITT（ITU-T）：0001 0001 0000 0010 0001；CRC-12：0001 0000 0000 1111；CRC-16（ANSI）：0001 1000 0000 0000 0101；CRC-32：1 0000 0100 1100 0001 0001 1101 1011 0011。前三种是对字节操作，CRC-32是对4字节操作，适用于32位字系统。</li>
+<li><strong>海明编码</strong>（Hamming code）具有校正错误的能力，采用奇偶校验。普通的奇偶校验只能检错（且无法检测双位出错）无法纠错。通常使用在随机错误最可能发生的情形（假定每一位出错的几率都是固定的，与其他位的出错没有关联）。海明编码的奇偶校验位（冗余位）根据信息字本身的位数决定。最后形成的编码字由m位信息字本身和r位校验位组成，满足m + r + 1 &lt;= 2^r。两个编码字之间不同的位的位置数目称为两个编码字的<strong>海明距离</strong>，对于一种编码方法中任意一对编码的<strong>最小海明距离</strong>（minimum Hamming distance），用D（min）表示。海明编码可以检测出D（min）-1个单位错误，能够纠正[（D（min）-1）/2]个错误。因此如果要纠正k个错误，最小海明距离必须大于2k+1。<ul>
+<li>创建海明编码的方法：首先根据公式确定编码所需的校验位数目r，算出编码字的位长度n = m + r，从右向左从1开始编号。位数是2的指数幂的位设置为奇偶校验位，其他位为数据位。对于各个编码位置，第b位编码由满足b = b1 + b2 + … + bj的奇偶校验位b1，b2，…，bj检测。<br>例如：对ASCII字符K编码，K为01001011，m=8，r=4。从1开始从右向左编号，第1，2，4，8位为奇偶校验位，1 = 1，2 = 2，3 = 2 + 1，4 = 4，5 = 4 + 1，6 = 4 + 2，……，10 = 8 + 2，11 = 8 + 2 + 1，12 = 8 + 4。因为第1、3、5、7、9、11位的求和表达式中含有1，所以第一位（最低位）的奇偶校验位将检测这几个位置的奇偶特性，同理，第2位对2、3、6、7、10、11位作用，第4位对4、5、6、7、12位作用，第8位对8、9、10、11、12作用。分别对各自对应的位数奇偶校验，产生编码字010011010110。假如在传递编码字的过程中发生了一个错误，如发生在第9位，则接收到的为010111010110。接受端可以发现第1位、第8位的奇偶校验位出错，而第2位、第4位没有出错。因此可以推测出出错的码位是1 + 8 = 9位。取反即可。海明编码在出错率非常低的正常情况非常有效，但如果发生成块的错误（相邻数据位），则无效。</li>
+</ul>
+</li>
+<li><strong>里德-所罗门编码</strong>（Reed-Soloman，RS）针对区块错误（突发错误），如因为操作不当和外界环境影响导致存储设备发生相邻数据位损坏。RS编码属于CRC类型的编码，是一种系统编码方式，在信息字节块上加入奇偶校验位。RS（n，k）编码中的参数定义为：s = 一个字符所占位的数目，k = 构成数据块的s位字符的数目，n = 编码字的位的数目。RS（n，k）可以在k个信息字节组成的编码字中校正（n-k）/2个错误。流行的RS（255,233）编码方式是采用223个8位信息字节加上32个错误校正字节构成255字节的编码字。</li>
+</ol>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/10/12/Computer-Organization-Architecture1/">原始出处</a>(<a href="http://forec.github.io/2015/10/12/Computer-Organization-Architecture1/">http://forec.github.io/2015/10/12/Computer-Organization-Architecture1/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机组成与体系结构/" rel="tag">#计算机组成与体系结构</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/14/Computer-Organization-Architecture2/" rel="prev">计组与体系结构笔记（二）</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/08/Algorithms-Must1/" rel="next">LCA和RSA</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/12/Computer-Organization-Architecture1/"
+                   data-title="计组与体系结构笔记（一）" data-url="http://forec.github.io/2015/10/12/Computer-Organization-Architecture1/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Never mind</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gitcafe.com/forec" target="_blank">gitcafe</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forect@hotmail.com" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u57FA_u7840_u6982_u5FF5_u548C_u53D1_u5C55_u5386_u53F2"><span class="nav-number">1.</span> <span class="nav-text">基础概念和发展历史</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u6570_u636E_u8868_u793A_u65B9_u6CD5"><span class="nav-number">2.</span> <span class="nav-text">数据表示方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u6570_u636E_u7F16_u7801_u65B9_u6CD5"><span class="nav-number">3.</span> <span class="nav-text">数据编码方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u9519_u8BEF_u68C0_u6D4B_u4E0E_u6821_u6B63"><span class="nav-number">4.</span> <span class="nav-text">错误检测与校正</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

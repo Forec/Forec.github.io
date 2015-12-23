@@ -1,0 +1,797 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Never mind" />
+
+
+
+  <meta name="keywords" content="计算机组成与体系结构," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="What Happened ?" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="指令系统体系结构概览（C05）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计组与体系结构笔记（四）">
+<meta property="og:url" content="http://forec.github.io/2015/10/27/Computer-Organization-Architecture4/index.html">
+<meta property="og:site_name" content="What Happened ?">
+<meta property="og:description" content="指令系统体系结构概览（C05）。">
+<meta property="og:updated_time" content="2015-11-01T10:02:33.500Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计组与体系结构笔记（四）">
+<meta name="twitter:description" content="指令系统体系结构概览（C05）。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 计组与体系结构笔记（四） | What Happened ? </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">What Happened ?</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              计组与体系结构笔记（四）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-27T11:08:53+08:00" content="2015-10-27">
+            2015-10-27
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/计算机理论基础/" itemprop="url" rel="index">
+                  <span itemprop="name">计算机理论基础</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/27/Computer-Organization-Architecture4/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/27/Computer-Organization-Architecture4/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>指令系统体系结构概览（C05）。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="u6307_u4EE4_u7CFB_u7EDF_u8BBE_u8BA1"><a href="#u6307_u4EE4_u7CFB_u7EDF_u8BBE_u8BA1" class="headerlink" title="指令系统设计"></a>指令系统设计</h1><blockquote>
+<p>每条计算机指令均有一个操作码和0或多个操作数。前章的MARIE指令长度为16位，至多只有一个操作数。根据ISA的不同，指令使用的二进制位数也可能不同（16位，32位，64位），每条指令允许使用的操作数的个数可能不同，指令类型和指令处理的操作数的类型也可能不同。具体在特征上可能存在以下差别：1）操作数在CPU中的存储方式（堆栈结构或寄存器）；2）指令直接作用的操作数数目（常用的操作数个数为0，1，2，3）；3）操作数的位置（寄存器-寄存器，寄存器-存储器，存储器-存储器）；4）操作（操作类型，指令是否可以访问存储器）；5）操作数的类型和长度。</p>
+</blockquote>
+<h2 id="u8861_u91CF_u6807_u51C6"><a href="#u8861_u91CF_u6807_u51C6" class="headerlink" title="衡量标准"></a>衡量标准</h2><blockquote>
+<p>ISA的效能通过以下因素衡量：程序执行指令时占用内存空间的大小；指令系统复杂程度，主要指指令执行所需要的译码数量和指令所执行任务的复杂性；指令长度；指令系统中指令的总数目。</p>
+</blockquote>
+<ul>
+<li>指令一般越短越好，较短的指令占用较少的内存空间，并且提取指令速度更快。但采取短指令会限制指令的数量（受到能够编码的二进制数的位数限制），同样也会限制操作数的大小和数量。</li>
+<li>固定长度的指令的译码容易但浪费空间，但固定长度的指令系统不表示必须使用固定数量的操作数。可以设计一个指令总长度固定的ISA，但可以允许其操作数域的位数根据需要改变，称为拓展操作码（expanding opcode）。</li>
+<li>存储器的组成形势会影响指令的格式。如果存储器为16或32位字，如果不是按字节编址则很难访问到一个单一字符，因此有些16/32/64位机器也是按照字节编址。</li>
+<li>存在多种不同类型的寻址方法；字节存储的小端大端位序问题；ISA需要多少寄存器并如何组织这些寄存器。</li>
+</ul>
+<h2 id="u5C0F_u7AEF_u548C_u5927_u7AEF_u4F4D_u5E8F_u95EE_u9898"><a href="#u5C0F_u7AEF_u548C_u5927_u7AEF_u4F4D_u5E8F_u95EE_u9898" class="headerlink" title="小端和大端位序问题"></a>小端和大端位序问题</h2><blockquote>
+<p>位端（endian）指的是计算机体系结构中的“位序”（byte order），即计算机存储一个多字节数据时，多个字节的排列方式。当今所有的计算机体系结构都是按字节编址，对于存储一个2字节整数，将低位的字节首先存放到低位地址，高位字节存放到高位地址，此时较低地址的字节就是数据的低位，这种方式称为小端（little-endian）；对于低位地址存放高位数据的方式称为大端（big-endian）。<strong>大部分UNIX计算机和新式RISC体系结构为大端机器，PC计算机为小端机器</strong>。Intel总是使用小端方式设计机器，而Motorola总采用大端。有的CPU既可以处理小端问题也可以处理大端问题。</p>
+</blockquote>
+<ul>
+<li>将32位16进制数据12345678存储在地址0的存储单元，每个十六进制数字需要半字节。对应两种不同的存储方式列出下表。<table><tbody><tr><td>编址————&gt;</td><td>00</td><td>01</td><td>10</td><td>11</td></tr><tr><td>大端位序</td><td>12</td><td>34</td><td>56</td><td>78</td></tr><tr><td>小端位序</td><td>78</td><td>56</td><td>34</td><td>12</td></tr></tbody></table></li>
+<li>大端位序存储方式更自然，便于阅读16进制编写的程序端。可以通过检查最高位的符号位判读数字正负，而小端需要知道数值长度，再跳过中间字节找到最高位。大端位序的机器存储整数和字符串采用相同次序，在某些字符串操作时更快。大部分位图映射格式图像都采用“最高位在字符串左边”的变换方法，即对于像素大于一个字节的数据可以直接按照大端位序处理，因此对于小端位序在处理较大图形对象时可能会性能受限。当对采用例如赫夫曼和LZW这类编码的压缩数据译码时，若数据采用大端位序存储，则实际的编码字可以被当作进入到某个查询表中的一个索引使用。</li>
+<li>小端位序在高精度算术运算上速度更快更方便。大部分采用大端位序的体系结构都不允许计算机字按照非字地址边界的方法写数据字，例如一个字由2或4字节组成，写数据字时必须从偶数编号的字节地址开始，浪费空间。小端机器允许进行奇数地址的读写。</li>
+<li><p><strong>计算机网络都采用大端位序的体系结构</strong>。如果小端位序的机器要将整数数据（如网络设备地址）传送到网络上，必须将数据转换成网络要求的字节次序，从网络上接收数据时也需要将这些数据转换成本地表示形式。BMP图形格式是小端位序，如果在大端位序机器上查看BMP图形必须先反转数据位序。Adobe Photoshop采用大端格式，GIF是小端格式，JPEG是大端格式，Macpaint使用大端格式，PC Paintbrush是小端格式，RTP使用小端位序，Sun光栅文件是大端格式。WAV、AVI、TIFF、XWD等同时支持两种格式。</p>
+<h2 id="u5806_u6808_u548C_u5BC4_u5B58_u5668"><a href="#u5806_u6808_u548C_u5BC4_u5B58_u5668" class="headerlink" title="堆栈和寄存器"></a>堆栈和寄存器</h2><blockquote>
+<p>CPU数据存储方式是区分不同指令系统体系结构的最基本方法。包含：堆栈体系结构，累加器体系结构和通用寄存器（GPR）体系结构。</p>
+</blockquote>
+</li>
+<li><p><strong>堆栈体系结构</strong>（stack architecture）的计算机使用一个堆栈来执行各种指令，指令的操作数隐含的存放在堆栈顶部。按照堆栈体系结构设计的机器通常具有好的编码密度和一个简单的表达式估值模型。但因为不能对堆栈进行随机访问，使得采用堆栈结构的机器很难产生高效率的编码。如果存储器速度快，使用堆栈体系结构较好。</p>
+</li>
+<li><strong>累加器体系结构</strong>（Accumulator architecture）计算机，如MARIE，将其中一个操作数隐含在累加器中，最大限度地降低机器内部复杂性，并且允许使用非常短的指令。由于累加器只是临时存储，需要对存储器的访问非常频繁。</li>
+<li><strong>通用寄存器体系结构</strong>（general purpose register architecture）计算机，采用多个通用寄存器组，是<strong>当今计算机体系结构最广泛的模型</strong>。寄存器组的访问速度比存储器快得多，也方便编译器处理。由于硬件价格急剧下降，现在可以以较小成本增加大量数目的寄存器。如果存储器速度较慢，通常采用通用寄存器体系结构。但由于所有操作数必须加以命名，因此使用寄存器结构会产生较长指令，导致较长的取指和译码时间。对ISA设计人员来说，实现短指令是一个非常重要的目标。通用寄存器体系结构可以根据指令的操作数所处的位置分成三种类型。<ul>
+<li><strong>存储器-存储器</strong>（memory-memory）体系结构可以有两个或三个操作数位于存储器内，允许有一条执行某种操作而不需要有任何操作数的指令存放在某个寄存器中。</li>
+<li><strong>寄存器-存储器</strong>（register-memory）体系结构采用混合方式，要求至少有一个操作数在寄存器中和一个操作数在存储器中。</li>
+<li><strong>装入-存储</strong>（load-store）体系结构需要在任何对数据的操作前把数据装入寄存器中。<br>Intel和Motorola的计算机属于寄存器-存储器体系结构，数字仪器公司的VAX计算机体系结构实行的是存储器-存储器操作，SPARC、MIPS、ALPHA和PowerPC都是装入-存储式体系结构计算机。</li>
+</ul>
+</li>
+</ul>
+<h2 id="u64CD_u4F5C_u6570_u7684_u6570_u76EE_u548C_u6307_u4EE4_u957F_u5EA6"><a href="#u64CD_u4F5C_u6570_u7684_u6570_u76EE_u548C_u6307_u4EE4_u957F_u5EA6" class="headerlink" title="操作数的数目和指令长度"></a>操作数的数目和指令长度</h2><blockquote>
+<p>描述计算机体系结构的传统方法是制定每条指令中所包含的操作数，或者说地址的最大数目。</p>
+</blockquote>
+<ul>
+<li>MARIE采用固定长度的指令，包括4位操作码和12位操作数。在现在的计算机体系结构中，指令构成的格式有固定长度和可变长度两种。<ul>
+<li><strong>固定长度</strong>（fixed length）：会浪费一定存储空间，但执行速度更快。在采用指令层次的流水线结构时性能更好。</li>
+<li><strong>可变长度</strong>（variable length）：译码复杂，但节省存储空间。<br>实际设计中，通常会<strong>采用两到三种不同的指令长度</strong>，这样可以有不同的位的指令组合形式，便于简化指令的区分和译码。<strong>指令的长度必须配合机器字的长度</strong>，如果指令的长度严格等于机器字的长度，则将指令存储到主存储器时，指令间的对齐问题就会非常完美。因为存储器要编址，因此采用实际机器字长度的1/4，1/2，2倍或3倍长度的指令会浪费不少的存储空间。可变长度的指令同样也会造成存储空间的浪费。</li>
+</ul>
+</li>
+<li>最常用的指令格式包括0，1，2或3个操作数。通常情况下，算术运算或逻辑运算需要2个操作数，如果将累加器作为一个隐藏的操作数，则两个操作数的操作可以按照一个操作数指令的方式执行。同理，使用一个堆栈结构可以允许有不带操作数的指令。<table><tbody><tr><td>只有操作码</td><td>0地址</td></tr><tr><td>操作码+1个地址</td><td>通常只有一个存储器地址</td></tr><tr><td>操作码+2个地址</td><td>通常两个寄存器地址，或一个寄存器地址加上一个存储器地址</td></tr><tr><td>操作码+3个地址</td><td>通常是三个寄存器地址或寄存器和存储器的某种组合</td></tr></tbody></table></li>
+<li><p>对每种体系结构来说，每条指令允许的最大操作数的数目是有限制的。不带操作数的机器指令必须使用堆栈来执行在逻辑上需要一个或两个操作数的操作。对于两个操作数的操作，堆栈结构采用堆栈顶部最上面的两个元素作为操作数。如Add指令，将栈顶两个元素相加并弹出，再将求和结果压入堆栈顶部。对于操作次序不能交换的各种操作，同样对堆栈顶部最上面的两个数据元素按次序进行。这种组成结构对于<strong>反向波兰表达式</strong>（reverse Polish notation，RTN）编写的长算术表达式非常有效，逆波兰表示法将保持计算次序的括号都消除了。<table><tbody><tr><td colspan="2">Z = ( X × Y ) + ( W × U )</td></tr><tr><td>3个操作数</td><td>Mult R1, X, Y; Mult R2, W, U; Add Z, R2, R1</td></tr><tr><td>2个操作数</td><td>Load R1, X; Mult R1, Y; Load R2, W; Mult R2, U; Add R1, R2; Store Z, R1</td></tr><tr><td>1个操作数</td><td>Load X; Mult Y; Store Temp; Load W; Mult U; Add Temp; Store Z</td></tr><tr><td>0个操作数</td><td>Push X; Push Y; Mult; Push W; Push U; Mult; Add; Pop Z</td></tr></tbody></table></p>
+</li>
+<li><p><strong>扩展操作码</strong>（expanding opcode）代表一种折衷方案，及要求有尽可能多的操作码，又要求采用尽可能短的操作码。设计思想是：<strong>选用短操作码，而有需要时可以有某种方法将操作码加长</strong>。如果使用短操作码就留给操作数大量的指令位，因此每条指令可以有2～3个操作数；若指令不需要操作数（如halt），或计算机使用堆栈操作，则指令所有位都可用于操作码，生成独特指令。假设计算机具有16位指令系统和16个寄存器，因此指令用4个二进制位就可以指定其中的某个寄存器。如果使用4位操作码，剩下12位作为存储器地址，就像MARIE一样，寻址范围可达2^12 = 4KB。但如果所有数据都被预先装入寄存器，则可以将12位地址分成3个寄存器地址。举例说明：用16位编码产生1）15条3地址指令，2）14条2地址指令，3）31条1地址指令，4）16条0地址指令。<table><tbody><tr><td>15个3地址编码</td><td>0000 R1 R2 R3; ··· ; 1110 R1 R2 R3</td></tr><tr><td>14个2地址编码</td><td>1111 0000 R1 R2; ··· ; 1111 1101 R1 R2</td></tr><tr><td>31个1地址编码</td><td>1111 1110 0000 R1; ··· ; 1111 1111 1110 R1</td></tr><tr><td>16个0地址编码</td><td>1111 1111 1111 0000; ··· ; 1111 1111 1111 1111</td></tr></tbody></table>扩展操作码的译码更复杂，对于例子而言，需要采用类似下面方式译码。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">if ( leftmost four bits != 1111 )</span><br><span class="line">	Execute appropriate three-address instruction</span><br><span class="line">else if ( leftmost seven bits != 1111 111 )</span><br><span class="line">	Execute appropriate two-address instruction</span><br><span class="line">else if ( left most twelve bits != 1111 1111 1111 )</span><br><span class="line">	Execute appropriate one-address instruction</span><br><span class="line">else </span><br><span class="line">	Execute appropriate zero-address instruction</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="u6307_u4EE4_u7C7B_u578B"><a href="#u6307_u4EE4_u7C7B_u578B" class="headerlink" title="指令类型"></a>指令类型</h2><ul>
+<li>数据移动：可能有多种不同数据移动指令，如MOVER要求有两个寄存器操作数，而MOVE则使用一个寄存器操作数和一个存储器操作数。某些计算机体系结构如RISC，会限制将数据从存储器移出或将数据移到存储器，以加快运行速度。许多计算机有多种载入、存储和移动指令处理不同大小的数据，如LOADB处理字节数据，LOADW处理数据字。</li>
+<li>算术运算：包括整数和浮点运算的各种指令，许多机器对不同大小的数据提供有不同的算术运算指令。</li>
+<li>布尔逻辑运算：逻辑与、逻辑或、逻辑非、异或。</li>
+<li>位操作（移位和循环换位）：在某个特定数据字中对一些单独数据位进行置位和复位操作，包括各种算术移位指令、逻辑移位指令和循环移位指令。逻辑移位指令对数据简单移位，反向补零；算术移位指令左移时不移动符号位，右移时符号位右移；循环移位各数据位移出后再反向移入。</li>
+<li>输入/输出：程序控制的I/O，中断驱动的I/O，直接存储器访问（DMA）。</li>
+<li>控制转移：分支转移（branch）、跳过（skip）、进程调用（procedure call）。分支转移分为条件转移和无条件转移，跳过指令是没有指定地址的分支转移指令，进程调用时一些特殊的分支转移指令，自动存储程序返回的地址，有的机器将这个返回地址存放在存储器某个特殊存储单元，有的机器将这个地址存放在某个寄存器中，有的则压入堆栈。</li>
+<li>专门用途：如字符串处理指令，高级语言支持指令，保护和标志位控制指令，高速缓存指令等。</li>
+</ul>
+<hr>
+<h1 id="u5BFB_u5740_u65B9_u5F0F"><a href="#u5BFB_u5740_u65B9_u5F0F" class="headerlink" title="寻址方式"></a>寻址方式</h1><blockquote>
+<p>MARIE指令有一个12位操作数域，这个12位二进制数可以表示操作数的存储器地址，也可以是一个指示物理存储器地址的指针，也可以解释成其他内容。这样可以形成不同的<strong>寻址方式</strong>（addressing mode），寻址方式是指定指令中操作数位置的方法。实际操作数的位置称为操作数的有效地址。</p>
+</blockquote>
+<ul>
+<li><strong>立即寻址</strong>（immediate addressing）：指令中操作码后的数值会被立刻引用，例如Load 008会直接将数值8装入累加器AC中。不灵活。</li>
+<li><strong>直接寻址</strong>（direct addressing）：指令之直接指定要饮用的数值的存储器地址，如Load 008将存储器地址为008的存储单元中的数值作为操作数装入累加器AC。</li>
+<li><strong>寄存器寻址</strong>（register addressing）：采用寄存器而不是存储器指定操作数，指令的地址域包含一个寄存器的引用。</li>
+<li><strong>间接寻址</strong>（indirect addressing）：地址域中的二进制数指定一个存储器地址，将该地址中的内容作为一个指针。例如Load 008，该操作表示在存储器地址为008的存储单元中存放的数值实际上是要用到的操作数的有效地址。如果008单元存放的数值是2A0，则2A0是真实地址，操作将地址为2A0的存储器单元中的内容装入AC。间接寻址也可用做寄存器。</li>
+<li><strong>变址寻址和基址寻址</strong>（indexed addressing）：一个变址寄存器用于存储一个偏移量，将这个偏移量与操作数相加，产生实际的有效地址。如Load X中的操作数X采用变址寻址方式，假定R1为变址寄存器，如果R1中存放着1，则Load X寻找到的有效地址是X+1。基址寻址与变址寻址类似，但基址寻址使用基地址寄存器而不是变址寄存器，操作数域中的内容表示的是偏移量。这两种寻址方式在访问数组元素和字符串中字符时非常有效，大部分汇编语言都提供专门的变址寄存器。</li>
+<li><strong>堆栈寻址</strong>（stack addressing）：操作数假定放在堆栈中。</li>
+<li>其他寻址方式：间接变址寻址（同时采用变址和间接寻址），基址/偏移量寻址（先将一个偏移量加到某个特定的基址寄存器中，再于指定的操作数相加产生有效地址），自动增/减量寻址等。</li>
+<li>举例：假设指令Load 800、寄存器R1中数值为800。存储器结构如下：<table><tbody><tr><td>地址</td><td>数值</td></tr><tr><td>800</td><td>900</td></tr><tr><td>···</td><td> </td></tr><tr><td>900</td><td>1000</td></tr><tr><td>···</td><td> </td></tr><tr><td>1000</td><td>500</td></tr><tr><td>···</td><td> </td></tr><tr><td>1100</td><td>600</td></tr><tr><td>···</td><td> </td></tr><tr><td>1600</td><td>700</td></tr></tbody></table>下表对于不同寻址方式给出实际装入累加器AC的值。<table><tbody><tr><td>寻址方式</td><td>获取操作数方法</td><td>装入AC的值</td></tr><tr><td>立即寻址</td><td>操作数数值直接包含在指令中</td><td>800</td></tr><tr><td>直接寻址</td><td>指令的地址域是操作数的有效地址</td><td>900</td></tr><tr><td>间接寻址</td><td>地址域的内容是实际操作数的地址</td><td>1000</td></tr><tr><td>变址寻址</td><td>地址域数值与寄存器中数值相加产生有效地址</td><td>700</td></tr></tbody></table></li>
+</ul>
+<hr>
+<h1 id="u6307_u4EE4_u6D41_u6C34_u7EBF"><a href="#u6307_u4EE4_u6D41_u6C34_u7EBF" class="headerlink" title="指令流水线"></a>指令流水线</h1><blockquote>
+<p>计算机使用时钟脉冲精确控制各个操作步骤的顺序执行，有时可以使用额外的脉冲控制某个操作步骤中的小细节。现在所有的CPU都会将取指-译码-执行周期分为一些较小步骤，其中较小步骤可以并行执行，时间上的交叠可以加快CPU执行速度。这种方法称为<strong>流水线</strong>（pipeline）。</p>
+</blockquote>
+<ul>
+<li>假设将取指-译码-执行周期分解为如下6个小步骤：S1取指令；S2操作码译码；S3计算操作数有效地址；S4取操作数；S5执行指令；S6存储结果，这是一个6级流水线，其中的每一个步骤称为<strong>流水线级</strong>（pipeline stage），将流水线逐级连接就构成指令执行的管道。假设现在有n条指令，k级流水线（本例的k=6）时钟周期时间为tp，即每级流水线需要tp时间。如果不采用流水线执行指令，则需要T = n × k × tp的总时间。如果采用流水线系统，一旦第一条指令的S1完成，该指令就会被送去执行S2，同时可以开始第二条指令的S1，当第二条指令执行S2时，第三条指令S1开始，第一条指令则执行S3，以此类推。因此执行第一条指令需要k × tp时间完成，之后的n - 1个任务每隔一个时钟周期就会从流水线中流出一个流水线级，因此剩下的总时间为（n - 1）×tp，利用k级流水线的总时间为T’=（k × tp）+（n - 1）×tp = （k + n - 1 ）× tp。获得的加速比S = T/T’，当n较大时，k + n - 1与n近似，因此n较大时S = k。流水线级数越多，计算机运行速度越快，从某种意义上说这一点是对的，但流水线控制逻辑的数量和大小也会随之增加，拖慢系统速度。另外还存在一些条件会导致“<strong>流水线冲突</strong>”，这些情况会阻碍计算机实现每个时钟周期执行一条指令的目标。条件包括：资源冲突、数据关联、条件分支语句。</li>
+<li><strong>资源冲突</strong>（resource conflict）：如果计算机正在将某个数值存放到存储器，同时又在从存储器中提取另一条指令，两个操作需要同时访问内存。通常解决方法是让存储指令继续执行，提取指令强制等待。某些冲突可以通过使用两条独立的通道来解决：一条通道从内存提取数据，另一条通道从内存提取指令。</li>
+<li><strong>数据关联</strong>（data dependency）：一条指令尚未结束，后续指令要求使用该指令的执行结果作为操作数。可以添加专门的硬件检测某条指令的源操作数是否是流水线上游的指令的目标操作数，这种硬件通过在流水线中插入一个no-op指令（不执行操作），让计算机有足够时间解决冲突。</li>
+<li>条件分支转移：假设有一个4级流水线，S1=取指，S2=译码和计算有效地址，S3=取操作数，S4=执行指令和存储结果（假定该体系结构可以并行提取数据和指令，实际上大部分存储器系统将操作数放到高速缓存中，这样取指令和取操作数可以同时进行）。令指令I3是一个条件分支转移语句，使CPU不再执行I4～I7，而是直接跳转到I8。<table><tbody><tr><td>时钟周期</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr><tr><td>指令I1</td><td>S1</td><td>S2</td><td>S3</td><td>S4</td><td> </td><td> </td><td> </td><td> </td><td> </td></tr><tr><td>指令I2</td><td> </td><td>S1</td><td>S2</td><td>S3</td><td>S4</td><td> </td><td> </td><td> </td><td> </td></tr><tr><td>分支指令I3</td><td> </td><td> </td><td>S1</td><td>S2</td><td>S3</td><td>S4</td><td> </td><td> </td><td> </td></tr><tr><td>指令I4</td><td> </td><td> </td><td> </td><td>S1</td><td>S2</td><td>S3</td><td> </td><td> </td><td> </td></tr><tr><td>指令I5</td><td> </td><td> </td><td> </td><td> </td><td>S1</td><td>S2</td><td> </td><td> </td><td> </td></tr><tr><td>指令I6</td><td> </td><td> </td><td> </td><td> </td><td> </td><td>S1</td><td> </td><td> </td><td> </td></tr><tr><td>指令I8</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td>S1</td><td>S2</td><td>S3</td></tr><tr><td>指令I9</td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td>S1</td><td>S2</td></tr></tbody></table>从表格可以看出，CPU对I4～I6仍然进行了取指和接下来的各种操作，但实际执行I3后不需要I4～I7。这带来的结果是从第六到第九个时钟周期期间都没有指令流出，直到第9个时钟周期流水线才再次装满，而理想情况下一旦流水线管道开始装入指令，每个时钟周期都应该有指令流出。一种解决方法是设计<strong>分支预测</strong>机构，利用合理的逻辑对下一条指令做最优预测，编译器试图通过重新安排机器代码的方式产生延迟的分支转移操作。另一种方法是对某个已知的条件分支转移的两条分支通道都开始执行取指操作，并将结果存储，等到分支语句的实际执行时，需要执行的真实分支路径已经被计算过。</li>
+<li>并行执行：<strong>并行指令计算机</strong>（EPIC）是一种完全不同的体系结构，采用非常大的指令（如Itanium为128位），该指令可以规定几个需要并行执行的操作。EPIC的指令系统强烈取决于编译器，安排操作的负担从处理器转移到编译器。并行执行有几种级别，几乎所有计算机都不同程度应用了并行概念，指令均使用字作为操作数，两个极端情形为程序级的并行执行（PLP）和指令级的并行执行（ILP）。PLP指一个程序各部分可以同时在多台计算机执行，ILP是在时间上重叠执行指令，分为两种类型，第一种将一条指令分解为多个步骤（流水线），第二种处理器本身就可以在同一时刻执行多条指令。ILP还有超标量体系结构，超流水线体系结构，超长指令字（VLIW）体系结构。</li>
+</ul>
+<hr>
+<h1 id="ISA_u4F53_u7CFB_u7ED3_u6784_u771F_u5B9E_u6848_u4F8B"><a href="#ISA_u4F53_u7CFB_u7ED3_u6784_u771F_u5B9E_u6848_u4F8B" class="headerlink" title="ISA体系结构真实案例"></a>ISA体系结构真实案例</h1><ul>
+<li>Intel体系结构：Intel使用的是小端、双地址的体系结构，采用可变长度指令系统，寄存器-存储器结构，操作数句长度可以是1，2，4字节。从8086到80486都是单级流水线体系结构，奔腾结构采用两条平行的5级流水线（U线和V线，不同级包括指令预取、指令译码、地址生成、指令执行、回写）执行，这些流水线都必须保持被填满状态，并行发出指令。奔腾II系列将两条流水线增加到12级，大部分新增加的流水线级用来支持Intel的MMX技术（Intel公司为处理多媒体数据对CPU体系结构功能的扩充）。奔腾III流水线增加到14级，奔腾IV增加到24级。Tntel处理器支持上述各种基本寻址方式，如8086有17种不同访问存储器方式。通常Intel体系结构各种寻址方式都保持向下兼容，但IA-64体系结构存储器只有一种寻址方式：寄存器间接寻址，遵循RISC设计思想，对特殊硬件需求减少到最少。</li>
+<li>MIPS体系结构：小端、按字编址、3地址、采用固定长度，是装入/存储式体系结构。MIPS限制只有固定长度的操作，操作数句必须具有相同的字节数。某些MIPS处理器如R2000和R3000，有5级流水线。R4000和R4400有8级流水线。R10000处理器流水线级数取决于执行指令需要经过的功能单元：整数指令为5级，装入/存储指令为6级，浮点运算为7级。R5000和R10000都属于超标量体系结构。MIPS共有5种类型指令：执行简单算术操作指令、数据移动指令、控制转移指令、多重循环指令、其他杂类指令。MIPS指令系统只提供基地址寻址方式，其他编址方式由编译器提供。MIPS指令分为4个域，一个操作码域，两个操作数地址域和一个结果地址域；具有三种类型指令格式，I类型（immediate）、R类型（register）和J类型（jump）。R类型包括一个6位操作码、5位源寄存器、5位目标寄存器、5位偏移量和6位功能代码；I类型指令包括6位操作码、5位源寄存器、5位目标寄存器或分支转移条件、16位立即分支转移位移量或地址位移量；J类型指令包括6位操作码、26位目标地址。</li>
+<li>Java虚拟机：与工作平台无关，实际运行在JVM（Java Virtual Machine）上，不同硬件机器的JVM不同，按照机器固有的指令集编写。JVM相当于解释程序：读取java字节码，将字节码解释成各种机器指令。对Java程序编译时，生成特殊字节码（bytecodes），这些字节码是JVM的输入源程序。编译语言如C、C++、Ada、FORTRAN、COBOL等通常具有很好的可执行性能，只能在特定的目标体系结构上运行。解释性编程语言如LISP、PhP和Tcl等与工作平台无关，但执行速度约比编译程序慢100倍。同时以两种形式存在的称为P代码语言，如Perl、Python和Java等，效率比编译程序语言慢5～10倍。Java虚拟机有4个寄存器，支持访问5各不同的主存储区区域，JVM是堆栈类型的机器，不提供通用寄存器。</li>
+</ul>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/10/27/Computer-Organization-Architectur4/">原始出处</a>(<a href="http://forec.github.io/2015/10/27/Computer-Organization-Architecture4/">http://forec.github.io/2015/10/27/Computer-Organization-Architecture4/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机组成与体系结构/" rel="tag">#计算机组成与体系结构</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/01/Computer-Organization-Architecture5/" rel="prev">计组与体系结构笔记（五）</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/21/Computer-Organization-Architecture3/" rel="next">计组与体系结构笔记（三）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/27/Computer-Organization-Architecture4/"
+                   data-title="计组与体系结构笔记（四）" data-url="http://forec.github.io/2015/10/27/Computer-Organization-Architecture4/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Never mind</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gitcafe.com/forec" target="_blank">gitcafe</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forect@hotmail.com" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u6307_u4EE4_u7CFB_u7EDF_u8BBE_u8BA1"><span class="nav-number">1.</span> <span class="nav-text">指令系统设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u8861_u91CF_u6807_u51C6"><span class="nav-number">1.1.</span> <span class="nav-text">衡量标准</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5C0F_u7AEF_u548C_u5927_u7AEF_u4F4D_u5E8F_u95EE_u9898"><span class="nav-number">1.2.</span> <span class="nav-text">小端和大端位序问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5806_u6808_u548C_u5BC4_u5B58_u5668"><span class="nav-number">1.3.</span> <span class="nav-text">堆栈和寄存器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u64CD_u4F5C_u6570_u7684_u6570_u76EE_u548C_u6307_u4EE4_u957F_u5EA6"><span class="nav-number">1.4.</span> <span class="nav-text">操作数的数目和指令长度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6307_u4EE4_u7C7B_u578B"><span class="nav-number">1.5.</span> <span class="nav-text">指令类型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u5BFB_u5740_u65B9_u5F0F"><span class="nav-number">2.</span> <span class="nav-text">寻址方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u6307_u4EE4_u6D41_u6C34_u7EBF"><span class="nav-number">3.</span> <span class="nav-text">指令流水线</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ISA_u4F53_u7CFB_u7ED3_u6784_u771F_u5B9E_u6848_u4F8B"><span class="nav-number">4.</span> <span class="nav-text">ISA体系结构真实案例</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

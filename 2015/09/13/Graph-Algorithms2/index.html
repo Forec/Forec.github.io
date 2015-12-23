@@ -1,0 +1,845 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Never mind" />
+
+
+
+  <meta name="keywords" content="Algorithms," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="What Happened ?" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="摘要
+图的搜索算法
+广度优先搜索
+深度优先搜索
+
+
+拓扑排序
+基于DFS
+Kahn
+
+
+边的分类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图的遍历和拓扑排序">
+<meta property="og:url" content="http://forec.github.io/2015/09/13/Graph-Algorithms2/index.html">
+<meta property="og:site_name" content="What Happened ?">
+<meta property="og:description" content="摘要
+图的搜索算法
+广度优先搜索
+深度优先搜索
+
+
+拓扑排序
+基于DFS
+Kahn
+
+
+边的分类">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/广度优先搜索2.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/BFS运行1.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/BFS运行2.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/BFS运行3.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/BFS运行4.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/深度优先搜索.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/DFS过程1.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/DFS过程2.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/拓扑无回路.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/拓扑有回路.png">
+<meta property="og:updated_time" content="2015-11-01T10:06:27.774Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图的遍历和拓扑排序">
+<meta name="twitter:description" content="摘要
+图的搜索算法
+广度优先搜索
+深度优先搜索
+
+
+拓扑排序
+基于DFS
+Kahn
+
+
+边的分类">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 图的遍历和拓扑排序 | What Happened ? </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">What Happened ?</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              图的遍历和拓扑排序
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-13T22:19:47+08:00" content="2015-09-13">
+            2015-09-13
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Code/" itemprop="url" rel="index">
+                  <span itemprop="name">Code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/09/13/Graph-Algorithms2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/13/Graph-Algorithms2/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="u6458_u8981"><a href="#u6458_u8981" class="headerlink" title="摘要"></a>摘要</h1><ul>
+<li><a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/#1">图的搜索算法</a><ul>
+<li><a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/#2">广度优先搜索</a></li>
+<li><a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/#3">深度优先搜索</a></li>
+</ul>
+</li>
+<li><a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/#4">拓扑排序</a><ul>
+<li><a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/#6">基于DFS</a></li>
+<li><a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/#7">Kahn</a></li>
+</ul>
+</li>
+<li><a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/#5">边的分类</a></li>
+</ul>
+<a id="more"></a>
+<p></p><h1 id="1">图的搜索算法</h1><p></p>
+<blockquote>
+<p>图的搜索（此处以遍历为例）指从图中任一顶点出发，对图中所有所有顶点访问一次且只访问一次，是图的基本操作。</p>
+</blockquote>
+<p></p><h2 id="2">广度优先搜索（BFS)</h2><p></p>
+<blockquote>
+<p>广度优先搜索（BFS）是最简单的图搜索算法之一，在Prim最小生成树和Dijkstra单源最短路径中都采用了广度优先的思想。  </p>
+</blockquote>
+<ul>
+<li>在给定图G=（V，E）的情况下和某个特定的源点s时，BFS首先从s出发，寻找到图中所有s可到达的顶点（可以同时计算s到这些顶点之间的距离，生成一颗根为s，包括所有s可达顶点的<strong>广度优先树</strong>）。BFS的特点是沿着已发现顶点和未发现顶点之间的边界向外拓展，也就是说，BFS最先搜索到与s距离为k的所有顶点，在这步操作完成之后，再以这些距离s为k的顶点为基础向外拓展，寻找与s距离为k+1的其他顶点。为了区分已寻找到的顶点和未寻找到的顶点，需要对顶点着色，通常设置一个vis/used数组，boolean类型记录是否访问过。开始时全部为false（白色），在BFS的过程中逐渐染色为true（非白色）。有时为了区分顶点u的相邻顶点是否全部发现，可以对u着灰色或黑色予以区分：灰色表示顶点u可能与一些白色顶点相邻，黑色表示u的相邻顶点全部都是黑色。</li>
+<li>整个BFS使用一个队列，开始时将源点s入队，标记s为已访问（used[s] = true），之后每次队首元素u出队，并遍历与u直接相连的顶点v，判断used[v]，如果没有访问则标记v为已访问，并将v入队，整个过程直至队列为空结束。下面这张图展示了BFS过程中队列变化的情况，图片来源于网络。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/广度优先搜索2.jpg" alt="广度优先搜索遍历2" width="300px"></li>
+<li><p>代码实现（以有向图邻接表为例，最后输入的是搜索开始的源点）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> Node &#123;</span><br><span class="line">	<span class="keyword">int</span> v;</span><br><span class="line">	<span class="keyword">struct</span> Node * next;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> INF = <span class="number">0x7fffffff</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> Node node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> V, E;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">( node ** graph, <span class="keyword">int</span> u, <span class="keyword">int</span> v )</span></span>&#123;</span><br><span class="line">	node * temp = ( node * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span> ( node ) );</span><br><span class="line">	temp-&gt;v = v;</span><br><span class="line">	temp-&gt;next = graph[u];</span><br><span class="line">	graph[u] = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> * visit, * dist, * pre;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BFS</span><span class="params">( node ** graph, <span class="keyword">int</span> s )</span></span>&#123;</span><br><span class="line">	visit = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	dist = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	pre = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )&#123;</span><br><span class="line">		visit[i] = <span class="number">0</span>;</span><br><span class="line">		dist[i] = INF;</span><br><span class="line">		pre[i] = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	visit[s] = <span class="number">1</span>;</span><br><span class="line">	dist[s] = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> * Q = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="keyword">int</span> front = <span class="number">0</span>, rear = <span class="number">0</span>;</span><br><span class="line">	Q[front++] = s;</span><br><span class="line">	<span class="keyword">while</span> ( rear != front )&#123;</span><br><span class="line">		<span class="keyword">int</span> u = Q[rear++];</span><br><span class="line">		node * temp = graph[u];</span><br><span class="line">		<span class="keyword">while</span> ( temp != <span class="literal">NULL</span> )&#123;</span><br><span class="line">			<span class="keyword">if</span> ( !visit[temp-&gt;v] )&#123;</span><br><span class="line">				visit[temp-&gt;v] = <span class="number">1</span>;</span><br><span class="line">				dist[temp-&gt;v] = dist[u] + <span class="number">1</span>;</span><br><span class="line">				pre[temp-&gt;v] = u;</span><br><span class="line">				Q[front++] = temp-&gt;v;</span><br><span class="line">			&#125;</span><br><span class="line">			temp = temp-&gt;next;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">printf</span>( <span class="string">"%d "</span>, u );</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="built_in">scanf</span>( <span class="string">"%d %d"</span>, &amp;V, &amp;E );</span><br><span class="line">	<span class="keyword">int</span> i, u, v, s;</span><br><span class="line">	node ** graph = ( node ** ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span> ( node * ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; E ; i++ )&#123;</span><br><span class="line">		<span class="built_in">scanf</span>( <span class="string">"%d %d"</span>, &amp;u, &amp;v );</span><br><span class="line">		insert( graph, u , v );</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">scanf</span>( <span class="string">"%d"</span>, &amp;s );</span><br><span class="line">	BFS( graph, s );</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上面程序的运行结果依赖于输入的源点。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/BFS运行1.png" alt="样例1" style="display:inline; width:150px; float:left"><img src="http://7xktmz.com1.z0.glb.clouddn.com/BFS运行2.png" alt="样例2" style="display:inline; width:150px; float:left"><img src="http://7xktmz.com1.z0.glb.clouddn.com/BFS运行3.png" alt="样例3" style="display:inline; width:150px; float:left"><img src="http://7xktmz.com1.z0.glb.clouddn.com/BFS运行4.png" alt="样例4" style="display:inline; width:150px"><br>在大多数情况下，广度优先搜索从某个源顶点开始，而不会从多个源顶点开始搜索，例如寻找最短路径距离。而深度优先搜索则多从多个源顶点开始搜索，作为另一个算法的一个子程序。</p>
+</li>
+</ul>
+<p></p><h2 id="3">深度优先搜索（DFS）</h2><p></p>
+<blockquote>
+<p>与广度优先搜索不同的是，DFS的先辈子图可以由几棵树组成，因为搜索有可能从多个源点开始重复进行。深度优先搜索的先辈子图形成了一个由数棵<strong>深度优先树</strong>组成的<strong>深度优先森林</strong>。</p>
+</blockquote>
+<ul>
+<li>在搜索过程中，通过对顶点的着色表示顶点的状态。开始时每个顶点都为白色，搜索中发现后即置为黑色（或发现时置为灰色，结束时置为黑色），保证深度优先树互不相交。</li>
+<li>对于最新发现的顶点，如果它还有以自身为起点并且没有检测过的边，就沿此边继续探测。当某个顶点v的所有边都已经被探寻过，搜索会回溯到v顶点以上的某些仍有未探测边的顶点，直到从源顶点可到达的所有顶点都被探测过，此时查看染色数组，如果仍存在未访问顶点，则选择未访问顶点中的一个作为源点，重复以上过程，直到所有顶点被发现。</li>
+<li>除了创建深度优先森林外，深度优先搜索同时为每个顶点加盖时间戳（许多图的算法中都用到了时间戳，有助于推算深度优先搜索的进行情况。例如后面的Tarjan）。每个顶点v都有两个时间戳：当v被第一次发现时，记录第一个时间戳d[v]，当对v所有可到达顶点检查结束时，为v盖第二个时间戳f[v]。</li>
+<li><p>整个DFS执行过程：初始化将所有顶点染白，pre[]域置空，之后依次检索V中的顶点，发现白色顶点u即调用<code>DFS_Visit(u)</code>开始访问，每次通过<code>DFS_Visit(u)</code>调用时，顶点u就成为了深度优先森林中一棵新树的根。DFS的结果可能会依赖于顶点访问的顺序（下面代码中有相应解释）。下图是DFS整个过程的示意图，图片来自算法导论。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/深度优先搜索.jpg" alt="深度优先搜索过程" width="500px"></p>
+</li>
+<li><p>代码实现（有向图邻接表，采取三染色）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;memory.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> WHITE <span class="number">0</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> GRAY <span class="number">1</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> BLACK <span class="number">2</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> Node &#123;</span><br><span class="line">	<span class="keyword">int</span> v;</span><br><span class="line">	<span class="keyword">struct</span> Node * next;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> INF = <span class="number">0x7fffffff</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> Node node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> V, E;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">( node ** graph, <span class="keyword">int</span> u, <span class="keyword">int</span> v )</span></span>&#123;</span><br><span class="line">	node * temp = ( node * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span> ( node ) );</span><br><span class="line">	temp-&gt;v = v;</span><br><span class="line">	temp-&gt;next = graph[u];</span><br><span class="line">	graph[u] = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> * visit, * pre;</span><br><span class="line"><span class="keyword">int</span> * d, * f, time;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DFS_Visit</span><span class="params">( node ** graph, <span class="keyword">int</span> u )</span></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>( <span class="string">"%d "</span>, u );</span><br><span class="line">	visit[u] = GRAY;</span><br><span class="line">	d[u] = ++time;</span><br><span class="line">	node * temp = graph[u];</span><br><span class="line">	<span class="keyword">while</span> ( temp != <span class="literal">NULL</span> )&#123;</span><br><span class="line">		<span class="keyword">if</span> ( visit[temp-&gt;v] == WHITE )&#123;</span><br><span class="line">			pre[temp-&gt;v] = u;</span><br><span class="line">			DFS_Visit( graph, temp-&gt;v);</span><br><span class="line">		&#125;</span><br><span class="line">		temp = temp-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	visit[u] = BLACK;</span><br><span class="line">	f[u] = ++time;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DFS</span><span class="params">( node ** graph )</span></span>&#123;</span><br><span class="line">	visit = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	pre= ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	d= ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	f= ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="keyword">int</span> u;</span><br><span class="line">	<span class="built_in">memset</span>( visit, <span class="number">0</span>, <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="built_in">memset</span>( pre, <span class="number">0</span>, <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	time = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> ( u = V ; u &gt;= <span class="number">1</span> ; u-- )</span><br><span class="line">		<span class="keyword">if</span> ( visit[u] == WHITE )</span><br><span class="line">			DFS_Visit( graph, u );</span><br><span class="line">	<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="built_in">scanf</span>( <span class="string">"%d %d"</span>, &amp;V, &amp;E );</span><br><span class="line">	<span class="keyword">int</span> i, u, v, s;</span><br><span class="line">	node ** graph = ( node ** ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span> ( node * ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; E ; i++ )&#123;</span><br><span class="line">		<span class="built_in">scanf</span>( <span class="string">"%d %d"</span>, &amp;u, &amp;v );</span><br><span class="line">		insert( graph, u , v );</span><br><span class="line">	&#125;</span><br><span class="line">	DFS( graph );</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"u\td[u]\tf[u]\tpre[u]\n"</span>);</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )</span><br><span class="line">		<span class="built_in">printf</span> ( <span class="string">"%d\t%d\t%d\t%d\n"</span>, i, d[i], f[i], pre[i] );</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下面两张图分别是代码中注释掉的for循环（从1到V）和未注释的for循环（从V到1）的执行结果。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/DFS过程1.png" width="250px" alt="DFS过程1" style="float:left"><img src="http://7xktmz.com1.z0.glb.clouddn.com/DFS过程2.png" width="250px" alt="DFS过程2"><br>可以看出，最终搜索的顺序依赖于两个for循环的顺序，当然也依赖于DFS_Visit(u)中对u相邻顶点的访问次序。实践中，这些不同的顺序往往不会引起问题，因为任何DFS的搜索结果都可以被有效利用，最终结果基本上等价。</p>
+</li>
+<li>给出一些深度优先搜索的性质<ol>
+<li>括号定理：在对一个图（有向或无向）G =（V，E）的任何DFS中，对于图中任意两个顶点u和v，以下三条仅有一条成立：1.区间[d[u], f[u]]和区间[d[v], f[v]]是完全不相交的，并且在深度优先森林中，u或v都不是对方的后裔。2.区间[d[u], f[u]]完全包含于区间[d[v], f[v]]中，且在深度优先树当中，u是v的后裔。3.区间[d[v], f[v]]完全包含于区间[d[u], f[u]]中，且在深度优先树当中，v是u的后裔。</li>
+<li>后裔区间嵌套：在一个图（有向或无向）G的深度优先森林中，顶点v是顶点u的后裔，当且仅当d[u] &lt; d[v] &lt; f[v] &lt; f[u]。</li>
+<li>白色路径定理：在一个图（有向或无向）G的深度优先森林中，顶点v是顶点u的后裔，当且仅当在搜索过程中处于时刻d[u]发现u时，可以从顶点u出发，经过一条完全由白色顶点组成的路径到达v。<br>上面定理的证明都很简单。可以作为判定的技巧使用。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<p></p><h1 id="4">拓扑排序</h1><p></p>
+<blockquote>
+<p>对一个有向无回路图（dag）G=（V，E）进行拓扑排序后，结果为该图所有顶点的一个线性序列，这个序列满足：如果G包含边（u，v），则在这个序列中，u出现在v的前面（如果图G是有回路的，就不可能有这样的序列）。在很多应用中，有向无回路图用于说明事件发生的先后顺序，如早上起床穿衣的过程：必须先穿好袜子才能穿鞋，单色其他的一些衣服则可以按任意顺序穿戴（上衣和裤子）。</p>
+</blockquote>
+<p></p><h2 id="6">基于DFS</h2><p></p>
+<ul>
+<li>基于DFS：我们在DFS中为每个顶点加盖了时间戳，其中一个f[u]代表着将所有u的可到达顶点扫描完成时的时间。以穿戴为例，可以构造一个有向图，（袜子，鞋）为一条有向边，代表着二者之间的先后顺序：先穿完袜子才可以穿鞋，所以鞋必须在袜子遍历完成之后才能结束遍历，也就是f[鞋] &gt; f[袜子]。因此将DFS完成后的各个顶点按照f[]升序排序，得到的序列即为拓扑序列。当然，拓扑序列显然不是唯一的，可以先穿上衣再穿裤子也可以先穿裤子再穿上衣，这取决于DFS对顶点访问的顺序。</li>
+<li>代码实现<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DFS_Visit</span><span class="params">( node ** graph, <span class="keyword">int</span> u )</span></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>( <span class="string">"%d "</span>, u );</span><br><span class="line">	visit[u] = GRAY;</span><br><span class="line">	d[u] = ++time;</span><br><span class="line">	node * temp = graph[u];</span><br><span class="line">	<span class="keyword">while</span> ( temp != <span class="literal">NULL</span> )&#123;</span><br><span class="line">		<span class="keyword">if</span> ( visit[temp-&gt;v] == WHITE )&#123;</span><br><span class="line">			pre[temp-&gt;v] = u;</span><br><span class="line">			DFS_Visit( graph, temp-&gt;v);</span><br><span class="line">		&#125;</span><br><span class="line">		temp = temp-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	visit[u] = BLACK;</span><br><span class="line">	f[u] = ++time;</span><br><span class="line">	<span class="comment">// add u to L </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>只要在DFS_Visit()函数中最后将u添加到拓扑序列L中就可以。</p>
+<p></p><h2 id="7">Kahn</h2><p></p>
+<ul>
+<li>Kahn算法：首先设置拓扑序列为列表L，初始化为空，统计图中每个顶点的入度，将所有入度为0的点组成一个集合S，当S不为空，就从S中取出一个点u，将其加入L的表尾，并将所有与u直接相连的有向边（u，v）删去，并将每个v的入度减一，如果某个v因此入度变为了0，则将v加入S。如此循环往复，直到S为空。此时如果图中仍有边没被删去，则说明图中至少含有一个回路，否则L就是生成的一个拓扑序列。</li>
+<li><p>代码实现（有向图邻接表）</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;list&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;memory.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> Node &#123;</span><br><span class="line">	<span class="keyword">int</span> v;</span><br><span class="line">	<span class="keyword">struct</span> Node * next;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> INF = <span class="number">0x7fffffff</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> Node node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> V, E;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">( node ** graph, <span class="keyword">int</span> u, <span class="keyword">int</span> v )</span></span>&#123;</span><br><span class="line">	node * temp = ( node * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span> ( node ) );</span><br><span class="line">	temp-&gt;v = v;</span><br><span class="line">	temp-&gt;next = graph[u];</span><br><span class="line">	graph[u] = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Topological</span><span class="params">( node ** graph, <span class="keyword">int</span> * indegree )</span></span>&#123;</span><br><span class="line">	<span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt; S;</span><br><span class="line">	<span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt; L;</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= V ; i++ )&#123;</span><br><span class="line">		<span class="keyword">if</span> ( !indegree[i] )</span><br><span class="line">		S.push(i);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span> ( !S.empty() )&#123;</span><br><span class="line">		<span class="keyword">int</span> u = S.front();</span><br><span class="line">		S.pop();</span><br><span class="line">		L.push_back(u);</span><br><span class="line">		node * temp = graph[u];</span><br><span class="line">		<span class="keyword">while</span> ( temp != <span class="literal">NULL</span> )&#123;</span><br><span class="line">			E--;</span><br><span class="line">			<span class="keyword">if</span> ( !--indegree[temp-&gt;v] )</span><br><span class="line">				S.push(temp-&gt;v);</span><br><span class="line">			temp = temp-&gt;next;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> ( E != <span class="number">0</span> )</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"G has Circuit"</span>;</span><br><span class="line">	<span class="keyword">else</span> </span><br><span class="line">		<span class="keyword">for</span> ( <span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt;::iterator i = L.begin() ; i != L.end() ; ++i )</span><br><span class="line">			<span class="built_in">cout</span> &lt;&lt; *i &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> u, v;</span><br><span class="line">	<span class="built_in">cin</span> &gt;&gt; V &gt;&gt; E;</span><br><span class="line">	<span class="keyword">int</span> * Indegree = ( <span class="keyword">int</span> * )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	node ** graph = ( node ** )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( node * ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="built_in">memset</span>( Indegree, <span class="number">0</span>, <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; E ; i++ )&#123;</span><br><span class="line">		<span class="built_in">cin</span> &gt;&gt; u &gt;&gt; v;</span><br><span class="line">		insert( graph, u, v );</span><br><span class="line">		Indegree[v]++;</span><br><span class="line">	&#125;</span><br><span class="line">	Topological( graph, Indegree );</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>以下是运行情况<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/拓扑无回路.png" alt="无回路拓扑" style="float:left"><img src="http://7xktmz.com1.z0.glb.clouddn.com/拓扑有回路.png" alt="有回路拓扑"></p>
+</li>
+</ul>
+<hr>
+<p></p><h1 id="5">边的分类</h1><p></p>
+<blockquote>
+<p>深度优先搜索可以对输入图G =（V，E）的边归类，这种归类可以用来收集很多关于图的重要信息，例如之后会看到这种归类在有向图回路问题中的运用。</p>
+</blockquote>
+<ul>
+<li>归类方法<ul>
+<li>树边：是深度优先森林中的边，如果顶点v是在探寻边（u，v）时被首次发现的，则（u，v）为一条树边。</li>
+<li>反向边：在深度优先树中连接顶点v到达它的某一个祖先顶点u的那些边。有向图中可能出现的自环也被认为是反向边。</li>
+<li>正向边：在深度优先树中连接顶点u到它的某一个后裔v的非树边（u，v）。</li>
+<li>交叉边：其它类型的边，存在于同一棵深度优先树的两个顶点之间，条件是其中的一个顶点不是另一个顶点的祖先。交叉边也可以在不同的深度优先树的顶点之间。</li>
+</ul>
+</li>
+<li><p>修改DFS使其可以对边进行分类</p>
+<blockquote>
+<p>在上面DFS代码中，可以通过三染色对边进行归类。核心在于，对于每条边（u，v），当该边第一次被探寻到时，即根据v的颜色来对该边进行分类（对正向边和交叉边不做区分）。</p>
+</blockquote>
+<ol>
+<li>白色：表明（u，v）是一条树边。</li>
+<li>灰色：表明（u，v）是一条反向边。</li>
+<li>黑色：表明（u，v）是一条正向边或者交叉边。</li>
+<li>证明：对第一种情况，白色从定义可知；对第二种情况，灰色顶点对应着DFS_Visit()的调用栈，每次探寻都从最深的灰色顶点开始，所以一旦目标顶点v是灰色，说明v是u的祖先；第三种情况处理其他可能性，并且显而易见：<strong>如果d[u] &lt; d[v]，则（u，v）是一条正向边，如果d[u] &gt; d[v]，则（u，v）是一条交叉边。</strong>当然，在无向图中，因为（u，v）和（v，u）是一条边，因此这种分类仅适用前两种（白色，灰色）类型，可以证明：<strong>对无向图G深度优先搜索，G的每一条边要么是树边，要么是反向边。</strong></li>
+</ol>
+</li>
+</ul>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/">原始出处</a>(<a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/">http://forec.github.io/2015/09/13/Graph-Algorithms2/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Algorithms/" rel="tag">#Algorithms</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/15/小学期实践报告/" rel="prev">小学期实践报告</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/12/Graph-Algorithms1/" rel="next">图的概念和存储方式</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/09/13/Graph-Algorithms2/"
+                   data-title="图的遍历和拓扑排序" data-url="http://forec.github.io/2015/09/13/Graph-Algorithms2/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Never mind</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gitcafe.com/forec" target="_blank">gitcafe</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forect@hotmail.com" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u6458_u8981"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1"><span class="nav-number">2.</span> <span class="nav-text">图的搜索算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2"><span class="nav-number">2.1.</span> <span class="nav-text">广度优先搜索（BFS)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3"><span class="nav-number">2.2.</span> <span class="nav-text">深度优先搜索（DFS）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4"><span class="nav-number">3.</span> <span class="nav-text">拓扑排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6"><span class="nav-number">3.1.</span> <span class="nav-text">基于DFS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7"><span class="nav-number">3.2.</span> <span class="nav-text">Kahn</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5"><span class="nav-number">4.</span> <span class="nav-text">边的分类</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

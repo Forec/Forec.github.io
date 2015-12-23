@@ -1,0 +1,787 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Never mind" />
+
+
+
+  <meta name="keywords" content="Algorithms," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="What Happened ?" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="摘要
+图的概念和术语
+标准表示方式
+其他存储方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图的概念和存储方式">
+<meta property="og:url" content="http://forec.github.io/2015/09/12/Graph-Algorithms1/index.html">
+<meta property="og:site_name" content="What Happened ?">
+<meta property="og:description" content="摘要
+图的概念和术语
+标准表示方式
+其他存储方式">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/无向图存储方式实例.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/有向图存储方式实例.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/邻接表测试图.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/邻接矩阵测试图.png">
+<meta property="og:updated_time" content="2015-11-01T10:06:25.725Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图的概念和存储方式">
+<meta name="twitter:description" content="摘要
+图的概念和术语
+标准表示方式
+其他存储方式">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 图的概念和存储方式 | What Happened ? </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">What Happened ?</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              图的概念和存储方式
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-12T13:00:21+08:00" content="2015-09-12">
+            2015-09-12
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Code/" itemprop="url" rel="index">
+                  <span itemprop="name">Code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/09/12/Graph-Algorithms1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/12/Graph-Algorithms1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="u6458_u8981"><a href="#u6458_u8981" class="headerlink" title="摘要"></a>摘要</h1><ul>
+<li><a href="http://forec.github.io/2015/09/12/Graph-Algorithms1/#1">图的概念和术语</a></li>
+<li><a href="http://forec.github.io/2015/09/12/Graph-Algorithms1/#2">标准表示方式</a></li>
+<li><a href="http://forec.github.io/2015/09/12/Graph-Algorithms1/#3">其他存储方式</a></li>
+</ul>
+<a id="more"></a>
+<p></p><h1 id="1">图的概念和术语</h1><p></p>
+<blockquote>
+<p>一个图（Graph）是表示物件与物件之间的关系的方法，是图论的基本研究对象。一个图看起来是由一些小圆点（称为顶点或结点）和连结这些圆点的直线或曲线（称为边）组成的。（From <a href="https://zh.wikipedia.org/wiki/%E5%9B%BE_%28%E6%95%B0%E5%AD%A6%29" target="_blank" rel="external">Wikipedia</a>）</p>
+</blockquote>
+<ul>
+<li>给定图G=（V，E），其中V代表|V|，指的是图中的顶点数，E代表|E|，指的是图中的边数。通过这两个参数描述一个图的规模。以下均使用二元组的定义方式定义G，对于映射关系复杂的使用三元组G=（V，E，I），I为关联函数，将E中的每个元素映射到V。</li>
+<li>基本术语<ul>
+<li><strong>阶</strong>（Order）：图G中V的大小称为G的阶。</li>
+<li><strong>子图</strong>（Sub-Graph）：图G’称为G的子图，当V(G’)包含于V(G)，并且E(G’)包含于E(G)。</li>
+<li><strong>生成子图</strong>（Spanning Sub-Graph）：满足V(G’)=V(G)的子图。</li>
+<li><strong>度</strong>（Degree）：一个顶点的度是指与该顶点相关联的总边数，顶点v的度记作d(v)。在G中：∑d(v) = 2|E|。</li>
+<li><strong>出度</strong>（Out-Degree）和<strong>入度</strong>（In-Degree）：有向图中，顶点v的出度是以v为起点的边的数量，入度相反。</li>
+<li><strong>自环</strong>（Loop）：一条边的起点和终点是同一个顶点。</li>
+<li><strong>路径</strong>（Path）：从顶点u到顶点v的一条路径是指经过一个边的序列（u，v1），（v1，v2），（v2，v3），……，（vn，v），若u = v则该路径是<strong>闭</strong>的，否则是<strong>开</strong>的。若v1，v2，……，v两两不等，则该路径为<strong>简单路径</strong>，又称<strong>轨道</strong>（Track）（允许u=v），闭的轨道称为<strong>圈</strong>（Cycle）。</li>
+<li><strong>行迹</strong>（Trace）：若路径P（u，v）中各边都不相同则该路径为u到v的一条行迹。闭的行迹称为<strong>回路</strong>（Circuit）。</li>
+<li><strong>距离</strong>（Distance）：从u到v的最短路径存在时，该最短路径的长度为从u到v的距离。不存在路径时，距离为∞。</li>
+<li><strong>桥</strong>（Bridge）：若去掉一条边使得整个图不连通，则该边称为桥。</li>
+</ul>
+</li>
+<li><strong>有向图</strong>：图中顶点之间的路径存在方向，A-&gt;B的路径存在不等于B-&gt;A的路径也存在。</li>
+<li><strong>无向图</strong>：图中顶点之间的路径是双向的。</li>
+<li><strong>完全图</strong>：若图中每一对不同顶点恰有一条边相连，则称为完全图。完全图是每对顶点之间都恰连有一条边的简单图。无向完全图的边数E=V×(V-1)/2。有向完全图E=V×(V-1)。</li>
+<li><strong>连通图</strong>和<strong>连通分量</strong>：在无向图中，若从顶点A到顶点B有路径，则称A和B连通。若图中任意两个顶点之间都连通，则称该图为连通图，否则，称该图为非连通图，其中的极大连通子图称为连通分量（极大指该子图中包含的顶点个数在所有连通子图中极大）。有向图的最大连通子图称为该有向图的强连通分量。任何连通图的连通分量只有一个（其自身）。</li>
+<li><strong>团</strong>：团是G的一个完全子图，如果一个团不是其他任何一个团的真子集，则该团为G的极大团。顶点最多的极大团是G的最大团。</li>
+</ul>
+<hr>
+<p></p><h1 id="2">标准表示方式</h1><p></p>
+<h2 id="u6982_u5FF5"><a href="#u6982_u5FF5" class="headerlink" title="概念"></a>概念</h2><p> 表示一个图的标准方法有邻接表和邻接数组，这两种方法都可以同时用于有向图和无向图。通常采用邻接表表示法，它用来存储稀疏图（E远小于V^2）更紧凑。当遇到稠密图或必须很快判断两个顶点间是否存在边时使用邻接数组表示法（如Floyd算法）。</p>
+<ul>
+<li><strong>邻接表</strong>：G=（V，E）的邻接表由一个包含|V|个列表的数组D组成，每个顶点对应数组中的一个列表。对于顶点u∈V，当存在一条路径u-&gt;v（v∈V），则D[u]中包含v或指向v的指针。邻接表中的顶点可以按任意顺序存储。当G是有向图，邻接表D的长度为E，G是无向图，邻接表D的长度为2E（一条边需要在两个方向存储）。邻接表修改后可以支持多种图的变体，有很强的适应性，但若要确定图中边（u，v）是否存在只能经过线性时间搜索。</li>
+<li><strong>邻接数组</strong>：在G=（V，E）中，将各个顶点按某种方式编号为1，2，3，……，|V|，之后通过一个|V|×|V|的矩阵A存储，当（u，v）∈E，Auv =  1，否则Auv = 0。若为加权图，则可以用权值和∞代替1和0。这种表示方法在O(1)的时间内得到u，v之间的关系，但需要较大的存储空间。</li>
+<li>以下是无向图和有向图使用上述两种方式的表示形式。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/无向图存储方式实例.jpg" alt="无向图表示实例" width="500px"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/有向图存储方式实例.jpg" alt="无向图表示实例" width="500px"><br>从上面图可以看出，邻接矩阵A关于主对角线对称，即A = A^T ，在无向图的一些应用中可以只存储主对角线和主对角线以上的部分，减少一半的存储空间。</li>
+</ul>
+<h2 id="u5B8C_u6574_u4EE3_u7801"><a href="#u5B8C_u6574_u4EE3_u7801" class="headerlink" title="完整代码"></a>完整代码</h2><ul>
+<li><p>邻接表表示法（无向加权图）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> * @author Forec</span><br><span class="line"> * Test Adjacency List</span><br><span class="line"> */</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="keyword">struct</span> Node&#123;</span><br><span class="line">	<span class="keyword">int</span> w;</span><br><span class="line">	<span class="keyword">int</span> v;</span><br><span class="line">	<span class="keyword">struct</span> Node * next;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> Node node;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">( <span class="keyword">int</span> u, <span class="keyword">int</span> v, <span class="keyword">int</span> weight, node ** List )</span></span>&#123;</span><br><span class="line">	node * temp;</span><br><span class="line">	temp = ( node * )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( node ) );</span><br><span class="line">	temp-&gt;v = v;</span><br><span class="line">	temp-&gt;w = weight;</span><br><span class="line">	temp-&gt;next = List[u];</span><br><span class="line">	List[u] = temp;			<span class="comment">// Add node v to the head of list[u]</span></span><br><span class="line">	temp = ( node * )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( node ) );</span><br><span class="line">	temp-&gt;v = u;</span><br><span class="line">	temp-&gt;w = weight;</span><br><span class="line">	temp-&gt;next = List[v];</span><br><span class="line">	List[v] = temp;			<span class="comment">// Add node u to the head of list[v]</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">( node ** List, <span class="keyword">int</span> V )</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	node * temp;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )&#123;</span><br><span class="line">		<span class="built_in">printf</span>( <span class="string">"%d"</span>, i );</span><br><span class="line">		temp = List[i];</span><br><span class="line">		<span class="keyword">while</span> ( temp != <span class="literal">NULL</span> )&#123;</span><br><span class="line">			<span class="built_in">printf</span>( <span class="string">"-&gt;%d(%d)"</span>, temp-&gt;v, temp-&gt;w );</span><br><span class="line">			temp = temp-&gt;next;			</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> V, E, u, v, w;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="built_in">scanf</span>( <span class="string">"%d %d"</span>, &amp;V, &amp;E );</span><br><span class="line">	node ** Adj = ( node ** )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( node * ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )</span><br><span class="line">		Adj[i] = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; E ; i++ )&#123;</span><br><span class="line">		<span class="built_in">scanf</span>( <span class="string">"%d %d %d"</span>, &amp;u, &amp;v, &amp;w );</span><br><span class="line">		insert( u, v, w, Adj );</span><br><span class="line">	&#125;</span><br><span class="line">	print( Adj, V );</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>邻接矩阵表示法（无向加权图）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> * @author Forec</span><br><span class="line"> * Test Adjacency Matrix</span><br><span class="line"> */</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> INF <span class="number">0x7fff</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Min</span><span class="params">( <span class="keyword">int</span> a, <span class="keyword">int</span> b )</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a &lt; b ? a : b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Max</span><span class="params">( <span class="keyword">int</span> a, <span class="keyword">int</span> b )</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a &gt; b ? a : b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> V, E, u, v, w;</span><br><span class="line">	<span class="keyword">int</span> i, j;</span><br><span class="line">	<span class="built_in">scanf</span>( <span class="string">"%d %d"</span>, &amp;V, &amp;E );</span><br><span class="line">	<span class="keyword">int</span> ** Mat = ( <span class="keyword">int</span> ** )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( <span class="keyword">int</span> * ) * ( V + <span class="number">1</span> ) ); </span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )&#123;</span><br><span class="line">		Mat[i] = ( <span class="keyword">int</span> * )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( i + <span class="number">1</span> ) );</span><br><span class="line">		<span class="keyword">for</span> ( j = <span class="number">1</span> ; j &lt; i ; j++ )</span><br><span class="line">			Mat[i][j] = INF;</span><br><span class="line">		Mat[i][i] = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; E ; i++ )&#123;</span><br><span class="line">		<span class="built_in">scanf</span>( <span class="string">"%d %d %d"</span>, &amp;u, &amp;v, &amp;w );</span><br><span class="line">		Mat[Max( u, v )][Min( u, v )] = w;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )&#123;</span><br><span class="line">		<span class="keyword">for</span> ( j = <span class="number">1</span> ; j &lt;= i ; j++ )</span><br><span class="line">			<span class="built_in">printf</span>( <span class="string">"%d\t"</span>,Mat[i][j]);</span><br><span class="line">		<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><img src="http://7xktmz.com1.z0.glb.clouddn.com/邻接表测试图.png" alt="邻接表测试图" width="300px" style="float:left"><img src="http://7xktmz.com1.z0.glb.clouddn.com/邻接矩阵测试图.png" alt="邻接矩阵测试图" width="300px"></p>
+</li>
+</ul>
+<hr>
+<p></p><h1 id="3">其他存储方式</h1><p></p>
+<h2 id="u8FB9_u96C6_u6570_u7EC4"><a href="#u8FB9_u96C6_u6570_u7EC4" class="headerlink" title="边集数组"></a>边集数组</h2><blockquote>
+<p>边集数组利用几个一维数组存储图中的所有边。</p>
+</blockquote>
+<p> 举例，输入数据：<br> 1 4<br> 1 3<br> 3 2<br> 5 2<br> 1 5<br> 上面输入完成后，边集数组如下<table style="text-align: center"><tbody><tr><td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr><tr><td>source</td><td>1</td><td>1</td><td>3</td><td>5</td><td>1</td></tr><tr><td>destination</td><td>4</td><td>3</td><td>2</td><td>2</td><td>5</td></tr></tbody></table>容易看出，边集数组只是简单的存储每条边的信息，如果需要存储权值只需要再加上一个域。在边集数组中查找一条边或一个顶点的度都需要扫描整个数组，所以其时间复杂性为O（e）。边集数组适合那些对边依次进行处理的运算，不适合对顶点的运算和对任一条边的运算。 </p>
+<h2 id="u524D_u5411_u661F_u548C_u94FE_u5F0F_u524D_u5411_u661F"><a href="#u524D_u5411_u661F_u548C_u94FE_u5F0F_u524D_u5411_u661F" class="headerlink" title="前向星和链式前向星"></a>前向星和链式前向星</h2><ul>
+<li>前向星是特殊的边集数组，把边集数组中的每一条边按照起点排序，如果起点相同就按照重点排序，之后用Len[i]记录以i为起点的边共有多少条，以Head[i]记录这Len[i]条边中第一条在前向星数组的哪个位置。举例，输入数据：<br>1 4<br>1 3<br>3 2<br>5 2<br>1 5<br>在上面的输入完成后，对其排序得到<br><table style="text-align: center"><tbody><tr><td>编号</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr><tr><td>起点</td><td>1</td><td>1</td><td>1</td><td>3</td><td>5</td></tr><tr><td>终点</td><td>3</td><td>4</td><td>5</td><td>2</td><td>2</td></tr></tbody></table><br>此时Len和Head数组分别为<table style="text-align: center"><tbody><tr><td></td><td>Head</td><td>Len</td></tr><tr><td>1</td><td>1</td><td>3</td></tr><tr><td>2</td><td>-1</td><td>0</td></tr><tr><td>3</td><td>4</td><td>1</td></tr><tr><td>4</td><td>-1</td><td>0</td></tr><tr><td>5</td><td>5</td><td>1</td></tr></tbody></table>前向星需要先对边集数组排序，用快排需要O（NlogN）复杂度，计数排序也需要O（M）的预处理时间。</li>
+<li><p>链式前向星<br>不需要排序，建立边结构体  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> Edge&#123;</span><br><span class="line">    <span class="keyword">int</span> next;</span><br><span class="line">    <span class="keyword">int</span> to;</span><br><span class="line">    <span class="keyword">int</span> weight;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中，edge[i].to为第i条边的终点，edge[i].next表示与第i条边同起点的下一边在Edge数组中的位置，edge[i].weight为权值。此外还需要数组head，初始化为-1。head[i]表示以i为起点的第一条边的存储位置，利用链式前向星存储时，head[i]记录的位置是按输入顺序最后一条以i为起点的边所存储的位置。插入边代码如下。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// initialize cnt 0</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">( <span class="keyword">int</span> u, <span class="keyword">int</span> v, <span class="keyword">int</span> w )</span></span>&#123;</span><br><span class="line">   edge[cnt].to = v;</span><br><span class="line">   edge[cnt].weight = w;</span><br><span class="line">   edge[cnt].next = head[u];</span><br><span class="line">   head[u] = cnt++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>按照上面前向星的例子，插入结束后得到的edge数组如下<table style="text-align: center"><tbody><tr><td>i</td><td>edge[i].to</td><td>edge[i].next</td><td>edge[i].w</td><td>head</td></tr><tr><td>1</td><td>4</td><td>-1</td><td>-</td><td>head[1] = 0</td></tr><tr><td>2</td><td>3</td><td>0</td><td>-</td><td>head[1] = 1</td></tr><tr><td>3</td><td>2</td><td>-1</td><td>-</td><td>head[3] = 2</td></tr><tr><td>4</td><td>2</td><td>-1</td><td>-</td><td>head[5] = 3</td></tr><tr><td>5</td><td>5</td><td>1</td><td>-</td><td>head[1]= 4</td></tr></tbody></table>遍历时按输入顺序的倒序遍历，<code>for ( int i = head[u] ; i &gt;= 0 ; i = edge[i].next )</code>。</p>
+</li>
+</ul>
+<h2 id="u5341_u5B57_u94FE_u8868"><a href="#u5341_u5B57_u94FE_u8868" class="headerlink" title="十字链表"></a>十字链表</h2><ul>
+<li><p>对于邻接矩阵，处理稀疏图资源利用效率不高，可以结合邻接表的思想，链式表示稀疏矩阵。当然其应用不局限于矩阵，一切具有正交关系的结构都可以使用十字链表存储。<br><table style="text-align: center"><tbody><tr><td>row</td><td>col</td><td>value</td></tr><tr><td>right</td><td>down</td></tr></tbody></table><br>以上是十字链表的结构，row和col分别表示当该元素使用邻接矩阵存储时所在的行数和列数。value是元素值（权值），down指向了当用邻接矩阵存储时，同一列中下一个非0元素所在的位置，right指向了当用邻接矩阵存储时，同一行中下一个非0元素所在的位置。<br>每行/列设一个表头结点（结构与元素结点相同），与down/right构成循环链表，即第i列头结点的down指向该列上第1个非0元素，第i行头结点的right指向该行第1个非0元素，第i列/行上最后一个结点的down/right指向该列/行的头结点。如果某列/行中没有非0元素，则令它的头结点down/right域指向自己。<br>可以额外设置一个表头指针数组，指向每行/列的表头节点。</p>
+</li>
+<li><p>代码实现十字链表的结构和插入</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="keyword">struct</span> Node&#123;   </span><br><span class="line">    <span class="keyword">int</span> row, col, value;   </span><br><span class="line">    <span class="keyword">struct</span> Node *right, *down;   </span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> Node OLNode;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> Node * OLink;   </span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span>&#123;   </span><br><span class="line">    OLink *rowHead;</span><br><span class="line">    OLink *colHead;   </span><br><span class="line">    <span class="keyword">int</span> row, col, len;</span><br><span class="line">&#125;CrossList;</span><br><span class="line">   </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CreateCrossList</span><span class="params">( CrossList * List )</span></span>&#123;   </span><br><span class="line">    <span class="keyword">int</span> row, col, len, i, u, v, w;   </span><br><span class="line">    OLink p, q;  </span><br><span class="line">    <span class="built_in">scanf</span>( <span class="string">"%d %d %d"</span>, &amp;row, &amp;col, &amp;len ); <span class="comment">/* row, col分别为十字链表模拟数组的行数和列数，len为非0元素数目 */</span>   </span><br><span class="line">    List-&gt;row = row;   </span><br><span class="line">    List-&gt;col = col;   </span><br><span class="line">    List-&gt;len = len;   </span><br><span class="line">    List-&gt;rowHead = ( OLink * )<span class="built_in">malloc</span>( ( row+<span class="number">1</span> ) * <span class="keyword">sizeof</span>( OLink ) );</span><br><span class="line">    List-&gt;colHead = ( OLink * )<span class="built_in">malloc</span>( ( col+<span class="number">1</span> ) * <span class="keyword">sizeof</span>( OLink ) ); <span class="comment">// 应检查是否overflow </span></span><br><span class="line">    <span class="keyword">for</span>( i = <span class="number">0</span>; i &lt; row + <span class="number">1</span> ; i++ )</span><br><span class="line">		List-&gt;rowHead[i] = <span class="literal">NULL</span>;      </span><br><span class="line">    <span class="keyword">for</span>( i = <span class="number">0</span>; i &lt; col + <span class="number">1</span> ; i++ )</span><br><span class="line">		List-&gt;colHead[i] = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">for</span>( i = <span class="number">0</span> ; i &lt; len ; i++ )&#123; </span><br><span class="line">		<span class="built_in">scanf</span>( <span class="string">"%d %d %d "</span>, &amp;u, &amp;v, &amp;w );</span><br><span class="line">		p = ( OLink )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( OLNode ) ); <span class="comment">// 实际使用要检查溢出</span></span><br><span class="line">		p-&gt;row = u;</span><br><span class="line">		p-&gt;col = v;</span><br><span class="line">		p-&gt;value = w;</span><br><span class="line">		<span class="keyword">if</span> ( List-&gt;rowHead[u] == <span class="literal">NULL</span> )&#123;</span><br><span class="line">			List-&gt;rowHead[u] = p;</span><br><span class="line">			p-&gt;right=<span class="literal">NULL</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="keyword">for</span>( q = List-&gt;rowHead[u] ; q-&gt;right != <span class="literal">NULL</span> &amp;&amp; q-&gt;right-&gt;col &lt; v ; q = q-&gt;right );</span><br><span class="line">			p-&gt;right = q-&gt;right;</span><br><span class="line">			q-&gt;right = p;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(List-&gt;colHead[v] == <span class="literal">NULL</span>)&#123;</span><br><span class="line">			List-&gt;colHead[v] = p;</span><br><span class="line">			p-&gt;down = <span class="literal">NULL</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="keyword">for</span>( q = List-&gt;colHead[v] ; q-&gt;down != <span class="literal">NULL</span> &amp;&amp; q-&gt;down-&gt;row &lt; u; q = q-&gt;down );</span><br><span class="line">			p-&gt;down = q-&gt;down;</span><br><span class="line">			q-&gt;down = p;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/09/12/Graph-Algorithms1/">原始出处</a>(<a href="http://forec.github.io/2015/09/12/Graph-Algorithms1/">http://forec.github.io/2015/09/12/Graph-Algorithms1/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Algorithms/" rel="tag">#Algorithms</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/13/Graph-Algorithms2/" rel="prev">图的遍历和拓扑排序</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/09/Data-Structure-example1/" rel="next">部分问题例程</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/09/12/Graph-Algorithms1/"
+                   data-title="图的概念和存储方式" data-url="http://forec.github.io/2015/09/12/Graph-Algorithms1/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Never mind</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gitcafe.com/forec" target="_blank">gitcafe</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forect@hotmail.com" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u6458_u8981"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1"><span class="nav-number">2.</span> <span class="nav-text">图的概念和术语</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2"><span class="nav-number">3.</span> <span class="nav-text">标准表示方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u6982_u5FF5"><span class="nav-number">3.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5B8C_u6574_u4EE3_u7801"><span class="nav-number">3.2.</span> <span class="nav-text">完整代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3"><span class="nav-number">4.</span> <span class="nav-text">其他存储方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u8FB9_u96C6_u6570_u7EC4"><span class="nav-number">4.1.</span> <span class="nav-text">边集数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u524D_u5411_u661F_u548C_u94FE_u5F0F_u524D_u5411_u661F"><span class="nav-number">4.2.</span> <span class="nav-text">前向星和链式前向星</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5341_u5B57_u94FE_u8868"><span class="nav-number">4.3.</span> <span class="nav-text">十字链表</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

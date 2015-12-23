@@ -1,0 +1,846 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Never mind" />
+
+
+
+  <meta name="keywords" content="Algorithms," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="What Happened ?" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="摘要
+最小生成树
+算法设计
+Prim算法
+Kruskal算法
+
+
+最小树形图
+朱刘算法
+1986年Tarjan等提出的复杂度更好的算法
+
+
+
+
+分析一下MST普适算法，加一些证明，帮助理解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最小生成树和最小树形图">
+<meta property="og:url" content="http://forec.github.io/2015/09/23/Graph-Algorithms4/index.html">
+<meta property="og:site_name" content="What Happened ?">
+<meta property="og:description" content="摘要
+最小生成树
+算法设计
+Prim算法
+Kruskal算法
+
+
+最小树形图
+朱刘算法
+1986年Tarjan等提出的复杂度更好的算法
+
+
+
+
+分析一下MST普适算法，加一些证明，帮助理解。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/prim.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/最小树形图演示.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/朱刘算法运行.png">
+<meta property="og:updated_time" content="2015-11-01T10:06:34.859Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="最小生成树和最小树形图">
+<meta name="twitter:description" content="摘要
+最小生成树
+算法设计
+Prim算法
+Kruskal算法
+
+
+最小树形图
+朱刘算法
+1986年Tarjan等提出的复杂度更好的算法
+
+
+
+
+分析一下MST普适算法，加一些证明，帮助理解。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 最小生成树和最小树形图 | What Happened ? </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">What Happened ?</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              最小生成树和最小树形图
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-23T09:03:27+08:00" content="2015-09-23">
+            2015-09-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Code/" itemprop="url" rel="index">
+                  <span itemprop="name">Code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/09/23/Graph-Algorithms4/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/23/Graph-Algorithms4/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="u6458_u8981"><a href="#u6458_u8981" class="headerlink" title="摘要"></a>摘要</h1><ul>
+<li><a href="http://forec.github.io/2015/09/23/Graph-Algorithms4/#1">最小生成树</a><ul>
+<li><a href="http://forec.github.io/2015/09/23/Graph-Algorithms4/#7">算法设计</a></li>
+<li><a href="http://forec.github.io/2015/09/23/Graph-Algorithms4/#2">Prim算法</a></li>
+<li><a href="http://forec.github.io/2015/09/23/Graph-Algorithms4/#3">Kruskal算法</a></li>
+</ul>
+</li>
+<li><a href="http://forec.github.io/2015/09/23/Graph-Algorithms4/#4">最小树形图</a><ul>
+<li><a href="http://forec.github.io/2015/09/23/Graph-Algorithms4/#5">朱刘算法</a></li>
+<li><a href="http://forec.github.io/2015/09/23/Graph-Algorithms4/#6">1986年Tarjan等提出的复杂度更好的算法</a></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>分析一下MST普适算法，加一些证明，帮助理解。</p>
+</blockquote>
+<a id="more"></a>
+<p></p><h1 id="1">最小生成树</h1><p></p>
+<blockquote>
+<p>一个有V个顶点的无向连通图，其最小生成树是包含原图全部V个顶点，并且保持V个节点连通的，具有V-1条权值之和最小边的连通子图。（MST）</p>
+</blockquote>
+<p></p><h2 id="7">算法设计</h2><p></p>
+<ul>
+<li><p>贪心策略在求解MST时是可行的：要寻找最小生成树T，对于任意顶点u而言，在其相邻边的集合中，假设权值最小边是（u，v），而T中不包含（u，v），因此一定有另一条相邻边（u，v’）∈T且其权值大于（u，v），这意味着T不满足最小生成树的性质。根据定义，最小生成树只含有V-1条边，因此关键在于如何寻找<strong>不破坏性质而对整体而言权值相对更小的边</strong>。最小生成树包含图中所有顶点，因此从任一顶点开始搜索都可以获取到满足的MST，假设从顶点s开始，对于s紧邻的所有顶点遍历过后，一定会有一个顶点v，使得（s，v）的权值是所有s邻边中最小的，根据上面贪心策略的证明，（s，v）∈T。将构造过程中的顶点集合记为A，边集合记为E^s ，此时A = {s，v}，E^s = {（s，v）}，E^s ⊆T。</p>
+<blockquote>
+<p>定义一些概念：无向图G =（V，E）的一个<strong>割</strong>（A，V - A）是对顶点集V的一个划分，当一条边（u，v）∈E并且其中一个顶点∈A，另一个顶点∈（V - A），称这条边（u，v）通过割（A，V - A）。如果一个边集E’满足其中任一边都不通过某个割，则说这个割<strong>不妨害</strong>边集E’。如果某一条边的权值是通过一个割的所有边中最小的，则称该边为通过这个割的一条<strong>轻边</strong>（可能会有多条轻边）。</p>
+</blockquote>
+</li>
+<li><p>接下来对E^s 继续扩充。显然，再向E^s 中加入任何直接或间接连接s，v的边都是无用的，称这些边为对E^s 不安全的边。可以添加的安全边必须满足一定条件，下面寻找这个条件。上一句已经表明：安全边首先必须通过割（A，V - A），否则是不安全的。根据贪心策略，应当在通过割的边中寻找最小边，因此定义里的轻边是符合这两个前提的。下面证明，<strong>通过割（A，V - A）的轻边是对E^s 安全的</strong>（显然，割（A，V - A）是不妨害E^s 的）：</p>
+<ul>
+<li>假设T是包含E^s 的一棵最小生成树，并且T不包含轻边（u，v）（否则证明完成）。因为T不包含（u，v），所以向T中加入（u，v）将构成回路。因为（u，v）通过割（A，V - A），所以在T中存在另外一条边也通过割，假设这条边是（x，y），因为割不妨害E^s ，所以（x，y）不属于E^s 。在T中，除去任意一条边都会导致生成树变成两个子图，如果去掉（x，y），T将被分成两个子图（u到v的唯一通路断开），此时加入边（u，v）将使得T重新被连接，新的T’ = T - {（x，y）}∪{（u，v）}。接下来可以证明T’是一颗最小生成树。记ω（a，b）为边（a，b）的权值，因为（u，v）是轻边，所以ω（u，v）≤ ω（x，y），所以ω（T’）≤ ω（T）。又已知T是最小生成树，所以ω（T）≤ ω（T’）。因此T’是最小生成树。</li>
+<li>下面证明（u，v）是E^s 的一条安全边。因为E^s ⊆T而（x，y）∉E^s ，故E^s ⊆T’。故E^s ∪{（u，v）}⊆T’。因为T’是最小生成树，所以（u，v）对E^s 是安全的。</li>
+</ul>
+</li>
+<li>整个流程。根据上面的证明，已经确定了加边的过程和依据。<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Get-MST( <span class="keyword">G</span>, ω )&#123;</span><br><span class="line">    <span class="keyword">E</span>^s ← ∅</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">E</span>^s hasn't formed a MST</span><br><span class="line">        find a safe edge (<span class="keyword">u</span>, v) <span class="keyword">for</span> <span class="keyword">E</span>^<span class="literal">s</span></span><br><span class="line">        <span class="keyword">E</span>^s ← <span class="keyword">E</span>^s ∪&#123;（<span class="keyword">u</span>，v）&#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">E</span>^<span class="literal">s</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p></p><h2 id="2">Prim算法</h2><p></p>
+<blockquote>
+<p>Prim算法又称为DJP算法，分别于1930年由捷克数学家沃伊捷赫·亚尔尼克（Vojtěch Jarník），1957年由美国计算机科学家罗伯特·普里姆（Robert C. Prim），1959年由艾兹格·迪科斯彻多次发现。下面的链接是<a href="https://zh.wikipedia.org/wiki/Prim" target="_blank" rel="external">Wiki上关于普里姆算法的描述</a>。</p>
+</blockquote>
+<h3 id="u7B97_u6CD5_u63CF_u8FF0"><a href="#u7B97_u6CD5_u63CF_u8FF0" class="headerlink" title="算法描述"></a>算法描述</h3><ol>
+<li>输入一个加权连通图G =（V，E）。</li>
+<li>初始化一个顶点集Vn = {s}，s是集合V中的任一节点作为起点，边集En = {}为空。</li>
+<li>重复下列操作直到V = Vn：<ul>
+<li>从集合E中选取（u，v），满足以下条件：u属于Vn且v不属于Vn，并且这样的（u，v）在E中权值最小，如果存在多条相同权值的边，任选其一。</li>
+<li>将v加入Vn中，将边（u，v）边加入En中。</li>
+</ul>
+</li>
+<li>En为最小生成树包含的V-1条边的集合。</li>
+</ol>
+<h3 id="u65F6_u95F4_u590D_u6742_u5EA6_u5206_u6790"><a href="#u65F6_u95F4_u590D_u6742_u5EA6_u5206_u6790" class="headerlink" title="时间复杂度分析"></a>时间复杂度分析</h3><ol>
+<li>邻接矩阵表示:采用邻接矩阵存储，每次寻找到权值最短的边需要O（V），一共需要O（V^2）。</li>
+<li>采用邻接表+二叉堆，O（（V+E）logV）。因为对维护边的二叉堆每次操作需要logV，需要调整边E次，向En加边后删除最小元V次。</li>
+<li>采用斐波那契堆+邻接表为O（E+VlogV），在连通图足够稠密时（E = Ω（VlogV）时），可以显著提高运行速度。 </li>
+</ol>
+<h3 id="u4EE3_u7801_u5B9E_u73B0_28_u90BB_u63A5_u8868+_u5806_u4F18_u5316_uFF09"><a href="#u4EE3_u7801_u5B9E_u73B0_28_u90BB_u63A5_u8868+_u5806_u4F18_u5316_uFF09" class="headerlink" title="代码实现(邻接表+堆优化）"></a>代码实现(邻接表+堆优化）</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;memory.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> INF <span class="number">0x7fffffff</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> edge</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> v, w, next;</span><br><span class="line">&#125;* edges;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> *h, *heap, *pos, *dist;</span><br><span class="line"><span class="comment">/*</span><br><span class="line"> dist used to store the distance between Vn and V - Vn</span><br><span class="line"> h[i] points to the position of first v satisfying (u,v)</span><br><span class="line"> heap[] simulates a heap structure to store vertexs</span><br><span class="line"> pos[u] counts the position of vertex u in heap[]</span><br><span class="line">*/</span> </span><br><span class="line"><span class="keyword">int</span> V, E, size, count;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">( <span class="keyword">int</span> u, <span class="keyword">int</span> v, <span class="keyword">int</span> w )</span></span>&#123;</span><br><span class="line">	edges[++count].v = v;</span><br><span class="line">	edges[count].w = w;</span><br><span class="line">	edges[count].next = h[u];</span><br><span class="line">	h[u] = count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">( <span class="keyword">int</span> * a , <span class="keyword">int</span> * b )</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> temp = *a;</span><br><span class="line">	*a = *b;</span><br><span class="line">	*b = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Father</span><span class="params">( <span class="keyword">int</span> u )</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> u / <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Left</span><span class="params">( <span class="keyword">int</span> u )</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">2</span> * u;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Right</span><span class="params">( <span class="keyword">int</span> u )</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">2</span> * u + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">heapUp</span><span class="params">( <span class="keyword">int</span> u )</span></span>&#123;</span><br><span class="line">	<span class="keyword">while</span> ( u &gt; <span class="number">1</span> )&#123;</span><br><span class="line">		<span class="keyword">if</span> ( dist[ heap[ Father(u) ] ] &gt; dist[ heap[u] ] )&#123;</span><br><span class="line">			swap( pos + heap[ Father(u) ] , pos + heap[u]  );</span><br><span class="line">			swap( heap + Father(u) , heap + u );</span><br><span class="line">			u = Father(u);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> </span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">heapDown</span><span class="params">( <span class="keyword">int</span> u )</span></span>&#123;</span><br><span class="line">	<span class="keyword">while</span> ( Left(u) &lt;= size )&#123;</span><br><span class="line">		<span class="keyword">int</span> child;</span><br><span class="line">		<span class="keyword">if</span> ( Left(u) == size || dist[ heap[ Left(u) ] ] &lt; dist[ heap[ Right(u) ] ] )</span><br><span class="line">			child = Left(u);</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			child = Right(u);</span><br><span class="line">		<span class="keyword">if</span> ( dist[ heap[u] ] &gt; dist[ heap[child] ] )&#123;</span><br><span class="line">			swap( pos + heap[u], pos + heap[child] );</span><br><span class="line">			swap( heap + u, heap + child );</span><br><span class="line">			u = child;</span><br><span class="line">		&#125;			</span><br><span class="line">		<span class="keyword">else</span> </span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">( <span class="keyword">int</span> v, <span class="keyword">int</span> w )</span></span>&#123;</span><br><span class="line">	dist[v] = w;</span><br><span class="line">	heap[ ++size ] = v;</span><br><span class="line">	pos[v] = size;</span><br><span class="line">	heapUp(size);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pop</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> root = heap[<span class="number">1</span>];</span><br><span class="line">	swap( pos + heap[size], pos + heap[<span class="number">1</span>]);</span><br><span class="line">	swap( heap + (size--), heap + <span class="number">1</span> );</span><br><span class="line">	heapDown(<span class="number">1</span>);</span><br><span class="line">	<span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i, u, v, w;</span><br><span class="line">	<span class="built_in">scanf</span>( <span class="string">"%d %d"</span>, &amp;V, &amp;E );</span><br><span class="line">	h = ( <span class="keyword">int</span> * )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	heap = ( <span class="keyword">int</span> * )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	pos = ( <span class="keyword">int</span> * )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	dist = ( <span class="keyword">int</span> * )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="built_in">memset</span>( h, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">int</span>) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="built_in">memset</span>( heap, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">int</span>) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="built_in">memset</span>( pos, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">int</span>) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="built_in">memset</span>( dist, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">int</span>) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	edges = ( <span class="keyword">struct</span> edge * )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( <span class="keyword">struct</span> edge ) * ( <span class="number">2</span> * ( E + <span class="number">2</span>) ) );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= E ; i++ )&#123;</span><br><span class="line">		<span class="built_in">scanf</span>( <span class="string">"%d %d %d"</span>, &amp;u, &amp;v, &amp;w );</span><br><span class="line">		insert( u, v, w );</span><br><span class="line">		insert( v, u, w ); </span><br><span class="line">	&#125;</span><br><span class="line">	push( <span class="number">1</span>, <span class="number">0</span> );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">2</span> ; i &lt;= V ; i++ )</span><br><span class="line">		push( i, INF );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">prim</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i, v, ans = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )&#123;</span><br><span class="line">		<span class="keyword">int</span> front = pop();</span><br><span class="line">		ans += dist[front];</span><br><span class="line">		pos[front] = -<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">for</span> ( v = h[front] ; v != <span class="number">0</span> ; v = edges[v].next )&#123;</span><br><span class="line">			<span class="keyword">int</span> destination = edges[v].v;</span><br><span class="line">			<span class="keyword">if</span> ( pos[destination] != -<span class="number">1</span> &amp;&amp; dist[destination] &gt; edges[v].w )&#123;</span><br><span class="line">				dist[destination] = edges[v].w;</span><br><span class="line">				heapUp( pos[destination] );</span><br><span class="line">				heapDown( pos[destination] );</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	init();</span><br><span class="line">	<span class="built_in">printf</span>( <span class="string">"%d\n"</span>, prim() );</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码给出最小生成树的权值和。如果需要记录E^s ，要额外建立一个数组e，在每次修改dist的时候维护e，或者在edge结构中加入一个flag域区分此边是否被选中，每次维护dist都要更新对应边的flag域。<br>运行示例：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/prim.png"></p>
+<p></p><h2 id="3">Kruskal算法</h2><p></p>
+<blockquote>
+<p>可以看出要优化Prim需要比较高的代码复杂度。Kruskal算法从E中选取V-1条边，其贪心策略简单并且易实现，完全基于上面算法设计的描述，只需要对边进行操作，并用并查集判断点之间的相交关系。采用快速排序的Kruskal时间复杂度为O（ElogE），适合稀疏图。如果不采用快速排序，改用优先队列维护Kruskal效率会更高（如果边比较多，会有很多无用边无需排序，只要取出优先队列前列的需要的MST边）。与Prim的区别在于：Kruskal中，E^s 是一个森林，加入集合E^s 的安全边总是连接G中的两个不同连通分支的最小权边；而在Prim中，E^s 一直只有一棵树，每次向E^s 中添加的安全边连接E^s 和一个不在树中的顶点的最小权边。</p>
+</blockquote>
+<h3 id="u7B97_u6CD5_u63CF_u8FF0-1"><a href="#u7B97_u6CD5_u63CF_u8FF0-1" class="headerlink" title="算法描述"></a>算法描述</h3><ul>
+<li>对于无向连通图G =（V，E），先构造一个只含V个顶点，边集为空的子图G’，若将G’中各个顶点看成是各棵树上的根结点，则它是一个含有V棵树的一个森林。从E中选取一条权值最小的边，若该条边的两个顶点分属不同的树，则将其加入G’，即将这两个顶点分别所在的两棵树合成一棵树；反之若该条边的两个顶点已落在同一棵树上，则跳过，取下一条权值最小的边再尝试。直至森林中只有一棵树，即G’中含有V-1条边。 </li>
+</ul>
+<h3 id="u4EE3_u7801_u5B9E_u73B0_uFF08_u5FEB_u901F_u6392_u5E8F+_u5E76_u67E5_u96C6_uFF0C_u8FB9_u96C6_u6570_u7EC4_u5B58_u50A8_uFF09"><a href="#u4EE3_u7801_u5B9E_u73B0_uFF08_u5FEB_u901F_u6392_u5E8F+_u5E76_u67E5_u96C6_uFF0C_u8FB9_u96C6_u6570_u7EC4_u5B58_u50A8_uFF09" class="headerlink" title="代码实现（快速排序+并查集，边集数组存储）"></a>代码实现（快速排序+并查集，边集数组存储）</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;memory.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> Edge&#123;</span><br><span class="line">	<span class="keyword">int</span> u, v, w;</span><br><span class="line">&#125;edge;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> V, E;</span><br><span class="line"><span class="keyword">int</span> * f, * r;  <span class="comment">// r[u] is the depth of the tree with the root u </span></span><br><span class="line">edge * edges;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cmp</span><span class="params">( <span class="keyword">const</span> <span class="keyword">void</span> * a, <span class="keyword">const</span> <span class="keyword">void</span> * b )</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span>  ( (edge * ) a)-&gt;w - ( (edge *) b)-&gt;w;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getFather</span><span class="params">( <span class="keyword">int</span> x )</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> ( f[x] != x )</span><br><span class="line">		f[x] = getFather( f[x] );</span><br><span class="line">	<span class="keyword">return</span> f[x];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isSame</span><span class="params">( <span class="keyword">int</span> x, <span class="keyword">int</span> y )</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> getFather( x ) == getFather( y );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setUnion</span><span class="params">( <span class="keyword">int</span> x,<span class="keyword">int</span> y )</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> fx, fy;</span><br><span class="line">	<span class="keyword">if</span> ( ( fx = getFather(x) ) == ( fy = getFather(y) ) )</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">if</span> ( r[fx] &gt; r[fy] )</span><br><span class="line">		f[fy] = fx;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		f[fx] = fy;</span><br><span class="line">		<span class="keyword">if</span> ( r[fx] == r[fy] )</span><br><span class="line">			r[fy]++;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="built_in">scanf</span>( <span class="string">"%d %d"</span>, &amp;V, &amp;E );</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	edges = ( edge * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( edge ) * E );</span><br><span class="line">	f = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	r = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="built_in">memset</span>( r, <span class="number">0</span>, <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; E ; i++ )</span><br><span class="line">		<span class="built_in">scanf</span>( <span class="string">"%d %d %d"</span>, &amp;edges[i].u, &amp;edges[i].v, &amp;edges[i].w );</span><br><span class="line">	qsort( edges, E, <span class="keyword">sizeof</span>( edge ), cmp );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )</span><br><span class="line">		f[i] = i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Kruskal</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i, e = <span class="number">0</span>, ans = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; E &amp;&amp; e &lt; V - <span class="number">1</span>  ; i++ )</span><br><span class="line">		<span class="keyword">if</span> ( !isSame( edges[i].u, edges[i].v ) )&#123;</span><br><span class="line">			e++;</span><br><span class="line">			ans += edges[i].w;</span><br><span class="line">			setUnion( edges[i].u, edges[i].v );</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="keyword">if</span> ( e != V - <span class="number">1</span> )</span><br><span class="line">		<span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	init();</span><br><span class="line">	<span class="built_in">printf</span>( <span class="string">"%d\n"</span>, Kruskal() );</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p></p><h1 id="4">最小树形图</h1><p></p>
+<blockquote>
+<p>上面的最小生成树针对无向加权连通图，在有向带权图中，指定一个特定的顶点root，求出一棵以root为根的有向生成树T，使得T中所有边的总权值最小，该问题称为最小树形图。以下均不考虑图中不存在最小树形图的情况（判断是否存在只要对图进行一次遍历即可确定）。</p>
+</blockquote>
+<p></p><h2 id="5">朱刘算法</h2><p></p>
+<blockquote>
+<p>朱刘算法是最小树形图的第一个算法，在1965年由朱永津和刘振宏提出，复杂度为O（VE）。</p>
+</blockquote>
+<h3 id="u7B97_u6CD5_u63CF_u8FF0-2"><a href="#u7B97_u6CD5_u63CF_u8FF0-2" class="headerlink" title="算法描述"></a>算法描述</h3><ol>
+<li>对固定根root进行一遍DFS判断是否存在最小树形图。</li>
+<li>为除了root之外的每个顶点选定一条最小的入边（用pre[u]记录顶点u最小入边的起点）。</li>
+<li>判断2中构造的入边集合是否存在有向环，如果不存在，那么这个集合就是该图的最小树形图。</li>
+<li>如果3中判断出现有向环，则消环缩点。设（u, v, w）表示从u到v的权为w的边。假设3中判断出的有向环缩为新顶点new，若u位于环上，并设环中指向u的边权是ω[u]。那么对于每条从u出发的边（u, v, w），在新图中连接（new, v, w），对于每条进入u的边（in, u, w），在新图中建立边（in, new, w-ω[u]）。新图里最小树形图的权加上旧图中被收缩的环的权和，就是原图中最小树形图的权值。重复2，3，4。</li>
+<li>3中判断无有向环，返回权值。</li>
+</ol>
+<ul>
+<li>其他：<ul>
+<li>如果没有指定固定根，可以增加一个虚拟根，并且为其增加V条边指向每个顶点，权值都为原图所有边权值之和加一，转化为固定根求解。</li>
+<li>朱流算法只能求解最小总权值，无法求出路径（缩点后原顶点编号改变）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="u4EE3_u7801_u63CF_u8FF0_uFF08_u8FB9_u96C6_u6570_u7EC4_uFF09"><a href="#u4EE3_u7801_u63CF_u8FF0_uFF08_u8FB9_u96C6_u6570_u7EC4_uFF09" class="headerlink" title="代码描述（边集数组）"></a>代码描述（边集数组）</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;memory.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> INF <span class="number">0x7fffffff</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> V, E;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> Edge&#123;</span><br><span class="line">	<span class="keyword">int</span> u, v, w;</span><br><span class="line">&#125;edge;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> * in, * num, * pre, * father;</span><br><span class="line">edge * edges;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="built_in">scanf</span>( <span class="string">"%d %d"</span>, &amp;V, &amp;E );</span><br><span class="line">	num = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	in = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	pre = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	father = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	edges = ( edge * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( edge ) * E );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; E ; i++ )</span><br><span class="line">		<span class="built_in">scanf</span>( <span class="string">"%d %d %d"</span>, &amp;edges[i].u , &amp;edges[i].v, &amp;edges[i].w );</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Unidirectional_MST</span><span class="params">( <span class="keyword">int</span> root )</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> i, u, v;</span><br><span class="line">	<span class="keyword">while</span> ( <span class="number">1</span> )&#123;</span><br><span class="line">		<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )</span><br><span class="line">			in[i] = INF;</span><br><span class="line">		<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; E ; i++ )&#123;			<span class="comment">// 寻找最短边</span></span><br><span class="line">			u = edges[i].u;</span><br><span class="line">			v = edges[i].v;</span><br><span class="line">			<span class="keyword">if</span> ( edges[i].w &lt; in[v] &amp;&amp; u != v )&#123;</span><br><span class="line">				in[v] = edges[i].w;</span><br><span class="line">				pre[v] = u;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )			<span class="comment">// 判断有无孤立点</span></span><br><span class="line">			<span class="keyword">if</span> ( in[i] == INF &amp;&amp; i != root )</span><br><span class="line">				<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">int</span> count = <span class="number">1</span>;</span><br><span class="line">		<span class="built_in">memset</span>( num, <span class="number">0</span>, <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line"> 		<span class="built_in">memset</span>( father, <span class="number">0</span>, <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line"> 		in[root] = <span class="number">0</span>;</span><br><span class="line"> 		<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )&#123;</span><br><span class="line"> 			ans += in[i];</span><br><span class="line"> 			v = i;</span><br><span class="line"> 			<span class="keyword">while</span> ( father[v] != i &amp;&amp; num[v] == <span class="number">0</span> &amp;&amp; v != root )&#123;	<span class="comment">// 寻找环</span></span><br><span class="line"> 				father[v] = i;</span><br><span class="line"> 				v = pre[v];</span><br><span class="line"> 			&#125;</span><br><span class="line"> 			<span class="keyword">if</span> ( v != root &amp;&amp; num[v] == <span class="number">0</span> )&#123;	<span class="comment">// 缩点</span></span><br><span class="line"> 				<span class="keyword">for</span> ( u = pre[v] ; u != v ; u = pre[u] )</span><br><span class="line"> 					num[u] = count;</span><br><span class="line"> 				num[v] = count++;</span><br><span class="line"> 			&#125;</span><br><span class="line"> 		&#125;</span><br><span class="line"> 		<span class="keyword">if</span> ( count == <span class="number">1</span> )</span><br><span class="line"> 			<span class="keyword">break</span>;</span><br><span class="line"> 		<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )	<span class="comment">// 顶点重编号</span></span><br><span class="line"> 			<span class="keyword">if</span> ( num[i] == <span class="number">0</span> )</span><br><span class="line"> 				num[i] = count++;</span><br><span class="line"> 		<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; E ; i++ )&#123;	<span class="comment">// 维护与环相连的边</span></span><br><span class="line"> 			v = edges[i].v;</span><br><span class="line"> 			edges[i].u = num[edges[i].u];</span><br><span class="line"> 			edges[i].v = num[edges[i].v];</span><br><span class="line"> 			<span class="keyword">if</span> ( edges[i].u != edges[i].v )</span><br><span class="line"> 				edges[i].w -= in[v];</span><br><span class="line"> 		&#125;</span><br><span class="line"> 		V = count - <span class="number">1</span>;	<span class="comment">// 更新当前顶点数量和新根</span></span><br><span class="line"> 		root = num[root];</span><br><span class="line"> 	&#125;</span><br><span class="line"> 	<span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	init();</span><br><span class="line">	<span class="built_in">printf</span>( <span class="string">"%d\n"</span>, Unidirectional_MST(<span class="number">1</span>) );</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="u6D41_u7A0B_u5C55_u793A"><a href="#u6D41_u7A0B_u5C55_u793A" class="headerlink" title="流程展示"></a>流程展示</h3><ul>
+<li>盗了一张图，演示最小树形图的构造流程，并以此为样例试运行上面的代码。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/最小树形图演示.jpg" alt="最小树形图流程演示"></li>
+<li>运行结果如下：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/朱刘算法运行.png" alt="朱刘算法运行结果"></li>
+</ul>
+<p></p><h2 id="6">1986年Tarjan等提出的复杂度更好的算法</h2><p></p>
+<blockquote>
+<p>1986年， Gabow, Galil, Spencer和Tarjan提出了一个复杂度更好的实现，其时间复杂度为O(E+VlogV)。相关资料比较少，以后会把这里补上。</p>
+</blockquote>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/09/23/Graph-Algorithms4/">原始出处</a>(<a href="http://forec.github.io/2015/09/23/Graph-Algorithms4/">http://forec.github.io/2015/09/23/Graph-Algorithms4/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Algorithms/" rel="tag">#Algorithms</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/28/Data-Structure-basis2/" rel="prev">基础数据结构（散列和优先队列）</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/19/Graph-Algorithms3/" rel="next">强连通分量</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/09/23/Graph-Algorithms4/"
+                   data-title="最小生成树和最小树形图" data-url="http://forec.github.io/2015/09/23/Graph-Algorithms4/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Never mind</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gitcafe.com/forec" target="_blank">gitcafe</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forect@hotmail.com" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u6458_u8981"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1"><span class="nav-number">2.</span> <span class="nav-text">最小生成树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7"><span class="nav-number">2.1.</span> <span class="nav-text">算法设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2"><span class="nav-number">2.2.</span> <span class="nav-text">Prim算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u7B97_u6CD5_u63CF_u8FF0"><span class="nav-number">2.2.1.</span> <span class="nav-text">算法描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u65F6_u95F4_u590D_u6742_u5EA6_u5206_u6790"><span class="nav-number">2.2.2.</span> <span class="nav-text">时间复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4EE3_u7801_u5B9E_u73B0_28_u90BB_u63A5_u8868+_u5806_u4F18_u5316_uFF09"><span class="nav-number">2.2.3.</span> <span class="nav-text">代码实现(邻接表+堆优化）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3"><span class="nav-number">2.3.</span> <span class="nav-text">Kruskal算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u7B97_u6CD5_u63CF_u8FF0-1"><span class="nav-number">2.3.1.</span> <span class="nav-text">算法描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4EE3_u7801_u5B9E_u73B0_uFF08_u5FEB_u901F_u6392_u5E8F+_u5E76_u67E5_u96C6_uFF0C_u8FB9_u96C6_u6570_u7EC4_u5B58_u50A8_uFF09"><span class="nav-number">2.3.2.</span> <span class="nav-text">代码实现（快速排序+并查集，边集数组存储）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4"><span class="nav-number">3.</span> <span class="nav-text">最小树形图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5"><span class="nav-number">3.1.</span> <span class="nav-text">朱刘算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u7B97_u6CD5_u63CF_u8FF0-2"><span class="nav-number">3.1.1.</span> <span class="nav-text">算法描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4EE3_u7801_u63CF_u8FF0_uFF08_u8FB9_u96C6_u6570_u7EC4_uFF09"><span class="nav-number">3.1.2.</span> <span class="nav-text">代码描述（边集数组）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6D41_u7A0B_u5C55_u793A"><span class="nav-number">3.1.3.</span> <span class="nav-text">流程展示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6"><span class="nav-number">3.2.</span> <span class="nav-text">1986年Tarjan等提出的复杂度更好的算法</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

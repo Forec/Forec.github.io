@@ -1,0 +1,960 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Never mind" />
+
+
+
+  <meta name="keywords" content="Data-Structures," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="What Happened ?" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="这篇文章中的C语言代码均为md编辑器中手打，仅作理解用，未经过编译测试。有错误请留言，将及时更正。
+
+摘要
+需求
+树
+二叉查找树
+AVL树
+红黑树">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基础数据结构（需求和树相关）">
+<meta property="og:url" content="http://forec.github.io/2015/09/08/Data-Structure-basis1/index.html">
+<meta property="og:site_name" content="What Happened ?">
+<meta property="og:description" content="这篇文章中的C语言代码均为md编辑器中手打，仅作理解用，未经过编译测试。有错误请留言，将及时更正。
+
+摘要
+需求
+树
+二叉查找树
+AVL树
+红黑树">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/算导.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/5.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/2.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/7.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/1.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/3.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/4.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/红黑树旋转操作.jpg">
+<meta property="og:updated_time" content="2015-11-01T10:06:18.621Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基础数据结构（需求和树相关）">
+<meta name="twitter:description" content="这篇文章中的C语言代码均为md编辑器中手打，仅作理解用，未经过编译测试。有错误请留言，将及时更正。
+
+摘要
+需求
+树
+二叉查找树
+AVL树
+红黑树">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 基础数据结构（需求和树相关） | What Happened ? </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">What Happened ?</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              基础数据结构（需求和树相关）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-08T18:01:00+08:00" content="2015-09-08">
+            2015-09-08
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Code/" itemprop="url" rel="index">
+                  <span itemprop="name">Code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/09/08/Data-Structure-basis1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/08/Data-Structure-basis1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>这篇文章中的C语言代码均为md编辑器中手打，仅作理解用，未经过编译测试。有错误请留言，将及时更正。</p>
+</blockquote>
+<h1 id="u6458_u8981"><a href="#u6458_u8981" class="headerlink" title="摘要"></a>摘要</h1><ul>
+<li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#1">需求</a></li>
+<li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#2">树</a></li>
+<li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#3">二叉查找树</a></li>
+<li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#4">AVL树</a></li>
+<li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#5">红黑树</a></li>
+</ul>
+<a id="more"></a>
+<p></p><h1 id="1">需求</h1><p></p>
+<h2 id="u57FA_u672C_u7684_u6570_u5B66_u77E5_u8BC6"><a href="#u57FA_u672C_u7684_u6570_u5B66_u77E5_u8BC6" class="headerlink" title="基本的数学知识"></a>基本的数学知识</h2><ul>
+<li>指对数、级数、模运算，常用换底公式，几何/算术级数公式以及同余的一些相关公式。<ul>
+<li>log(a)B = log(c)B/log(c)A &nbsp;&nbsp;  （c &gt; 0）</li>
+<li>∑(0-&gt;N) A^i &lt; 1/(1-A) &nbsp;&nbsp;  （0 &lt; A &lt; 1）</li>
+<li>∑(1-&gt;N) i^2 = N(N+1)(2N+1) / 6 ≈ N^3 / 3</li>
+<li>∑(1-&gt;N) i^k ≈ N^(k+1) / |k+1| &nbsp;&nbsp;（k != -1）</li>
+<li>Hn(调和数) = ∑(1-&gt;N) 1 / i ≈ ln N 误差γ（欧拉常数） ≈ 0.57721566   </li>
+<li>A+C≡B+C(mod N) &amp;&amp; AD≡BD(mod N)   &nbsp;&nbsp; （A≡B mod N）</li>
+</ul>
+</li>
+<li>数学归纳法和反证法</li>
+<li>递归和算法时空复杂度分析（离散数学上册，考虑最坏结果）<ul>
+<li>一个经典的例子：<a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#6">最大子序列和问题</a>，在本文底部。 </li>
+<li>一般估计：根据循环嵌套得到的迭代次数估计复杂度</li>
+<li>常可寻找的优化：递推式取代循环，分治，循环数组，记忆化。</li>
+</ul>
+</li>
+</ul>
+<h2 id="u4E09_u79CD_u57FA_u672C_u6570_u636E_u7ED3_u6784ADT"><a href="#u4E09_u79CD_u57FA_u672C_u6570_u636E_u7ED3_u6784ADT" class="headerlink" title="三种基本数据结构ADT"></a>三种基本数据结构ADT</h2><blockquote>
+<p>抽象数据类型（abstract data type， ADT）是一些操作的集合：例如对于集合ADT，可以有如交、并、测定长度等操作，也可以只有交、并两种操作，这从集合上定义了两种不同的ADT。</p>
+</blockquote>
+<h3 id="u8868ADT"><a href="#u8868ADT" class="headerlink" title="表ADT"></a>表ADT</h3><ul>
+<li>对表（list）的所有操作可以通过数组实现<ul>
+<li>需要估计表所需数组的最大长度，资源浪费  </li>
+<li>PrintList和FindItem以线性时间执行，且FindKth为常数时间</li>
+<li>Insert和Delete操作最坏时间复杂度为O(N)，平均情况下每次操作均需移动表中一般的元素</li>
+</ul>
+</li>
+<li>链表<ul>
+<li>减少Insert和Delete操作的线性开销（根本在于表的存储不是连续的）</li>
+<li>FindKth以线性时间执行</li>
+</ul>
+</li>
+<li>数组模拟链表，类似图的前向星表示法，采用一组cursor实现（游标）。</li>
+<li>两个实例<a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#7">单向链表的类型声明及其ADT包含的操作</a>和<a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#8">链表实现基数排序</a>在本文底部。</li>
+</ul>
+<h3 id="u6808ADT"><a href="#u6808ADT" class="headerlink" title="栈ADT"></a>栈ADT</h3><ul>
+<li>栈（stack）是的插入和删除操作只能在一个位置上进行的表，该位置为表的末端，称为栈顶（top）。<ul>
+<li>主要有push和pop操作，先进后出。</li>
+<li>通过链表或数组实现。链表操作调用的malloc和free函数开销较大。数组实现避免了指针，并且更流行，但需要提前声明大小，浪费资源。</li>
+<li><a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#10">栈ADT链表实现</a>和<a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#11">栈ADT数组实现</a>在本文底部例程中。</li>
+</ul>
+</li>
+<li>应用<ul>
+<li>平衡符号</li>
+<li><a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#9">逆波兰表达式</a>，在本文底部有其实现方式的简单介绍。</li>
+<li>函数调用的存储工作由系统栈完成，尽量避免尾递归。</li>
+</ul>
+</li>
+</ul>
+<h3 id="u961F_u5217ADT"><a href="#u961F_u5217ADT" class="headerlink" title="队列ADT"></a>队列ADT</h3><ul>
+<li>基本操作是入队(Enqueue)和出队(Dequeue)，先进先出。</li>
+<li>需要注意队列是否为空的条件。循环队列可以满足一些问题的模型，同时改善数组实现队列的空间利用率。</li>
+<li>应用<ul>
+<li><a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#13">约瑟夫环问题</a>，链表模拟实现代码在本文例程中。</li>
+<li>排队作业问题</li>
+</ul>
+</li>
+<li><a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#12">队列ADT数组模拟代码实现</a></li>
+</ul>
+<hr>
+<p></p><h1 id="2">树</h1><p></p>
+<h2 id="u6811_u7684_u5B9E_u73B0_u3001_u904D_u5386_u548C_u5E94_u7528"><a href="#u6811_u7684_u5B9E_u73B0_u3001_u904D_u5386_u548C_u5E94_u7528" class="headerlink" title="树的实现、遍历和应用"></a>树的实现、遍历和应用</h2><ul>
+<li>基本概念<br>每个节点可以有任意多个子女，也可能没有子女。没有子女的节点为叶子结点（树叶），具有相同父亲的节点为兄弟。</li>
+<li><p>实现<br>每个节点包含一个指向其第一个子女的指针（向下），和一个指向其下一个兄弟的指针（平行）。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> TreeNode&#123;</span><br><span class="line">    ElementType element;</span><br><span class="line">    <span class="keyword">struct</span> TreeNode * firstChild;</span><br><span class="line">    <span class="keyword">struct</span> TreeNode * nextBrother;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>遍历和应用</p>
+<ul>
+<li>应用：操作系统的目录结构</li>
+<li>遍历方式：先序遍历（先处理父亲节点，如打印目录内全部文件），后序遍历（先处理诸子女，如统计该目录所占空间大小）  </li>
+</ul>
+</li>
+</ul>
+<h2 id="u4E8C_u53C9_u6811"><a href="#u4E8C_u53C9_u6811" class="headerlink" title="二叉树"></a>二叉树</h2><blockquote>
+<p>二叉树的每个节点不能有多于两个子女<br>平均二叉树的深度为O(sqrt(N))，二叉查找树的平均深度为O(logN)，可达最坏深度为N-1。</p>
+</blockquote>
+<ul>
+<li><p>二叉树的数学基础</p>
+<ul>
+<li>高度为h的二叉树至多有2^h 个叶子结点；高度为h≥0的二叉树至少有h+1个结点；高度不超过h(≥0)的二叉树至多有2^h+1 -1个结点；含有n≥1个结点的二叉树的高度至多为n-1；含有n≥1个结点的二叉树的高度至少为logn，因此其高度为Ω(logn)。</li>
+<li>满二叉树：高度为h的满二叉树，共有2^h+1 -1个结点；共有2^h 个叶子,共有2^h -1个内结点，内结点个数比叶子少1。</li>
+<li>完全二叉树：第h层的从左到右第k个结点的编号为2^h +k-1；叶子个数或者和内结点个数相等或者多1；通过本结点的编号可以快速得到父结点（i/2)、左右孩子（2×i，2×i+1）的编号。 </li>
+</ul>
+</li>
+<li><p>表达式树 </p>
+<ul>
+<li>表达式树的操作数是树叶，其他节点为操作符。方便起见，假设所有操作均为二元的，则该表达式树刚好是二叉树（节点有可能含有多于两个子女，或只含有一个子女，如单目运算符）。<br>此时分别先序（中左右），中序（左中右），后序（左右中）遍历，得到的即为对应的前缀，中缀和后缀表达式。</li>
+<li>由后缀表达式构造表达式树：类似后缀表达式求值，若遇到操作数直接压栈，遇到操作符则弹出栈顶的两棵树T1,T2作为操作符的两个子女，构成一棵新的树，此树的根为操作符，并将其指针压入栈中。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p></p><h1 id="3">二叉查找树</h1><p></p>
+<blockquote>
+<p>以整型数据为例，假设不存在重复的关键字（重复情况可以增加一个count域记录）</p>
+</blockquote>
+<ul>
+<li>对于树中每个节点X，其左子树中所有关键字均小于X，右子树中所有关键字均大于X</li>
+<li>类型声明<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> TreeNode&#123;</span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">struct</span> TreeNode * left;</span><br><span class="line">    <span class="keyword">struct</span> TreeNode * right;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">ifndef</span> _Tree_</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> TreeNode * node;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MakeEmpty</span><span class="params">( node root )</span></span>;</span><br><span class="line"><span class="function">node <span class="title">Find</span><span class="params">( <span class="keyword">int</span> x, node root )</span></span>;</span><br><span class="line"><span class="function">node <span class="title">Findmin</span><span class="params">( node root )</span></span>;</span><br><span class="line"><span class="function">node <span class="title">Findmax</span><span class="params">( node root )</span></span>;</span><br><span class="line"><span class="function">node <span class="title">Insert</span><span class="params">( <span class="keyword">int</span> x, node root )</span></span>;</span><br><span class="line"><span class="function">node <span class="title">Delete</span><span class="params">( <span class="keyword">int</span> x, node root )</span></span>;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="u64CD_u4F5C_u5B9E_u73B0"><a href="#u64CD_u4F5C_u5B9E_u73B0" class="headerlink" title="操作实现"></a>操作实现</h2><ul>
+<li><p>Find（注意测试空树）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">node <span class="title">Find</span><span class="params">( <span class="keyword">int</span> x, node root )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( root == <span class="literal">NULL</span> )</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span> ( x == root-&gt;value )</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    <span class="keyword">if</span> ( x &lt; root-&gt;value )</span><br><span class="line">        <span class="keyword">return</span> Find( x, root-&gt;left );</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">        <span class="keyword">return</span> Find( x, root-&gt;right );</span><br><span class="line">&#125;    <span class="comment">/*这里的尾递归可以用迭代代替，但其使用的栈空间只有O(logN)*/</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>递归版本的Findmin和迭代版本的Findmax</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">node <span class="title">Findmin</span><span class="params">( node root )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( root == <span class="literal">NULL</span> )</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( root-&gt;left == <span class="literal">NULL</span> )</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">        <span class="keyword">return</span> Findmin( root-&gt;left );</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">node <span class="title">Findmax</span><span class="params">( node root )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( root != <span class="literal">NULL</span> )</span><br><span class="line">        node temp = root;</span><br><span class="line">        <span class="keyword">while</span> ( temp-&gt;right != <span class="literal">NULL</span> )</span><br><span class="line">            temp = temp-&gt;right;</span><br><span class="line">    <span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Insert</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">node <span class="title">Insert</span><span class="params">( <span class="keyword">int</span> x, node root )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( root == <span class="literal">NULL</span> )&#123;</span><br><span class="line">        root = <span class="built_in">malloc</span>( <span class="keyword">sizeof</span> ( <span class="keyword">struct</span> TreeNode ) );</span><br><span class="line">        <span class="keyword">if</span> ( root == <span class="literal">NULL</span> )</span><br><span class="line">            FatalError(<span class="string">"flood"</span>);</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            root-&gt;value = x;</span><br><span class="line">            root-&gt;left = root-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( x &lt; root-&gt;value )</span><br><span class="line">        root-&gt;left = Insert( x, root-&gt;left );</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( x &gt; root-&gt;value )</span><br><span class="line">        root-&gt;right = Insert( x, root-&gt;right );</span><br><span class="line">    <span class="comment">/* count++ if x == root-&gt;value */</span></span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Delete，若要删除的节点没有子女则直接删除，有一个子女则使用其子女将其替代，若有两个子女，则寻找其后继节点（其右子树中最左节点），使用该后继节点（此节点一定最多只有一个子女）代替要删除的节点，并删除该后继节点。当删除次数不多时，可以采用<em>懒惰删除</em>，被删除的节点仍留在树中，但做一个删除的标记。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">node <span class="title">Delete</span><span class="params">( <span class="keyword">int</span> x, node root )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( root == <span class="literal">NULL</span> )</span><br><span class="line">        Error(<span class="string">"Empty tree"</span>);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( x &lt; root-&gt;value )</span><br><span class="line">        root-&gt;left = Delete( x, root-&gt;left );</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( x &gt; root-&gt;value )</span><br><span class="line">        root-&gt;right = Delete( x, root-&gt;right );</span><br><span class="line">    <span class="keyword">else</span>   <span class="comment">/* Found */</span></span><br><span class="line">    <span class="keyword">if</span> ( root-&gt;left != <span class="literal">NULL</span> &amp;&amp; root-&gt;right != <span class="literal">NULL</span> )&#123;</span><br><span class="line">        node temp = Findmin( root-&gt;right );</span><br><span class="line">        root-&gt;value = temp-&gt;value;</span><br><span class="line">        root-&gt;right = Delete( root-&gt;value, root-&gt;right );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        node temp = root;</span><br><span class="line">        <span class="keyword">if</span> ( root-&gt;left == <span class="literal">NULL</span> )</span><br><span class="line">            root = root-&gt;right;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            root = root-&gt;left;</span><br><span class="line">        <span class="built_in">free</span>( temp );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="u5E73_u5747_u5206_u6790"><a href="#u5E73_u5747_u5206_u6790" class="headerlink" title="平均分析"></a>平均分析</h2><p> 当二叉查找树不够平衡时，或者退化成一条直线时，所有操作都会成为线性开销。常用的解决办法是为二叉查找树附加一个平衡结构条件，使得任何节点的深度都不能过深。这种做法非常麻烦，并且更新树结构需要很长时间，但防止了查找树的退化。例如最老的一种平衡查找树（AVL树），红黑树，treap等。比较新的做法是splay tree（伸展树或分裂树），放弃平衡条件，允许树有任意深度，但每次操作后要对树结构调整，使后面的操作效率提高。此时对于任意单个运算无法保证O(logN)的时间复杂度，但可证明连续M次操作在最坏情形下的花费时间为O(MlogN)。</p>
+<hr>
+<p></p><h1 id="4">AVL树</h1><p></p>
+<blockquote>
+<p>一棵AVL树的每个节点的左子树和右子树的高度最多差1。</p>
+</blockquote>
+<h2 id="AVL_u6811_u7684_u5E73_u8861_u7EF4_u62A4"><a href="#AVL_u6811_u7684_u5E73_u8861_u7EF4_u62A4" class="headerlink" title="AVL树的平衡维护"></a>AVL树的平衡维护</h2><ul>
+<li><p>AVL树平衡条件破坏的可能情况  </p>
+<ul>
+<li>在插入一个新节点之后，只有从插入点到根结点的路径上的节点可能不平衡，因为<strong>只有这些节点的子树可能发生变化</strong>。沿着这条路径上行到根并更新平衡信息，就可以找到某个平衡性被破坏的节点。假设这个平衡性被破坏的节点叫=是X，因为任意节点最多能有两个孩子，所以高度不平衡的情况下，X的两棵子树高度差2。这种不平衡可能源于下面四种情况：  </li>
+<li>对X的左孩子的左子树进行了一次插入</li>
+<li>对X的左孩子的右子树进行了一次插入</li>
+<li>对X的右孩子的左子树进行了一次插入</li>
+<li>对X的右孩子的右子树进行了一次插入</li>
+<li>上面四种情况中，第一种和第四种是关于X的镜面对称，第二种和第三种是关于X的镜面对称。因此只需要考虑前两种情况，并拓展到后两种情况。下面对前两种情况分别分析，这两种情况的处理方法在其他平衡树中也多有使用。</li>
+</ul>
+</li>
+<li><p>对X左孩子的左子树插入。此时为（左-左）或（右-右）情况，发生在树的“外边”，可以通过一次单旋转完成调整。以下图片来源于网络。<br>下面的两张图分别是调整第一种和第四种情况的单旋转。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/算导.jpg" width="400px" alt="第一种情况单旋转"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/5.jpg" width="400px" alt="第四种情况单旋转"><br>下面的两张图分别是两种情况的实例，上面的图是第一种情况（右旋转），下面的图为第四种情况（左旋转）。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/2.jpg" width="400px" alt="第一种情况单旋转实例"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/7.jpg" width="400px" alt="第四种情况单旋转实例"><br>需要注意的是，<strong>当旋转修正树的部分结构时，树的其余部分必须知晓这部分变化</strong>。比如实例的第一张图中，6,7,8旋转后，5的右孩子必须指向7，来代替原来的8。</p>
+</li>
+<li>对X左孩子的右子树插入。此时为（左-右）或（右-左）情况，发生在树的“内侧”，可以通过双旋转修正。<br>如下图所示是一个双旋转过程（图片来源于Vamei）<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/1.png" width="400px" alt="双旋转举例"><br>下面两张图分别是LR旋转（针对左孩子的右子树插入）和RL旋转（针对右孩子的左子树插入）。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/3.jpg" width="400px" alt="LR旋转"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/4.jpg" width="400px" alt="RL旋转"><br>以LR旋转为例，B节点处不满足AVL树性质，对B-C支作左旋转，使得C成为C-B支新的根，之后A-C支右旋转，使得C成为整棵树的新根，满足AVL树性质。</li>
+</ul>
+<h2 id="AVL_u6811_u7684_u4EE3_u7801_u5B9E_u73B0"><a href="#AVL_u6811_u7684_u4EE3_u7801_u5B9E_u73B0" class="headerlink" title="AVL树的代码实现"></a>AVL树的代码实现</h2><ul>
+<li><p>节点声明  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">ifndef</span> _AvlTree_H</span></span><br><span class="line"><span class="keyword">struct</span> AvlNode;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> AvlNode *Position;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> AvlNode *AvlTree;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> ElementType;  <span class="comment">/* ElementType */</span></span><br><span class="line"></span><br><span class="line"><span class="function">AvlTree <span class="title">MakeEmpty</span><span class="params">( AvlTree T )</span></span>;</span><br><span class="line"><span class="function">AvlTree <span class="title">Insert</span><span class="params">( ElementType x, AvlTree T )</span></span>;</span><br><span class="line"><span class="function">AvlTree <span class="title">Delete</span><span class="params">( ElementType x, AvlTree T )</span></span>;</span><br><span class="line"><span class="function">Position <span class="title">Find</span><span class="params">( ElementType x, AvlTree T )</span></span>;</span><br><span class="line"><span class="function">Position <span class="title">Findmin</span><span class="params">( AvlTree T )</span></span>;</span><br><span class="line"><span class="function">Position <span class="title">Findmax</span><span class="params">( AvlTree T )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Destroy</span><span class="params">( AvlTree T )</span></span>;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span> <span class="comment">/* _AvlTree_H */</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> AvlNode&#123;</span><br><span class="line">    ElementType element;</span><br><span class="line">    AvlTree left;</span><br><span class="line">    AvlTree right;</span><br><span class="line">    <span class="keyword">int</span> height;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>功能实现（Find，Findmin和Findmax操作与二叉查找树完全相同）</p>
+<ul>
+<li><p>获取节点高度</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">Height</span><span class="params">( Position P )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( P == <span class="literal">NULL</span> )</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> P-&gt;height;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>右旋转（针对第一种情况）和左旋转（针对第四种情况）  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> Position <span class="title">SingleRightRotate</span><span class="params">( Position K2 )</span></span>&#123;</span><br><span class="line">    Position K1 = K2-&gt;left;</span><br><span class="line">    K2-&gt;left = K1-&gt;right;</span><br><span class="line">    K1-&gt;right = K2;</span><br><span class="line">    K2-&gt;height = Max( Height( K2-&gt;left ), Height( K2-&gt;right ) ) + <span class="number">1</span>;</span><br><span class="line">    K1-&gt;height = Max( Height( K1-&gt;left ), K2-&gt;height ) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> K1; <span class="comment">/* K1 is the new root */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">static</span> Position <span class="title">SingleLeftRotate</span><span class="params">( Position K1 )</span></span>&#123;</span><br><span class="line">    Position K2 = K1-&gt;right;</span><br><span class="line">    K1-&gt;right = K2-&gt;left;</span><br><span class="line">    K2-&gt;left = K1;</span><br><span class="line">    K1-&gt;height = Max( Height( K1-&gt;right ), Height( K1-&gt;left ) ) + <span class="number">1</span>;</span><br><span class="line">    K2-&gt;height = Max( K1-&gt;height, Height( K2-&gt;right ) ) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> K2; <span class="comment">/* K2 is the new root */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>LR旋转（针对第二种情况）和RL旋转（针对第三种情况）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> Position <span class="title">DoubleLeftRightRotate</span><span class="params">( Position K3 )</span></span>&#123;</span><br><span class="line">    K3-&gt;left = SingleLeftRotate( K3-&gt;left );</span><br><span class="line">    <span class="keyword">return</span> SingleRightRotate( K3 );</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">static</span> Position <span class="title">DoubleRightLeftRotate</span><span class="params">( Position K3 )</span></span>&#123;</span><br><span class="line">    K3-&gt;right = SinglerightRotate( K3-&gt;right );</span><br><span class="line">    <span class="keyword">return</span> SingleLeftRotate( K3 );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>插入  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AvlTree <span class="title">Insert</span><span class="params">( ElementType x, AvlTree T )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( T == <span class="literal">NULL</span> )&#123;</span><br><span class="line">        <span class="comment">/* Empty Tree, Create a one-node tree */</span></span><br><span class="line">        T = ( AvlTree )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( <span class="keyword">struct</span> AvlNode ) );</span><br><span class="line">        <span class="keyword">if</span> ( T == <span class="literal">NULL</span> )</span><br><span class="line">            FatalError( <span class="string">"flood"</span> );</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            T-&gt;element = x;</span><br><span class="line">            T-&gt;height = <span class="number">0</span>;</span><br><span class="line">            T-&gt;left = T-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( x &lt; T-&gt;element )&#123;</span><br><span class="line">        T-&gt;left = Insert( x, T-&gt;left );</span><br><span class="line">        <span class="keyword">if</span> ( Height( T-&gt;left ) - Height( T-&gt;right ) == <span class="number">2</span> )</span><br><span class="line">            <span class="keyword">if</span> ( x &lt; T-&gt;left-&gt;element )</span><br><span class="line">                T = SingleRightRotate( T );</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                T = DoubleLeftRight( T );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( x &gt; T-&gt;element )&#123;</span><br><span class="line">        T-&gt;right = Insert( x, T-&gt;right );</span><br><span class="line">        <span class="keyword">if</span> ( Height( T-&gt;right ) - Height( T-&gt;left ) == <span class="number">2</span> )</span><br><span class="line">            <span class="keyword">if</span> ( x &gt; T-&gt;right-&gt;element )</span><br><span class="line">                T = SingleLeftRotate( T );</span><br><span class="line">            <span class="keyword">else</span> </span><br><span class="line">                T = DoubleRightLeftRotate( T );</span><br><span class="line">    &#125;</span><br><span class="line">    T-&gt;height = Max( Height( T-&gt;left ), Height( T-&gt;right ) ) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> T;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除（AVL树删除操作相对比较复杂，删除操作较少时可以懒惰删除减少代码编写量）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> AvlTree <span class="title">Delete</span><span class="params">( ElementType x, AvlTree T )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( T == <span class="literal">NULL</span> )</span><br><span class="line">        Error(<span class="string">"Empty Tree"</span>);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( x &lt; T-&gt;element )&#123;</span><br><span class="line">        T-&gt;left = Delete( x, T-&gt;left );</span><br><span class="line">        <span class="keyword">if</span> ( Height( T-&gt;right ) - Height( T-&gt;left ) == <span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span> ( T-&gt;right != <span class="literal">NULL</span> )&#123;</span><br><span class="line">                <span class="keyword">if</span> ( Height( T-&gt;right-&gt;left ) &gt; Height( T-&gt;right-&gt;right ) )</span><br><span class="line">                    T = DoubleRightLeftRotate( T );</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    T = SingleLeftRotate( T );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( x &gt; T-&gt;element )&#123;</span><br><span class="line">        T-&gt;right = Delete( x, T-&gt;right );</span><br><span class="line">        <span class="keyword">if</span> ( Height( T-&gt;left ) - Height( T-&gt;right ) == <span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span> ( T-&gt;left != <span class="literal">NULL</span> )&#123;</span><br><span class="line">                <span class="keyword">if</span> ( Height( T-&gt;left-&gt;right ) &gt; Height( T-&gt;left-&gt;left ) )</span><br><span class="line">                    T = DoubleLeftRotate( T );</span><br><span class="line">                <span class="keyword">else</span> </span><br><span class="line">                    T = SingleRightRotate( T );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="comment">/* Found */</span></span><br><span class="line">    <span class="keyword">if</span> ( T-&gt;left != <span class="literal">NULL</span> &amp;&amp; T-&gt;right != <span class="literal">NULL</span> )&#123;</span><br><span class="line">        Position temp = Findmin( T-&gt;right );</span><br><span class="line">        T-&gt;value = temp-&gt;value;</span><br><span class="line">        T-&gt;right = Delete( T-&gt;value, T-&gt;right );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        Position temp = T;</span><br><span class="line">        <span class="keyword">if</span> ( T-&gt;left == <span class="literal">NULL</span> )</span><br><span class="line">            T = T-&gt;right;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            T = T-&gt;left;</span><br><span class="line">        <span class="built_in">free</span>( temp );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( T != <span class="literal">NULL</span> )</span><br><span class="line">        T-&gt;height = Max( Height( T-&gt;left ), Height( T-&gt;right ) ) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> T;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>销毁</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Destroy</span><span class="params">( AvlTree T )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( T == <span class="literal">NULL</span> )</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    Destroy( T-&gt;left );</span><br><span class="line">    Destroy( T-&gt;right );</span><br><span class="line">    <span class="built_in">free</span>( T );</span><br><span class="line">    T = <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p></p><h1 id="5">红黑树</h1><p></p>
+<blockquote>
+<p>红黑树也是一种二叉查找树，但在其每个节点上增加一个存储位表示节点的颜色（红或黑）。通过对节点着色的限制，可以使得红黑树没有任何一条路径可能比其他路径长两倍，因此整棵红黑树<strong>接近平衡</strong>。<br>采用一个哨兵NIL（外节点）来代替空指针，NIL是和红黑树内普通节点有相同域的对象，其color域为BLACK，其他域可以设置为任意值。所有指向NULL的指针都将指向NIL。</p>
+</blockquote>
+<h2 id="u7EA2_u9ED1_u6027_u8D28"><a href="#u7EA2_u9ED1_u6027_u8D28" class="headerlink" title="红黑性质"></a>红黑性质</h2><ul>
+<li>每个节点或是红的或是黑的</li>
+<li>根节点是黑的，每个叶节点（NIL）也是黑的</li>
+<li>如果一个节点是红的，则它的两个子女都是黑的</li>
+<li><strong>对每个节点，从该节点到其子孙节点的所有路径上包含相同数目的黑色节点</strong></li>
+<li>一棵有n个内节点的红黑树，其高度至多为2lg(n+1)，证明使用数学归纳法。</li>
+</ul>
+<ul>
+<li>旋转操作：insert和delete都可能使新的红黑树违反红黑性质。下图展示了左旋和右旋两种状态的切换<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/红黑树旋转操作.jpg" width="400px" alt="红黑树左右旋转"></li>
+</ul>
+<h2 id="u7EA2_u9ED1_u6811_u7684_u4EE3_u7801_u5B9E_u73B0"><a href="#u7EA2_u9ED1_u6811_u7684_u4EE3_u7801_u5B9E_u73B0" class="headerlink" title="红黑树的代码实现"></a>红黑树的代码实现</h2><ul>
+<li><p>类型声明</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">ifndef</span> _RBT_H</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> RbNode * Position;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> RbNode * RbTree;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LeftRotate</span><span class="params">( RbTree T, Position x )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RightRotate</span><span class="params">( RbTree T, Position x )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Insert</span><span class="params">( RbTree T, Position x )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Delete</span><span class="params">( RbTree T, Position x )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InsertFixup</span><span class="params">( RbTree T, Position x )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DeleteFixup</span><span class="params">( RbTree T, Position x )</span></span>;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> COLOR = &#123; RED , BLACK &#125;;</span><br><span class="line"><span class="keyword">struct</span> RbNode&#123;</span><br><span class="line">    ElementType value;</span><br><span class="line">    <span class="keyword">struct</span> RbNode * left;</span><br><span class="line">    <span class="keyword">struct</span> RbNode * right;</span><br><span class="line">    <span class="keyword">struct</span> RbNode * parent;</span><br><span class="line">    <span class="keyword">enum</span> COLOR color;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> RbNode * NIL = ( RbNode * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span> ( <span class="keyword">struct</span> RbNode ) );</span><br><span class="line"><span class="keyword">struct</span> RbNode * root = NIL;</span><br><span class="line">NIL-&gt;color = BLACK;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>旋转操作</p>
+<ul>
+<li><p>左旋</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LeftRotate</span><span class="params">( RbTree T, Position x )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( x == NIL || x-&gt;right == NIL )</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    Position y = x-&gt;right;</span><br><span class="line">    y-&gt;parent = x-&gt;parent;</span><br><span class="line">    x-&gt;right = y-&gt;left;</span><br><span class="line">    <span class="keyword">if</span> ( y-&gt;left != NIL )</span><br><span class="line">        y-&gt;left-&gt;parent = x;</span><br><span class="line">    <span class="keyword">if</span> ( x-&gt;parent == NIL )&#123;</span><br><span class="line">        root = y;</span><br><span class="line">        NIL-&gt;left = root;</span><br><span class="line">        NIL-&gt;right = root;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> ( x == x-&gt;parent-&gt;left )</span><br><span class="line">            x-&gt;parent-&gt;left = y;</span><br><span class="line">        <span class="keyword">else</span> x-&gt;parent-&gt;right = y;</span><br><span class="line">    &#125;</span><br><span class="line">    y-&gt;left = x;</span><br><span class="line">    x-&gt;parent = y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>右旋（和左旋相对应）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RightRotate</span><span class="params">( RbTree T, Position y )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( y == NIL || y-&gt;left == NIL )</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    Position x = y-&gt;left;</span><br><span class="line">    x-&gt;parent = y-&gt;parent;</span><br><span class="line">    y-&gt;left = x-&gt;right;</span><br><span class="line">    <span class="keyword">if</span> ( x-&gt;right != NIL )</span><br><span class="line">        x-&gt;right-&gt;parent = y;</span><br><span class="line">    <span class="keyword">if</span> ( y-&gt;parent == NIL )&#123;</span><br><span class="line">        root = x;</span><br><span class="line">        NIL-&gt;left = root;</span><br><span class="line">        NIL-&gt;right = root;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> ( y == y-&gt;parent-&gt;right )</span><br><span class="line">            y-&gt;parent-&gt;right = x;</span><br><span class="line">        <span class="keyword">else</span> </span><br><span class="line">            y-&gt;parent-&gt;left = x;</span><br><span class="line">    &#125;</span><br><span class="line">    x-&gt;right = y;</span><br><span class="line">    y-&gt;parent = x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>插入操作</p>
+<ul>
+<li>红黑树的插入操作时，新插入的节点默认颜色红色，因此可能破坏红黑性质共有三种情况：1.当前插入节点的父节点和叔叔节点都是红色，2.当前插入节点的父亲节点是红色，叔叔节点是黑色，插入节点是父亲节点的右孩子，3.在2中的情况，插入节点是父亲节点的左孩子。</li>
+<li><p>插入代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Insert</span><span class="params">( RbTree T, Position z )</span></span>&#123;   <span class="comment">// z has already been allocated storage</span></span><br><span class="line">    Position y = NIL;</span><br><span class="line">    Position x = root;</span><br><span class="line">    <span class="keyword">while</span> ( x != NIL )&#123;</span><br><span class="line">        y = x;</span><br><span class="line">        <span class="keyword">if</span> ( z-&gt;value &lt; x-&gt;value )</span><br><span class="line">            x = x-&gt;left;</span><br><span class="line">        <span class="keyword">else</span> </span><br><span class="line">            x = x-&gt;right;</span><br><span class="line">    &#125;</span><br><span class="line">    z-&gt;parent = y;</span><br><span class="line">    <span class="keyword">if</span> ( y == NIL )</span><br><span class="line">        root = z;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( z-&gt;value &lt; y-&gt;value )</span><br><span class="line">        y-&gt;left = z;</span><br><span class="line">        <span class="keyword">else</span> </span><br><span class="line">            y-&gt;right = z;</span><br><span class="line">    z-&gt;left = z-&gt;right = NIL; </span><br><span class="line">    z-&gt;color = RED;</span><br><span class="line">    InsertFixup( T, z );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>插入修复代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InsertFixup</span><span class="params">( RbTree T, Position z )</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> ( z-&gt;parent-&gt;color == RED )&#123;</span><br><span class="line">        <span class="keyword">if</span> ( z-&gt;parent == z-&gt;parent-&gt;parent-&gt;left )&#123;</span><br><span class="line">            Position y = z-&gt;parent-&gt;parent-&gt;right;</span><br><span class="line">            <span class="keyword">if</span> ( y-&gt;color == RED )&#123;    <span class="comment">// case 1</span></span><br><span class="line">                z-&gt;parent-&gt;color = BLACK;</span><br><span class="line">                y-&gt;color = BLACK;</span><br><span class="line">                z-&gt;parent-&gt;parent-&gt;color = RED;</span><br><span class="line">                z = z-&gt;parent-&gt;parent;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> ( z == z-&gt;parent-&gt;right )&#123; <span class="comment">// case 2</span></span><br><span class="line">                    z = z-&gt;parent;</span><br><span class="line">                    LeftRotate( T, z );</span><br><span class="line">                &#125;</span><br><span class="line">                z-&gt;parent-&gt;color = BLACK;     <span class="comment">// case 3</span></span><br><span class="line">                z-&gt;parent-&gt;parent-&gt;color = RED;</span><br><span class="line">                RightRotate( T, z-&gt;parent-&gt;parent );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> ( z-&gt;parent == z-&gt;parent-&gt;parent-&gt;right )&#123;</span><br><span class="line">            Position y = z-&gt;parent-&gt;parent-&gt;left;</span><br><span class="line">            <span class="keyword">if</span> ( y-&gt;color == RED )&#123;</span><br><span class="line">                z-&gt;parent-&gt;color = BLACK;</span><br><span class="line">                y-&gt;color = BLACK;</span><br><span class="line">                z-&gt;parent-&gt;parent-&gt;color = RED;</span><br><span class="line">                z = z-&gt;parent-&gt;parent;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> ( z == z-&gt;parent-&gt;left )&#123;</span><br><span class="line">                    z = z-&gt;parent;</span><br><span class="line">                    RightRotate( T, z );</span><br><span class="line">                &#125;</span><br><span class="line">                z-&gt;parent-&gt;color = BLACK;</span><br><span class="line">                z-&gt;parent-&gt;parent-&gt;color = RED;</span><br><span class="line">                LeftRotate( T, z-&gt;parent-&gt;parent );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    root-&gt;color = BLACK;        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>删除操作</p>
+<ul>
+<li>删除操作：如果被删除节点是黑色（假设它是其父节点的左孩子），可能有四种情况破坏红黑性质：1.被删除节点的兄弟节点是红色（此时父节点和兄弟节点的子节点都是黑色），2.兄弟节点是黑色且兄弟节点的两个子节点都是黑色，3.兄弟节点是黑色，兄弟节点的左孩子是红色，右孩子是黑色，4.兄弟节点是黑色，兄弟节点的右孩子是红色，左孩子颜色随意。</li>
+<li><p>删除代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Delete</span><span class="params">( RbTree T, Position z )</span></span>&#123;    <span class="comment">// z has already been found</span></span><br><span class="line">    Position x, y;</span><br><span class="line">    <span class="keyword">if</span> ( z-&gt;left == NIL || z-&gt;right == NIL )</span><br><span class="line">        y = z;</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">        y = Findmin( z-&gt;right );</span><br><span class="line">    <span class="keyword">if</span> ( y-&gt;left != NIL )</span><br><span class="line">        x = y-&gt;left;</span><br><span class="line">    <span class="keyword">else</span> x = y-&gt;right;</span><br><span class="line">    x-&gt;parent = y-&gt;parent;</span><br><span class="line">    <span class="keyword">if</span> ( y-&gt;parent == NIL )&#123;</span><br><span class="line">        root = x;</span><br><span class="line">        NIL-&gt;left = root;</span><br><span class="line">        NIL-&gt;right = root;</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ( y == y-&gt;parent-&gt;left )</span><br><span class="line">            x = y-&gt;parent-&gt;left;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            x = y-&gt;parent-&gt;right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( y != z )</span><br><span class="line">        z-&gt;value = y-&gt;value;   </span><br><span class="line">    <span class="keyword">if</span> ( y-&gt;color == BLACK )</span><br><span class="line">        DeleteFixup( T, x );    </span><br><span class="line">    <span class="built_in">free</span>(y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除恢复红黑性质代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DeleteFixup</span><span class="params">( RbTree T, Position x )</span></span>&#123;</span><br><span class="line">    Position w;</span><br><span class="line">    <span class="keyword">while</span> ( x != root &amp;&amp; x-&gt;color == BLACK )&#123;</span><br><span class="line">    <span class="keyword">if</span> ( x == x-&gt;parent-&gt;left )&#123;</span><br><span class="line">        w = x-&gt;parent-&gt;right;</span><br><span class="line">        <span class="keyword">if</span> ( w-&gt;color == RED )&#123;        <span class="comment">// case 1</span></span><br><span class="line">            w-&gt;color = BLACK;</span><br><span class="line">            x-&gt;parent-&gt;color = RED;</span><br><span class="line">            LeftRotate( T, x-&gt;parent );</span><br><span class="line">            w = x-&gt;parent-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> ( w-&gt;left-&gt;color == BLACK &amp;&amp; w-&gt;right-&gt;color == BLACK )&#123;    <span class="comment">// case 2</span></span><br><span class="line">            w-&gt;color = RED;</span><br><span class="line">            x = x-&gt;parent;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> ( w-&gt;right-&gt;color == BLACK )&#123;        <span class="comment">// case 3</span></span><br><span class="line">                w-&gt;left-&gt;color = BLACK;</span><br><span class="line">                w-&gt;color = RED;</span><br><span class="line">                RightRotate( T, w );</span><br><span class="line">                w = x-&gt;parent-&gt;right;</span><br><span class="line">            &#125;                            <span class="comment">// case 4</span></span><br><span class="line">            w-&gt;color = x-&gt;parent-&gt;color;</span><br><span class="line">            x-&gt;parent-&gt;color = BLACK;</span><br><span class="line">            w-&gt;right-&gt;color = BLACK;</span><br><span class="line">            LeftRotate( T, x-&gt;parent );</span><br><span class="line">            x = root;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( x == x-&gt;parent-&gt;right )&#123;</span><br><span class="line">        w = x-&gt;parent-&gt;left;</span><br><span class="line">        <span class="keyword">if</span> ( w-&gt;color == RED )&#123;</span><br><span class="line">            w-&gt;color = BLACK;</span><br><span class="line">            x-&gt;parent-&gt;color = RED;</span><br><span class="line">            RightRotate( T, x-&gt;parent );</span><br><span class="line">            w = x-&gt;parent-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> ( w-&gt;left-&gt;color == BLACK &amp;&amp; w-&gt;right-&gt;color == BLACK )&#123;</span><br><span class="line">            w-&gt;color = RED;</span><br><span class="line">            x = x-&gt;parent;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> ( w-&gt;left-&gt;color == BLACK )&#123;</span><br><span class="line">                w-&gt;right-&gt;color = BLACK;</span><br><span class="line">                w-&gt;color = RED;</span><br><span class="line">                LeftRotate( T, w );</span><br><span class="line">                w = x-&gt;parent-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line">            w-&gt;color = x-&gt;parent-&gt;color;</span><br><span class="line">            x-&gt;parent-&gt;color = BLACK;</span><br><span class="line">            w-&gt;left-&gt;color = BLACK;</span><br><span class="line">            RightRotate( T, x-&gt;parent );</span><br><span class="line">            x = root;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   x-&gt;color = BLACK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/">原始出处</a>(<a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/">http://forec.github.io/2015/09/08/Data-Structure-basis1/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Data-Structures/" rel="tag">#Data-Structures</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/09/Data-Structure-example1/" rel="prev">部分问题例程</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/07/Algorithms-Must/" rel="next">排序和字符串匹配</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/09/08/Data-Structure-basis1/"
+                   data-title="基础数据结构（需求和树相关）" data-url="http://forec.github.io/2015/09/08/Data-Structure-basis1/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Never mind</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gitcafe.com/forec" target="_blank">gitcafe</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forect@hotmail.com" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u6458_u8981"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1"><span class="nav-number">2.</span> <span class="nav-text">需求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u57FA_u672C_u7684_u6570_u5B66_u77E5_u8BC6"><span class="nav-number">2.1.</span> <span class="nav-text">基本的数学知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4E09_u79CD_u57FA_u672C_u6570_u636E_u7ED3_u6784ADT"><span class="nav-number">2.2.</span> <span class="nav-text">三种基本数据结构ADT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u8868ADT"><span class="nav-number">2.2.1.</span> <span class="nav-text">表ADT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6808ADT"><span class="nav-number">2.2.2.</span> <span class="nav-text">栈ADT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u961F_u5217ADT"><span class="nav-number">2.2.3.</span> <span class="nav-text">队列ADT</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2"><span class="nav-number">3.</span> <span class="nav-text">树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u6811_u7684_u5B9E_u73B0_u3001_u904D_u5386_u548C_u5E94_u7528"><span class="nav-number">3.1.</span> <span class="nav-text">树的实现、遍历和应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4E8C_u53C9_u6811"><span class="nav-number">3.2.</span> <span class="nav-text">二叉树</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3"><span class="nav-number">4.</span> <span class="nav-text">二叉查找树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u64CD_u4F5C_u5B9E_u73B0"><span class="nav-number">4.1.</span> <span class="nav-text">操作实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5E73_u5747_u5206_u6790"><span class="nav-number">4.2.</span> <span class="nav-text">平均分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4"><span class="nav-number">5.</span> <span class="nav-text">AVL树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AVL_u6811_u7684_u5E73_u8861_u7EF4_u62A4"><span class="nav-number">5.1.</span> <span class="nav-text">AVL树的平衡维护</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AVL_u6811_u7684_u4EE3_u7801_u5B9E_u73B0"><span class="nav-number">5.2.</span> <span class="nav-text">AVL树的代码实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5"><span class="nav-number">6.</span> <span class="nav-text">红黑树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u7EA2_u9ED1_u6027_u8D28"><span class="nav-number">6.1.</span> <span class="nav-text">红黑性质</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7EA2_u9ED1_u6811_u7684_u4EE3_u7801_u5B9E_u73B0"><span class="nav-number">6.2.</span> <span class="nav-text">红黑树的代码实现</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,811 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Never mind" />
+
+
+
+  <meta name="keywords" content="计算机组成与体系结构," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="What Happened ?" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="简单的计算机体系模型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计组与体系结构笔记（三）">
+<meta property="og:url" content="http://forec.github.io/2015/10/21/Computer-Organization-Architecture3/index.html">
+<meta property="og:site_name" content="What Happened ?">
+<meta property="og:description" content="简单的计算机体系模型。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/MARIE体系结构.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/数据传输连接.jpg">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/指令执行流程.jpg">
+<meta property="og:updated_time" content="2015-11-01T10:02:25.177Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计组与体系结构笔记（三）">
+<meta name="twitter:description" content="简单的计算机体系模型。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 计组与体系结构笔记（三） | What Happened ? </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">What Happened ?</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              计组与体系结构笔记（三）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-21T19:26:38+08:00" content="2015-10-21">
+            2015-10-21
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/计算机理论基础/" itemprop="url" rel="index">
+                  <span itemprop="name">计算机理论基础</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/21/Computer-Organization-Architecture3/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/21/Computer-Organization-Architecture3/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>简单的计算机体系模型。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="u73B0_u4EE3_u8BA1_u7B97_u673A_u5FAE_u89C2_u4F53_u7CFB_u7ED3_u6784"><a href="#u73B0_u4EE3_u8BA1_u7B97_u673A_u5FAE_u89C2_u4F53_u7CFB_u7ED3_u6784" class="headerlink" title="现代计算机微观体系结构"></a>现代计算机微观体系结构</h1><h2 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h2><blockquote>
+<p><strong>中央处理器</strong>（central processing unit, CPU）负责提取程序指令，并对指令译码，之后按程序规定的顺序对正确的数据执行操作。CPU可分为两部分，第一部分为<strong>数据通道</strong>（datapath），是一种由存储单元（寄存器）和算术逻辑单元组成的网络，这些组件通过总线连接，并利用时钟控制时间。第二部分是<strong>控制单元</strong>（control unit），负责对各种操作进行排序并保证各种正确的数据适时地出现在所需的地方。</p>
+</blockquote>
+<ul>
+<li><strong>寄存器</strong>（register）位于CPU内部，用于存储二进制数据，前章介绍的D存储器可以用来构建寄存器，一个多位寄存器是一组D触发器的组合。通用寄存器大小为16位，32位，64位。某些寄存器会被赋予专门的用途，如只能存放地址、只用于存储控制信息等。寄存器的编址与存储器不同，每一存储器字都有一个唯一的二进制地址，这些地址从0开始编码，而仅存次则由CPU内部控制单元进行编址。</li>
+<li><strong>算术逻辑单元</strong>（arithmetic logic unit，ALU）在程序执行过程中用于进行逻辑运算和算术运算。一般情况为两个数据输入和一个数据输出。ALU中的各种操作常常影响<strong>状态寄存器</strong>（status register）的某些数据位的数值。控制单元发出的信号控制ALU执行运算。</li>
+<li><strong>控制单元</strong>（control unit）监视所有指令的执行和各种信息的传送过程。控制单元负责从内存提取指令，对指令译码，确保数据适时的出现在正确的地方，同时负责通知ALU应当使用哪一个寄存器，执行哪些中断服务程序。其使用一个<strong>程序计数器</strong>（program counter）的寄存器来寻找下一条要执行的指令的位置，并用状态寄存器存放某些特殊操作状态。</li>
+</ul>
+<h2 id="u603B_u7EBF"><a href="#u603B_u7EBF" class="headerlink" title="总线"></a>总线</h2><blockquote>
+<p><strong>总线</strong>（bus）是一组导电线路的组合，作为一个共享和公用的数据通道把系统内的各个子系统连接在一起，由多条线路构成，允许多位数据并行传递。</p>
+</blockquote>
+<ul>
+<li><strong>在任何时刻只能有一个设备（如寄存器、ALU、内存或其他某个设备）使用总线</strong>。这种共享总线的方式可能引起通信上的瓶颈。总线的速度受到总线长度和共享总线的设备数目的影响。更通常的情况：各种设备分为主设备（master）和从设备（slave），主设备为最初启动的设备，从设备为响应主设备请求的设备。</li>
+<li>总线可以实现以<strong>点对点</strong>（point-to-point）的方式连接两个特定设备，或将总线作为一条<strong>公用通道</strong>（commmon pathway）来连接多个设备。要求多个设备共享的总线称为<strong>多点</strong>（multipoint）总线。总线协议（bus protocol）对于共享总线十分重要，典型计算机总线包含数据总线、地址总线、控制总线和电源线：数据总线（data bus）传递必须在计算机不同位置之间移动的实际信息；控制总线（control line）提示哪个设备允许使用总线和使用的目的，也用来传递有关总线请求、中断和时钟同步信号的响应；地址总线（address line）指出数据读写位置。</li>
+<li>各种信息的传递都发生在一个<strong>总线周期</strong>（bus cycle）内，总线周期是完成总线信息传送所需的时间脉冲间的时间间隔。<strong>同步</strong>（synchronous）总线由时钟控制，各种事件只有在时钟脉冲到来时才会发生。总线周期与时钟频率成反比，要通过时钟控制事件的发生，因此任何时钟脉冲产生的相位漂移（clock skew）都不能过大，即<strong>总线周期时间不能短于信息在总线上传输所需要的时间，因此总线长度对总线的时钟频率和周期时间有一定限制</strong>。<strong>异步</strong>（asynchronous）总线负责协调计算机各种操作，采用握手协议强制实现计算机其他操作同步。</li>
+<li>根据总线传递的信息类型和使用总线的设备，可以细分为：处理器-内存总线（processor-memory bus）为长度较短的高速总线，将CPU和内存系统使用最大限度的带宽连接，需要专门的设计；I/O总线通常比处理器-内存总线长，可连接不同带宽的设备，兼容多种不同体系结构；底板总线（backplane bus）构建在机器主板上，将主板上所有部件连接，即所有设备共享一条总线。对于PC机，使用内总线（系统总线）连接CPU、内存和所有其他内部部件，使用外总线（拓展总线）连接外围设备、拓展插槽和I/O端口。</li>
+<li><strong>总线仲裁</strong>（bus arbitration）：对于配备不止有一个主控设备的系统需要主线仲裁，为主控设备制定优先级别，保证各个主控设备都有机会使用总线。<ul>
+<li>菊花链仲裁方式：使用一条“出让总线”的控制线将总线使用权依次由最高级别向最低级别传递，简单但不能保证仲裁公平性。</li>
+<li>集中式平行仲裁方式：每个设备有一个总线请求控制线，通过一个总线仲裁器选择设备。会导致使用过程中出现瓶颈效应。</li>
+<li>自选择的分配式仲裁方式：由设备自己决定那个设备具有使用的最高优先级。</li>
+<li>冲突检测的分配式仲裁方式：每个设备都允许发出总线使用请求，如果有冲突则这些设备都必须重新发出另一个使用请求。以太网采用这种方式。</li>
+</ul>
+</li>
+</ul>
+<h2 id="u65F6_u949F"><a href="#u65F6_u949F" class="headerlink" title="时钟"></a>时钟</h2><blockquote>
+<p>用于对系统各个部件协调同步，CPU的每条指令执行都是使用固定的时钟脉冲数目。计算机采用时钟周期量度系统指令的性能。</p>
+</blockquote>
+<ul>
+<li>多数计算机系统都是同步计算机：计算机只有一个主控时钟信号，按照规定的时间间隔发生脉动，各个寄存器必须等待时钟脉冲发生跃变才能输入新的数据。<strong>最小的时钟周期时间至少应大于数据从每组寄存器的输出到下一组寄存器的输入所需要的传递时间，即电路的最大传输延迟时间</strong>。可以通过在输出寄存器和对应的输入寄存器之间增加寄存器的方法减小传输延迟，增加额外的寄存器等价于增加该条指令所需的时钟周期的数目。一般的，乘法比加法操作、浮点运算比整数运算要更多的时钟周期。</li>
+<li>某些总线结构有自己的时钟，总线时钟通常比CPU时钟慢，造成了系统的瓶颈问题。有时会为了达到目的超越某些技术限制，如<strong>超频</strong>（over-clocking）使部件超出规定给出的时间频率或总线速度上限，CPU是最流行的超频组件（许多部件都可以超频运行）。对系统总线的超频可以大幅度改善系统性能，但同样可能损害与总线相连的各种部件。</li>
+</ul>
+<h2 id="u5B58_u50A8_u5668_u7EC4_u6210_u548C_u5BFB_u5740_u65B9_u5F0F"><a href="#u5B58_u50A8_u5668_u7EC4_u6210_u548C_u5BFB_u5740_u65B9_u5F0F" class="headerlink" title="存储器组成和寻址方式"></a>存储器组成和寻址方式</h2><blockquote>
+<p>可以把存储器设想成一个数据位的方阵，方阵的每一行的位长度通常是机器的字大小。物理上通过一个寄存器实现存储器方阵的一行的数据存储。每个寄存器（存储单元）都有一个唯一的地址编号。存储器地址几乎都为无符号整数，正常情况下（目前流行的大部分）存储器采用<strong>按字节编址</strong>（byte-addressable），即每个字节有一个唯一的地址。有的机器的字大小超过一个字节（32位系统的每个字都是4个字节），可以采用<strong>按字编址</strong>（word-addressable），每个机器字有一个自己唯一的地址。字是计算机指令使用的基本单位，即使是按字节编址的计算机也可以从内存中直接读出一个字或将一个字写入存储器。</p>
+</blockquote>
+<ul>
+<li>存储器（内存）由随机访问存储器（RAM）芯片构成，使用符号L×W（长×宽）表示，如4M×16存储器表示存储器有4M（2^22个字）长和16位宽（每个字都是16位）。要对该存储器编址需要2^22个不同的地址，即22位二进制数。主存储器使用的RAM芯片数目大于1,通常利用多块芯片拼接成一定要求的单一存储器模块。单一共享存储器模块可能引起存储器访问上的顺序问题，<strong>存储器交叉存储技术</strong>从多个存储器模块中分离存储单元，低位交叉存储使用地址的低位选择存储器组，把连续的存储器地址分配到不同的存储器模块中，高位交叉存储使用地址的高位选择存储器组，把地址直接分配给具有连续地址的存储器模块。</li>
+</ul>
+<h2 id="u4E2D_u65AD_u548C_u8F93_u5165/_u8F93_u51FA_u5B50_u7CFB_u7EDF"><a href="#u4E2D_u65AD_u548C_u8F93_u5165/_u8F93_u51FA_u5B50_u7CFB_u7EDF" class="headerlink" title="中断和输入/输出子系统"></a>中断和输入/输出子系统</h2><blockquote>
+<p>输入/输出是各种外围设备和主存储器（内存）之间的数据交换。中断（interrput）是改变或中断系统正常流程的各种事件。</p>
+</blockquote>
+<ul>
+<li>输入/输出设备通常不与CPU直接相连，而采用某种接口（interface）来处理数据交换，接口将信号转化为总线和外设都可以接受的形式。CPU通过输入输出寄存器和外设交流，有两种工作方式：1）内存映射的输入输出（memory-mapped I/O），接口中的寄存器地址就在内存地址的分配表中，此时CPU对I/O设备的访问和对内存的访问完全相同，速度很快但要占用系统内存空间；2）指令实现的输入输出（instruction-based I/O），CPU有专门的指令实现输入输出操作。</li>
+<li>如果采用键盘输入，并且打字的速度很快，计算机必须有足够的时间来阅读输入寄存器的每一个字符。如果在计算机能够有机会处理完当前的字符之前，又有另外一个字符被送入到输入寄存器，那么当前的那个字符就会丢失。一种更可能发生的情况是，由于处理器的速度非常快，而键盘输入的速度很慢，所以处理器可能会多次从寄存器重复读取同一个字符。可以使用中断控制的输入输出(interrupt-driven I/O)来解决上述这些问题。</li>
+<li>多种原因可以触发中断：I/O请求，算术错误，算术下溢或上溢，硬件故障，用户定义的中断点（如程序调试），页面错误，非法指令等。不同中断类型的中断处理方法不同。由用户或系统发出（启动）的中断请求可以是屏蔽（maskable）中断（可以被禁止或忽略）或非屏蔽（maskable）中断（高优先级别的中断，不能被禁止，必须响应）。</li>
+<li>计算机中有三种类型的中断：由外部事件（输入/输出，电源掉电等） 产生的外部中断；由于程序中的一些异常（被0除，堆栈溢出，保护系统侵犯等）产生的内部中断以及执行程序中的某条指令（例如，要求程序的执行从一种运行环境如用户层，转到另一个运行环境如内核层等）所引起的软件中断。</li>
+</ul>
+<h1 id="MARIE"><a href="#MARIE" class="headerlink" title="MARIE"></a>MARIE</h1><blockquote>
+<p>MARIE包含一个实际的工作计算机具备的全部功能部件，包括存储器和CPU。</p>
+</blockquote>
+<h2 id="u4F53_u7CFB_u7ED3_u6784_u3001_u5BC4_u5B58_u5668_u548C_u603B_u7EBF"><a href="#u4F53_u7CFB_u7ED3_u6784_u3001_u5BC4_u5B58_u5668_u548C_u603B_u7EBF" class="headerlink" title="体系结构、寄存器和总线"></a>体系结构、寄存器和总线</h2><ul>
+<li>MARIE有以下特点：使用二进制数和补码表示法，存储程序和采用字长度，按字编址，主存储器容量为4K字，16位数据，16位指令、4位操作吗和12位地址，一个16位的累加器（AC），一个16位的指令寄存器（IR），一个16位的存储器缓冲寄存器（MBR），一个12位的程序计数器（PC），一个12位的存储器地址寄存器（MAR），一个8位的输入寄存器和一个8位的输出寄存器。<img src="http://7xktmz.com1.z0.glb.clouddn.com/MARIE体系结构.jpg" alt="MARIE体系结构"></li>
+<li>MARIE的7种寄存器<ul>
+<li>AC：<strong>累加器</strong>（accumalator）用来保持数据值，是通用寄存器。</li>
+<li>MAR：<strong>存储器地址寄存器</strong>（memory address register），用来保持被引用数据存储器地址。</li>
+<li>MBR：<strong>存储器缓冲寄存器</strong>（memory buffer register），用来保持刚从存储器中读取或者将要写入存储器的数据。</li>
+<li>PC：<strong>程序计数器</strong>（program counter），用来保持程序将要执行的下一条指令的地址。</li>
+<li>IR：<strong>指令寄存器</strong>（instruction register），用来保持要执行的下一条指令。</li>
+<li>InREG：输入寄存器（input register），用来保持来自输入设备的数据。</li>
+<li>OutREG：输出寄存器（output register），用来保持将要输出到输出设备的数据。<br>其中，MAR、MBR、PC和IR寄存器为专用寄存器，不能作除上述规定外的其他目的。另外有一个状态或标志寄存器（status），保持显示各种状态信息。</li>
+</ul>
+</li>
+<li>MARIE的数据通道<img src="http://7xktmz.com1.z0.glb.clouddn.com/数据传输连接.jpg" alt="MARIE数据通道"></li>
+</ul>
+<h2 id="u6307_u4EE4_u7CFB_u7EDF_u4F53_u7CFB_u7ED3_u6784"><a href="#u6307_u4EE4_u7CFB_u7EDF_u4F53_u7CFB_u7ED3_u6784" class="headerlink" title="指令系统体系结构"></a>指令系统体系结构</h2><blockquote>
+<p>指令系统体系结构（instruction set architecture，ISA）规定了计算机可以执行的每条指令和其格式。</p>
+</blockquote>
+<ul>
+<li><p>指令构成<br>MARIE的每条指令由16位二进制数构成，最左边（12～15）4位组成<strong>操作码</strong>，右边12位（0～11）形成地址。<table><tbody><tr><td>0001</td><td>1</td><td>Load X</td><td>将地址为X的存储单元中的内容装入AC</td></tr><tr><td>0010</td><td>2</td><td>Store X</td><td>将AC中的内容存储到地址为X的存储单元中</td></tr><tr><td>0011</td><td>3</td><td>Add X</td><td>将地址为X的存储单元中的内容和AC中的内容相加，结果存入AC</td></tr><tr><td>0100</td><td>4</td><td>Subt X</td><td>将AC中的内容减去地址位X的存储单元中的内容，结果存入AC</td></tr><tr><td>0101</td><td>5</td><td>Input</td><td>从键盘输入一个数值到AC中</td></tr><tr><td>0110</td><td>6</td><td>Output</td><td>将AC中的数值输出到显示器</td></tr><tr><td>0111</td><td>7</td><td>Halt</td><td>终止程序的执行</td></tr><tr><td>1000</td><td>8</td><td>Skipcond</td><td>有条件的跳过下一条指令</td></tr><tr><td>1001</td><td>9</td><td>Jump X</td><td>将X的值装入PC中</td></tr></tbody></table><br>对于Skipcond，假定最靠近操作码的两位地址位作为测试的条件，如可以设定00为AC中的值为负数，01为AC中的值等于0，10为AC中的值大于0。</p>
+</li>
+<li><p>寄存器传输表示法：MARIE指令集实际是计算机部件用来执行程序的机器级别的指令系统，每条指令实际包含多个<strong>微指令</strong>（mini-instruction），又称为微操作。微指令规定了对寄存器中存储数据可以执行的各种最基本操作。描述计算机微操作的行为的符号表示法为<strong>寄存器传输表示法</strong>（RTN）或寄存器传输语言（RTL）。使用M[X]表示存放在地址为X处的存储单元中的数据，&lt;——表示信息的传送。实际操作中，数据先从源寄存器送到总线，然后脱离总线到达目的寄存器。下面叙述中没有包括总线的传送过程。<table><tbody><tr><td>Load X</td><td>MAR&lt;——X，MBR&lt;——M[MAR]，AC&lt;——MBR</td></tr><tr><td>Store X</td><td>MAR&lt;——X，MBR&lt;——AC，M[MAR]&lt;——MBR</td></tr><tr><td>Add X</td><td>MAR&lt;——X，MBR&lt;——M[MAR]，AC&lt;——AC+MBR</td></tr><tr><td>Subt X</td><td>MAR&lt;——X，MBR&lt;——M[MAR]，AC&lt;——AC-MBR</td></tr><tr><td>Input</td><td>AC&lt;——InREG</td></tr><tr><td>Output</td><td>OutREG&lt;——AC</td></tr><tr><td>Halt</td><td>无</td></tr><tr><td>Jump X</td><td>PC&lt;——X</td></tr></tbody></table></p>
+</li>
+<li><p>指令执行过程</p>
+<blockquote>
+<p><strong>取指-译码-执行</strong>（fecth-decode-execute）。整个过程如下。</p>
+</blockquote>
+<ul>
+<li>将PC中的内容复制到MAR：MAR&lt;——PC。</li>
+<li>CPU转向主存储器，提取由MAR给出的地址单元中的指令，并将指令放入指令寄存器IR，同时PC自动加1（MARIE按字编址，PC加一实际效果是下一个字的地址占据PC寄存器，如果MARIE按字节编制，则PC需要增量2,因为每条16位指令占据两个字节宽度），此时PC指向下一条指令：IR&lt;——M[MAR]，PC&lt;——PC+1。</li>
+<li>IR最右边的12位地址复制到MAR，对IR最左边4位译码：MAR&lt;——IR[11-0]，IR[15-12]。</li>
+<li>若需要，则CPU使用MAR中的地址转向存储器提取数据，并将数据放入MAR（可能是AC）中，然后执行指令。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/指令执行流程.jpg" alt="指令执行流程"></li>
+</ul>
+</li>
+<li><p>MARIE的中断和输入/输出：当CPU要执行输入输出指令时，通知I/O设备，之后继续处理其它任务，直到I/O设备准备就绪，此时I/O设备会向CPU发送中断请求信号，CPU响应和处理这个中断请求，完成I/O操作后CPU会继续正常的取指-译码-执行周期。大部分计算机中断处理方法为：在机器的每一个取指-译码-执行周期开始处，检查是否有中断请求存在，如果有中断请求则CPU先处理中断任务，否则正常执行。<strong>在CPU执行中断服务程序前，必须存储PC中的内容，CPU的所有寄存器中的内容，以及原始程序中原有的各种状态条件</strong>。中断服务完成后，CPU必须严格恢复到原始程序运行的真实环境。</p>
+</li>
+<li><p>编译程序：编译程序使用助记符号将汇编语言转换成机器语言，即完全由二进制数组成的语句。编译程序阅读由汇编语言编写的源文件（source file），生成由机器代码组成的目标文件（object file）。可以使用标记符号<strong>label</strong>（简单名称）来标识或命名一些特定的存储器地址。MARIE要求标号后面必须要加一个“，”的标点符号。<br>在第一次通读时，编译程序建立一组符号表（symbol table）表示对应关系。<br>第二次通读时，编译程序使用符号表来填充空白地址，并且生成相应的机器语言指令。</p>
+</li>
+</ul>
+<h2 id="u7B80_u5355MARIE_u7A0B_u5E8F"><a href="#u7B80_u5355MARIE_u7A0B_u5E8F" class="headerlink" title="简单MARIE程序"></a>简单MARIE程序</h2><ul>
+<li><p>两数相加<table><tbody><tr><td>十六进制地址</td><td>指令</td><td>存储器地址二进制内容</td><td>存储器十六进制内容</td></tr><tr><td>100</td><td>Load 104</td><td>0001 0001 0000 0100</td><td>1104</td></tr><tr><td>101</td><td>Add 105</td><td>0011 0001 0000 0101</td><td>3105</td></tr><tr><td>102</td><td>Store 106</td><td>0010 0001 0000 0110</td><td>2106</td></tr><tr><td>103</td><td>Halt</td><td>0111 0000 0000 0000</td><td>7000</td></tr><tr><td>104</td><td>0023</td><td>0000 0000 0010 0011</td><td>0023</td></tr><tr><td>105</td><td>FFE9</td><td>1111 1111 1110 1001</td><td>FFE9</td></tr><tr><td>106</td><td>0000</td><td>0000 0000 0000 0000</td><td>0000</td></tr></tbody></table></p>
+</li>
+<li><p>MARIE指令集扩充<table><tbody><tr><td>指令编号（十六进制）</td><td>指令</td><td>意义</td><td>RTN</td></tr><tr><td>0</td><td>JnS X</td><td>将PC内容存储到地址X处，并跳转到地址X+1</td><td>MBR&lt;——PC，MAR&lt;——X，M[MAR]&lt;——MBR，MBR&lt;——X，AC&lt;——1，AC&lt;——AC+MBR，PC&lt;——AC</td></tr><tr><td>A</td><td>Clear</td><td>AC清零</td><td>AC&lt;——0</td></tr><tr><td>B</td><td>AddI X</td><td>间接相加：将地址X处的数值作为操作数实际地址，加到AC中</td><td>MAR&lt;——X，MBR&lt;——M[MAR]，MAR&lt;——MBR，MBR&lt;——M[MAR]，AC&lt;——AC+MBR</td></tr><tr><td>C</td><td>JumpI X</td><td>间接转移：将地址X处的数值作为地址并无条件跳转到该存储单元</td><td>MAR&lt;——X，MBR&lt;——M[MAR]，PC&lt;——MBR</td></tr></tbody></table></p>
+</li>
+<li><p>硬件译码和微程序控制译码</p>
+<ul>
+<li><strong>硬连线控制</strong>（hardwired control）：物理上将各条控制线与实际的机器指令连接。速度快，电路复杂，设计修改困难。</li>
+<li><strong>微编程</strong>（microprogramming）：所有机器指令被放置到微程序中，将指令转换成规定的控制信号。微程序是一个用微代码编写的翻译器，被存储在计算机固件（ROM、PROM、EPROM等）中，称为控制存储器。设计灵活简单，有助于设计功能强大的指令集。每条指令都需要经过一次额外的翻译过程，会减缓整个程序执行速度。</li>
+</ul>
+</li>
+<li><p>实际计算机体系结构：CISC（复杂指令集计算机，Complex Instruction Set Computer），如Intel体系结构中的x86系列CPU，和RISC（精简指令集计算机，Reduced Instruction Set Computer），如Intel的奔腾系列和MIPS体系结构。CISC机器有数目庞大、长度各异、设计复杂的指令系统，多数指令非常复杂，这些复杂指令的一个小子集就可能显著减慢CPU运行速度。RISC机器主要目的是简化指令，对一些小的但是完整的指令硬连线，提高指令执行速度。在RISC系统中，每条指令只执行一个操作，所有指令长度相同只是格式略有差别，所有算术运算在寄存器之间执行，存储器中的数据不能用作操作数。1982年后，所有新设计的指令系统基本都属于RISC结构或CISC和RISC组合结构。</p>
+</li>
+</ul>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/10/21/Computer-Organization-Architecture3/">原始出处</a>(<a href="http://forec.github.io/2015/10/21/Computer-Organization-Architecture3/">http://forec.github.io/2015/10/21/Computer-Organization-Architecture3/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机组成与体系结构/" rel="tag">#计算机组成与体系结构</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/27/Computer-Organization-Architecture4/" rel="prev">计组与体系结构笔记（四）</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/14/Computer-Organization-Architecture2/" rel="next">计组与体系结构笔记（二）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/21/Computer-Organization-Architecture3/"
+                   data-title="计组与体系结构笔记（三）" data-url="http://forec.github.io/2015/10/21/Computer-Organization-Architecture3/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Never mind</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gitcafe.com/forec" target="_blank">gitcafe</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forect@hotmail.com" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u73B0_u4EE3_u8BA1_u7B97_u673A_u5FAE_u89C2_u4F53_u7CFB_u7ED3_u6784"><span class="nav-number">1.</span> <span class="nav-text">现代计算机微观体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU"><span class="nav-number">1.1.</span> <span class="nav-text">CPU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u603B_u7EBF"><span class="nav-number">1.2.</span> <span class="nav-text">总线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u65F6_u949F"><span class="nav-number">1.3.</span> <span class="nav-text">时钟</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5B58_u50A8_u5668_u7EC4_u6210_u548C_u5BFB_u5740_u65B9_u5F0F"><span class="nav-number">1.4.</span> <span class="nav-text">存储器组成和寻址方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4E2D_u65AD_u548C_u8F93_u5165/_u8F93_u51FA_u5B50_u7CFB_u7EDF"><span class="nav-number">1.5.</span> <span class="nav-text">中断和输入/输出子系统</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MARIE"><span class="nav-number">2.</span> <span class="nav-text">MARIE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F53_u7CFB_u7ED3_u6784_u3001_u5BC4_u5B58_u5668_u548C_u603B_u7EBF"><span class="nav-number">2.1.</span> <span class="nav-text">体系结构、寄存器和总线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6307_u4EE4_u7CFB_u7EDF_u4F53_u7CFB_u7ED3_u6784"><span class="nav-number">2.2.</span> <span class="nav-text">指令系统体系结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7B80_u5355MARIE_u7A0B_u5E8F"><span class="nav-number">2.3.</span> <span class="nav-text">简单MARIE程序</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

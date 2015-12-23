@@ -1,0 +1,794 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Never mind" />
+
+
+
+  <meta name="keywords" content="字符编码," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="What Happened ?" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="摘要
+Unicode和ANSI编码的区别
+URL中编码问题
+C/C++/Java/Python对两种编码格式的转换">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ANSI/Unicode备忘">
+<meta property="og:url" content="http://forec.github.io/2015/08/14/ANSI-Unicode备忘/index.html">
+<meta property="og:site_name" content="What Happened ?">
+<meta property="og:description" content="摘要
+Unicode和ANSI编码的区别
+URL中编码问题
+C/C++/Java/Python对两种编码格式的转换">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/url1.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/url2.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/url3.png">
+<meta property="og:updated_time" content="2015-11-01T10:06:53.613Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ANSI/Unicode备忘">
+<meta name="twitter:description" content="摘要
+Unicode和ANSI编码的区别
+URL中编码问题
+C/C++/Java/Python对两种编码格式的转换">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> ANSI/Unicode备忘 | What Happened ? </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">What Happened ?</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              ANSI/Unicode备忘
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-08-14T22:08:40+08:00" content="2015-08-14">
+            2015-08-14
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Code/" itemprop="url" rel="index">
+                  <span itemprop="name">Code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/08/14/ANSI-Unicode备忘/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/14/ANSI-Unicode备忘/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="u6458_u8981"><a href="#u6458_u8981" class="headerlink" title="摘要"></a>摘要</h1><ul>
+<li>Unicode和ANSI编码的区别</li>
+<li>URL中编码问题</li>
+<li>C/C++/Java/Python对两种编码格式的转换</li>
+</ul>
+<a id="more"></a>
+<h1 id="Unicode_u548CANSI"><a href="#Unicode_u548CANSI" class="headerlink" title="Unicode和ANSI"></a>Unicode和ANSI</h1><h2 id="u767E_u79D1"><a href="#u767E_u79D1" class="headerlink" title="百科"></a>百科</h2><blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/Unicode#.E5.8E.86.E5.8F.B2" target="_blank" rel="external">Unicode (from Wiki)</a>（中文：万国码、国际码、统一码、单一码）对世界上大部分的文字系统进行了整理、编码，使得电脑可以用更为简单的方式来呈现和处理文字。Unicode至今仍在不断增修，每个新版本都加入更多新的字符。目前最新的版本为2015年6月17日公布的8.0.0，已收入超过十万个字符。Unicode发展由非营利机构统一码联盟负责。  </p>
+<p><a href="http://baike.baidu.com/link?url=HRZVrZ7XZLisaIsZThLdVBOBn_WxbHowYmDplAYk4xYMXfb8J3abAKDsT2VHNPVLYySxfY773XNx-ZAKfqy6u5S6w16--6hymvsI2m_V5oi" target="_blank" rel="external">ANSI (from Baidu)</a>为使计算机支持更多语言，通常使用 0x80~0xFF 范围的 2 个字节来表示 1 个字符。不同的国家和地区制定了不同的标准，由此产生了 GB2312、GBK、GB18030、Big5、Shift_JIS 等各自的编码标准。不同 ANSI 编码之间互不兼容，当信息在国际间交流时，无法将属于两种语言的文字，存储在同一段 ANSI 编码的文本中。ANSI 编码表示英文字符时用一个字节，表示中文用两个或四个字节。</p>
+<p>编码：按照某种规则将文本转换为字节流<br>  解码：将字节流按照某种规则转换为文本</p>
+</blockquote>
+<h2 id="u8868_u793A"><a href="#u8868_u793A" class="headerlink" title="表示"></a>表示</h2><h3 id="Unicode_u5B9E_u73B0_u65B9_u5F0F"><a href="#Unicode_u5B9E_u73B0_u65B9_u5F0F" class="headerlink" title="Unicode实现方式"></a>Unicode实现方式</h3><ul>
+<li>Unicode只是符号集，规定了符号的二进制代码，没有规定该二进制代码的存储方式。</li>
+<li>UTF-8</li>
+<li>UTF-16</li>
+<li>UTF-32</li>
+<li>非unicode字元集的UTF-7（提供了一种将Unicode转换为7位US-ASCII的方法：“direct characters”包含了 62 个数字与英文字母，以及包含了九个符号字元：’ ( ) , - . / : ?。这些“direct characters”被认为可以很安全的直接在文件里呈现。“optional direct characters”包含了所有可被列印的字元，这些字元在 U+0020 ～ U+007E 之间，除了~ \ +和空白字元以外。空白字元、Tab字元、以及换行字元一般虽也可直接是为单一的 ASCII 字元来使用，然而，若是邮件中有使用了编码过的字串，则必须特别注意这些字元有无被使用在其他地方。其他的字元则必须被编码成 UTF-16 然后转换为修改的 Base64。这些区块的开头会以 + 符号来标示，结尾则以任何不在 Base64 里定义的字元来标示）。</li>
+</ul>
+<h3 id="UTF-8_uFF0CUTF-16_u548CUTF-32"><a href="#UTF-8_uFF0CUTF-16_u548CUTF-32" class="headerlink" title="UTF-8，UTF-16和UTF-32"></a>UTF-8，UTF-16和UTF-32</h3><ul>
+<li>UTF-8用1到6个字节编码UNICODE字符，现在已经标准化为RFC 3629。<table><tbody><tr><td><div class="para"><b>Unicode编码(0x)　</b></div><br></td><td><div class="para"><b>UTF-8 字节流(01)</b></div><br></td></tr><tr><td><div class="para">00000000 - 0000007F</div><br></td><td><div class="para">0xxxxxxx</div><br></td></tr><tr><td><div class="para">00000080 - 000007FF</div><br></td><td><div class="para">110xxxxx 10xxxxxx</div><br></td></tr><tr><td><div class="para">00000800 - 0000FFFF</div><br></td><td><div class="para">1110xxxx 10xxxxxx 10xxxxxx</div><br></td></tr><tr><td><div class="para">00010000 - 001FFFFF</div><br></td><td><div class="para">11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</div><br></td></tr><tr><td>00200000 - 03FFFFFF</td><td>111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</td></tr><tr><td>04000000 - 7FFFFFFF</td><td>1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</td></tr></tbody></table>  
+
+
+</li>
+</ul>
+<ul>
+<li><p>（<a href="http://www.cnblogs.com/kingcat/archive/2012/10/16/2726334.html" target="_blank" rel="external">总结自</a>）UTF-8根据字节中开头的bit标志来识别是该多少个字节做为一个单元来处理。  </p>
+<blockquote>
+<p>0xxxxxxx ，xx代表任意bit.就表示把一个字节作为一个单元，和ASCII一样.<br>110xxxxx 10xxxxxx ，把两个字节作为一个单元。<br>1110xxxx 10xxxxxx 10xxxxxx ，三个字节作为一个单元。</p>
+</blockquote>
+</li>
+<li><p>在文件的开头几个字节为编码标识，EF BB BF 表示UTF-8，FE FF 表示UTF-16。UTF-8需要判断每个字节中的开头标志信息，当某个字节在传送过程中出错，会导致后面的字节也会解析出错。而UTF-16不会判断开头标志，即使错也只会错一个字符，所以容错能力强。</p>
+</li>
+</ul>
+<h3 id="1997_u5E74Unicode2-0_u52A0_u5165UTF-32"><a href="#1997_u5E74Unicode2-0_u52A0_u5165UTF-32" class="headerlink" title="1997年Unicode2.0加入UTF-32"></a>1997年Unicode2.0加入UTF-32</h3><ul>
+<li>UTF-32将所有的字符都用4个字节表示。UTF-8可以选择1至8个字节中的任一个来表示。UTF-16只能为两字节或四字节。</li>
+<li><p>文本开头判断标志（16进制编辑）  </p>
+<blockquote>
+<p>EF BB BF　　　 UTF-8<br>FE FF　　　　　UTF-16LE/UCS-2, little endian<br>FF FE　　　　　UTF-16BE/UCS-2, big endian<br>FF FE 00 00　　UTF-32LE/UCS-4, little endian<br>00 00 FE FF　　UTF-32BE/UCS-4, big-endian  </p>
+</blockquote>
+<p>其中的UCS是ISO制定的标准，与Unicode完全相同。UCS-2对应UTF-16，UCS-4对应UTF-32。UTF-8无对应的UCS。</p>
+</li>
+</ul>
+<h2 id="URL_u4E2D_u7684_u7F16_u7801_u95EE_u9898"><a href="#URL_u4E2D_u7684_u7F16_u7801_u95EE_u9898" class="headerlink" title="URL中的编码问题"></a>URL中的编码问题</h2><h3 id="RFC_1738"><a href="#RFC_1738" class="headerlink" title="RFC 1738"></a>RFC 1738</h3><blockquote>
+<p>Only alphanumerics [0-9a-zA-Z], the special characters “$-_.+!*’(),” [not including the quotes - ed], and reserved characters used for their reserved purposes may be used unencoded within a URL.  </p>
+</blockquote>
+<h3 id="u4E0D_u540C_u60C5_u51B5_u4E0B_u7684_u7F16_u7801"><a href="#u4E0D_u540C_u60C5_u51B5_u4E0B_u7684_u7F16_u7801" class="headerlink" title="不同情况下的编码"></a>不同情况下的编码</h3><h4 id="u7F51_u5740_u8DEF_u5F84_u4E2D_u5B58_u5728_u975E_u6CD5_u5B57_u7B26"><a href="#u7F51_u5740_u8DEF_u5F84_u4E2D_u5B58_u5728_u975E_u6CD5_u5B57_u7B26" class="headerlink" title="网址路径中存在非法字符"></a>网址路径中存在非法字符</h4><blockquote>
+<p>随机输入一个包含中文的网址<br>  <img src="http://7xktmz.com1.z0.glb.clouddn.com/url1.png" alt="维基百科：中国"><br>  打开开发者工具可以看到http请求的头信息<br>  <img src="http://7xktmz.com1.z0.glb.clouddn.com/url2.png" alt="头信息"><br>  测试的浏览器是firefox40.0，可以看到编码为UTF-8（图中E4 B8 AD E5 9C 8B为‘中国’的UTF-8编码）</p>
+</blockquote>
+<h4 id="u53D1_u9001_u7684_u67E5_u8BE2_u5B57_u7B26_u4E32_u4E2D_u5B58_u5728_u975E_u6CD5_u5B57_u7B26"><a href="#u53D1_u9001_u7684_u67E5_u8BE2_u5B57_u7B26_u4E32_u4E2D_u5B58_u5728_u975E_u6CD5_u5B57_u7B26" class="headerlink" title="发送的查询字符串中存在非法字符"></a>发送的查询字符串中存在非法字符</h4><blockquote>
+<p>在谷歌中搜索“火狐”，根据测试浏览器给出的编码方式仍然为UTF-8。<br>但是根据查找的资料(<a href="http://www.360doc.com/content/11/1223/16/2150778_174499703.shtml" target="_blank" rel="external">引用</a>)，这种情况下会使用操作系统的默认编码。测试系统为windows10，使用的默认编码不是GB2312而是UTF-8。在XP虚拟机中默认编码为GB2312，此时浏览器使用的编码方式为GB2312。 </p>
+</blockquote>
+<h4 id="GET_u65B9_u6CD5_u751F_u6210_u7684URL_u5B58_u5728_u975E_u6CD5_u5B57_u7B26"><a href="#GET_u65B9_u6CD5_u751F_u6210_u7684URL_u5B58_u5728_u975E_u6CD5_u5B57_u7B26" class="headerlink" title="GET方法生成的URL存在非法字符"></a>GET方法生成的URL存在非法字符</h4><blockquote>
+<p>直接搬过来，没有测试<br>  <img src="http://7xktmz.com1.z0.glb.clouddn.com/url3.png" alt="GET方法生成URL"></p>
+</blockquote>
+<hr>
+<h1 id="u4EE3_u7801_u5B9E_u73B0_u8F6C_u6362"><a href="#u4EE3_u7801_u5B9E_u73B0_u8F6C_u6362" class="headerlink" title="代码实现转换"></a>代码实现转换</h1><h2 id="C_u8BED_u8A00/C++"><a href="#C_u8BED_u8A00/C++" class="headerlink" title="C语言/C++"></a>C语言/C++</h2><ul>
+<li>ANSI：char，可用函数：strcat(),strcpy(),strlen()等，以str开头。<br>UNICODE：wchar_t，可用函数：wcscat(),wcscpy(),wcslen()等，以wcs开头。<br><a href="http://www.cnblogs.com/Pickuper/articles/2050427.html" target="_blank" rel="external">详细介绍及系统支持</a>   </li>
+<li><p>代码(需要win32API，原创在<a href="http://www.cnblogs.com/gakusei/articles/1585211.html" target="_blank" rel="external">gakusei</a>)  </p>
+<h3 id="Unicode_-_26gt_3B_ANSI"><a href="#Unicode_-_26gt_3B_ANSI" class="headerlink" title="Unicode -&gt; ANSI"></a>Unicode -&gt; ANSI</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">UnicodeToANSI</span><span class="params">( <span class="keyword">const</span> wstring&amp; str )</span></span>&#123;</span><br><span class="line">     <span class="keyword">int</span> iTextLen = WideCharToMultiByte( CP_ACP,</span><br><span class="line">         <span class="number">0</span>,</span><br><span class="line">         str.c_str(),</span><br><span class="line">         -<span class="number">1</span>,</span><br><span class="line">         <span class="literal">NULL</span>,</span><br><span class="line">         <span class="number">0</span>,</span><br><span class="line">         <span class="literal">NULL</span>,</span><br><span class="line">         <span class="literal">NULL</span>);</span><br><span class="line">     <span class="keyword">char</span>* pElementText = <span class="keyword">new</span> <span class="keyword">char</span>[iTextLen + <span class="number">1</span>];</span><br><span class="line">     <span class="built_in">memset</span>((<span class="keyword">void</span>*)pElementText,<span class="number">0</span>,<span class="keyword">sizeof</span>(<span class="keyword">char</span>)*(iTextLen+<span class="number">1</span>));</span><br><span class="line">     ::WideCharToMultiByte( CP_ACP,</span><br><span class="line">         <span class="number">0</span>,</span><br><span class="line">         str.c_str(),</span><br><span class="line">         -<span class="number">1</span>,</span><br><span class="line">         pElementText,</span><br><span class="line">         iTextLen,</span><br><span class="line">         <span class="literal">NULL</span>,</span><br><span class="line">         <span class="literal">NULL</span>);</span><br><span class="line">     <span class="built_in">string</span> strText = pElementText;</span><br><span class="line">     <span class="keyword">delete</span>[] pElementText;</span><br><span class="line">     <span class="keyword">return</span> strText;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="ANSI_-_26gt_3B_Unicode"><a href="#ANSI_-_26gt_3B_Unicode" class="headerlink" title="ANSI -&gt; Unicode"></a>ANSI -&gt; Unicode</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">wstring <span class="title">ANSIToUnicode</span><span class="params">( <span class="keyword">const</span> <span class="built_in">string</span>&amp; str )</span></span>&#123;</span><br><span class="line">     <span class="keyword">int</span> len = str.length();</span><br><span class="line">     <span class="keyword">int</span> unicodeLen = ::MultiByteToWideChar( CP_ACP,</span><br><span class="line">        <span class="number">0</span>,</span><br><span class="line">        str.c_str(),</span><br><span class="line">        -<span class="number">1</span>,</span><br><span class="line">        <span class="literal">NULL</span>,</span><br><span class="line">        <span class="number">0</span>); </span><br><span class="line">     <span class="keyword">wchar_t</span> *pUnicode; </span><br><span class="line">     pUnicode = <span class="keyword">new</span> <span class="keyword">wchar_t</span>[unicodeLen+<span class="number">1</span>]; </span><br><span class="line">     <span class="built_in">memset</span>(pUnicode,<span class="number">0</span>,(unicodeLen+<span class="number">1</span>)*<span class="keyword">sizeof</span>(<span class="keyword">wchar_t</span>)); </span><br><span class="line">     ::MultiByteToWideChar( CP_ACP,</span><br><span class="line">         <span class="number">0</span>,</span><br><span class="line">         str.c_str(),</span><br><span class="line">         -<span class="number">1</span>,</span><br><span class="line">         (LPWSTR)pUnicode,</span><br><span class="line">         unicodeLen ); </span><br><span class="line">     wstring rt = (<span class="keyword">wchar_t</span>*)pUnicode;</span><br><span class="line">     <span class="keyword">delete</span> pUnicode;</span><br><span class="line">     <span class="keyword">return</span> rt; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="UTF-8_-_26gt_3B_Unicode"><a href="#UTF-8_-_26gt_3B_Unicode" class="headerlink" title="UTF-8 -&gt; Unicode"></a>UTF-8 -&gt; Unicode</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> <span class="function">wstring <span class="title">UTF8ToUnicode</span><span class="params">( <span class="keyword">const</span> <span class="built_in">string</span>&amp; str )</span></span>&#123;</span><br><span class="line">      <span class="keyword">int</span> len = str.length();</span><br><span class="line">      <span class="keyword">int</span> unicodeLen = ::MultiByteToWideChar( CP_UTF8,</span><br><span class="line">          <span class="number">0</span>,</span><br><span class="line">          str.c_str(),</span><br><span class="line">          -<span class="number">1</span>,</span><br><span class="line">          <span class="literal">NULL</span>,</span><br><span class="line">          <span class="number">0</span>); </span><br><span class="line">      <span class="keyword">wchar_t</span> *pUnicode; </span><br><span class="line">      pUnicode = <span class="keyword">new</span>  <span class="keyword">wchar_t</span>[unicodeLen+<span class="number">1</span>]; </span><br><span class="line">      <span class="built_in">memset</span>(pUnicode,<span class="number">0</span>,(unicodeLen+<span class="number">1</span>)*<span class="keyword">sizeof</span>(<span class="keyword">wchar_t</span>)); </span><br><span class="line">      ::MultiByteToWideChar( CP_UTF8,</span><br><span class="line">          <span class="number">0</span>,</span><br><span class="line">          str.c_str(),</span><br><span class="line">          -<span class="number">1</span>,</span><br><span class="line">          (LPWSTR)pUnicode,</span><br><span class="line">          unicodeLen ); </span><br><span class="line">      wstring rt = ( <span class="keyword">wchar_t</span>* )pUnicode;</span><br><span class="line">      <span class="keyword">delete</span> pUnicode;</span><br><span class="line">      <span class="keyword">return</span>  rt; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Unicode_-_26gt_3B_UTF-8"><a href="#Unicode_-_26gt_3B_UTF-8" class="headerlink" title="Unicode -&gt; UTF-8"></a>Unicode -&gt; UTF-8</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">UnicodeToUTF8</span><span class="params">( <span class="keyword">const</span> wstring&amp; str )</span></span>&#123;</span><br><span class="line">    <span class="keyword">char</span>* pElementText;</span><br><span class="line">    <span class="keyword">int</span> iTextLen;</span><br><span class="line">    <span class="comment">// wide char to multi char</span></span><br><span class="line">    iTextLen = WideCharToMultiByte( CP_UTF8,</span><br><span class="line">         <span class="number">0</span>,</span><br><span class="line">         str.c_str(),</span><br><span class="line">         -<span class="number">1</span>,</span><br><span class="line">         <span class="literal">NULL</span>,</span><br><span class="line">         <span class="number">0</span>,</span><br><span class="line">         <span class="literal">NULL</span>,</span><br><span class="line">         <span class="literal">NULL</span>);</span><br><span class="line">    pElementText = <span class="keyword">new</span> <span class="keyword">char</span>[iTextLen + <span class="number">1</span>];</span><br><span class="line">    <span class="built_in">memset</span>((<span class="keyword">void</span>*)pElementText,<span class="number">0</span>,<span class="keyword">sizeof</span>(<span class="keyword">char</span>)*(iTextLen+<span class="number">1</span>));</span><br><span class="line">    ::WideCharToMultiByte( CP_UTF8,</span><br><span class="line">         <span class="number">0</span>,</span><br><span class="line">         str.c_str(),</span><br><span class="line">         -<span class="number">1</span>,</span><br><span class="line">         pElementText,</span><br><span class="line">         iTextLen,</span><br><span class="line">         <span class="literal">NULL</span>,</span><br><span class="line">         <span class="literal">NULL</span> );</span><br><span class="line">    <span class="built_in">string</span> strText = pElementText;</span><br><span class="line">    <span class="keyword">delete</span>[] pElementText;</span><br><span class="line">    <span class="keyword">return</span> strText;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><ul>
+<li><p>将字符串按不同编码方式读取</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">String text = “TESTSTRING”;</span><br><span class="line"><span class="keyword">byte</span>[] b_utf8 = text.getBytes(<span class="string">"UTF-8"</span>);    <span class="comment">//utf-8</span></span><br><span class="line"><span class="keyword">byte</span>[] b_iso88591 = text.getBytes(<span class="string">"ISO8859-1"</span>);    <span class="comment">//iso</span></span><br><span class="line"><span class="keyword">byte</span>[] b_gbk = text.getBytes(<span class="string">"GBK"</span>);    <span class="comment">//ansi</span></span><br><span class="line">string unicode = getUnicode(text);        <span class="comment">//unicode</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getUnicode</span><span class="params">(String source)</span> </span>&#123;</span><br><span class="line">    String result = <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; source.length(); i++) &#123;</span><br><span class="line">        result += <span class="string">"\\u"</span>+Integer.toHexString((<span class="keyword">int</span>)source.charAt(i));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//new String(str.getBytes(原编码),目标编码)</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将ansi文件转为UTF-8</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">transferFile</span><span class="params">(String srcFileName, String destFileName)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">         String line_separator = System.getProperty(<span class="string">"line.separator"</span>); </span><br><span class="line">         FileInputStream fis = <span class="keyword">new</span> FileInputStream(srcFileName);</span><br><span class="line">         StringBuffer content = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">         DataInputStream in = <span class="keyword">new</span> DataInputStream(fis);</span><br><span class="line">         BufferedReader d = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(in, <span class="string">"GBK"</span>));  <span class="comment">//源文件为GBK  </span></span><br><span class="line">         String line = <span class="keyword">null</span>;</span><br><span class="line">         <span class="keyword">while</span> ((line = d.readLine()) != <span class="keyword">null</span>)</span><br><span class="line">              content.append(line + line_separator);</span><br><span class="line">         d.close();</span><br><span class="line">         in.close();</span><br><span class="line">         fis.close();</span><br><span class="line">         Writer ow = <span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(destFileName),<span class="string">"utf-8"</span>);</span><br><span class="line">         ow.write(content.toString());</span><br><span class="line">         ow.close();</span><br><span class="line">      &#125;</span><br><span class="line"><span class="comment">// line_separator可以通过另一种方式获取，上面的代码line_separator获取得系统默认编码的回车</span></span><br><span class="line">       <span class="keyword">byte</span>[] sep=<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span>];  </span><br><span class="line">       sep[<span class="number">0</span>]=<span class="number">0x0d</span>;  </span><br><span class="line">       sep[<span class="number">1</span>]=<span class="number">0x0a</span>;  </span><br><span class="line">       String line_separator=<span class="keyword">new</span> String(sep);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h2><h3 id="u83B7_u53D6_u7CFB_u7EDF_u9ED8_u8BA4_u7F16_u7801"><a href="#u83B7_u53D6_u7CFB_u7EDF_u9ED8_u8BA4_u7F16_u7801" class="headerlink" title="获取系统默认编码"></a>获取系统默认编码</h3><blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">print</span> sys.getdefaultencoding()</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="u7F16_u7801_u95F4_u8F6C_u6362"><a href="#u7F16_u7801_u95F4_u8F6C_u6362" class="headerlink" title="编码间转换"></a>编码间转换</h3><blockquote>
+<p>通常通过Unicode作为中间编码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">str.decode(<span class="string">'gb2312'</span>); //将GB2312的字符串str转换为unicode编码</span><br><span class="line">str.encode(<span class="string">'gb2312'</span>); //将unicode字符串str转换为GB2312编码</span><br><span class="line">str.decode(<span class="string">"ascii"</span>).encode(<span class="string">"utf-8"</span>)  //先解码再按utf-<span class="number">8</span>编码</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">'utf8'</span>) //设置默认编码</span><br></pre></td></tr></table></figure>
+</blockquote>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/08/14/ANSI-Unicode备忘/">原始出处</a>(<a href="http://forec.github.io/2015/08/14/ANSI-Unicode备忘/">http://forec.github.io/2015/08/14/ANSI-Unicode备忘/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/字符编码/" rel="tag">#字符编码</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/18/多线程编程备忘/" rel="prev">多线程编程备忘</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/08/Win10-Fedora22/" rel="next">Win10+Fedora22</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/08/14/ANSI-Unicode备忘/"
+                   data-title="ANSI/Unicode备忘" data-url="http://forec.github.io/2015/08/14/ANSI-Unicode备忘/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Never mind</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gitcafe.com/forec" target="_blank">gitcafe</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forect@hotmail.com" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u6458_u8981"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Unicode_u548CANSI"><span class="nav-number">2.</span> <span class="nav-text">Unicode和ANSI</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u767E_u79D1"><span class="nav-number">2.1.</span> <span class="nav-text">百科</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u8868_u793A"><span class="nav-number">2.2.</span> <span class="nav-text">表示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unicode_u5B9E_u73B0_u65B9_u5F0F"><span class="nav-number">2.2.1.</span> <span class="nav-text">Unicode实现方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UTF-8_uFF0CUTF-16_u548CUTF-32"><span class="nav-number">2.2.2.</span> <span class="nav-text">UTF-8，UTF-16和UTF-32</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1997_u5E74Unicode2-0_u52A0_u5165UTF-32"><span class="nav-number">2.2.3.</span> <span class="nav-text">1997年Unicode2.0加入UTF-32</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#URL_u4E2D_u7684_u7F16_u7801_u95EE_u9898"><span class="nav-number">2.3.</span> <span class="nav-text">URL中的编码问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RFC_1738"><span class="nav-number">2.3.1.</span> <span class="nav-text">RFC 1738</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E0D_u540C_u60C5_u51B5_u4E0B_u7684_u7F16_u7801"><span class="nav-number">2.3.2.</span> <span class="nav-text">不同情况下的编码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u7F51_u5740_u8DEF_u5F84_u4E2D_u5B58_u5728_u975E_u6CD5_u5B57_u7B26"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">网址路径中存在非法字符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u53D1_u9001_u7684_u67E5_u8BE2_u5B57_u7B26_u4E32_u4E2D_u5B58_u5728_u975E_u6CD5_u5B57_u7B26"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">发送的查询字符串中存在非法字符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GET_u65B9_u6CD5_u751F_u6210_u7684URL_u5B58_u5728_u975E_u6CD5_u5B57_u7B26"><span class="nav-number">2.3.2.3.</span> <span class="nav-text">GET方法生成的URL存在非法字符</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u4EE3_u7801_u5B9E_u73B0_u8F6C_u6362"><span class="nav-number">3.</span> <span class="nav-text">代码实现转换</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#C_u8BED_u8A00/C++"><span class="nav-number">3.1.</span> <span class="nav-text">C语言/C++</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unicode_-_26gt_3B_ANSI"><span class="nav-number">3.1.1.</span> <span class="nav-text">Unicode -> ANSI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ANSI_-_26gt_3B_Unicode"><span class="nav-number">3.1.2.</span> <span class="nav-text">ANSI -> Unicode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UTF-8_-_26gt_3B_Unicode"><span class="nav-number">3.1.3.</span> <span class="nav-text">UTF-8 -> Unicode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Unicode_-_26gt_3B_UTF-8"><span class="nav-number">3.1.4.</span> <span class="nav-text">Unicode -> UTF-8</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java"><span class="nav-number">3.2.</span> <span class="nav-text">Java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python"><span class="nav-number">3.3.</span> <span class="nav-text">Python</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u83B7_u53D6_u7CFB_u7EDF_u9ED8_u8BA4_u7F16_u7801"><span class="nav-number">3.3.1.</span> <span class="nav-text">获取系统默认编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7F16_u7801_u95F4_u8F6C_u6362"><span class="nav-number">3.3.2.</span> <span class="nav-text">编码间转换</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
