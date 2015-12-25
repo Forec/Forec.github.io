@@ -1,0 +1,750 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Never mind" />
+
+
+
+  <meta name="keywords" content="Algorithms," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="What Happened ?" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="简述最大流问题，给出一种解决最大流的最简单方法，及在二分图匹配中的应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最大流（一）">
+<meta property="og:url" content="http://forec.github.io/2015/12/25/Graph-Algorithms7-flow/index.html">
+<meta property="og:site_name" content="What Happened ?">
+<meta property="og:description" content="简述最大流问题，给出一种解决最大流的最简单方法，及在二分图匹配中的应用。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/%E6%9C%80%E5%A4%A7%E6%B5%81.jpg">
+<meta property="og:updated_time" content="2015-12-25T12:10:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="最大流（一）">
+<meta name="twitter:description" content="简述最大流问题，给出一种解决最大流的最简单方法，及在二分图匹配中的应用。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 最大流（一） | What Happened ? </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">What Happened ?</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              最大流（一）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-12-25T08:43:42+08:00" content="2015-12-25">
+            2015-12-25
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Code/" itemprop="url" rel="index">
+                  <span itemprop="name">Code</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/12/25/Graph-Algorithms7-flow/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/25/Graph-Algorithms7-flow/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>简述最大流问题，给出一种解决最大流的最简单方法，及在二分图匹配中的应用。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="u6D41_u7F51_u7EDC"><a href="#u6D41_u7F51_u7EDC" class="headerlink" title="流网络"></a>流网络</h1><ul>
+<li>流网络G=（V，E）是一个有向图，E中的每条边（u，v）均有一个非负容量c（u，v）&gt;=0，对于不属于E中的边（u，v），则c（u，v）=0。流网络中有源点s和汇点t，方便起见假设每个顶点都处在从源点s到汇点t的某条路径上，也就是说对每个V中的顶点v，都有s～&gt;v~&gt;t的路径存在。因此，图G为连通图，并且|E|&gt;=|V|-1。流网络具备三个基本性质。<ul>
+<li>容量限制：对于所有V中的顶点u,v，都有f(u,v) &lt;= c(u,v)。</li>
+<li>反对称性：对于所有V中的顶点u,v，都有f(u,v) = -f(v,u)。</li>
+<li>流守恒性：对所有V中的非s、t顶点u，都有Sum{ f(u,v)，v为V中全部顶点 }= 0。<br>f(u,v)称为从顶点u到顶点v的流，它可以为正、负或零。流f的值的定义为|f| = Sum{ f(s,v)，v为V中所有顶点 }，也就是从源点s出发的总流量，|f|表示流的值，而不是绝对值。</li>
+</ul>
+</li>
+<li>流网络性质的解释：容量限制说明从一个顶点到另一个顶点的网络流不能超过设定的容量。反对称性说明从顶点u到顶点v的流是其反向流的负值。流守恒性说明从非源点或非汇点的顶点出发的总网络流为0，也可以说，除s和t外，进入一个顶点的总流为0，可以阐述为流进等于流出。</li>
+<li>最大流问题：给出一个具有源点s和汇点t的流网络G，找出从s到t的最大流值。举个例子说明，下图是一个简单的流网络，从源点s到汇点t的最大流为5，将有向边想象成城市间的公路，该流网络就转化为城市间的物流问题。另外，图中不存在双向边，假如为图中权值为6的有向边配备一条“反向通道”，该反向通道的权值为3，也就是城市间可以相互运输，则可以利用<strong>抵消处理</strong>将反向通道剔除。因为运输同一种物品，从u到v运送6个，从v到u运送3个，实质相当于从u到v运送6-3=3个，因此任意顶点间流传输问题都可以通过抵消转化为单向传输问题：只沿正向流的方向传输。<img src="http://7xktmz.com1.z0.glb.clouddn.com/%E6%9C%80%E5%A4%A7%E6%B5%81.jpg" width="200px"></li>
+<li>多个源点或多个汇点：考虑上一篇差分约束系统，我们通过构造了一个额外的源点s0得到了差分约束系统的最短路模型。在最大流问题中，如果出现多个源点或者多个汇点，可以为其增加一个超级源点s0或超级汇点t0,并将s0和所有源点si相连，权值为正无穷，将所有汇点ti和超级汇点t0相连，权值为正无穷。问题就转化为从超级源点s0到超级汇点t0的最大流问题。</li>
+<li>隐含求和记号简化流网络的表达：使用函数f，f的任意自变量都可以是顶点的集合，表示的值为自变量代表的元素所有可能求和情况，例如f(X,Y) = Sum{ f(x,y) ，x in X and y in Y }。因此流守恒可以表示为f(u,V) = 0，流的值|f| = f(s,V) = f(V,t)。对于下面几个恒等式，建议参考基尔霍夫第一第二定律证明。（1）对于所有的X包含于V，f(X, X) = 0，（2）对所有X，Y包含于V，f(X, Y) = -f(Y,X)，（3）对所有X,Y,Z包含于V，其中X and Y = None，有<code>f(X or Y, Z) = f(X, Z)+f(Y, Z)</code>，<code>f(Z, X or Y) = f(Z, X)+f(Z, Y)</code>。</li>
+</ul>
+<h1 id="Ford-Fulkerson_u65B9_u6CD5"><a href="#Ford-Fulkerson_u65B9_u6CD5" class="headerlink" title="Ford-Fulkerson方法"></a>Ford-Fulkerson方法</h1><h2 id="u65B9_u6CD5_u89E3_u91CA_u548C_u5B9A_u7406"><a href="#u65B9_u6CD5_u89E3_u91CA_u548C_u5B9A_u7406" class="headerlink" title="方法解释和定理"></a>方法解释和定理</h2><ul>
+<li><p>最大流问题的Ford-Fulkerson方法包含多种不同运行时间的实现，其依赖于三种流网络中常见的思想：残留网络（residual network），增广路径（augmenting path）和割（cut）。Ford-Fulkerson方法是一种迭代方法，开始时对所有V中的u，v有f(u,v)=0，即初始状态时流的值为0。每次迭代可以通过寻找一条“增广路径”来增加流值。增广路径时从源点s到汇点t的一条路径，沿着该路径可以向现有流量压入更多流值。反复进行该过程，直到所有增广路径都被寻找出。后面将证明算法的正确性。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">FORD-FULKERSON-METHORD</span><span class="params">(G, s, t)</span></span></span><br><span class="line">	initialize flow f to <span class="number">0</span></span><br><span class="line">	while there exists an augmenting path <span class="tag">p</span></span><br><span class="line">		do augment flow f along <span class="tag">p</span></span><br><span class="line">	return f</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>残留网络</strong>：给定一个流网络G和一个流f，该流网络在此流基础上的残留网络Gf由可以容纳更多网络流的边组成。举例来说，有一个流网络G=（V,E），源点s汇点t，设f是G中的一个流，考察V中一对顶点u，v，在不超过容量c(u,v)的条件下，从u到v可以压入额外的网络流量，就是(u,v)的残留容量，即<code>cf(u,v) = c(u,v) - f(u,v)</code>。在残留网络Gf中，每条残留边都能容纳一个严格为正的网络流。定义Ef为残留网络的边集，Ef中的边既可以是E中的边，也可以是它们的反向边。如果E中存在边（u，v）并且f(u,v)<c(u,v)，则cf(u,v) =="" c(u,v)-f(u,v)=""> 0，并且若f(u,v)&gt;0，则f(v,u)<0，此时cf(v,u) =="" c(v,u)="" -="" f(v,u)="">0，因此(u,v)的反向边(v,u)也存在于Ef中。对于一对顶点(u,v)，只有在初始网络中存在连接两个顶点的边，则残留网络中才能出现连接这两点的边，因此|Ef| &lt;= 2|E|。残留网络中的流和初始网络中的流的关系为|f+f’| = |f|+|f’|。</0，此时cf(v,u)></c(u,v)，则cf(u,v)></p>
+</li>
+<li><strong>增广路径</strong>：增广路径p是残留网络Gf中从s到t的一条简单路径，增广路径上的每条边(u, v)可以容纳从u到v的某额外正网络流。称能够沿一条增广路径p的每条边传输的网络流的最大量为p的残留容量，cf(p) = min{ cf(u,v), (u,v) in p }。在已有流f的基础上加上fp，则可以得到G的另一个流，且新流的流值更接近最大值，因为|fp|为正，|f| + |fp|&gt;|f|。</li>
+<li><strong>流网络的割</strong>：Ford-Fulkerson方法沿增广路径反复增加流，直到找到最大流。流网络G=(V,E)的割（S，T）将V划分为S和T=V-S两部分，这里的划分类似于最小生成树中的点集划分，但此处针对的是有向图而非无向图。对于一个流f，穿过割（S，T）的净流量被定义为f(S,T)，割(S,T)的容量为c(S, T)，一个网络的最小割是网络中所有割中具有最小容量的割。对于最大流问题介绍中的图片，假如将左侧的s和距离其最近的顶点划分为S，剩下的两个顶点（含t）划分为T，则通过该割的<strong>净流量</strong>为2+3=5，2是图中最顶部顶点向t提供的流，3是s向图中最底部顶点提供的流。该割的<strong>容量</strong>为3+1+6=10。通过割的净流量可能包括顶点间的负网络流，但割的容量完全由非负值组成，即通过割（S，T）的净流由双向的正网络流组成，用从S到T的正网络流减去从T到S的正网络流；而割（S，T）的容量仅由从S到T的边计算而得，从T到S的边在计算c（S，T）时不包含在内。可以证明，<strong>流经任意割的净流都是相同的，且f(S,T) = |f|</strong>。证明如下：根据流守恒性，f(S-s,V) = 0，因此f(S,T) = f(S,V)-f(S,S) = f(S,V) = f(s,V)+f(S-s,V) = f(s,V) = |f|。还可以证明，<strong>对一个流网络G中任意流f来说，其值的上界为G的任意割的容量</strong>，即|f|=f(S, T) = Sum{ f(u, v), u in S, v in T } &lt;= Sum{ c(u, v), u in S, v in T } = c(S，T)。从该式可以直接得出一个结论，<strong>网络的最大流必定不超过此网络最小割的容量</strong>。</li>
+<li><strong>最大流最小割定理</strong>：如果f是具有源点s和汇点t的流网络G=（V，E）中的一个流，则下列条件等价：（1）f是G的一个最大流，（2）残留网络Gf不包含增广路径，（3）对G的某个割（S，T），有|f|=c（S，T）。结合上面提到的网络的最大流不超过此网络最小割的容量，可以得出<strong>网络的最大流等于某一最小割的容量</strong>。证明如下。<ul>
+<li>(1)-&gt;(2)：假设f是G的最大流，而Gf包含一条增广路径p，因此流的和f+fp是G的一个流，并且由增广路径的定义，f+fp的流值严格大于|f|，这与假设矛盾。</li>
+<li>(2)-&gt;(3)：假设Gf不包含增广路径，即Gf不包含从s到v的路径。定义S={ v in V且Gf中从s到v存在路径 }，T=V-S。对于这样的割（S，T），s在S中，t在T中，并且对每对顶点(u, v)，都有f(u,v) = c(u,v)，否则(u,v)属于Ef，v就属于了集合S，这和前提矛盾。因此|f| = f(S, T) = c(S, T)。</li>
+<li>(3)-&gt;(1)：对所有割（S，T），都有f&lt;=c(S,T)，因此条件|f| = c(S, T)说明此时f是一个最大流。</li>
+</ul>
+</li>
+</ul>
+<h2 id="u57FA_u672C_u7684Ford-Fulkerson_u7B97_u6CD5_u5B9E_u73B0"><a href="#u57FA_u672C_u7684Ford-Fulkerson_u7B97_u6CD5_u5B9E_u73B0" class="headerlink" title="基本的Ford-Fulkerson算法实现"></a>基本的Ford-Fulkerson算法实现</h2><ul>
+<li><p>在Ford-Fulkerson方法的每次迭代中，找出任意增广路径p，并把沿p每条边的流f加上其残留容量cf（p）。下面的实现中，通过更新有边相连的每对顶点间的网络流来计算最大流。如果一对顶点间在任意方向都没有边相连，则隐含假设该对顶点间的f = 0。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FORD-FULKERSON(<span class="keyword">G</span>, s, t)</span><br><span class="line">	<span class="keyword">for</span> each edge(<span class="keyword">u</span>, v) <span class="keyword">in</span> <span class="literal">E</span>(<span class="keyword">G</span>):</span><br><span class="line">		f[<span class="keyword">u</span>][v] &lt;- 0</span><br><span class="line">		f[v][<span class="keyword">u</span>] &lt;- 0</span><br><span class="line">	<span class="keyword">while</span> there exists a path p from s to t <span class="keyword">in</span> the residual network Gf:</span><br><span class="line">		<span class="keyword">cf</span>(p) &lt;- min&#123; <span class="keyword">cf</span>(<span class="keyword">u</span>, v): (<span class="keyword">u</span>, v) is <span class="keyword">in</span> p &#125;</span><br><span class="line">		<span class="keyword">for</span> each edge(<span class="keyword">u</span>, v) <span class="keyword">in</span> p:</span><br><span class="line">			f[<span class="keyword">u</span>][v] &lt;- f[<span class="keyword">u</span>][v] + <span class="keyword">cf</span>(p)</span><br><span class="line">			f[v][<span class="keyword">u</span>] &lt;- -f[<span class="keyword">u</span>][v]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上述基本实现方法，运行时间取决于如何确定第四行中的增广路径，如果选择不好，在边权有无理数的情况下算法可能不会终止：流的值随着求和运算不断增加，但始终无法收敛到流的最大值。若采用广度优先搜索来选择增广路径，则算法运行时间为多项式复杂度。通常情况下算法处理的问题中权值都为整数，如果是有理数可以按照一定比例转化为整数。在整数条件下，该种实现Ford-Fulkerson算法的运行时间为O(E|f<em>|)，其中f</em>是算法求出的最大流，原因在于第7行的循环为E次，寻找一条增广路径需要的深度优先搜索为E复杂度，而while最多执行f<em>次，每次至少增加流值1个单位。在f</em>较小时可以取得不错的运行效果，但当流网络中的最大流f*很大，例如我们将上面示例图中除了中间那条权值为1的边之外的其他边，权值都设为1000000，显然最大流为2000000,但增广路径会在权值为1的边上往返出现，因此一共要运行2000000×5次。</p>
+</li>
+</ul>
+<h2 id="Edmonds-Karp_u7B97_u6CD5"><a href="#Edmonds-Karp_u7B97_u6CD5" class="headerlink" title="Edmonds-Karp算法"></a>Edmonds-Karp算法</h2><ul>
+<li>如果在第四行用BFS实现对增广路径p的计算，即若增广路径时残留网络中从s到t的最短路径（每条边设为单位距离），则能改进Ford-Fulkerson的界，该种实现方法为Edmonds-Karp算法，运行时间为O(VE^2)。令R（u，v）表示每条边为单位长度的图Gf中，从u到v的最短路径长度。下证时间复杂度。</li>
+<li><strong>对具有源点s和汇点t的流网络G=（V，E）运行Edmonds-Karp算法，对所有非源非汇点顶点v，残留网络Gf中的最短路径长度R（u，v）随着每个流的增加而单调递增</strong>。假设这个顶点v的流增加引起了从s到v的最短路径的减少，下面会推出矛盾。假设f是第一次流增加之前的流，该增加导致了某个最短路径距离的减小；设f’时增加以后的流。设v是在流增加时最小距离Rf’（u，v）被减小的顶点，因此Rf’（s，v）&lt; Rf（s，v）。设p=s～&gt;u-&gt;v是Gf’中从s到v的最短路径，因此（u，v）在Ef’中，且Rf’（s，u）=Rf’（s，v）-1。顶点u到s的距离不会因为v的流增加而减小，因此Rf’（s，u）&gt;=Rf（s，u）。可以断言（u，v）不属于Ef，否则根据三角不等式有Rf（s，v）&lt;=Rf（s，u）+1 &lt;= Rf’（s，u）+1 = Rf’（s，v），这和假设Rf’（s，v）&lt;Rf(s,v)矛盾。因此，如果有（u，v）不在Ef中而在Ef’中，只有流从v向u增加。Edmonds-Karp算法总是沿着最短路径增加流，因此Gf中从s到u的最短路径以（v，u）作为最后一条边。因此Rf（s，v）=Rf（s，u）-1&lt;=Rf’（s，u）-1=Rf’（s，v）-2。因为开始假设Rf’（s，v）&lt;Rf（s，v），因此假设矛盾。</li>
+<li><strong>对具有源点s和汇点t的一个流网络G=（V，E）运行Edmonds-Karp算法，对流进行增加的全部次数为O(VE)</strong>。在一个残留网络Gf中，如果其增广路径p的残留容量是边（u，v）的残留容量，即cf（p）=cf（u，v），称此边（u，v）对增广路径p关键。在沿增广路径p增流后，路径p上的任何关键边都从残留网络中消失。此外，任何增广路径上都至少有一条关键边。下证|E|条边中每一条都可以至多|V|/2-1次成为关键边。设u，v为V中顶点，且它们之间由E中的一条边相连，由于增广路径为最短路径，因此（u，v）第一次作为关键边时，有Rf（s，v）=f（s，u）+1。一旦对流增加，边（u，v）立刻从残留网络中消失，直到从v到u的边出现增流，才会使（u，v）再次出现在增广路径上。假设此时G的流为f’，则Rf’（s，u）=Rf’（s，v）+1，又Rf（s，v）&lt;=Rf’（s，v），得Rf’（s，u）=Rf’（s，v）+1&gt;=Rf（s，v）+1=Rf（s，u）+2。因此对于边（u，v），从其成为关键边到再次成为关键边，源点到u的最短距离至少增加2，初始时从源点到u的距离至少为0。因此在u变为从s不可达之前，距离至多为|V|-2（排除s和t），因此在（u，v）第一次成为关键边后，至多还能成为关键边(|V|-2)/2次，总计至多|V|/2次。在残留网络中可能有O（E）对顶点间有边相连，因此全部关键边的数目规模为O（VE）。</li>
+</ul>
+<h2 id="Edmonds-Karp_u90BB_u63A5_u8868_u5B9E_u73B0"><a href="#Edmonds-Karp_u90BB_u63A5_u8868_u5B9E_u73B0" class="headerlink" title="Edmonds-Karp邻接表实现"></a>Edmonds-Karp邻接表实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;memory.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> INF <span class="number">0x7fffffff</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> N <span class="number">101</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> <span class="built_in">map</span>[N][N];</span><br><span class="line"><span class="keyword">int</span> visited[N], pre[N];</span><br><span class="line"><span class="keyword">int</span> V, E, s, t;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%d %d"</span>, &amp;V, &amp;E);</span><br><span class="line">	<span class="keyword">int</span> i, j, u, v, w;</span><br><span class="line">	<span class="built_in">memset</span>(<span class="built_in">map</span>, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="built_in">map</span>));</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; E; i++ )&#123;</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">"%d %d %d"</span>, &amp;u, &amp;v, &amp;w );</span><br><span class="line">		<span class="keyword">if</span> ( <span class="built_in">map</span>[v][u] != <span class="number">0</span> )</span><br><span class="line">			<span class="built_in">map</span>[v][u] -= w;</span><br><span class="line">		<span class="keyword">else</span> </span><br><span class="line">			<span class="built_in">map</span>[u][v] = w;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%d %d"</span>,&amp;s, &amp;t);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cf</span><span class="params">( <span class="keyword">int</span> source, <span class="keyword">int</span> end )</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> p = end, min = INF;</span><br><span class="line">	<span class="keyword">while</span> ( p != source )&#123;</span><br><span class="line">		min = ( min &gt; <span class="built_in">map</span>[pre[p]][p] ? <span class="built_in">map</span>[pre[p]][p] : min );</span><br><span class="line">		p = pre[p];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> min;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span>  <span class="title">BFS</span><span class="params">( <span class="keyword">int</span> source, <span class="keyword">int</span> end )</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> * <span class="built_in">stack</span> = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * V ), i;</span><br><span class="line">	<span class="built_in">memset</span>(visited, <span class="number">0</span>, <span class="keyword">sizeof</span>(visited));</span><br><span class="line">	<span class="keyword">int</span> front = <span class="number">0</span>, rear = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">stack</span>[rear++] = source;</span><br><span class="line">	visited[source] = <span class="number">1</span>;</span><br><span class="line">	pre[source] = source;</span><br><span class="line">	<span class="keyword">while</span> ( front != rear )&#123;</span><br><span class="line">		<span class="keyword">int</span> s = <span class="built_in">stack</span>[front++];</span><br><span class="line">		<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; V ; i++ )&#123;</span><br><span class="line">			<span class="keyword">if</span> ( !visited[i] &amp;&amp; <span class="built_in">map</span>[s][i] )&#123;</span><br><span class="line">				<span class="built_in">stack</span>[rear++] = i;</span><br><span class="line">				visited[i] = <span class="number">1</span>;</span><br><span class="line">				pre[i] = s;</span><br><span class="line">				<span class="keyword">if</span> ( i == end)&#123;</span><br><span class="line">					<span class="built_in">free</span>(<span class="built_in">stack</span>);</span><br><span class="line">					<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">free</span>(<span class="built_in">stack</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">maxFlow</span><span class="params">( <span class="keyword">int</span> source, <span class="keyword">int</span> end )</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> flow = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span> ( BFS( source, end ) )&#123;</span><br><span class="line">		<span class="keyword">int</span> cfp = cf( source, end );</span><br><span class="line">		flow += cfp;</span><br><span class="line">		<span class="keyword">int</span> p = end;</span><br><span class="line">		<span class="keyword">while</span> ( p != source )&#123;</span><br><span class="line">			<span class="built_in">map</span>[pre[p]][p] = <span class="built_in">map</span>[pre[p]][p] - cfp;</span><br><span class="line">			<span class="built_in">map</span>[p][pre[p]] += cfp;</span><br><span class="line">			p = pre[p];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> flow;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	init();</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"maxFlow:%d\n"</span>, maxFlow(s,t));</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="u8F6C_u5316_u4E3A_u6700_u5927_u6D41_u95EE_u9898_u7684_u6700_u5927_u65E0_u5411_u4E8C_u5206_u56FE_u5339_u914D_u95EE_u9898"><a href="#u8F6C_u5316_u4E3A_u6700_u5927_u6D41_u95EE_u9898_u7684_u6700_u5927_u65E0_u5411_u4E8C_u5206_u56FE_u5339_u914D_u95EE_u9898" class="headerlink" title="转化为最大流问题的最大无向二分图匹配问题"></a>转化为最大流问题的最大无向二分图匹配问题</h1><ul>
+<li>最大无向二分图匹配问题：给定一个无向图G=（V，E），一个匹配是编辑E的子集，令匹配为M，满足对所有V中顶点v，M中至多有一条边和v相关联。若M中有边和v关联，则称v被匹配，否则v是无匹配的。最大匹配是求解最大势的匹配，即让|M|最大。假定顶点集合V可以被划分为L和R两部分，L和R不相交，且E中的所有边均为一个顶点在L中，另一个顶点在R中，则该图为二分图。方便起见假设该图每个顶点都至少有一条关联的边。</li>
+<li>为该无向二分图建立流网络，其中最大流对应最大匹配的数量。二分图G对应的流网络G’=（V’，E’）定义如下：设源点s和汇点t不属于V，在V’中向V加入超级源点s和超级汇点t，从s引出|L|条有向边，分别指向L中的每个顶点，R中的每个顶点也均引出一条指向t的有向边。此外在G中，L和R之间的|E|条边，均在G’中成为自L指向R的|E|条有向边。<strong>所有边均赋予单位容量</strong>。因为V中每个顶点都至少有一条关联边，因此|E|&gt;=|V|/2，所以|E|&lt;=|E’|=|E|+|V|&lt;=3|E|，因此|E’|的规模为O(E)。</li>
+</ul>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/12/25/Graph-Algorithms-flow/">原始出处</a>(<a href="http://forec.github.io/2015/12/25/Graph-Algorithms7-flow/">http://forec.github.io/2015/12/25/Graph-Algorithms7-flow/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Algorithms/" rel="tag">#Algorithms</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/24/Graph-Algorithms6/" rel="next">差分约束系统</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/12/25/Graph-Algorithms7-flow/"
+                   data-title="最大流（一）" data-url="http://forec.github.io/2015/12/25/Graph-Algorithms7-flow/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Never mind</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gitcafe.com/forec" target="_blank">gitcafe</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forect@hotmail.com" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u6D41_u7F51_u7EDC"><span class="nav-number">1.</span> <span class="nav-text">流网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ford-Fulkerson_u65B9_u6CD5"><span class="nav-number">2.</span> <span class="nav-text">Ford-Fulkerson方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u65B9_u6CD5_u89E3_u91CA_u548C_u5B9A_u7406"><span class="nav-number">2.1.</span> <span class="nav-text">方法解释和定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u57FA_u672C_u7684Ford-Fulkerson_u7B97_u6CD5_u5B9E_u73B0"><span class="nav-number">2.2.</span> <span class="nav-text">基本的Ford-Fulkerson算法实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Edmonds-Karp_u7B97_u6CD5"><span class="nav-number">2.3.</span> <span class="nav-text">Edmonds-Karp算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Edmonds-Karp_u90BB_u63A5_u8868_u5B9E_u73B0"><span class="nav-number">2.4.</span> <span class="nav-text">Edmonds-Karp邻接表实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u8F6C_u5316_u4E3A_u6700_u5927_u6D41_u95EE_u9898_u7684_u6700_u5927_u65E0_u5411_u4E8C_u5206_u56FE_u5339_u914D_u95EE_u9898"><span class="nav-number">3.</span> <span class="nav-text">转化为最大流问题的最大无向二分图匹配问题</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
