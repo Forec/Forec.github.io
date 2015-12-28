@@ -51,7 +51,7 @@
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/RAID2.jpg">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/RAID3.jpg">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/RAID5.gif">
-<meta property="og:updated_time" content="2015-12-02T03:36:54.000Z">
+<meta property="og:updated_time" content="2015-12-26T14:21:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计组与体系结构笔记（六）">
 <meta name="twitter:description" content="输入/输出和存储系统。">
@@ -316,14 +316,10 @@
 </ul>
 <h2 id="u7B97_u672F_u7F16_u7801"><a href="#u7B97_u672F_u7F16_u7801" class="headerlink" title="算术编码"></a>算术编码</h2><ul>
 <li>编码方式：将实数集映射到实数集中，利用消息中符号集的概率在0和1之间分割实数轴。使用越频繁的符号，分割所得到的区间快越大。</li>
-<li>举例：“HELLO WORLD!”在该语句中共有12个字符，这些符号中出现最低的概率是1/12，其他概率都是1/12的整数倍，因此可将0到1之间的区间划分为12个部分。除了L和O之外，其他每个符号都分配了1/12的区间，符号L和O则分配了3/12和2/12的区间。区间映射关系如下表<table><tbody><tr><td>符号</td><td>频率</td><td>区间</td><td>符号</td><td>频率</td><td>区间</td></tr><tr><td>D</td><td>1/12</td><td>[0.0…0.083)</td><td>R</td><td>1/12</td><td>[0.667…0.750)</td></tr><tr><td>E</td><td>1/12</td><td>[0.083…0.167)</td><td>W</td><td>1/12</td><td>[0.750…0.833)</td></tr><tr><td>H</td><td>1/12</td><td>[0.167…0.250)</td><td>(space)</td><td>1/12</td><td>[0.833…0.917)</td></tr><tr><td>L</td><td>3/12</td><td>[0.250…0.500)</td><td>!</td><td>1/12</td><td>[0.917…1.0)</td></tr><tr><td>O</td><td>2/12</td><td>[0.500…0.667)</td><td> </td><td> </td><td> </td></tr></tbody></table>通过连续划分与符号所分配区间成比例的数值范围（0.0到1.0）来对消息进行编码。例如当前区间位置为1/8，而字母L获得了1/4的当前区间，如上表，接下来对L编码，将1/8乘以1/4得到L的新的当前区间1/32。如果下一个字符是另一个字母L，则将1/32再乘以1/4得到当前的区间值1/128。这个编码过程会一直持续下去，直到整条消息编码完成。过程可用伪代码描述。<br>```<br>ALGORITHM Arith_Code( Message )<br>  HiVal &lt;- 1.0<br>  LoVal &lt;- 0.0<br>  WHILE ( more characters to process )<pre><code>Char &lt;- Next message character
-Interval &lt;- Hival - Loval
-CharHival &lt;- Upper interval limit for Char
-CharLoval &lt;- Lower interval limit for Char
-HiVal &lt;- Loval + Interval * CharHival
-LoVal &lt;- Loval + Interval * CharLoval
-</code></pre>  ENDWHILE<br>  OUTPUT ( Loval )<br>END Arith_Code<br>```该过程用表格表示：<table><tbody><tr><td>符号</td><td>区间</td><td>CharLoVal</td><td>CharHiVal</td><td>LoVal</td><td>HiVal</td></tr><tr><td> </td><td> </td><td> </td><td> </td><td>0.0</td><td>1.0</td></tr><tr><td>H</td><td>1.0</td><td>0.167</td><td>0.25</td><td>0.167</td><td>0.25</td></tr><tr><td>E</td><td>0.083</td><td>0.083</td><td>0.167</td><td>0.173889</td><td>0.180861</td></tr><tr><td>L</td><td>0.006972</td><td>0.25</td><td>0.5</td><td>0.1756320</td><td>0.1773750</td></tr><tr><td>L</td><td>0.001743</td><td>0.25</td><td>0.5</td><td>0.17606775</td><td>0.17650350</td></tr><tr><td>O</td><td>0.00043575</td><td>0.5</td><td>0.667</td><td>0.176285625</td><td>0.176358395</td></tr><tr><td>(space)</td><td>0.00007277025</td><td>0.833</td><td>0.917</td><td>0.1763462426</td><td>0.1763523553</td></tr><tr><td>W</td><td>0.00000611270</td><td>0.75</td><td>0.833</td><td>0.1763508271</td><td>0.1763513345</td></tr><tr><td>O</td><td>0.00000050735</td><td>0.5</td><td>0.667</td><td>0.1763510808</td><td>0.1763511655</td></tr><tr><td>R</td><td>0.00000008473</td><td>0.667</td><td>0.75</td><td>0.1763511373</td><td>0.176351444</td></tr><tr><td>L</td><td>0.00000000703</td><td>0.25</td><td>0.5</td><td>0.1763511391</td><td>0.1763511409</td></tr><tr><td>D</td><td>0.00000000176</td><td>0</td><td>0.083</td><td>0.1763511391</td><td>0.1763511392</td></tr><tr><td>!</td><td>0.00000000015</td><td>0.917</td><td>1.0</td><td>0.176351139227</td><td>0.176351139239</td></tr><tr><td> </td><td> </td><td> </td><td> </td><td>0.176351139227</td><td> </td></tr></tbody></table></li>
+<li>举例：“HELLO WORLD!”在该语句中共有12个字符，这些符号中出现最低的概率是1/12，其他概率都是1/12的整数倍，因此可将0到1之间的区间划分为12个部分。除了L和O之外，其他每个符号都分配了1/12的区间，符号L和O则分配了3/12和2/12的区间。区间映射关系如下表<table><tbody><tr><td>符号</td><td>频率</td><td>区间</td><td>符号</td><td>频率</td><td>区间</td></tr><tr><td>D</td><td>1/12</td><td>[0.0…0.083)</td><td>R</td><td>1/12</td><td>[0.667…0.750)</td></tr><tr><td>E</td><td>1/12</td><td>[0.083…0.167)</td><td>W</td><td>1/12</td><td>[0.750…0.833)</td></tr><tr><td>H</td><td>1/12</td><td>[0.167…0.250)</td><td>(space)</td><td>1/12</td><td>[0.833…0.917)</td></tr><tr><td>L</td><td>3/12</td><td>[0.250…0.500)</td><td>!</td><td>1/12</td><td>[0.917…1.0)</td></tr><tr><td>O</td><td>2/12</td><td>[0.500…0.667)</td><td> </td><td> </td><td> </td></tr></tbody></table>通过连续划分与符号所分配区间成比例的数值范围（0.0到1.0）来对消息进行编码。例如当前区间位置为1/8，而字母L获得了1/4的当前区间，如上表，接下来对L编码，将1/8乘以1/4得到L的新的当前区间1/32。如果下一个字符是另一个字母L，则将1/32再乘以1/4得到当前的区间值1/128。这个编码过程会一直持续下去，直到整条消息编码完成。过程可用伪代码描述。<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ALGORITHM Arith_Code( Message )</span><br><span class="line">    HiVal &lt;- <span class="number">1.0</span></span><br><span class="line">    LoVal &lt;- <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">WHILE</span> ( more characters <span class="keyword">to</span> process )</span><br><span class="line">        <span class="built_in">Char</span> &lt;- <span class="keyword">Next</span> message character</span><br><span class="line">        Interval &lt;- Hival - Loval</span><br><span class="line">        CharHival &lt;- Upper interval limit <span class="keyword">for</span> <span class="built_in">Char</span></span><br><span class="line">        CharLoval &lt;- Lower interval limit <span class="keyword">for</span> <span class="built_in">Char</span></span><br><span class="line">        HiVal &lt;- Loval + Interval * CharHival</span><br><span class="line">        LoVal &lt;- Loval + Interval * CharLoval</span><br><span class="line">    ENDWHILE</span><br><span class="line">    OUTPUT ( Loval )</span><br><span class="line"><span class="keyword">END</span> Arith_Code</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
+<p>该过程用表格表示：<table><tbody><tr><td>符号</td><td>区间</td><td>CharLoVal</td><td>CharHiVal</td><td>LoVal</td><td>HiVal</td></tr><tr><td> </td><td> </td><td> </td><td> </td><td>0.0</td><td>1.0</td></tr><tr><td>H</td><td>1.0</td><td>0.167</td><td>0.25</td><td>0.167</td><td>0.25</td></tr><tr><td>E</td><td>0.083</td><td>0.083</td><td>0.167</td><td>0.173889</td><td>0.180861</td></tr><tr><td>L</td><td>0.006972</td><td>0.25</td><td>0.5</td><td>0.1756320</td><td>0.1773750</td></tr><tr><td>L</td><td>0.001743</td><td>0.25</td><td>0.5</td><td>0.17606775</td><td>0.17650350</td></tr><tr><td>O</td><td>0.00043575</td><td>0.5</td><td>0.667</td><td>0.176285625</td><td>0.176358395</td></tr><tr><td>(space)</td><td>0.00007277025</td><td>0.833</td><td>0.917</td><td>0.1763462426</td><td>0.1763523553</td></tr><tr><td>W</td><td>0.00000611270</td><td>0.75</td><td>0.833</td><td>0.1763508271</td><td>0.1763513345</td></tr><tr><td>O</td><td>0.00000050735</td><td>0.5</td><td>0.667</td><td>0.1763510808</td><td>0.1763511655</td></tr><tr><td>R</td><td>0.00000008473</td><td>0.667</td><td>0.75</td><td>0.1763511373</td><td>0.176351444</td></tr><tr><td>L</td><td>0.00000000703</td><td>0.25</td><td>0.5</td><td>0.1763511391</td><td>0.1763511409</td></tr><tr><td>D</td><td>0.00000000176</td><td>0</td><td>0.083</td><td>0.1763511391</td><td>0.1763511392</td></tr><tr><td>!</td><td>0.00000000015</td><td>0.917</td><td>1.0</td><td>0.176351139227</td><td>0.176351139239</td></tr><tr><td> </td><td> </td><td> </td><td> </td><td>0.176351139227</td><td> </td></tr></tbody></table></p>
 <h2 id="Ziv-Lempel_u5B57_u5178_u7CFB_u7EDF"><a href="#Ziv-Lempel_u5B57_u5178_u7CFB_u7EDF" class="headerlink" title="Ziv-Lempel字典系统"></a>Ziv-Lempel字典系统</h2><h2 id="JPEG_u538B_u7F29"><a href="#JPEG_u538B_u7F29" class="headerlink" title="JPEG压缩"></a>JPEG压缩</h2><hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/11/14/Computer-Organization-Architectur6/">原始出处</a>(<a href="http://forec.github.io/2015/11/14/Computer-Organization-Architecture6/">http://forec.github.io/2015/11/14/Computer-Organization-Architecture6/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
@@ -415,21 +411,21 @@ LoVal &lt;- Loval + Interval * CharLoval
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
