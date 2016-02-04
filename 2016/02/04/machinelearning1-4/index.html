@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>机器学习笔记（一） | Forec的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近在自学数据挖掘和机器学习方面的内容，参考《机器学习实战》。整理笔记备忘。下面为Chapter1~Chapter4内容。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记（一）">
+<meta property="og:url" content="http://forec.github.io/2016/02/04/machinelearning1-4/index.html">
+<meta property="og:site_name" content="Forec的博客">
+<meta property="og:description" content="最近在自学数据挖掘和机器学习方面的内容，参考《机器学习实战》。整理笔记备忘。下面为Chapter1~Chapter4内容。">
+<meta property="og:image" content="http://7xqmj8.com1.z0.glb.clouddn.com/k-%E8%BF%91%E9%82%BB-%E7%BA%A6%E4%BC%9A%E7%BD%91%E7%AB%99.png">
+<meta property="og:image" content="http://7xqmj8.com1.z0.glb.clouddn.com/%E5%86%B3%E7%AD%96%E6%A0%91-%E9%9A%90%E5%BD%A2%E7%9C%BC%E9%95%9C.png">
+<meta property="og:updated_time" content="2016-02-04T15:58:33.140Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记（一）">
+<meta name="twitter:description" content="最近在自学数据挖掘和机器学习方面的内容，参考《机器学习实战》。整理笔记备忘。下面为Chapter1~Chapter4内容。">
+  
+    <link rel="alternative" href="/atom.xml" title="Forec的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Forec</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">奋斗在Code World的在校生</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/Data-Structures/" style="font-size: 13.33px;">Data-Structures</a> <a href="/tags/Mistakes/" style="font-size: 10px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/字符编码/" style="font-size: 10px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 16.67px;">计算机组成与体系结构</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://fallenwood.github.io">Fallenwood的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.codewars.com/users/Forec">Forec的CodeWars</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">就读于北京邮电大学，代码爱好者。近期自学机器学习。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Forec</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Forec</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">奋斗在Code World的在校生</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-machinelearning1-4" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/04/machinelearning1-4/" class="article-date">
+  	<time datetime="2016-02-04T15:48:05.000Z" itemprop="datePublished">2016-02-04</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      机器学习笔记（一）
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/机器学习/">机器学习</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>最近在自学数据挖掘和机器学习方面的内容，参考《机器学习实战》。整理笔记备忘。下面为Chapter1~Chapter4内容。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="Chapter_01"><a href="#Chapter_01" class="headerlink" title="Chapter 01"></a>Chapter 01</h1><ul>
+<li><p>使用NumPy</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>random.rand(<span class="number">4</span>,<span class="number">4</span>)  <span class="comment"># make 4*4 random array</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>mat1 = mat( random.rand(<span class="number">4</span>,<span class="number">4</span>) )  <span class="comment"># make 4*4 random matrix</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>mat1.I  <span class="comment"># get the reverse of mat1</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>eye(<span class="number">4</span>) <span class="comment"># make 4*4 unit matrix</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>deb源安装numpy和matplotlib：<code>pip install numpy</code>，在此前需要安装python-dev。安装matplotlib前需要libpng，在sourceforge可以找到最新版本，之后<code>apt-get install python-matplotlib</code>。python3和python2类似。</p>
+</li>
+<li>标称型和数值型：分别从有限和无限目标集中取值。</li>
+<li>选择合适算法<ul>
+<li>预测目标变量的值：监督学习算法 =&gt; 目标变量为离散型：分类算法； 目标变量为连续型：回归算法。</li>
+<li>不预测目标变量：无监督学习算法 =&gt; 唯一需求是将数据划分为离散的组：聚类算法； 需要估计数据与每个组的相似度：密度估计算法。</li>
+</ul>
+</li>
+<li>开发机器学习程序步骤：收集数据-&gt;准备输入数据-&gt;分析输入数据-&gt;<strong>训练算法</strong>-&gt;<strong>测试算法</strong>。</li>
+</ul>
+<h1 id="Chapter_02_-_k-_u8FD1_u90BB_u7B97_u6CD5"><a href="#Chapter_02_-_k-_u8FD1_u90BB_u7B97_u6CD5" class="headerlink" title="Chapter 02 - k-近邻算法"></a>Chapter 02 - k-近邻算法</h1><blockquote>
+<p>已知样本集中每一数据与所属分类的对应关系，将待定数据的每个特征与样本集中数据对应的特征进行比较，取前k个最相似数据决断。</p>
+</blockquote>
+<h2 id="kNN_-_Category"><a href="#kNN_-_Category" class="headerlink" title="kNN - Category"></a>kNN - Category</h2><ul>
+<li><p>流程</p>
+<ul>
+<li>计算已知类别数据集中的点和当前点之间的距离（map）</li>
+<li>按距离递增排序（sort）</li>
+<li>选取于当前点距离最小的k个点（take）</li>
+<li>统计k个点所在类别的出现频率（sortBy frequency）</li>
+<li>返回前k个点中出现频率最高的类别（length . group）</li>
+<li>Haskell的表示： reverse . sort . map length . group . sortBy frequency . take k . sort . map distance </li>
+</ul>
+</li>
+<li><p>Code - kNN.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> operator</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createDataSet</span><span class="params">()</span>:</span></span><br><span class="line">	group = array([[<span class="number">1.0</span>,<span class="number">1.1</span>],[<span class="number">1.0</span>,<span class="number">1.0</span>],[<span class="number">0</span>,<span class="number">0</span>],[<span class="number">0</span>,<span class="number">0.1</span>]])</span><br><span class="line">	labels = [<span class="string">'A'</span>,<span class="string">'A'</span>,<span class="string">'B'</span>,<span class="string">'B'</span>]</span><br><span class="line">	<span class="keyword">return</span> group, labels</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">classify0</span><span class="params">(inX, dataSet, labels, k )</span>:</span></span><br><span class="line">	dataSetSize = dataSet.shape[<span class="number">0</span>]</span><br><span class="line">				<span class="comment"># dataSet = group,  dataSet.shape[0] = 4, dataSet.shape[1] = 2</span></span><br><span class="line">	diffMat = tile(inX, (dataSetSize, <span class="number">1</span>)) -dataSet</span><br><span class="line">			  	<span class="comment"># inX = [1,2] tile(inX,(4,2)) = array([[1,2,1,2],	tile(inX,(2,3)) = array([[1,2,1,2,1,2],</span></span><br><span class="line">				<span class="comment">#									  [1,2,1,2],							 [1,2,1,2,1,2]])</span></span><br><span class="line">				<span class="comment">#									  [1,2,1,2],</span></span><br><span class="line">				<span class="comment">#									  [1,2,1,2]])</span></span><br><span class="line">	sqDiffMat = diffMat**<span class="number">2</span></span><br><span class="line">			  	<span class="comment"># diffMat = array([[ 0.  ,  0.1],  diffMat**2 = array([[0, 0.01],</span></span><br><span class="line">				<span class="comment">#  		  	       [ 0.  ,  0.  ],					   [0, 0.  ],</span></span><br><span class="line">				<span class="comment">#			       [ 1.  ,  1.  ],					   [1.,1.  ],</span></span><br><span class="line">				<span class="comment">#			       [ 1.  ,  0.9]])					   [1.,0.81]])</span></span><br><span class="line">	sqDistances = sqDiffMat.sum(axis=<span class="number">1</span>)</span><br><span class="line">				<span class="comment"># sqDiffMat.sum(axis=1) = array([ 0.01, 0. , 2. , 1.81])</span></span><br><span class="line">	distances = sqDistances**<span class="number">0.5</span></span><br><span class="line">	sortedDistIndicies = distances.argsort()</span><br><span class="line">				<span class="comment"># sortedDisIndicies = array([1, 0, 3, 2]), the indeices of the sorted distances</span></span><br><span class="line">	classCount = &#123;&#125;</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(k) :</span><br><span class="line">		voteIlabel = labels[sortedDistIndicies[i]]</span><br><span class="line">			    <span class="comment"># get the first k data's label =&gt; k=3, ['A','A','B']</span></span><br><span class="line">		classCount[voteIlabel] = classCount.get(voteIlabel,<span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">				<span class="comment"># classCount.get(voteIlabel,default) if voteIlabel doesn't exist, return default</span></span><br><span class="line">	sortedClassCount = sorted(classCount.iteritems(),</span><br><span class="line">							  key = operator.itemgetter(<span class="number">1</span>), reverse =<span class="keyword">True</span>)</span><br><span class="line">				<span class="comment"># sortedClassCount = [('A',2),('B',1)]</span></span><br><span class="line">	<span class="keyword">return</span> sortedClassCount[<span class="number">0</span>][<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="u7EA6_u4F1A_u7F51_u7AD9_u914D_u5BF9_u6548_u679C"><a href="#u7EA6_u4F1A_u7F51_u7AD9_u914D_u5BF9_u6548_u679C" class="headerlink" title="约会网站配对效果"></a>约会网站配对效果</h2><blockquote>
+<p>流程：收集数据（文本文件）-&gt;准备数据（用Python解析文本文件）-&gt;分析数据（用Matplotlib画二维扩散图）-&gt;训练算法（不适用k-近邻算法）-&gt;测试算法（使用提供的部分数据作为测试样本）-&gt;使用算法（产生命令行程序）</p>
+</blockquote>
+<h3 id="u51C6_u5907_u6570_u636E_-__u6587_u4EF6-_26gt_3B_u6837_u672C_u77E9_u9635"><a href="#u51C6_u5907_u6570_u636E_-__u6587_u4EF6-_26gt_3B_u6837_u672C_u77E9_u9635" class="headerlink" title="准备数据 - 文件-&gt;样本矩阵"></a>准备数据 - 文件-&gt;样本矩阵</h3><ul>
+<li><p>数据存放在文本文件datingTestSet.txt中，每行为一个样本，共1000行，每行包含三种特征。在kNN.py中创建file2matrix将输入文本文件转为样本矩阵和类标签向量。</p>
+</li>
+<li><p>Code - kNN.py  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">file2matrix</span><span class="params">(filename)</span>:</span></span><br><span class="line">	fr = open(filename)</span><br><span class="line">	arrayOLines = fr.readlines()</span><br><span class="line">	numberOfLines = len(arrayOLines)</span><br><span class="line">	returnMat = zeros((numberOfLines, <span class="number">3</span>))</span><br><span class="line">	        <span class="comment"># generate a matrix filled with zero</span></span><br><span class="line">	classLabelVector = []</span><br><span class="line">	index = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> arrayOLines:</span><br><span class="line">		line = line.strip()</span><br><span class="line">		listFromLine = line.split(<span class="string">'\t'</span>)</span><br><span class="line">		returnMat[index,:] = listFromLine[<span class="number">0</span>:<span class="number">3</span>]</span><br><span class="line">		classLabelVector.append(int(listFromLine[-<span class="number">1</span>]))</span><br><span class="line">		index += <span class="number">1</span></span><br><span class="line">	<span class="keyword">return</span> returnMat, classLabelVector</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="u5206_u6790_u6570_u636E_-_Matplotlib"><a href="#u5206_u6790_u6570_u636E_-_Matplotlib" class="headerlink" title="分析数据 - Matplotlib"></a>分析数据 - Matplotlib</h3><ul>
+<li><p>作用在于从已有的样本中观察数据分布的特点，选择合适的坐标，区分数据点从属的类别。</p>
+</li>
+<li><p>交互命令</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> kNN</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>datingDataMat, datingLabels = kNN.file2matrix(<span class="string">'datingTestSet.txt'</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>fig = plt.figure()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax.scatter(datingDataMat[:,<span class="number">1</span>],datingDataMat[:,<span class="number">2</span>])</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>plt.show()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>增加区分，修改上面的ax.scatter为<code>ax.scatter(datingDataMat[:,1],datingDataMat[:,2],15.0*array(datingLabels),15.0*array(datingLabels))</code>，需要从numpy库中导入array数组。此时绘制的图形采用数据中的第2列和第3列作为横纵坐标，区分出三种类型但不够清晰。若采用第1列和第2列作为坐标，得到散点图如下。<br><img src="http://7xqmj8.com1.z0.glb.clouddn.com/k-%E8%BF%91%E9%82%BB-%E7%BA%A6%E4%BC%9A%E7%BD%91%E7%AB%99.png" width="500px"></p>
+</li>
+</ul>
+<h3 id="u51C6_u5907_u6570_u636E_-__u5F52_u4E00_u5316"><a href="#u51C6_u5907_u6570_u636E_-__u5F52_u4E00_u5316" class="headerlink" title="准备数据 - 归一化"></a>准备数据 - 归一化</h3><ul>
+<li><p>简单通过欧几里得距离衡量样本与数据间距离会受到数据大小范围影响，例如每年飞行常客里程数的差距远大于视频游戏百分比。因此将所有数据的特征值都归一到0~1之间或-1~1之间，公式为<code>newValue = (old - value - min) / ( max - min)</code>。</p>
+</li>
+<li><p>Code - 归一化特征值 - kNN.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">autoNorm</span><span class="params">(dataSet)</span>:</span></span><br><span class="line">    minVals = dataSet.min(<span class="number">0</span>)</span><br><span class="line">	maxVals = dataSet.max(<span class="number">0</span>)</span><br><span class="line">	ranges = maxVals - minVals</span><br><span class="line">	normDataSet = zeros(shape(dataSet))</span><br><span class="line">	m = dataSet.shape[<span class="number">0</span>]</span><br><span class="line">	normDataSet = dataSet - tile(minVals, (m,<span class="number">1</span>))</span><br><span class="line">	normDataSet = normDataSet / tile(ranges,(m,<span class="number">1</span>))</span><br><span class="line">	<span class="keyword">return</span> normDataSet, ranges, minvals</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="u6D4B_u8BD5_u7B97_u6CD5"><a href="#u6D4B_u8BD5_u7B97_u6CD5" class="headerlink" title="测试算法"></a>测试算法</h3><ul>
+<li><p>取样本中一部分作为测试数据</p>
+</li>
+<li><p>Code - 测试算法 - kNN.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">datingClassTest</span><span class="params">()</span>:</span></span><br><span class="line">	hoRatio = <span class="number">0.10</span></span><br><span class="line">	datingDataMat, datingLabels = file2matrix(<span class="string">'datingTestSet.txt'</span>)</span><br><span class="line">	normMat, ranges, minVals = autoNorm(datingDataMat)</span><br><span class="line">	m = normMat.shape[<span class="number">0</span>]</span><br><span class="line">	numTestVecs = int(m*hoRatio)</span><br><span class="line">	errorCount = <span class="number">0.0</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(numTestVecs):</span><br><span class="line">		classifierResult = classify0(normMat[i,:], normMat[numTestVecs:m,:],</span><br><span class="line">									 datingLabels[numTestVecs:m], <span class="number">3</span>)</span><br><span class="line">		<span class="keyword">print</span> <span class="string">"the classifier came back with: %d, the real answer is: %d"</span>\</span><br><span class="line">									% (classifierResult, datingLabels[i])</span><br><span class="line">		<span class="keyword">if</span> (classifierResult != datingLabels[i]): errorCount += <span class="number">1.0</span></span><br><span class="line">	<span class="keyword">print</span> <span class="string">"the total error rate is :%f"</span> % (errorCount / float(numTestVecs))</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="u624B_u5199_u8BC6_u522B_u7CFB_u7EDF"><a href="#u624B_u5199_u8BC6_u522B_u7CFB_u7EDF" class="headerlink" title="手写识别系统"></a>手写识别系统</h2><h3 id="u6B65_u9AA4"><a href="#u6B65_u9AA4" class="headerlink" title="步骤"></a>步骤</h3><ul>
+<li>收集数据：提供32*32像素格式的txt文件</li>
+<li>准备数据：编写函数img2vector()将文本文件转换为样本矩阵</li>
+<li>分析数据：在命令提示符中检验数据正确性</li>
+<li>训练算法：不适用于k-近邻算法</li>
+<li>测试算法：使用部分数据集作为测试样本</li>
+</ul>
+<h3 id="u51C6_u5907_u6570_u636E"><a href="#u51C6_u5907_u6570_u636E" class="headerlink" title="准备数据"></a>准备数据</h3><ul>
+<li><p>使用trainingDigits中的大约2000个例子作为样本，平均每个0~9的数字有200个样本。使用testDigits目录下的测试数据作为测试。</p>
+</li>
+<li><p>Code - img2vector - kNN.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">img2vector</span><span class="params">(filename)</span>:</span></span><br><span class="line">	returnVect  = zeros((<span class="number">1</span>,<span class="number">1024</span>))</span><br><span class="line">	fr = open(filename)</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range (<span class="number">32</span>):</span><br><span class="line">		lineStr = fr.readline()</span><br><span class="line">		<span class="keyword">for</span> j  <span class="keyword">in</span> range (<span class="number">32</span>):</span><br><span class="line">			returnVect[<span class="number">0</span>,<span class="number">32</span>*i+j] = int(lineStr[j])</span><br><span class="line">	<span class="keyword">return</span> returnVect</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="u6D4B_u8BD5_u7B97_u6CD5-1"><a href="#u6D4B_u8BD5_u7B97_u6CD5-1" class="headerlink" title="测试算法"></a>测试算法</h3><ul>
+<li><p>测试946个文件，错误11个，修改变量k的值、随即训练样本的取样、训练样本的数目，都会对错误率产生影响。</p>
+</li>
+<li><p>Code - handwritingClassTest - kNN.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handwritingClassTest</span><span class="params">()</span>:</span></span><br><span class="line">	<span class="keyword">from</span> os <span class="keyword">import</span> listdir</span><br><span class="line">	hwLabels = []</span><br><span class="line">	trainingFileList = listdir(<span class="string">'digits/trainingDigits'</span>)</span><br><span class="line">	m = len(trainingFileList)</span><br><span class="line">	trainingMat = zeros((m,<span class="number">1024</span>))</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">		fileNameStr = trainingFileList[i]</span><br><span class="line">		fileStr = fileNameStr.split(<span class="string">'.'</span>)[<span class="number">0</span>]</span><br><span class="line">		classNumStr = int(fileStr.split(<span class="string">'_'</span>)[<span class="number">0</span>])</span><br><span class="line">		hwLabels.append(classNumStr)</span><br><span class="line">		trainingMat[i,:] = img2vector(<span class="string">'digits/trainingDigits/%s'</span> % fileNameStr)</span><br><span class="line">	testFileList=  listdir(<span class="string">'digits/testDigits'</span>)</span><br><span class="line">	errorCount = <span class="number">0.0</span></span><br><span class="line">	mTest = len(testFileList)</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(mTest):</span><br><span class="line">		fileNameStr = testFileList[i]</span><br><span class="line">		fileStr = fileNameStr.split(<span class="string">'.'</span>)[<span class="number">0</span>]</span><br><span class="line">		classNumStr = int(fileStr.split(<span class="string">'_'</span>)[<span class="number">0</span>])</span><br><span class="line">		vectorUnderTest = img2vector(<span class="string">'digits/testDigits/%s'</span> % fileNameStr)</span><br><span class="line">		classifierResult = classify0(vectorUnderTest, trainingMat, hwLabels, <span class="number">3</span>)</span><br><span class="line">		<span class="keyword">print</span> <span class="string">"the classifier came back with: %d, the real answer is %d"</span>\</span><br><span class="line">					% (classifierResult, classNumStr)</span><br><span class="line">		<span class="keyword">if</span> (classifierResult != classNumStr) : errorCount += <span class="number">1.0</span></span><br><span class="line">	<span class="keyword">print</span> <span class="string">"\nthe total number of errors is: %d"</span> % errorCount</span><br><span class="line">	<span class="keyword">print</span> <span class="string">"\nthe total error rate is: %f"</span> % (errorCount/float(mTest))</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="k-_u8FD1_u90BB_u7B97_u6CD5__u603B_u7ED3"><a href="#k-_u8FD1_u90BB_u7B97_u6CD5__u603B_u7ED3" class="headerlink" title="k-近邻算法 总结"></a>k-近邻算法 总结</h2><blockquote>
+<p>k-近邻算法是基于实例的学习，使用算法是必须有接近实际数据的训练样本数据，并且必须保存全部数据集，使用大量的存储空间。需要对数据集中的每个数据计算距离值，实际使用过程非常耗时。并且k-近邻算法无法给出任何数据的基础结构信息，因而我们无法知晓平均实例样本和典型实例样本具有什么样的特征。k-决策树是k-近邻算法的优化，减少存储空间和计算时间开销。</p>
+</blockquote>
+<h1 id="Chapter_03_-__u51B3_u7B56_u6811_-__u71B5_u5EA6_u91CF"><a href="#Chapter_03_-__u51B3_u7B56_u6811_-__u71B5_u5EA6_u91CF" class="headerlink" title="Chapter 03 - 决策树 - 熵度量"></a>Chapter 03 - 决策树 - 熵度量</h1><blockquote>
+<p>k-近邻算法无法持久化分类器，每次分类都需要重新学习，并且无法给出数据的内在含义。决策树的主要优势在于其数据形式非常容易理解，并且可以保存在硬盘上。</p>
+</blockquote>
+<h2 id="u7279_u6027_u548C_u601D_u60F3"><a href="#u7279_u6027_u548C_u601D_u60F3" class="headerlink" title="特性和思想"></a>特性和思想</h2><ul>
+<li>决策树优点：计算复杂度不高，输出结果易于理解，对中间值的缺失不敏感，可以处理不相关的特征数据。缺点：可能产生<strong>过度匹配</strong>问题。适用于数值型和标称型，数值型需先离散化。</li>
+<li><p>整体思路：大原则是“<strong>将无序的数据变得更加有序</strong>”。从当前可供学习的数据集中，选择一个特性，根据这个特性划分出来的数据分类，可以获得最高的信息增益（在划分数据集前后信息发生的变化），也可以说是最小的熵（公式<code>l(xi) = p(xi)log(p(xi))</code>，出现的概率越小，携带的信息量越大，<strong>熵越高，混合的数据也就越多</strong>），<strong>信息增益是熵的减少，或者是数据无序度的减少</strong>。在此划分之后，对划分出的各个分类再次进行算法，<strong>直到所有分类中均为同一类元素，或所有特性均已使用</strong>。</p>
+</li>
+<li><p>Code - trees.py - 计算香农熵</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calcShannonEnt</span><span class="params">(dataSet)</span>:</span> 		<span class="comment"># Calculate the shannonEnt</span></span><br><span class="line">	numEntries = len(dataSet)</span><br><span class="line">	labelCounts = &#123;&#125;</span><br><span class="line">	<span class="keyword">for</span> featVec <span class="keyword">in</span> dataSet:</span><br><span class="line">		currentLabel = featVec[-<span class="number">1</span>]</span><br><span class="line">		<span class="keyword">if</span> currentLabel <span class="keyword">not</span> <span class="keyword">in</span> labelCounts.keys():</span><br><span class="line">			labelCounts[currentLabel] = <span class="number">0</span></span><br><span class="line">		labelCounts[currentLabel] += <span class="number">1</span></span><br><span class="line">	shannonEnt = <span class="number">0.0</span></span><br><span class="line">	<span class="keyword">for</span> key <span class="keyword">in</span> labelCounts:</span><br><span class="line">		prob = float(labelCounts[key])/numEntries</span><br><span class="line">		shannonEnt -= prob * log(prob,<span class="number">2</span>)  <span class="comment"># p(x)logp(x)</span></span><br><span class="line">	<span class="keyword">return</span> shannonEnt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Code - trees.py - 按给定特征划分数据集</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">splitDataSet</span><span class="params">(dataSet, axis, value)</span>:</span>   	</span><br><span class="line">	retDataSet = []</span><br><span class="line">	<span class="keyword">for</span> featVec <span class="keyword">in</span> dataSet:</span><br><span class="line">		<span class="keyword">if</span> featVec[axis] == value:</span><br><span class="line">			reducedFeatVec = featVec[:axis]</span><br><span class="line">			reducedFeatVec.extend(featVec[axis+<span class="number">1</span>:])</span><br><span class="line">			retDataSet.append(reducedFeatVec)</span><br><span class="line">	<span class="keyword">return</span> retDataSet</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Code - trees.py - 选择最优数据集划分特性</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">chooseBestFeatureToSplit</span><span class="params">(dataSet)</span>:</span>			</span><br><span class="line">	numFeatures = len(dataSet[<span class="number">0</span>]) - <span class="number">1</span></span><br><span class="line">	baseEntropy = calcShannonEnt(dataSet)</span><br><span class="line">	bestInfoGain = <span class="number">0.0</span> ; bestFeature = -<span class="number">1</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(numFeatures):</span><br><span class="line">		featList = [example[i] <span class="keyword">for</span> example <span class="keyword">in</span> dataSet]</span><br><span class="line">		uniqueVals = set(featList)</span><br><span class="line">		newEntropy = <span class="number">0.0</span></span><br><span class="line">		<span class="keyword">for</span> value <span class="keyword">in</span> uniqueVals:</span><br><span class="line">			subDataSet = splitDataSet(dataSet, i ,value)</span><br><span class="line">			prob = len(subDataSet)/float(len(dataSet))</span><br><span class="line">			newEntropy += prob * calcShannonEnt(subDataSet)		</span><br><span class="line">			    <span class="comment"># careful, newEntropy &lt; 0</span></span><br><span class="line">		infoGain = baseEntropy - newEntropy</span><br><span class="line">		<span class="keyword">if</span> infoGain &gt; bestInfoGain:</span><br><span class="line">			bestInfoGain = infoGain</span><br><span class="line">			bestFeature = i</span><br><span class="line">	<span class="keyword">return</span> bestFeature</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Code - trees.py - 选择该分类的代表种类</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">majorityCnt</span><span class="params">(classList)</span>:</span> 		</span><br><span class="line">	classCount = &#123;&#125;</span><br><span class="line">	<span class="keyword">for</span> vote <span class="keyword">in</span> classList:</span><br><span class="line">		<span class="keyword">if</span> vote <span class="keyword">not</span> <span class="keyword">in</span> classCount.keys() :</span><br><span class="line">			classCount[vote] = <span class="number">0</span></span><br><span class="line">		classCount[vote] += <span class="number">1</span></span><br><span class="line">	sortedClassCount = sorted(classCount.iteritems(),\</span><br><span class="line">		key = operator.itemgetter(<span class="number">1</span>), reverse = <span class="keyword">True</span>)</span><br><span class="line">	<span class="keyword">return</span> sortedClassCount[<span class="number">0</span>][<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Code - trees.py - 递归构建决策树</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createTree</span><span class="params">(dataSet, labels)</span>:</span>			</span><br><span class="line">	classList = [example[-<span class="number">1</span>] <span class="keyword">for</span> example <span class="keyword">in</span> dataSet]</span><br><span class="line">	<span class="keyword">if</span> classList.count(classList[<span class="number">0</span>]) == len(classList):		</span><br><span class="line">		<span class="keyword">return</span> classList[<span class="number">0</span>]</span><br><span class="line">	<span class="keyword">if</span> len(dataSet[<span class="number">0</span>]) == <span class="number">1</span>:			<span class="comment"># all the features have been used</span></span><br><span class="line">		<span class="keyword">return</span> majorityCnt(classList)</span><br><span class="line">	bestFeat = chooseBestFeatureToSplit(dataSet)</span><br><span class="line">	bestFeatLabel = labels[bestFeat]</span><br><span class="line">	myTree = &#123;bestFeatLabel:&#123;&#125;&#125;</span><br><span class="line">	<span class="keyword">del</span>(labels[bestFeat])</span><br><span class="line">	featValues = [example[bestFeat] <span class="keyword">for</span> example <span class="keyword">in</span> dataSet]</span><br><span class="line">	uniqueVals = set(featValues)</span><br><span class="line">	<span class="keyword">for</span> value <span class="keyword">in</span> uniqueVals:</span><br><span class="line">		subLabels = labels[:]				<span class="comment"># deep copy</span></span><br><span class="line">		myTree[bestFeatLabel][value] = createTree(splitDataSet\</span><br><span class="line">			(dataSet, bestFeat, value), subLabels)</span><br><span class="line">	<span class="keyword">return</span> myTree</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Matplotlib_u7ED8_u5236_u6811_u5F62_u56FE"><a href="#Matplotlib_u7ED8_u5236_u6811_u5F62_u56FE" class="headerlink" title="Matplotlib绘制树形图"></a>Matplotlib绘制树形图</h2><blockquote>
+<p>绘制代码在treePlotter.py</p>
+</blockquote>
+<h2 id="u4F7F_u7528_u51B3_u7B56_u6811_u5206_u7C7B"><a href="#u4F7F_u7528_u51B3_u7B56_u6811_u5206_u7C7B" class="headerlink" title="使用决策树分类"></a>使用决策树分类</h2><ul>
+<li><p>使用构造好的决策树对输入样例进行分类。已建立好的决策树可以使用pickle保存在本地。</p>
+</li>
+<li><p>Code - trees.py - 分类函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">classify</span><span class="params">(inputTree, featLabels, testVec)</span>:</span></span><br><span class="line"> firstStr = inputTree.keys()[<span class="number">0</span>]</span><br><span class="line"> secondDict = inputTree[firstStr]</span><br><span class="line"> featIndex = featLabels.index(firstStr)</span><br><span class="line"> <span class="keyword">for</span> key <span class="keyword">in</span> secondDict.keys():</span><br><span class="line">  <span class="keyword">if</span> testVec[featIndex] == key:</span><br><span class="line">   <span class="keyword">if</span> type(secondDict[key]).__name__ == <span class="string">'dict'</span>:</span><br><span class="line">    classLabel = classify(secondDict[key], featLabels, testVec)</span><br><span class="line">   <span class="keyword">else</span>:</span><br><span class="line">    classLabel = secondDict[key]</span><br><span class="line"> <span class="keyword">return</span> classLabel</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Code - trees.py - 保存和读取决策树</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">storeTree</span><span class="params">(inputTree, filename)</span>:</span></span><br><span class="line"> <span class="keyword">import</span> pickle</span><br><span class="line"> <span class="keyword">with</span> open(filename,<span class="string">'w'</span>) <span class="keyword">as</span> fw:</span><br><span class="line">  pickle.dump(inputTree, fw)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">grabTree</span><span class="params">(filename)</span>:</span></span><br><span class="line">	<span class="keyword">import</span> pickle</span><br><span class="line">	fr = open(filename)</span><br><span class="line">	<span class="keyword">return</span> pickle.load(fr)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Shell - 构建隐形眼镜决策树<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>fr = open(<span class="string">'lenses.txt'</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>lenses = [inst.strip().split(<span class="string">'\t'</span>) <span class="keyword">for</span> inst <span class="keyword">in</span> fr.readlines()]</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>lensesLabels = [<span class="string">'age'</span>,<span class="string">'prescript'</span>,<span class="string">'astigmatic'</span>,<span class="string">'tearRate'</span>]</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>lensesTree = trees.createTree(lenses, lensesLabels)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>treePlotter.createPlot(lensesTree)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>得到的决策树如下<img src="http://7xqmj8.com1.z0.glb.clouddn.com/%E5%86%B3%E7%AD%96%E6%A0%91-%E9%9A%90%E5%BD%A2%E7%9C%BC%E9%95%9C.png" width="500px"></p>
+<h2 id="ID3_u51B3_u7B56_u6811_u603B_u7ED3"><a href="#ID3_u51B3_u7B56_u6811_u603B_u7ED3" class="headerlink" title="ID3决策树总结"></a>ID3决策树总结</h2><blockquote>
+<p>上述为ID3算法构造，通过熵度量信息增益。另一个度量集合无序程度的方法是基尼不纯度，从一个数据集中随机选取子项，度量其被错误分到其他分组里的概率。然而ID3构造出的决策树可能产生<strong>过度匹配</strong>问题，即叶子结点产生的匹配过多。可以通过裁剪决策树，合并相邻的无法产生大量信息增益的叶节点消除该问题。其他算法如C4.5和CART。k-近邻算法和ID3决策树都是结果确定的分类算法，数据实例最终会被明确划分到某个分类中。</p>
+</blockquote>
+<h1 id="Chapter_04_-__u6734_u7D20_u8D1D_u53F6_u65AF"><a href="#Chapter_04_-__u6734_u7D20_u8D1D_u53F6_u65AF" class="headerlink" title="Chapter 04 - 朴素贝叶斯"></a>Chapter 04 - 朴素贝叶斯</h1><blockquote>
+<p>基于贝叶斯决策理论的分类，在数据较少的情况下依然有效，可以处理多类别问题，但<strong>对于输入数据的准备方式较为敏感</strong>。适用数据类型为标称型数据。对于待测数据X，Pi(x)表示X属于类别i的概率，取最高者作为最终类别。</p>
+</blockquote>
+<h2 id="u6761_u4EF6_u6982_u7387_u548C_u6734_u7D20_u8D1D_u53F6_u65AF_u51B3_u7B56"><a href="#u6761_u4EF6_u6982_u7387_u548C_u6734_u7D20_u8D1D_u53F6_u65AF_u51B3_u7B56" class="headerlink" title="条件概率和朴素贝叶斯决策"></a>条件概率和朴素贝叶斯决策</h2><ul>
+<li>条件概率：在事件x的前提下发生事件c的概率为P(c|x)，其计算公式为<code>P(c|x) = P(x|c)P(c)/P(x)</code>。</li>
+<li>朴素贝叶斯分类器的两个假设：<strong>朴素</strong>即<strong>独立</strong>，指一个特征或者单词出现的可能性与其他特征没有关系；<strong>每个特征同等重要</strong>。</li>
+<li>朴素贝叶斯的一般过程<ul>
+<li>收集数据</li>
+<li>准备数据：标称型或布尔型数据</li>
+<li>分析数据：有大量特征时可使用直方图</li>
+<li>训练算法：计算不同的独立特征的条件概率</li>
+<li>测试算法：计算错误率</li>
+<li>使用算法</li>
+</ul>
+</li>
+<li>使用朴素贝叶斯进行文档分类：使用文档中的每个词作为特征并观察它们是否出现，假设每个特征需要N个样本，有M个特征就需要N^M个样本，若特征之间相互独立，则所需要的样本数为M*N个。对于一篇文章，计算出其对应的数据向量，计算这个向量所属各个类别的概率，并取最高者。</li>
+</ul>
+<h2 id="Python_-__u6587_u672C_u5206_u7C7B"><a href="#Python_-__u6587_u672C_u5206_u7C7B" class="headerlink" title="Python - 文本分类"></a>Python - 文本分类</h2><ul>
+<li><p>以在线社区的留言板为例，屏蔽侮辱性的言论。通过统计文档中出现各个单词的数量，进行频率分析并确定待测留言是否属于侮辱性言论。</p>
+</li>
+<li><p>Code - 从文本构建词向量 - bayes.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">()</span>:</span></span><br><span class="line">	postingList = [[<span class="string">'my'</span>, <span class="string">'dog'</span>, <span class="string">'has'</span>, <span class="string">'flea'</span>, \</span><br><span class="line">					<span class="string">'problems'</span>, <span class="string">'help'</span>, <span class="string">'please'</span>],</span><br><span class="line">				   [<span class="string">'maybe'</span>, <span class="string">'not'</span>, <span class="string">'take'</span>, <span class="string">'him'</span>, \</span><br><span class="line">					 <span class="string">'to'</span>, <span class="string">'dog'</span>, <span class="string">'park'</span>, <span class="string">'stupid'</span>],</span><br><span class="line">				   [<span class="string">'my'</span>, <span class="string">'dalmation'</span>, <span class="string">'is'</span>, <span class="string">'so'</span>, <span class="string">'cute'</span>, \</span><br><span class="line">					<span class="string">'I'</span>, <span class="string">'love'</span>, <span class="string">'him'</span>],</span><br><span class="line">				   [<span class="string">'stop'</span>, <span class="string">'posting'</span>, <span class="string">'stupid'</span>, <span class="string">'worthless'</span>, <span class="string">'garbage'</span>],</span><br><span class="line">				   [<span class="string">'mr'</span>, <span class="string">'licks'</span>, <span class="string">'ate'</span>, <span class="string">'my'</span>, <span class="string">'steak'</span>, <span class="string">'how'</span>, \</span><br><span class="line">					<span class="string">'to'</span>, <span class="string">'stop'</span>, <span class="string">'him'</span>],</span><br><span class="line">				   [<span class="string">'quit'</span>, <span class="string">'buying'</span>, <span class="string">'worthless'</span>, <span class="string">'dog'</span>, <span class="string">'food'</span>, <span class="string">'stupid'</span>]]</span><br><span class="line">	classVec = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line">	<span class="keyword">return</span> postingList, classVec</span><br><span class="line">	</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createVocabList</span><span class="params">(dataSet)</span>:</span></span><br><span class="line">	vocabSet = set([])</span><br><span class="line">	<span class="keyword">for</span> document <span class="keyword">in</span> dataSet:</span><br><span class="line">		vocabSet = vocabSet | set(document)</span><br><span class="line">	<span class="keyword">return</span> list(vocabSet)</span><br><span class="line">	</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">setOfWords2Vec</span><span class="params">(vocabList, inputSet)</span>:</span> <span class="comment"># 贝努利模型</span></span><br><span class="line">	returnVec = [<span class="number">0</span>] * len(vocabList)</span><br><span class="line">	<span class="keyword">for</span> word <span class="keyword">in</span> inputSet:</span><br><span class="line">		<span class="keyword">if</span> word <span class="keyword">in</span> vocabList:</span><br><span class="line">			returnVec[vocabList.index(word)] = <span class="number">1</span></span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			<span class="keyword">print</span> <span class="string">"the word: %s i snot in my Vocabulary!"</span> % word</span><br><span class="line">	<span class="keyword">return</span> returnVec</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Code - 从词向量计算概率 - bayes.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">trainNB0</span><span class="params">(trainMatrix, trainCategory)</span>:</span></span><br><span class="line">	numTrainDocs = len(trainMatrix)</span><br><span class="line">	numWords = len(trainMatrix[<span class="number">0</span>])</span><br><span class="line">	pAbusive = sum(trainCategory)/float(numTrainDocs)</span><br><span class="line">	p0Num = ones(numWords); p1Num = ones(numWords)</span><br><span class="line">	p0Denom = <span class="number">2.0</span>; p1Denom = <span class="number">2.0</span>       <span class="comment"># 初始化概率</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(numTrainDocs):</span><br><span class="line">		<span class="keyword">if</span> trainCategory[i] == <span class="number">1</span>:</span><br><span class="line">			p1Num += trainMatrix[i]</span><br><span class="line">			p1Denom += sum(trainMatrix[i])</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			p0Num += trainMatrix[i]</span><br><span class="line">			p0Denom += sum(trainMatrix[i])</span><br><span class="line">	p1Vect = log(p1Num / p1Denom)    <span class="comment"># 取对数避免出现0</span></span><br><span class="line">	p0Vect = log(p0Num / p0Denom)</span><br><span class="line">	<span class="keyword">return</span> p0Vect, p1Vect, pAbusive</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Code - 计算最大概率 - bayes.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">classifyNB</span><span class="params">(vec2Classify, p0Vec, p1Vec, pClass1)</span>:</span></span><br><span class="line">	p1 = sum(vec2Classify * p1Vec) + log(pClass1)</span><br><span class="line">	p0 = sum(vec2Classify * p0Vec) + log(<span class="number">1.0</span> - pClass1)</span><br><span class="line">	<span class="keyword">if</span> p1 &gt; p0:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Code - 测试分类函数 - bayes.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">testingNB</span><span class="params">()</span>:</span></span><br><span class="line">	listOPosts, listClasses = loadDataSet()</span><br><span class="line">	myVocabList = createVocabList(listOPosts)</span><br><span class="line">	trainMat = []</span><br><span class="line">	<span class="keyword">for</span> postinDoc <span class="keyword">in</span> listOPosts:</span><br><span class="line">		trainMat.append(setOfWords2Vec(myVocabList, postinDoc))</span><br><span class="line">	p0V, p1V, pAb = trainNB0(array(trainMat),array(listClasses))</span><br><span class="line">	testEntry = [<span class="string">'love'</span>, <span class="string">'my'</span>, <span class="string">'dalmation'</span>]</span><br><span class="line">	thisDoc = array(setOfWords2Vec(myVocabList, testEntry))</span><br><span class="line">	<span class="keyword">print</span> testEntry, <span class="string">'classified as: '</span>, classifyNB(thisDoc, p0V, p1V, pAb)</span><br><span class="line">	testEntry = [<span class="string">'stupid'</span>, <span class="string">'garbage'</span>]</span><br><span class="line">	thisDoc = array(setOfWords2Vec(myVocabList, testEntry))</span><br><span class="line">	<span class="keyword">print</span> testEntry, <span class="string">'classified as: '</span>, classifyNB(thisDoc, p0V, p1V, pAb)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文档词袋模型：在词集中，每个词出现一次和出现多次是等同的，在词袋模型中，单词出现次数对概率有影响。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bagOfWords2VecMN</span><span class="params">(vocabList, inputSet)</span>:</span> <span class="comment"># 多项式模型</span></span><br><span class="line">	returnVec = [<span class="number">0</span>] * len(vocabList)</span><br><span class="line">	<span class="keyword">for</span> word <span class="keyword">in</span> inputSet:</span><br><span class="line">		<span class="keyword">if</span> word <span class="keyword">in</span> vocabList:</span><br><span class="line">			returnVec[vocabList.index(word)] += <span class="number">1</span></span><br><span class="line">	<span class="keyword">return</span> returnVec</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="u8FC7_u6EE4_u5783_u573E_u90AE_u4EF6"><a href="#u8FC7_u6EE4_u5783_u573E_u90AE_u4EF6" class="headerlink" title="过滤垃圾邮件"></a>过滤垃圾邮件</h2><ul>
+<li><p>切分文本，并使用朴素贝叶斯交叉验证。将训练集中随机选择的文件从训练集中剔除，作为测试集，称为“留存交叉验证”。</p>
+</li>
+<li><p>Code - 文件解析 - bayes.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">textParse</span><span class="params">(bigString)</span>:</span></span><br><span class="line">	<span class="keyword">import</span> re</span><br><span class="line">	listOfTokens = re.split(<span class="string">r'\W*'</span>, bigString)</span><br><span class="line">	<span class="keyword">return</span> [tok.lower() <span class="keyword">for</span> tok <span class="keyword">in</span> listOfTokens <span class="keyword">if</span> len(tok) &gt; <span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Code - 垃圾邮件测试 - bayes.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">spamTest</span><span class="params">()</span>:</span></span><br><span class="line">    docList = []; classList = []; fullText = [];</span><br><span class="line">    	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">26</span>):</span><br><span class="line">    		wordList = textParse(open(<span class="string">'email/spam/%d.txt'</span> % i).read())</span><br><span class="line">    		docList.append(wordList)</span><br><span class="line">    		fullText.extend(wordList)</span><br><span class="line">    		classList.append(<span class="number">1</span>)</span><br><span class="line">    		wordList = textParse(open(<span class="string">'email/ham/%d.txt'</span> %i).read())</span><br><span class="line">    		docList.append(wordList)</span><br><span class="line">    		fullText.extend(wordList)</span><br><span class="line">    		classList.append(<span class="number">0</span>)</span><br><span class="line">    	vocabList = createVocabList(docList)</span><br><span class="line">    	trainingSet = range(<span class="number">50</span>); testSet = []</span><br><span class="line">    	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">    		randIndex = int(random.uniform(<span class="number">0</span>, len(trainingSet))) <span class="comment"># 修改trainingSet,长度随之修改</span></span><br><span class="line">    		testSet.append(trainingSet[randIndex])</span><br><span class="line">    		<span class="keyword">del</span>(trainingSet[randIndex])</span><br><span class="line">    	trainMat = []; trainClasses = []</span><br><span class="line">    	<span class="keyword">for</span> docIndex <span class="keyword">in</span> trainingSet:</span><br><span class="line">    		trainMat.append(setOfWords2Vec(vocabList, docList[docIndex]))</span><br><span class="line">    		trainClasses.append(classList[docIndex])</span><br><span class="line">    	p0V, p1V, pSpam = trainNB0(array(trainMat),array(trainClasses))</span><br><span class="line">    	errorCount = <span class="number">0</span></span><br><span class="line">    	<span class="keyword">for</span> docIndex <span class="keyword">in</span> testSet:</span><br><span class="line">    		wordVector = setOfWords2Vec(vocabList, docList[docIndex])</span><br><span class="line">    		<span class="keyword">if</span> classifyNB(array(wordVector), p0V, p1V, pSpam) != classList[docIndex]:</span><br><span class="line">    			errorCount += <span class="number">1</span></span><br><span class="line">    	<span class="keyword">print</span> <span class="string">'the error rate is: '</span>, float(errorCount)/len(testSet)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="u4ECERSS_u4E2A_u4EBA_u5E7F_u544A_u4E2D_u83B7_u53D6_u533A_u57DF_u503E_u5411"><a href="#u4ECERSS_u4E2A_u4EBA_u5E7F_u544A_u4E2D_u83B7_u53D6_u533A_u57DF_u503E_u5411" class="headerlink" title="从RSS个人广告中获取区域倾向"></a>从RSS个人广告中获取区域倾向</h2><ul>
+<li>安装feedparser，从RSS源收集内容。从美国两个城市中选取一些人，通过分析这些人发布的征婚广告信息，比较两个城市的人在广告用词上是否不同。</li>
+<li><p>Code - RSS源分类器 - 高频词分类去除 - bayes.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calcMostFreq</span><span class="params">(vocabList, fullText)</span>:</span>    <span class="comment"># 计算出现频率</span></span><br><span class="line">    <span class="keyword">import</span> operator</span><br><span class="line">    freqDict = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> token <span class="keyword">in</span> vocabList:</span><br><span class="line">        freqDict[token] = fullText.count(token)</span><br><span class="line">    sortedFreq = sorted(freqDict.iteritems(), key = operator.itemgetter(<span class="number">1</span>), reverse = <span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">return</span> sortedFreq[:<span class="number">30</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">localWords</span><span class="params">(feed)</span>:</span></span><br><span class="line">    <span class="keyword">import</span> feedparser</span><br><span class="line">    feedLen = len(feed)</span><br><span class="line">    docList = []; classList = []; fullText = []</span><br><span class="line">    minLen = min([len(feedElem[<span class="string">'entries'</span>]) <span class="keyword">for</span> feedElem <span class="keyword">in</span> feed])</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(minLen):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(feedLen):</span><br><span class="line">            wordList = textParse(feed[j][<span class="string">'entries'</span>][i][<span class="string">'summary'</span>])</span><br><span class="line">            docList.append(wordList)</span><br><span class="line">            fullText.extend(wordList)</span><br><span class="line">            classList.append(j)</span><br><span class="line">    vocabList = createVocabList(docList)</span><br><span class="line">    top30Words = calcMostFreq(vocabList, fullText)</span><br><span class="line">    <span class="comment"># print top30Words</span></span><br><span class="line">    <span class="comment"># for pairW in top30Words:</span></span><br><span class="line">    <span class="comment">#     if pairW[0] in vocabList: vocabList.remove(pairW[0]) # 移除高频词</span></span><br><span class="line">    trainingSet = range(<span class="number">2</span>*minLen); testSet = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        randIndex = int(random.uniform(<span class="number">0</span>, len(trainingSet)))</span><br><span class="line">        testSet.append(trainingSet[randIndex])</span><br><span class="line">        <span class="keyword">del</span>(trainingSet[randIndex])</span><br><span class="line">    trainMat = []; trainClasses = []</span><br><span class="line">    <span class="keyword">for</span> docIndex <span class="keyword">in</span> trainingSet:</span><br><span class="line">        trainMat.append(bagOfWords2VecMN(vocabList, docList[docIndex]))</span><br><span class="line">        trainClasses.append(classList[docIndex])</span><br><span class="line">    p0V, p1V, pSpam = trainNB0(array(trainMat), array(trainClasses))</span><br><span class="line">    errorCount = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> docIndex <span class="keyword">in</span> testSet:</span><br><span class="line">        wordVector = bagOfWords2VecMN(vocabList, docList[docIndex])</span><br><span class="line">        <span class="keyword">if</span> classifyNB(array(wordVector), p0V, p1V, pSpam) != classList[docIndex]:</span><br><span class="line">            errorCount += <span class="number">1</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'the error rate is: '</span>, float(errorCount)/len(testSet)</span><br><span class="line">    <span class="keyword">return</span> vocabList, p0V, p1V</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注释掉移除高频词的三行代码后，错误率为54%，保留这些代码错误率为70%。留言中出现次数最多的三十个词涵盖了所有用词的30%。通过下面的代码测试错误率。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> bayes</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ny = feedparser.parse(<span class="string">'http://newyork.craigslist.org/stp/index.rss'</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>sf = feedparser.parse(<span class="string">'http://sfbay.craigslist.org/stp/index.rss'</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>vocabList, pSF, pNY = bayes.localWords(ny, sf)</span><br><span class="line">the error rate <span class="keyword">is</span> <span class="number">0.1</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>vocabList, pSF, pNY = bayes.localWords(ny, sf)</span><br><span class="line">the error rate <span class="keyword">is</span> <span class="number">0.35</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Code - 显示地域相关用词 - bayes.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getTopWords</span><span class="params">(ny,sf)</span>:</span></span><br><span class="line">    <span class="keyword">import</span> operator</span><br><span class="line">    vocabList, p0V, p1V = localWords([ny,sf])</span><br><span class="line">    topNY = []; topSF = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(p0V)):</span><br><span class="line">        <span class="keyword">if</span> p0V[i] &gt; -<span class="number">4.0</span> : topSF.append((vocabList[i],p0V[i]))</span><br><span class="line">        <span class="keyword">if</span> p1V[i] &gt; -<span class="number">4.0</span> : topNY.append((vocabList[i],p1V[i]))</span><br><span class="line">    sortedSF = sorted(topSF, key = <span class="keyword">lambda</span> pair : pair[<span class="number">1</span>], reverse = <span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"SF**SF**SF**SF**SF"</span></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> sortedSF:</span><br><span class="line">        <span class="keyword">print</span> item[<span class="number">0</span>]</span><br><span class="line">    sortedNY = sorted(topNY, key = <span class="keyword">lambda</span> pair : pair[<span class="number">1</span>], reverse = <span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"NY**NY**NY**NY**NY"</span></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> sortedNY:</span><br><span class="line">        <span class="keyword">print</span> item[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="u6734_u7D20_u8D1D_u53F6_u65AF_u603B_u7ED3"><a href="#u6734_u7D20_u8D1D_u53F6_u65AF_u603B_u7ED3" class="headerlink" title="朴素贝叶斯总结"></a>朴素贝叶斯总结</h2><blockquote>
+<p>贝叶斯概率和准则提供了一种利用已知值来估计未知概率的有效方法。可以通过特征之间的条件独立性假设，降低对数据量的需求。下溢出问题可以通过对概率求对数解决，词袋模型在解决文档分类问题比词集模型有所提高。</p>
+</blockquote>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/04/machinelearning1-4/">原始出处</a>(<a href="http://forec.github.io/2016/02/04/machinelearning1-4/">http://forec.github.io/2016/02/04/machinelearning1-4/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/12/28/parameter-error/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">C语言的一种错误传参做法</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="machinelearning1-4" data-title="机器学习笔记（一）" data-url="http://forec.github.io/2016/02/04/machinelearning1-4/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"forec"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Forec
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
