@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>机器学习笔记（二） | Forec的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Chapter5 Logistic回归。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记（二）">
+<meta property="og:url" content="http://forec.github.io/2016/02/09/machinelearning5/index.html">
+<meta property="og:site_name" content="Forec的博客">
+<meta property="og:description" content="Chapter5 Logistic回归。">
+<meta property="og:updated_time" content="2016-02-09T10:58:53.648Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记（二）">
+<meta name="twitter:description" content="Chapter5 Logistic回归。">
+  
+    <link rel="alternative" href="/atom.xml" title="Forec的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Forec</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">奋斗在Code World的在校生</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/Data-Structures/" style="font-size: 15px;">Data-Structures</a> <a href="/tags/Mistakes/" style="font-size: 10px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/字符编码/" style="font-size: 10px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 12.5px;">机器学习</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.5px;">计算机组成与体系结构</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.codewars.com/users/Forec">Forec的CodeWars</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">就读于北京邮电大学，代码爱好者。近期自学机器学习。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Forec</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Forec</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">奋斗在Code World的在校生</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-machinelearning5" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/09/machinelearning5/" class="article-date">
+  	<time datetime="2016-02-09T10:57:05.000Z" itemprop="datePublished">2016-02-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      机器学习笔记（二）
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/大数据/">大数据</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>Chapter5 Logistic回归。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="Chapter_05_-_Logistic_u56DE_u5F52"><a href="#Chapter_05_-_Logistic_u56DE_u5F52" class="headerlink" title="Chapter 05 - Logistic回归"></a>Chapter 05 - Logistic回归</h1><blockquote>
+<p>Logistic回归根据现有数据对边界回归线建立回归公式，以此进行分类。训练分类器时的做法就是寻找最佳拟合参数，使用的是最优化算法。</p>
+</blockquote>
+<h2 id="Logistic_u56DE_u5F52_u548CSigmoid_u51FD_u6570"><a href="#Logistic_u56DE_u5F52_u548CSigmoid_u51FD_u6570" class="headerlink" title="Logistic回归和Sigmoid函数"></a>Logistic回归和Sigmoid函数</h2><ul>
+<li>Logistic回归过程<ul>
+<li>准备数据：需要进行距离运算，数据类型为数值型，结构化数据格式最佳。</li>
+<li>分析数据：任意方法。</li>
+<li>训练算法：大部分时间用于训练，训练目的为了找到最佳的分类回归系统。</li>
+<li>测试算法：训练步骤完成后分类将会很快。</li>
+<li>使用算法：输入数据并将其转换为对应的结构化数值，之后基于训练好的回归系数可以对这些数值进行简单的回归计算，判定其属于哪个类别。</li>
+</ul>
+</li>
+<li>Logistic回归优缺点<ul>
+<li>优点：计算代价不高，易于理解和实现</li>
+<li>缺点：容易欠拟合，分类精度不高</li>
+<li>使用数据类型：数值型和标称型</li>
+</ul>
+</li>
+<li>Sigmoid函数：是近似海维塞德阶跃函数（单位阶跃函数），<code>σ(z)=1/(1+e^(-z))</code>。当x为0时，Sigmoid(0)=0.5，随着x的增大减小，σ(x)将逼近1和0。当横坐标刻度足够大，Sigmoid看起来类似阶跃函数。我们将输入数据的每个特征乘以对应的回归系数，得到的结果相加，作为Sigmoid函数的参数，得到一个范围在0-1之间的数值，若大于0.5则归入1，小于0.5则归入0。因此Logistic回归可以被看成概率估计。</li>
+</ul>
+<h2 id="u6700_u4F73_u56DE_u5F52_u7CFB_u6570_u786E_u5B9A"><a href="#u6700_u4F73_u56DE_u5F52_u7CFB_u6570_u786E_u5B9A" class="headerlink" title="最佳回归系数确定"></a>最佳回归系数确定</h2><ul>
+<li>梯度上升法与梯度下降法类似，梯度上升算法用来求函数的最大值，梯度下降算法用来求函数的最小值。思想为要找到某函数的最大值，则沿着该函数的梯度方向探寻。梯度上升法到达每个点后会重新估计移动方向，循环迭代直至满足停止条件。对于线性回归系数，初始状态均为1，每次迭代的计算公式为<code>w:=w+α▽f(w)</code>，▽f(w)是在w处的梯度，α是沿梯度方向移动量大小，记为步长。该公式一直迭代执行，直到停止条件，比如迭代次数达到某个指定值，或误差达到指定精度。</li>
+<li><p>使用梯度上升找到最佳参数，R为迭代次数，流程如下：</p>
+<ul>
+<li>每个回归系数初始化为1</li>
+<li>重复以下步骤R次：计算整个数据集的梯度，使用alpha*gradient更新回归系数的向量，返回回归系数</li>
+</ul>
+</li>
+<li><p>Code - gradAscent - logRegres.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(inX)</span>:</span>	<span class="comment"># the array from numpy can be used as a single parameter</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">1.0</span>/(<span class="number">1</span>+exp(-inX))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradAscent</span><span class="params">(dataMatIn, classLabels)</span>:</span></span><br><span class="line">	dataMatrix = mat(dataMatIn)    <span class="comment"># m*n</span></span><br><span class="line">	labelMat = mat(classLabels).transpose()    <span class="comment"># m*1</span></span><br><span class="line">	m, n = shape(dataMatrix)</span><br><span class="line">	alpha = <span class="number">0.001</span></span><br><span class="line">	maxCycles = <span class="number">500</span></span><br><span class="line">	weights = ones((n,<span class="number">1</span>))    <span class="comment"># n*1</span></span><br><span class="line">	<span class="keyword">for</span> k <span class="keyword">in</span> range(maxCycles):</span><br><span class="line">		h = sigmoid(dataMatrix*weights)	<span class="comment"># m*1</span></span><br><span class="line">		error = (labelMat - h)	<span class="comment"># counting error direction, m*1</span></span><br><span class="line">		weights = weights + alpha * dataMatrix.transpose() * error</span><br><span class="line">	<span class="keyword">return</span> weights</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">()</span>:</span></span><br><span class="line">	dataMat = []; labelMat = []</span><br><span class="line">	fr = open(<span class="string">'testSet.txt'</span>)</span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">		lineArr = line.strip().split()</span><br><span class="line">		dataMat.append([<span class="number">1.0</span>, float(lineArr[<span class="number">0</span>]), float(lineArr[<span class="number">1</span>])])</span><br><span class="line">		labelMat.append(int(lineArr[<span class="number">2</span>]))</span><br><span class="line">	<span class="keyword">return</span> dataMat, labelMat</span><br></pre></td></tr></table></figure>
+<p>loadDataSet函数导入testSet.txt，返回数据矩阵和标签。gradAscent接收数据矩阵和标签，并返回生成的回归系数向量。</p>
+<ul>
+<li>Code - plotBestFit - logRegres.py<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plotBestFit</span><span class="params">(weights)</span>:</span></span><br><span class="line">	<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">	dataMat, labelMat = loadDataSet()</span><br><span class="line">	dataArr = array(dataMat)</span><br><span class="line">	n = shape(dataArr)[<span class="number">0</span>]</span><br><span class="line">	xcord1 = []; ycord1 = []</span><br><span class="line">	xcord2 = []; ycord2 = []</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">		<span class="keyword">if</span> int(labelMat[i]) == <span class="number">1</span>:</span><br><span class="line">			xcord1.append(dataArr[i,<span class="number">1</span>]); ycord1.append(dataArr[i,<span class="number">2</span>])</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			xcord2.append(dataArr[i,<span class="number">1</span>]); ycord2.append(dataArr[i,<span class="number">2</span>])</span><br><span class="line">	fig = plt.figure()</span><br><span class="line">	ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line">	ax.scatter(xcord1, ycord1, s = <span class="number">30</span>, c = <span class="string">'red'</span>, marker = <span class="string">'s'</span>)</span><br><span class="line">	ax.scatter(xcord2, ycord2, s = <span class="number">30</span>, c = <span class="string">'green'</span>)</span><br><span class="line">	x = arange(-<span class="number">3.0</span>, <span class="number">3.0</span>, <span class="number">0.1</span>)</span><br><span class="line">	y = (-weights[<span class="number">0</span>]-weights[<span class="number">1</span>]*x)/weights[<span class="number">2</span>]</span><br><span class="line">	ax.plot(x,y)</span><br><span class="line">	plt.xlabel(<span class="string">'x1'</span>); plt.ylabel(<span class="string">'x2'</span>);</span><br><span class="line">	plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; import logRegres</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; dataArr, labelMat = logRegres.loadDataSet()</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; weights = logRegres.gradAscent(dataArr, labelMat)</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; logRegres.plotBestFit(weights.getA())</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="u968F_u673A_u68AF_u5EA6_u4E0A_u5347"><a href="#u968F_u673A_u68AF_u5EA6_u4E0A_u5347" class="headerlink" title="随机梯度上升"></a>随机梯度上升</h2><ul>
+<li><p>gradAscent函数迭代五百次，并且每次计算都要遍历整个数据集，对于大规模数据复杂度过高。改进方法为每次仅用一个样本点来更新回归系数，只在新样本到来时对分类器进行增量式更新，是在线学习算法。流程如下。</p>
+<ul>
+<li>所有回归系数初始化为1</li>
+<li>对数据集中的每个样本：计算该样本的梯度，使用alpha*gradient更新回归系数值</li>
+<li>返回回归系数值</li>
+</ul>
+</li>
+<li><p>Code - stocGradAscent0 - logRegres.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stocGradAscent0</span><span class="params">(dataMatrix, classLabels)</span>:</span></span><br><span class="line">	m, n = shape(dataMatrix)</span><br><span class="line">	weights = ones(n)</span><br><span class="line">	alpha = <span class="number">0.01</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">		h = sigmoid(sum(dataMatrix[i]*weights))</span><br><span class="line">		error = classLabels[i] - h</span><br><span class="line">		weights = weights + alpha * error * dataMatrix[i]</span><br><span class="line">	<span class="keyword">return</span> weights</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>随机上升算法在200次迭代时的系数变化过程在《机器学习实战》82页，其中系数X2经过50次迭代后达到稳定，而系数1和0则需要更多次迭代。并且，在大的波动停止后，还有一些小的周期性波动，这源于数据中存在一些不能正确分类的样本点（数据集非线性可分），在每次迭代时会引发系统的剧烈震荡。</p>
+<ul>
+<li>Improve - Code -stocGradAscent1 - logRegres.py<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stocGradAscent1</span><span class="params">(dataMatrix, classLabels, numIter = <span class="number">150</span>)</span>:</span></span><br><span class="line">	m, n = shape(dataMatrix)</span><br><span class="line">	weights = ones(n)</span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> range(numIter):</span><br><span class="line">		dataIndex = range(m)</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">			alpha = <span class="number">4</span>/(<span class="number">1.0</span>+j+i)+<span class="number">0.0001</span></span><br><span class="line">			randIndex = int(random.uniform(<span class="number">0</span>, len(dataIndex)))</span><br><span class="line">			h = sigmoid(sum(dataMatrix[randIndex]*weights))</span><br><span class="line">			error = classLabels[randIndex] - h</span><br><span class="line">			weights = weights + alpha * error * dataMatrix[randIndex]</span><br><span class="line">			<span class="keyword">del</span>(dataIndex[randIndex])</span><br><span class="line">	<span class="keyword">return</span> weights</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>改进后的代码中，alpha每次迭代都会调整，这可以缓解高频波动，并且虽然alpha随着迭代次数减小，但永远不会减小到0（常数项存在），这样保证多次迭代之后新数据仍然对系数有影响。同样，这也避免了alpha的严格下降，避免参数的严格下降也常见于模拟退火算法等其他优化算法中。改进后的代码通过随机选取样本的方式更新回归系数，这样可以减少周期性波动。改进后的代码收敛速度更快，默认迭代次数150。</p>
+<h2 id="u5904_u7406_u6570_u636E_u4E2D_u7684_u7F3A_u5931_u503C"><a href="#u5904_u7406_u6570_u636E_u4E2D_u7684_u7F3A_u5931_u503C" class="headerlink" title="处理数据中的缺失值"></a>处理数据中的缺失值</h2><ul>
+<li>假设有1000个样本和20个特征，若某传感器损坏导致一个特征无效，其余数据仍可用。<ul>
+<li>使用可用特征的均值填补缺失值</li>
+<li>使用特殊值来填补确实值，如-1</li>
+<li>忽略有缺失值的样本</li>
+<li>使用相似样本的均值填补缺失值</li>
+<li>使用另外的机器学习算法预测缺失值</li>
+</ul>
+</li>
+<li><p>对于Logistic回归，确实只用0代替可以保留现有数据，并且无需对算法进行修改。如果在测试数据集中发现某一条数据的类别标签已经缺失，Logistic回归的简单做法是将该数据丢弃，但如果采用类似kNN的方法则不太可行。</p>
+</li>
+<li><p>Code 用logistic回归从疝气病症预测病马死亡率 - logRegres.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">classifyVector</span><span class="params">(inX, weights)</span>:</span></span><br><span class="line">	prob = sigmoid(sum(inX*weights))</span><br><span class="line">	<span class="keyword">if</span> prob &gt; <span class="number">0.5</span> : <span class="keyword">return</span> <span class="number">1.0</span></span><br><span class="line">	<span class="keyword">else</span>: <span class="keyword">return</span> <span class="number">0.0</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">colicTest</span><span class="params">()</span>:</span></span><br><span class="line">	frTrain = open(<span class="string">'horseColicTraining.txt'</span>)</span><br><span class="line">	frTest = open(<span class="string">'horseColicTest.txt'</span>)</span><br><span class="line">	trainingSet = []; trainingLabels = []</span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> frTrain.readlines():</span><br><span class="line">		currLine = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">		lineArr = []</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">21</span>):</span><br><span class="line">			lineArr.append(float(currLine[i]))</span><br><span class="line">		trainingSet.append(lineArr)</span><br><span class="line">		trainingLabels.append(float(currLine[<span class="number">21</span>]))</span><br><span class="line">	trainWeights = stocGradAscent1(array(trainingSet), trainingLabels, <span class="number">1000</span>)</span><br><span class="line">	errorCount = <span class="number">0</span>; numTestVec = <span class="number">0.0</span></span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> frTest.readlines():</span><br><span class="line">		numTestVec += <span class="number">1.0</span></span><br><span class="line">		currLine = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">		lineArr = []</span><br><span class="line">		<span class="keyword">for</span> i  <span class="keyword">in</span> range(<span class="number">21</span>):</span><br><span class="line">			lineArr.append(float(currLine[i]))</span><br><span class="line">		<span class="keyword">if</span> int(classifyVector(array(lineArr), trainWeights)) != int(currLine[<span class="number">21</span>]) :</span><br><span class="line">			errorCount += <span class="number">1</span></span><br><span class="line">	errorRate = (float(errorCount)/numTestVec)</span><br><span class="line">	<span class="keyword">print</span> <span class="string">"the error rate of this test is %f"</span> % errorRate</span><br><span class="line">	<span class="keyword">return</span> errorRate</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">multiTest</span><span class="params">()</span>:</span></span><br><span class="line">	numTests = <span class="number">10</span>; errorSum = <span class="number">0.0</span></span><br><span class="line">	<span class="keyword">for</span> k <span class="keyword">in</span> range(numTests):</span><br><span class="line">		errorSum += colicTest()</span><br><span class="line">	<span class="keyword">print</span> <span class="string">"after %d iterations the average error rate is: %f"</span> % (numTests, errorSum/float(numTests))</span><br></pre></td></tr></table></figure>
+<h1 id="Logistic_u56DE_u5F52_u603B_u7ED3"><a href="#Logistic_u56DE_u5F52_u603B_u7ED3" class="headerlink" title="Logistic回归总结"></a>Logistic回归总结</h1><blockquote>
+<p>Logistic回归的目的是寻找一个非线性函数Sigmoid的最佳拟合参数，求解过程可以由最优化算法完成。随机梯度上升算法可以简化梯度上升算法，获取几乎相同的效果，并且占用更少的计算资源，在新数据到来时完成在线更新，而不需要重新读取整个数据集。</p>
+</blockquote>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/09/machinelearning5/">原始出处</a>(<a href="http://forec.github.io/2016/02/09/machinelearning5/">http://forec.github.io/2016/02/09/machinelearning5/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/02/04/machinelearning1-4/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">机器学习笔记（一）</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="machinelearning5" data-title="机器学习笔记（二）" data-url="http://forec.github.io/2016/02/09/machinelearning5/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"forec"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Forec
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
