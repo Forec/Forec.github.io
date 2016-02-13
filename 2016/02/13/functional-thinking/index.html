@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>《函数式编程思维》笔记 | Forec的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《函数式编程思维》笔记">
+<meta property="og:url" content="http://forec.github.io/2016/02/13/functional-thinking/index.html">
+<meta property="og:site_name" content="Forec的博客">
+<meta property="og:description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
+<meta property="og:updated_time" content="2016-02-13T03:13:23.053Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《函数式编程思维》笔记">
+<meta name="twitter:description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
+  
+    <link rel="alternative" href="/atom.xml" title="Forec的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Forec</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">奋斗在Code Farm的在校生</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/Data-Structures/" style="font-size: 15px;">Data-Structures</a> <a href="/tags/Mistakes/" style="font-size: 10px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/字符编码/" style="font-size: 10px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 12.5px;">机器学习</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.5px;">计算机组成与体系结构</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.codewars.com/users/Forec">Forec的CodeWars</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">就读于北京邮电大学，代码爱好者。近期自学机器学习。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Forec</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Forec</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">奋斗在Code Farm的在校生</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-functional-thinking" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/13/functional-thinking/" class="article-date">
+  	<time datetime="2016-02-13T01:36:15.000Z" itemprop="datePublished">2016-02-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      《函数式编程思维》笔记
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程/">函数式编程</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Code/">Code</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="u601D_u7EF4_u8F6C_u53D8"><a href="#u601D_u7EF4_u8F6C_u53D8" class="headerlink" title="思维转变"></a>思维转变</h1><ul>
+<li><p>命令式编程风格通常 <strong>迫使我们出于性能考虑，把不同的任务交织起来，以便能够用一次循环来完成多个任务</strong> 。而函数式编程用map、filter这些高阶函数把我们解放出来，让我们 <strong>站在更高的抽象层次上去考虑问题</strong> ，把问题看得更清楚。</p>
+</li>
+<li><p>把控制权让渡给语言（运行时）。“人生苦短，远离malloc”。函数式编程语言让我们用高阶抽象从容取代基本的控制结构，将琐碎的细节（如垃圾处理）交托给运行时。 <em>面向对象编程通过封装不确定因素来使代码能被人理解；函数式编程通过尽量减少不确定因素来使代码能被人理解。——Michael Feathers</em> 。与其建立种种机制来控制可变的状态，不如尽可能消灭可变的状态这个不确定因素。</p>
+</li>
+<li>函数式语言提倡 <strong>在有限的几种关键数据结构（list、set、map）上运用针对这些数据结构高度优化过的操作</strong> ，以此形成基本的运转架构；面向对象程序员喜欢不断的创建新的数据结构和附属的操作，因为OOP范式就是建立新的类和类间的消息。比起一味创建新的类结构体系，把封装的单元降低到函数级别，更有利于达到细颗粒度的、基础层面的重用。</li>
+<li>换用函数式语言不是关键，转变看待问题的角度才是必不可少的。命令式编程是按照“程序是一系列改变状态的命令”来建模的一种编程风格，鼓励程序员将操作安排在循环内部执行。 <strong>函数式语言希望尽可能减少可变的状态</strong> ，因此更多发展了通用性的计算设施。</li>
+<li>高阶函数消除了摩擦。语法上的便利是非常重要的方面， <strong>在语法处处掣肘下塑造出的抽象，很难配合我们的思维过程而不产生所谓的摩擦</strong> 。迭代需要让位于高阶函数，如果能用高阶函数把希望执行的操作表达出来，语言将会把操作安排的更高效。</li>
+</ul>
+<h1 id="u6743_u8D23_u8BA9_u6E21"><a href="#u6743_u8D23_u8BA9_u6E21" class="headerlink" title="权责让渡"></a>权责让渡</h1><ul>
+<li><p><strong>理解掌握的抽象层次永远要比日常使用的抽象层次更深一层</strong> 。</p>
+</li>
+<li><p><strong>闭包</strong> （closure）实际上是一种特殊的函数，在暗地里绑定了函数内部引用的所有变量，换句话说，这种函数把它所引用的所有东西都放在一个上下文里包了起来。下面的代码先定义了一个Employee类，其中带有name和salary字段，接着定义带有amount参数的paidMore函数，其返回值是一个以Employee实例为参数的 <strong>代码块</strong> ，或者叫闭包。数值100000随着<code>isHighPaid = paidMore(100000)</code>这一步操作永久的和代码块绑定在一起。第二部分代码执行闭包。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class Employee&#123;</span><br><span class="line">    def name, salary</span><br><span class="line">&#125;</span><br><span class="line">def paidMore(amount) &#123;</span><br><span class="line">    return &#123;Employee e -&gt; e.salary &gt; amount &#125;</span><br><span class="line">&#125;</span><br><span class="line">isHighPaid = paidMore(100000)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">def Smithers = new Employee(name:"Fred", salary:120000)</span><br><span class="line">def Homer = new Employee(name:"Homer", salary:80000)</span><br><span class="line">println isHighPaid(Smithers)</span><br><span class="line">println isHighPaid(Homer)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>闭包经常被函数式语言和框架当作一种 <strong>异地执行的机制</strong> ，用来传递待执行的变换代码，如map之类的高阶函数。注意闭包是代码块，而不是一个值，各个闭包内部状态都是独立的，尽管局部变量不在代码块内定义，但只要代码块引用了该变量，两者就被绑定在一起，这种联系在代码块实例的全部生命期内一直保持着。从实现的角度说， <strong>代码块实例从它被创建的一刻起，就持有其作用域内一切事物的封闭副本</strong> 。下面的代码展示了闭包的异地执行。<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def Closure makeCounter()&#123;</span><br><span class="line">    def local_variable = 0</span><br><span class="line">    return &#123; return local_variable += 1&#125;</span><br><span class="line">&#125;</span><br><span class="line">c1 = makeCounter()</span><br><span class="line">c1()</span><br><span class="line">c1()</span><br><span class="line">c1()</span><br><span class="line">c2 = makeCounter()</span><br><span class="line">println "C1 = $&#123;c1()&#125;, C2 = $&#123;c2()&#125;"</span><br><span class="line">// output: C1 = 4, C2 = 1 //</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>闭包所表现出来的函数式思维就是，“让运行时去管理状态”，同时也是推迟执行的绝佳样板。</p>
+<ul>
+<li><strong>柯里化</strong> 指的是从一个多参数函数变成 <strong>一连串单参数函数</strong> 的变换。它描述的是 <strong>变换的过程</strong> ，不涉及变换之后对函数的调用。调用者可以决定对多少个参数实施变换，余下的部分将衍生成一个参数数目较少的新函数。举例来说，函数process(x, y, z)完全柯里化之后变成process(x)(y)(z)的性质，其中process(x)和process(x)(y)都是单参数的函数。如果只对第一个参数柯里化，那么process(x)的返回值将是一个单参数的函数，而这个唯一的参数又接受另一个参数的输入。 <strong>函数柯里化的结果是返回链条中的下一个函数</strong> 。</li>
+<li><p><strong>部分施用</strong> 指提前代入一部分参数值，使一个多参数得以省略部分参数，从而转化为一个参数数目较少的函数。 <strong>部分施用是把参数的取值绑定到用户在操作中提供的具体值上</strong> 。 </p>
+</li>
+<li><p><strong>递归</strong> 的核心在于对一个不断变短的列表反复做同一件事，利用递归，将状态的管理责任推给运行时。递归没有成为一种平常的操作，一个主要原因是栈的增长。使用尾调用优化的写法来帮助运行时科夫栈的增长问题。当递归调用是函数执行的最后一个调用时，运行时往往可以在栈里就地更新，而不需要增加新的栈空间。因此 <strong>尽可能多的使用尾递归的写法</strong> 。</p>
+</li>
+</ul>
+<h1 id="u8BB0_u5FC6_u548C_u7F13_u6C42_u503C"><a href="#u8BB0_u5FC6_u548C_u7F13_u6C42_u503C" class="headerlink" title="记忆和缓求值"></a>记忆和缓求值</h1><ul>
+<li><p>只有对纯函数才能放心地使用函数缓存的结果，这刚好符合函数式特性。对于Groovy，可以先将记忆的函数定义为闭包，再对闭包使用memoize()方法获得一个新函数，这个新函数调用的时候结果就会被缓存起来。在Haskell中好像下面的链接可以实现。我们写出来的缓存决不可能比语言开发者设计的更高效，因为语言设计者可以无视他们给语言设定的规定。 <strong>语言设计者实现出来的机制总是比开发者自己做的效率高</strong> 。<a href="https://wiki.haskell.org/Memoization" target="_blank" rel="external">Haskell-Wiki上的Memoization</a></p>
+</li>
+<li><p>缓求值的好处：昂贵的运算只有到了绝对必要的时候才执行；可以建立无限大的集合，只要一接到请求就一直送出元素；按缓求值的方式使用map、filter等，可以产生更高效的代码。特别适合于资源生产成本较高的情况。Haskell的惰性求值就是这样的特性，是非严格求值的。在严格求值的语言运行下面代码会报错，而非严格求值的语言会得出4。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> length([<span class="number">2</span>+<span class="number">1</span>, <span class="number">3</span>*<span class="number">2</span>, <span class="number">1</span>/<span class="number">0</span>, <span class="number">5</span>-<span class="number">4</span>])</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="u8BED_u8A00_u6F14_u5316"><a href="#u8BED_u8A00_u6F14_u5316" class="headerlink" title="语言演化"></a>语言演化</h1><ul>
+<li><p>少量的数据结构搭配大量的操作。函数式语言有很多操作，但对应的数据结构很少。面向对象语言鼓励建立专门针对某个类的方法，我们从类的关系中发现重复出现的模式并加以重用。 <strong>函数式语言的重用表现在函数的通用性上，他们鼓励在数据结构上使用各种共通的变换，并通过高阶函数来调整操作以满足具体事项的要求</strong> 。 <em>100个函数操作一种数据结构的组合，要好过10个函数操作10种数据结构的组合。——Alan Perlis</em></p>
+</li>
+<li><p><strong>让语言去迎合问题</strong> ，不要拿问题硬套语言，而是想法揉捏手中的语言来迎合问题。Lisp家族的语言传承了无可比拟的灵活性，对DSL的支持比主流语言要强得多。</p>
+</li>
+<li>函数式偏好没有副作用的纯函数，“异常”违背了这个条件。因此函数式语言通过Either类这种不相交联合体，返回左值表示错误信息，右值表示正常结果。函数式语言关注 <strong>引用的透明性</strong> ，发出调用的例程不必关心他的访问对象真的是一个值，还是一个返回值的函数。</li>
+<li>现代语言大多数是多范式的，支持多种多样的编程范式，如OOP，元编程、函数式、过程式等等。这些范式在语言中相互正交（没有任何影响），不会相互干扰。</li>
+<li>设计模式的变化，模式已被函数式语言吸收成为了语言的一部分，语言特性简化了实现细节。OOP模式和FP模式已经具备了不同的意义。面向对象倾向于封装对象的重用，在不同的结构之间 <strong>耦合</strong> 。而函数式编程则依靠零件之间的 <strong>复合</strong> 来组织抽象，以达到减少不确定因素的目的。</li>
+</ul>
+<hr>
+<p>参考文献： 《函数式编程思维 - 美 Neal Ford》</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/13/functional-thinking/">原始出处</a>(<a href="http://forec.github.io/2016/02/13/functional-thinking/">http://forec.github.io/2016/02/13/functional-thinking/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/02/11/machinelearning6/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">机器学习笔记（Chapter 06 - 支持向量机）</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="functional-thinking" data-title="《函数式编程思维》笔记" data-url="http://forec.github.io/2016/02/13/functional-thinking/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"forec"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Forec
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

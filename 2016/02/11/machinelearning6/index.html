@@ -12,7 +12,7 @@
 <meta property="og:url" content="http://forec.github.io/2016/02/11/machinelearning6/index.html">
 <meta property="og:site_name" content="Forec的博客">
 <meta property="og:description" content="支持向量机（Support Vector Machineds，SVM）是一个二类问题的分类器，实现方法多样，这里采用了序列最小优化（SMO）实现方法，并通过核函数拓展到非线性可分的SVM。">
-<meta property="og:updated_time" content="2016-02-11T10:12:04.084Z">
+<meta property="og:updated_time" content="2016-02-11T10:16:25.965Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记（Chapter 06 - 支持向量机）">
 <meta name="twitter:description" content="支持向量机（Support Vector Machineds，SVM）是一个二类问题的分类器，实现方法多样，这里采用了序列最小优化（SMO）实现方法，并通过核函数拓展到非线性可分的SVM。">
@@ -115,7 +115,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/Data-Structures/" style="font-size: 15px;">Data-Structures</a> <a href="/tags/Mistakes/" style="font-size: 10px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/字符编码/" style="font-size: 10px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 12.5px;">机器学习</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.5px;">计算机组成与体系结构</a>
+						<a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/Data-Structures/" style="font-size: 15px;">Data-Structures</a> <a href="/tags/Mistakes/" style="font-size: 10px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/字符编码/" style="font-size: 10px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 12.5px;">机器学习</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.5px;">计算机组成与体系结构</a>
 					</div>
 				</section>
 				
@@ -235,7 +235,7 @@
 <h1 id="SVM_u548C_u6700_u5927_u8FB9_u7F18_u8D85_u5E73_u9762"><a href="#SVM_u548C_u6700_u5927_u8FB9_u7F18_u8D85_u5E73_u9762" class="headerlink" title="SVM和最大边缘超平面"></a>SVM和最大边缘超平面</h1><ul>
 <li>SVM的优缺点<ul>
 <li>优点：泛化错误率低，计算开销不大撒，结果易解释</li>
-<li>缺点：**对参数调节和核函数的选择敏感，原始分类器不加修改情况下仅适用于处理二类问题</li>
+<li>缺点：<strong>对参数调节和核函数的选择敏感</strong>，原始分类器不加修改情况下仅适用于处理二类问题</li>
 <li>适用数值类型：数值型和标称型</li>
 </ul>
 </li>
@@ -325,6 +325,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2016/02/13/functional-thinking/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          《函数式编程思维》笔记
+        
+      </div>
+    </a>
   
   
     <a href="/2016/02/09/machinelearning5/" id="article-nav-older" class="article-nav-link-wrap">
