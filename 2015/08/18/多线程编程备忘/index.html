@@ -1,12 +1,45 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
 <head>
-  <meta charset="utf-8">
   
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>多线程编程备忘 | Forec的博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="操作系统中的进程和线程，C/C++，Java，Python中多线程的备忘">
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="线程," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec的博客" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="操作系统中的进程和线程，C/C++，Java，Python中多线程的备忘">
 <meta property="og:type" content="article">
 <meta property="og:title" content="多线程编程备忘">
 <meta property="og:url" content="http://forec.github.io/2015/08/18/多线程编程备忘/index.html">
@@ -16,223 +49,206 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多线程编程备忘">
 <meta name="twitter:description" content="操作系统中的进程和线程，C/C++，Java，Python中多线程的备忘">
-  
-    <link rel="alternative" href="/atom.xml" title="Forec的博客" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 多线程编程备忘 | Forec的博客 </title>
 </head>
 
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-	<header id="header" class="inner">
-		<a href="/" class="profilepic">
-			
-			<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-		</a>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-		<hgroup>
-		  <h1 class="header-author"><a href="/">Forec</a></h1>
-		</hgroup>
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
 
-		
-		<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-		
 
-		
-			<div class="switch-btn">
-				<div class="icon">
-					<div class="icon-ctn">
-						<div class="icon-wrap icon-house" data-idx="0">
-							<div class="birdhouse"></div>
-							<div class="birdhouse_holes"></div>
-						</div>
-						<div class="icon-wrap icon-ribbon hide" data-idx="1">
-							<div class="ribbon"></div>
-						</div>
-						
-						<div class="icon-wrap icon-link hide" data-idx="2">
-							<div class="loopback_l"></div>
-							<div class="loopback_r"></div>
-						</div>
-						
-						
-						<div class="icon-wrap icon-me hide" data-idx="3">
-							<div class="user"></div>
-							<div class="shoulder"></div>
-						</div>
-						
-					</div>
-					
-				</div>
-				<div class="tips-box hide">
-					<div class="tips-arrow"></div>
-					<ul class="tips-inner">
-						<li>菜单</li>
-						<li>标签</li>
-						
-						<li>友情链接</li>
-						
-						
-						<li>关于我</li>
-						
-					</ul>
-				</div>
-			</div>
-		
 
-		<div class="switch-area">
-			<div class="switch-wrap">
-				<section class="switch-part switch-part1">
-					<nav class="header-menu">
-						<ul>
-						
-							<li><a href="/">主页</a></li>
-				        
-							<li><a href="/archives">所有文章</a></li>
-				        
-						</ul>
-					</nav>
-					<nav class="header-nav">
-						<div class="social">
-							
-								<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-					        
-								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-					        
-								<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-					        
-						</div>
-					</nav>
-				</section>
-				
-				
-				<section class="switch-part switch-part2">
-					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/Data-Structures/" style="font-size: 15px;">Data-Structures</a> <a href="/tags/Mistakes/" style="font-size: 10px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/字符编码/" style="font-size: 10px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 12.5px;">机器学习</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.5px;">计算机组成与体系结构</a>
-					</div>
-				</section>
-				
-				
-				
-				<section class="switch-part switch-part3">
-					<div id="js-friends">
-					
-			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.codewars.com/users/Forec">Forec的CodeWars</a>
-			        
-			        </div>
-				</section>
-				
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
 
-				
-				
-				<section class="switch-part switch-part4">
-				
-					<div id="js-aboutme">就读于北京邮电大学，代码爱好者。近期自学机器学习。</div>
-				</section>
-				
-			</div>
-		</div>
-	</header>				
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec的博客</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
 </div>
 
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
     </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-  	<div class="overlay">
-  		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide">Forec</h1>
-  	</div>
-	<div class="intrude-less">
-		<header id="header" class="inner">
-			<div class="profilepic">
-			
-				<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-			</div>
-			<hgroup>
-			  <h1 class="header-author">Forec</h1>
-			</hgroup>
-			
-			<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-			
-			<nav class="header-menu">
-				<ul>
-				
-					<li><a href="/">主页</a></li>
-		        
-					<li><a href="/archives">所有文章</a></li>
-		        
-		        <div class="clearfix"></div>
-				</ul>
-			</nav>
-			<nav class="header-nav">
-				<div class="social">
-					
-						<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-			        
-						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-			        
-						<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-			        
-				</div>
-			</nav>
-		</header>				
-	</div>
+  
 </nav>
 
-      <div class="body-wrap"><article id="post-多线程编程备忘" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/08/18/多线程编程备忘/" class="article-date">
-  	<time datetime="2015-08-18T01:16:02.000Z" itemprop="datePublished">2015-08-18</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      多线程编程备忘
-    </h1>
-  
+ </div>
+    </header>
 
-      </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
       
-      <div class="article-info article-info-post">
-        
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程/">线程</a></li></ul>
-	</div>
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              多线程编程备忘
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-08-18T09:16:02+08:00" content="2015-08-18">
+            2015-08-18
+          </time>
+        </span>
 
         
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Code/">Code</a>
-	</div>
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Code/" itemprop="url" rel="index">
+                  <span itemprop="name">Code</span>
+                </a>
+              </span>
 
+              
+              
 
-        <div class="clearfix"></div>
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/08/18/多线程编程备忘/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/18/多线程编程备忘/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
       </div>
+    </header>
+
+    <div class="post-body">
+
       
-    
-    <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
+
+      
+        <span itemprop="articleBody"><blockquote>
 <p>操作系统中的进程和线程，C/C++，Java，Python中多线程的备忘</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="u64CD_u4F5C_u7CFB_u7EDF_u4E2D_u7684_u8FDB_u7A0B_u548C_u7EBF_u7A0B_uFF08From_CareySon_uFF09"><a href="#u64CD_u4F5C_u7CFB_u7EDF_u4E2D_u7684_u8FDB_u7A0B_u548C_u7EBF_u7A0B_uFF08From_CareySon_uFF09" class="headerlink" title="操作系统中的进程和线程（From CareySon）"></a>操作系统中的进程和线程（From <a href="http://www.cnblogs.com/CareySon/archive/2012/05/04/ProcessAndThread.html" target="_blank" rel="external">CareySon</a>）</h1><h2 id="u533A_u522B"><a href="#u533A_u522B" class="headerlink" title="区别"></a>区别</h2><ul>
+<h1 id="操作系统中的进程和线程（From-CareySon）"><a href="#操作系统中的进程和线程（From-CareySon）" class="headerlink" title="操作系统中的进程和线程（From CareySon）"></a>操作系统中的进程和线程（From <a href="http://www.cnblogs.com/CareySon/archive/2012/05/04/ProcessAndThread.html" target="_blank" rel="external">CareySon</a>）</h1><h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><ul>
 <li>操作系统中进程拥有独立的内存地址空间和一个用于控制的线程，多个线程共享进程的内存地址空间。</li>
 <li>进程是组织资源的最小单位，线程是安排CPU执行的最小单位。</li>
 <li>线程共享地址空间，而进程共享物理内存，打印机，键盘等资源。<table><tr><td>进程占有的资源</td><td>线程占有的资源</td></tr><tr><td>地址空间，全局变量，打开的文件，子进程，信号量，账户信息</td><td>栈，寄存器，状态  ，程序计数器</td></tr></table></li>
@@ -244,7 +260,7 @@
 </ol>
 </li>
 </ul>
-<h2 id="u64CD_u4F5C_u7CFB_u7EDF_u5B9E_u73B0_u7EBF_u7A0B_u6A21_u5F0F"><a href="#u64CD_u4F5C_u7CFB_u7EDF_u5B9E_u73B0_u7EBF_u7A0B_u6A21_u5F0F" class="headerlink" title="操作系统实现线程模式"></a>操作系统实现线程模式</h2><h3 id="u7EBF_u7A0B_u5B9E_u73B0_u5728_u7528_u6237_u7A7A_u95F4_u4E0B"><a href="#u7EBF_u7A0B_u5B9E_u73B0_u5728_u7528_u6237_u7A7A_u95F4_u4E0B" class="headerlink" title="线程实现在用户空间下"></a>线程实现在用户空间下</h3><ul>
+<h2 id="操作系统实现线程模式"><a href="#操作系统实现线程模式" class="headerlink" title="操作系统实现线程模式"></a>操作系统实现线程模式</h2><h3 id="线程实现在用户空间下"><a href="#线程实现在用户空间下" class="headerlink" title="线程实现在用户空间下"></a>线程实现在用户空间下</h3><ul>
 <li>每一个进程中都维护着一个线程表来追踪本进程中的线程，表中包含每个线程独占的资源，如栈，寄存器，状态等。当一个线程完成了其工作或等待需要被阻塞时，其调用系统过程阻塞自身，然后将CPU交由其它线程。</li>
 <li>进程表由系统维护，操作系统只能看到进程，而不能看到线程。过去的操作系统大部分是这种实现方式，优势之一在于即使操作系统不支持线程，也可以通过库函数来支持线程。</li>
 <li>优势：  <ol>
@@ -259,16 +275,16 @@
 </ol>
 </li>
 </ul>
-<h3 id="u7EBF_u7A0B_u5B9E_u73B0_u5728_u64CD_u4F5C_u7CFB_u7EDF_u4E2D"><a href="#u7EBF_u7A0B_u5B9E_u73B0_u5728_u64CD_u4F5C_u7CFB_u7EDF_u4E2D" class="headerlink" title="线程实现在操作系统中"></a>线程实现在操作系统中</h3><ul>
+<h3 id="线程实现在操作系统中"><a href="#线程实现在操作系统中" class="headerlink" title="线程实现在操作系统中"></a>线程实现在操作系统中</h3><ul>
 <li>操作系统知道线程的存在，线程表存在操作系统内核中。</li>
 <li>所有可能阻塞线程的调用都以系统调用(System Call)的方式实现，相比在用户空间下实现线程造成阻塞的运行时调用(System runtime call)成本会高出很多。当一个线程阻塞时，操作系统可以选择将CPU交给同一进程中的其它线程，或是其它进程中的线程，而在用户空间下实现线程时，调度只能在本进程中执行，直到操作系统剥夺了当前进程的CPU。</li>
 <li>线程回收利用：当一个线程需要被销毁时，仅修改标记位，而不是直接销毁其内容，当一个新的线程需要被创建时，也同样修改被“销毁”的线程标记位即可。</li>
 </ul>
-<h3 id="u6DF7_u5408_u6A21_u5F0F"><a href="#u6DF7_u5408_u6A21_u5F0F" class="headerlink" title="混合模式"></a>混合模式</h3><ul>
+<h3 id="混合模式"><a href="#混合模式" class="headerlink" title="混合模式"></a>混合模式</h3><ul>
 <li>将上述两种方式混合，用户空间中由进程管理自己的线程，操作系统内核中有一部分内核级别的线程。</li>
 </ul>
 <hr>
-<h1 id="u591A_u7EBF_u7A0B_u4EE3_u7801_u5907_u5FD8"><a href="#u591A_u7EBF_u7A0B_u4EE3_u7801_u5907_u5FD8" class="headerlink" title="多线程代码备忘"></a>多线程代码备忘</h1><h2 id="C/C++"><a href="#C/C++" class="headerlink" title="C/C++"></a>C/C++</h2><h3 id="Windows_u4E0B_u7684_u591A_u7EBF_u7A0B"><a href="#Windows_u4E0B_u7684_u591A_u7EBF_u7A0B" class="headerlink" title="Windows下的多线程"></a>Windows下的多线程</h3><h4 id="u521B_u5EFA_u7EBF_u7A0B"><a href="#u521B_u5EFA_u7EBF_u7A0B" class="headerlink" title="创建线程"></a>创建线程</h4><ul>
+<h1 id="多线程代码备忘"><a href="#多线程代码备忘" class="headerlink" title="多线程代码备忘"></a>多线程代码备忘</h1><h2 id="C-C"><a href="#C-C" class="headerlink" title="C/C++"></a>C/C++</h2><h3 id="Windows下的多线程"><a href="#Windows下的多线程" class="headerlink" title="Windows下的多线程"></a>Windows下的多线程</h3><h4 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h4><ul>
 <li><p>需要库文件  </p>
 <blockquote>
 <p>windows.h   &nbsp;&nbsp;// for HANDLE<br> process.h   &nbsp;&nbsp;// for _beginthreadex()  </p>
@@ -298,10 +314,10 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> __<span class="function">stdcall <span class="title">ThreadTest</span><span class="params">(PVOID pM)</span></span>&#123;  </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"CurrentThread:%d\n"</span>, GetCurrentThreadId());  </span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;  </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;  </span><br><span class="line">        HANDLE handle = (HANDLE)_beginthreadex(<span class="literal">NULL</span>,<span class="number">0</span>,ThreadTest,<span class="literal">NULL</span>,<span class="number">0</span>,<span class="literal">NULL</span>);</span><br><span class="line">        WaitForSingleObject(handle,INFINITE);  </span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;  </span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h4 id="u7EBF_u7A0B_u540C_u6B65"><a href="#u7EBF_u7A0B_u540C_u6B65" class="headerlink" title="线程同步"></a>线程同步</h4><blockquote>
+<h4 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h4><blockquote>
 <p>多线程具有异步性。线程同步的主要任务是使并发执行的各线程之间能够有效的共享资源和相互合作，从而使程序的执行具有可再现性。<strong>同步包括互斥，互斥是一种特殊的同步。</strong></p>
 </blockquote>
-<h5 id="u4E8B_u4EF6Event"><a href="#u4E8B_u4EF6Event" class="headerlink" title="事件Event"></a>事件Event</h5><ul>
+<h5 id="事件Event"><a href="#事件Event" class="headerlink" title="事件Event"></a>事件Event</h5><ul>
 <li>CreateEvent<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HANDLE <span class="title">CreateEvent</span><span class="params">(</span><br><span class="line">         LPSECURITY_ATTRIBUTES lpEventAttributes,</span><br><span class="line">         BOOL bManualReset,</span><br><span class="line">         BOOL bInitialState,</span><br><span class="line">         LPCTSTR lpName</span><br><span class="line">)</span></span>;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
@@ -330,7 +346,7 @@
 <li>Event同步的实例<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;process.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> tickets = <span class="number">10</span>;</span><br><span class="line">HANDLE _Lock;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> __<span class="function">stdcall <span class="title">Test</span><span class="params">(<span class="keyword">void</span> *PM)</span></span>&#123;</span><br><span class="line">    	<span class="keyword">int</span> name = *(<span class="keyword">int</span> *)PM;</span><br><span class="line">    	<span class="built_in">printf</span>(<span class="string">"This is thread %d which name is %d\n"</span>, GetCurrentThreadId(), name);</span><br><span class="line">    	SetEvent(_Lock);</span><br><span class="line">    	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    	HANDLE thrs[<span class="number">10</span>];</span><br><span class="line">    	_Lock = CreateEvent(<span class="literal">NULL</span>, FALSE, FALSE, <span class="literal">NULL</span>);  <span class="comment">//自动置位</span></span><br><span class="line">    	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">    		thrs[i] = (HANDLE)_beginthreadex(<span class="literal">NULL</span>, <span class="number">0</span>, Test, &amp;i, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">    		WaitForSingleObject(_Lock, INFINITE);</span><br><span class="line">    	&#125;</span><br><span class="line">    	CloseHandle(_Lock);</span><br><span class="line">    	system(<span class="string">"pause"</span>);</span><br><span class="line">    	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h5 id="u4FE1_u53F7_u91CFSemaphore"><a href="#u4FE1_u53F7_u91CFSemaphore" class="headerlink" title="信号量Semaphore"></a>信号量Semaphore</h5><ul>
+<h5 id="信号量Semaphore"><a href="#信号量Semaphore" class="headerlink" title="信号量Semaphore"></a>信号量Semaphore</h5><ul>
 <li>CreateSemaphore<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HANDLE <span class="title">CreateSemaphore</span><span class="params">(</span><br><span class="line">  LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,</span><br><span class="line">  LONG lInitialCount,</span><br><span class="line">  LONG lMaximumCount,</span><br><span class="line">  LPCTSTR lpName</span><br><span class="line">)</span></span>;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
@@ -364,10 +380,10 @@
 <ul>
 <li>实例：<a href="http://www.cnblogs.com/moodlxs/archive/2012/02/13/2349128.html" target="_blank" rel="external">Dijkstra生产者消费者问题</a></li>
 </ul>
-<h4 id="u7EBF_u7A0B_u4E92_u65A5"><a href="#u7EBF_u7A0B_u4E92_u65A5" class="headerlink" title="线程互斥"></a>线程互斥</h4><blockquote>
+<h4 id="线程互斥"><a href="#线程互斥" class="headerlink" title="线程互斥"></a>线程互斥</h4><blockquote>
 <p>多个线程必然共享某种资源，线程A在使用某资源时，其它需要使用该资源的线程都要等待。<strong>在一段时间内只允许一个线程访问的资源称为临界资源或独占资源</strong>，计算机中大多数物理设备，进程中的共享变量等待都是临界资源，它们要求被互斥的访问。<strong>进程中访问临界资源的代码称为临界区</strong>。（介绍来自MoreWindows）</p>
 </blockquote>
-<h5 id="u539F_u5B50_u64CD_u4F5CInterlocked"><a href="#u539F_u5B50_u64CD_u4F5CInterlocked" class="headerlink" title="原子操作Interlocked"></a>原子操作Interlocked</h5><ul>
+<h5 id="原子操作Interlocked"><a href="#原子操作Interlocked" class="headerlink" title="原子操作Interlocked"></a>原子操作Interlocked</h5><ul>
 <li><p>参数自增：<code>LONG__cdeclInterlockedIncrement(LONG volatile* Addend);</code>  </p>
 </li>
 <li><p>参数自减：<code>LONG__cdeclInterlockedDecrement(LONG volatile* Addend);</code>  </p>
@@ -382,7 +398,7 @@
 <p>实际上，<strong>线程有自己独立的寄存器集合，切换线程时会保护现场</strong>。真正的原因可能是：1.假如A执行到第二句切换到B，B执行结束后继续执行A，寄存器会恢复到A的值，将B覆盖。 2.A和B读取了同一个值，自增操作后存入内存，相当于只执行了一次。</p>
 </li>
 </ul>
-<h5 id="u5173_u952E_u6BB5CRITICAL_SECTION"><a href="#u5173_u952E_u6BB5CRITICAL_SECTION" class="headerlink" title="关键段CRITICAL_SECTION"></a>关键段CRITICAL_SECTION</h5><ul>
+<h5 id="关键段CRITICAL-SECTION"><a href="#关键段CRITICAL-SECTION" class="headerlink" title="关键段CRITICAL_SECTION"></a>关键段CRITICAL_SECTION</h5><ul>
 <li>Init：<code>void InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection);</code><br>销毁：<code>void DeleteCriticalSection(LPCRITICAL_SECTION  lpCriticalSection);</code><br>进入：<code>void EnterCriticalSection(LPCRITICAL_SECTION  lpCriticalSection);</code><br>离开：<code>void LeaveCriticalSection(LPCRITICAL_SECTION  lpCriticalSection);</code>  </li>
 <li>CS关键段<strong>仅可用于互斥，不可用于同步</strong>。其在WinNT.h中声明，结构体定义为：  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _RTL_CRITICAL_SECTION &#123;</span><br><span class="line">        PRTL_CRITICAL_SECTION_DEBUG DebugInfo;</span><br><span class="line">        LONG LockCount;</span><br><span class="line">        LONG RecursionCount;</span><br><span class="line">        HANDLE OwningThread;</span><br><span class="line">        HANDLE LockSemaphore;</span><br><span class="line">        DWORD SpinCount;</span><br><span class="line">    &#125;RTL_CRITICAL_SECTION,*PRTL_CRITICAL_SECTION;</span><br></pre></td></tr></table></figure>
 </li>
@@ -403,7 +419,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;process.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> tickets = <span class="number">10</span>;</span><br><span class="line">CRITICAL_SECTION  _Lock;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> __<span class="function">stdcall <span class="title">Test</span><span class="params">(<span class="keyword">void</span> *PM)</span></span>&#123;</span><br><span class="line">    	<span class="keyword">char</span> name = *(<span class="keyword">char</span>*)PM;</span><br><span class="line">    	<span class="keyword">while</span> (tickets &gt; <span class="number">0</span>)&#123;</span><br><span class="line">    		EnterCriticalSection(&amp;_Lock);</span><br><span class="line">    		<span class="keyword">if</span> (tickets &gt; <span class="number">0</span>)</span><br><span class="line">	       		<span class="built_in">printf</span>(<span class="string">"Thread:%c\n Leaves:%d\n"</span>,name, tickets--);</span><br><span class="line">	    	LeaveCriticalSection(&amp;_Lock);</span><br><span class="line">	    	Sleep(<span class="number">100</span>);</span><br><span class="line">    	&#125;</span><br><span class="line">	    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    	InitializeCriticalSection(&amp;_Lock);</span><br><span class="line">    	<span class="keyword">char</span> tar[<span class="number">2</span>] = &#123; <span class="string">'A'</span>, <span class="string">'B'</span> &#125;;</span><br><span class="line">    	HANDLE _handleT[<span class="number">2</span>];</span><br><span class="line">    	_handleT[<span class="number">0</span>] = (HANDLE)_beginthreadex(<span class="literal">NULL</span>, <span class="number">0</span>, Test, tar, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">    	_handleT[<span class="number">1</span>] = (HANDLE)_beginthreadex(<span class="literal">NULL</span>, <span class="number">0</span>, Test, tar+<span class="number">1</span>, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">    	WaitForMultipleObjects(<span class="number">2</span>, _handleT, TRUE, INFINITE);</span><br><span class="line">    	DeleteCriticalSection(&amp;_Lock);</span><br><span class="line">    	system(<span class="string">"pause"</span>);</span><br><span class="line">    	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h5 id="u4E92_u65A5_u91CFMutex"><a href="#u4E92_u65A5_u91CFMutex" class="headerlink" title="互斥量Mutex"></a>互斥量Mutex</h5><ul>
+<h5 id="互斥量Mutex"><a href="#互斥量Mutex" class="headerlink" title="互斥量Mutex"></a>互斥量Mutex</h5><ul>
 <li><p>CreateMutex  </p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HANDLE <span class="title">CreateMutex</span><span class="params">(</span><br><span class="line">          LPSECURITY_ATTRIBUTES lpMutexAttributes,</span><br><span class="line">          BOOL bInitialOwner,</span><br><span class="line">          LPCTSTR lpName</span><br><span class="line">        )</span></span>;</span><br></pre></td></tr></table></figure>
 <p>参数解释：   </p>
@@ -427,10 +443,10 @@
 <li>请求一个互斥量的访问权：WaitForSingleObject()<br>释放一个互斥量的访问权：ReleaseMutex()<br>销毁互斥量：CloseHandle()  </li>
 <li>互斥量是内核对象，和关键段一样，mutex会记录线程访问权限，因此<strong>mutex不能用于线程的同步</strong>。但互斥量可以处理多进程间各个线程的互斥，可以处理遗弃情况：当当前某个占有互斥量的线程在触发互斥量之前意外中止（遗弃），系统会自动将互斥量内部储存占有该互斥量的线程ID重置为0，并且递归计数器重置为0，选择一个等待状态的线程进行调度，此时这个被选中的线程的WaitForSingleObject()会返回WAIT_ABANDONED_0。</li>
 </ul>
-<h3 id="Linux_u4E0B_u7684_u591A_u7EBF_u7A0Bpthread_t"><a href="#Linux_u4E0B_u7684_u591A_u7EBF_u7A0Bpthread_t" class="headerlink" title="Linux下的多线程pthread_t"></a>Linux下的多线程pthread_t</h3><h4 id="u5E93_u51FD_u6570_u548C_u7F16_u8BD1_u811A_u672C"><a href="#u5E93_u51FD_u6570_u548C_u7F16_u8BD1_u811A_u672C" class="headerlink" title="库函数和编译脚本"></a>库函数和编译脚本</h4><blockquote>
+<h3 id="Linux下的多线程pthread-t"><a href="#Linux下的多线程pthread-t" class="headerlink" title="Linux下的多线程pthread_t"></a>Linux下的多线程pthread_t</h3><h4 id="库函数和编译脚本"><a href="#库函数和编译脚本" class="headerlink" title="库函数和编译脚本"></a>库函数和编译脚本</h4><blockquote>
 <p>pthread.h<br>  gcc/g++ filename.c/cpp -o thread -lpthread<br>  遵循POSIX线程接口</p>
 </blockquote>
-<h4 id="u7EBF_u7A0B_u521B_u5EFA"><a href="#u7EBF_u7A0B_u521B_u5EFA" class="headerlink" title="线程创建"></a>线程创建</h4><ul>
+<h4 id="线程创建"><a href="#线程创建" class="headerlink" title="线程创建"></a>线程创建</h4><ul>
 <li>pthread_create<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int pthread_create(</span><br><span class="line">        pthread_t *thread,</span><br><span class="line">        pthread_attr_t *attr,</span><br><span class="line">        void *(*func)(void*),</span><br><span class="line">        void *arg</span><br><span class="line">        );</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
@@ -440,12 +456,12 @@
 <li>arg为传给func的参数。</li>
 <li>返回值为0表示成功，错误返回errcode。</li>
 </ol>
-<h4 id="u7EBF_u7A0B_u7B49_u5F85_u548C_u7ED3_u675F"><a href="#u7EBF_u7A0B_u7B49_u5F85_u548C_u7ED3_u675F" class="headerlink" title="线程等待和结束"></a>线程等待和结束</h4><ul>
+<h4 id="线程等待和结束"><a href="#线程等待和结束" class="headerlink" title="线程等待和结束"></a>线程等待和结束</h4><ul>
 <li>pthread_join 用来等待一个线程结束<br><code>int pthread_join(pthread_t thread,void ** retval);</code><br>其中thread为等待的进程，retval指向一个存储返回值的变量。一个线程不能被多个线程等待，否则第一个接收到信号的线程会成功返回，其它线程返回错误代码ESRCH。</li>
 <li>pthread_exit<br><code>extern void pthread_exit __P ((void *__retval)) __attribute__ ((__noreturn__));</code><br>调用此函数线程自发结束</li>
 <li>被动结束pthread_cancel<br><code>int pthread_cancel(pthread_t thread);</code><br>此函数调用成功返回0</li>
 </ul>
-<h4 id="u7EBF_u7A0B_u540C_u6B65-1"><a href="#u7EBF_u7A0B_u540C_u6B65-1" class="headerlink" title="线程同步"></a>线程同步</h4><h5 id="u4E92_u65A5_u91CFpthread_mutex_t"><a href="#u4E92_u65A5_u91CFpthread_mutex_t" class="headerlink" title="互斥量pthread_mutex_t"></a>互斥量pthread_mutex_t</h5><ul>
+<h4 id="线程同步-1"><a href="#线程同步-1" class="headerlink" title="线程同步"></a>线程同步</h4><h5 id="互斥量pthread-mutex-t"><a href="#互斥量pthread-mutex-t" class="headerlink" title="互斥量pthread_mutex_t"></a>互斥量pthread_mutex_t</h5><ul>
 <li>初始化  <ol>
 <li>赋值为常量PTHREAD_MUTEX_INITIALIZER  </li>
 <li>动态分配，pthread_mutex_init函数<br><code>int pthread_mutex_init (pthread_mutex_t *__mutex,__const pthread_mutexattr_t *__mutexattr);</code></li>
@@ -455,7 +471,7 @@
 <li>上锁和解锁  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_mutex_lock</span> <span class="params">(pthread_mutex_t *__mutex)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_mutex_unlock</span> <span class="params">(pthread_mutex_t *__mutex)</span></span>;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h5 id="u8BFB_u5199_u9501"><a href="#u8BFB_u5199_u9501" class="headerlink" title="读写锁"></a>读写锁</h5><ul>
+<h5 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h5><ul>
 <li>适用：允许多个线程同时读取，但只能有一个线程写入。适用于读的次数远大于写的情况。</li>
 <li><p>初始化和销毁  </p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlock_init</span> <span class="params">(pthread_rwlock_t *__restrict __rwlock,__const pthread_rwlockattr_t *__restrict __attr)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlock_destroy</span> <span class="params">(pthread_rwlock_t *__rwlock)</span></span>;</span><br></pre></td></tr></table></figure>
@@ -468,17 +484,17 @@
 </ol>
 </li>
 </ul>
-<h5 id="u6761_u4EF6_u53D8_u91CFpthread_cond_t"><a href="#u6761_u4EF6_u53D8_u91CFpthread_cond_t" class="headerlink" title="条件变量pthread_cond_t"></a>条件变量pthread_cond_t</h5><blockquote>
+<h5 id="条件变量pthread-cond-t"><a href="#条件变量pthread-cond-t" class="headerlink" title="条件变量pthread_cond_t"></a>条件变量pthread_cond_t</h5><blockquote>
 <p>一篇简洁的介绍《<a href="http://blog.csdn.net/hiflower/article/details/2195350" target="_blank" rel="external">Linux线程同步-条件变量</a>》<br>和一段具体的使用了mutex和cond的代码《<a href="http://blog.csdn.net/hubi0952/article/details/8039604" target="_blank" rel="external">linux 多线程（条件变量） </a>》</p>
 </blockquote>
 <hr>
-<h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><h3 id="u521B_u5EFA_u7EBF_u7A0B-1"><a href="#u521B_u5EFA_u7EBF_u7A0B-1" class="headerlink" title="创建线程"></a>创建线程</h3><h4 id="u7EE7_u627FThread_u7C7B"><a href="#u7EE7_u627FThread_u7C7B" class="headerlink" title="继承Thread类"></a>继承Thread类</h4><blockquote>
+<h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><h3 id="创建线程-1"><a href="#创建线程-1" class="headerlink" title="创建线程"></a>创建线程</h3><h4 id="继承Thread类"><a href="#继承Thread类" class="headerlink" title="继承Thread类"></a>继承Thread类</h4><blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">classname</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line">       ...</span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">           ...</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 </blockquote>
-<h4 id="u5B9E_u73B0Runnable_u63A5_u53E3"><a href="#u5B9E_u73B0Runnable_u63A5_u53E3" class="headerlink" title="实现Runnable接口"></a>实现Runnable接口</h4><blockquote>
+<h4 id="实现Runnable接口"><a href="#实现Runnable接口" class="headerlink" title="实现Runnable接口"></a>实现Runnable接口</h4><blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">classname</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 </blockquote>
-<h3 id="u7EBF_u7A0B_u7684_u751F_u547D_u5468_u671F"><a href="#u7EBF_u7A0B_u7684_u751F_u547D_u5468_u671F" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h3><ul>
+<h3 id="线程的生命周期"><a href="#线程的生命周期" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h3><ul>
 <li>构造方法  <ol>
 <li><code>Thread();</code></li>
 <li><code>Thread(Runnable target);</code></li>
@@ -491,24 +507,24 @@
 <li>礼让：<code>static void yield();</code></li>
 <li>详细方法见JDK API。</li>
 </ul>
-<h3 id="u7EBF_u7A0B_u540C_u6B65-2"><a href="#u7EBF_u7A0B_u540C_u6B65-2" class="headerlink" title="线程同步"></a>线程同步</h3><h4 id="u540C_u6B65_u65B9_u6CD5"><a href="#u540C_u6B65_u65B9_u6CD5" class="headerlink" title="同步方法"></a>同步方法</h4><ul>
+<h3 id="线程同步-2"><a href="#线程同步-2" class="headerlink" title="线程同步"></a>线程同步</h3><h4 id="同步方法"><a href="#同步方法" class="headerlink" title="同步方法"></a>同步方法</h4><ul>
 <li>对方法使用synchronized关键字修饰。java的每个对象都含有一个内置锁，使用此关键字修饰时内置锁会保护整个方法。<br><code>public synchronized void methodname(){}</code><br>调用方法前需要获得内置锁，否则处于阻塞状态。</li>
 <li>可以修饰静态方法，此时调用静态方法会锁住整个类。</li>
 <li><a href="http://blog.csdn.net/yaerfeng/article/details/7254734" target="_blank" rel="external">synchronized不同地方的使用方法</a></li>
 </ul>
-<h4 id="u540C_u6B65_u4EE3_u7801_u5757"><a href="#u540C_u6B65_u4EE3_u7801_u5757" class="headerlink" title="同步代码块"></a>同步代码块</h4><ul>
+<h4 id="同步代码块"><a href="#同步代码块" class="headerlink" title="同步代码块"></a>同步代码块</h4><ul>
 <li>使用synchronized关键字修饰代码块。<br><code>synchronized(object){}</code><br>同步操作开销较高，要尽量减少同步内容，通常同步关键代码块。</li>
 </ul>
-<h4 id="u7279_u6B8A_u57DF_u53D8_u91CFvolatile"><a href="#u7279_u6B8A_u57DF_u53D8_u91CFvolatile" class="headerlink" title="特殊域变量volatile"></a>特殊域变量volatile</h4><ul>
+<h4 id="特殊域变量volatile"><a href="#特殊域变量volatile" class="headerlink" title="特殊域变量volatile"></a>特殊域变量volatile</h4><ul>
 <li>volatile关键字为域变量提供了一种免锁机制。使用该关键字时等于告诉虚拟机此域可能被其他线程更新，每次使用该域需要重新计算，不能使用寄存器中的值。</li>
 <li>在需要同步的变量前加上volatile，不能修饰final变量。</li>
 </ul>
-<h4 id="u91CD_u5165_u9501"><a href="#u91CD_u5165_u9501" class="headerlink" title="重入锁"></a>重入锁</h4><ul>
+<h4 id="重入锁"><a href="#重入锁" class="headerlink" title="重入锁"></a>重入锁</h4><ul>
 <li>JavaSE5.0中加入java.util.concurrent。<br>常用方法：<br><code>ReentrantLock()</code><br><code>lock()</code><br><code>unlock()</code>  </li>
 <li>示例：  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">         <span class="keyword">private</span> <span class="keyword">int</span> origin = <span class="number">10</span>;</span><br><span class="line">         <span class="keyword">private</span> Lock xlock = <span class="keyword">new</span> ReentrantLock(); </span><br><span class="line">         <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">func</span><span class="params">()</span></span>&#123;</span><br><span class="line">             xlock.lock();</span><br><span class="line">             <span class="keyword">try</span>&#123;</span><br><span class="line">                 origin--;</span><br><span class="line">             &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">                 xlock.unlock();</span><br><span class="line">             &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h4 id="ThreadLocal_u7C7B"><a href="#ThreadLocal_u7C7B" class="headerlink" title="ThreadLocal类"></a>ThreadLocal类</h4><ul>
+<h4 id="ThreadLocal类"><a href="#ThreadLocal类" class="headerlink" title="ThreadLocal类"></a>ThreadLocal类</h4><ul>
 <li>使用空间换时间的方式，为每个线程创建一个变量副本。</li>
 <li>常用方法：<code>ThreadLocal()</code>,<code>get()</code>,<code>initialValue()</code>,set(T value)`，分别用于：创建一个线程本地变量，返回此线程当前副本中的值，返回副本初始值和设置当前副本值为value。</li>
 <li>示例：  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">         <span class="keyword">private</span> <span class="keyword">static</span> ThreadLocal&lt;Integer&gt; origin = <span class="keyword">new</span> ThreadLocal&lt;Integer&gt;()&#123;</span><br><span class="line">             <span class="function"><span class="keyword">protected</span> Integer <span class="title">initivalValue</span><span class="params">()</span></span>&#123;</span><br><span class="line">                 <span class="keyword">return</span> <span class="number">10</span>;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125;;</span><br><span class="line">         <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">func</span><span class="params">()</span></span>&#123;</span><br><span class="line">             origin.set(origin.get()-<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -520,141 +536,458 @@
 </blockquote>
 <hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/08/18/多线程编程备忘/">原始出处</a>(<a href="http://forec.github.io/2015/08/18/多线程编程备忘/">http://forec.github.io/2015/08/18/多线程编程备忘/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
-
+</span>
       
     </div>
-    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/线程/" rel="tag">#线程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/07/九月计划/" rel="prev">九月计划</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/14/ANSI-Unicode备忘/" rel="next">ANSI/Unicode备忘</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2015/09/07/九月计划/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
+
+ </div>
+
         
-          九月计划
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/08/18/多线程编程备忘/"
+                   data-title="多线程编程备忘" data-url="http://forec.github.io/2015/08/18/多线程编程备忘/">
+              </div>
+            
+          </div>
         
       </div>
-    </a>
+
+      
   
-  
-    <a href="/2015/08/14/ANSI-Unicode备忘/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">ANSI/Unicode备忘</div>
-      <strong class="article-nav-caption">></strong>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-<div class="share_jia">
-	<!-- JiaThis Button BEGIN -->
-	<div class="jiathis_style">
-		<span class="jiathis_txt">分享到: &nbsp; </span>
-		<a class="jiathis_button_facebook"></a> 
-    <a class="jiathis_button_twitter"></a>
-    <a class="jiathis_button_plus"></a> 
-    <a class="jiathis_button_tsina"></a>
-		<a class="jiathis_button_cqq"></a>
-		<a class="jiathis_button_douban"></a>
-		<a class="jiathis_button_weixin"></a>
-		<a class="jiathis_button_tumblr"></a>
-    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	</div>
-	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
-	<!-- JiaThis Button END -->
-</div>
-
-
-
-
-
-
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="多线程编程备忘" data-title="多线程编程备忘" data-url="http://forec.github.io/2015/08/18/多线程编程备忘/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"forec"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
-
-
-
-
-</div>
-      <footer id="footer">
-  <div class="outer">
-    <div id="footer-info">
-    	<div class="footer-left">
-    		&copy; 2016 Forec
-    	</div>
-      	<div class="footer-right">
-      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
-      	</div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
-</footer>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#操作系统中的进程和线程（From-CareySon）"><span class="nav-number">1.</span> <span class="nav-text">操作系统中的进程和线程（From CareySon）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#区别"><span class="nav-number">1.1.</span> <span class="nav-text">区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作系统实现线程模式"><span class="nav-number">1.2.</span> <span class="nav-text">操作系统实现线程模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#线程实现在用户空间下"><span class="nav-number">1.2.1.</span> <span class="nav-text">线程实现在用户空间下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程实现在操作系统中"><span class="nav-number">1.2.2.</span> <span class="nav-text">线程实现在操作系统中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混合模式"><span class="nav-number">1.2.3.</span> <span class="nav-text">混合模式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多线程代码备忘"><span class="nav-number">2.</span> <span class="nav-text">多线程代码备忘</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#C-C"><span class="nav-number">2.1.</span> <span class="nav-text">C/C++</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows下的多线程"><span class="nav-number">2.1.1.</span> <span class="nav-text">Windows下的多线程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建线程"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">创建线程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线程同步"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">线程同步</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#事件Event"><span class="nav-number">2.1.1.2.1.</span> <span class="nav-text">事件Event</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#信号量Semaphore"><span class="nav-number">2.1.1.2.2.</span> <span class="nav-text">信号量Semaphore</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线程互斥"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">线程互斥</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#原子操作Interlocked"><span class="nav-number">2.1.1.3.1.</span> <span class="nav-text">原子操作Interlocked</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#关键段CRITICAL-SECTION"><span class="nav-number">2.1.1.3.2.</span> <span class="nav-text">关键段CRITICAL_SECTION</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#互斥量Mutex"><span class="nav-number">2.1.1.3.3.</span> <span class="nav-text">互斥量Mutex</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux下的多线程pthread-t"><span class="nav-number">2.1.2.</span> <span class="nav-text">Linux下的多线程pthread_t</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#库函数和编译脚本"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">库函数和编译脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线程创建"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">线程创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线程等待和结束"><span class="nav-number">2.1.2.3.</span> <span class="nav-text">线程等待和结束</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线程同步-1"><span class="nav-number">2.1.2.4.</span> <span class="nav-text">线程同步</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#互斥量pthread-mutex-t"><span class="nav-number">2.1.2.4.1.</span> <span class="nav-text">互斥量pthread_mutex_t</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#读写锁"><span class="nav-number">2.1.2.4.2.</span> <span class="nav-text">读写锁</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#条件变量pthread-cond-t"><span class="nav-number">2.1.2.4.3.</span> <span class="nav-text">条件变量pthread_cond_t</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java"><span class="nav-number">2.2.</span> <span class="nav-text">Java</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建线程-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">创建线程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#继承Thread类"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">继承Thread类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现Runnable接口"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">实现Runnable接口</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程的生命周期"><span class="nav-number">2.2.2.</span> <span class="nav-text">线程的生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程同步-2"><span class="nav-number">2.2.3.</span> <span class="nav-text">线程同步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#同步方法"><span class="nav-number">2.2.3.1.</span> <span class="nav-text">同步方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#同步代码块"><span class="nav-number">2.2.3.2.</span> <span class="nav-text">同步代码块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特殊域变量volatile"><span class="nav-number">2.2.3.3.</span> <span class="nav-text">特殊域变量volatile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重入锁"><span class="nav-number">2.2.3.4.</span> <span class="nav-text">重入锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ThreadLocal类"><span class="nav-number">2.2.3.5.</span> <span class="nav-text">ThreadLocal类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python"><span class="nav-number">2.2.4.</span> <span class="nav-text">Python</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
     </div>
-    
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  </aside>
 
 
-<script>
-	var yiliaConfig = {
-		fancybox: true,
-		mathjax: true,
-		animate: true,
-		isHome: false,
-		isPost: true,
-		isArchive: false,
-		isTag: false,
-		isCategory: false,
-		open_in_new: false
-	}
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
-<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
-<script src="/js/main.js" type="text/javascript"></script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
 
 
 
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
 
 
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
 
 <script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-        processEscapes: true,
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    }
-});
-
-MathJax.Hub.Queue(function() {
+  MathJax.Hub.Queue(function() {
     var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';                 
-    }       
-});
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
 </script>
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 
-  </div>
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
 </body>
 </html>

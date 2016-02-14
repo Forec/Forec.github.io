@@ -1,12 +1,45 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
 <head>
-  <meta charset="utf-8">
   
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>基础数据结构（需求和树相关） | Forec的博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这篇文章中的C语言代码均为md编辑器中手打，仅作理解用，未经过编译测试。有错误请留言，将及时更正。">
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="Data-Structures," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec的博客" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="这篇文章中的C语言代码均为md编辑器中手打，仅作理解用，未经过编译测试。有错误请留言，将及时更正。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基础数据结构（需求和树相关）">
 <meta property="og:url" content="http://forec.github.io/2015/09/08/Data-Structure-basis1/index.html">
@@ -24,223 +57,206 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基础数据结构（需求和树相关）">
 <meta name="twitter:description" content="这篇文章中的C语言代码均为md编辑器中手打，仅作理解用，未经过编译测试。有错误请留言，将及时更正。">
-  
-    <link rel="alternative" href="/atom.xml" title="Forec的博客" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 基础数据结构（需求和树相关） | Forec的博客 </title>
 </head>
 
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-	<header id="header" class="inner">
-		<a href="/" class="profilepic">
-			
-			<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-		</a>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-		<hgroup>
-		  <h1 class="header-author"><a href="/">Forec</a></h1>
-		</hgroup>
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
 
-		
-		<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-		
 
-		
-			<div class="switch-btn">
-				<div class="icon">
-					<div class="icon-ctn">
-						<div class="icon-wrap icon-house" data-idx="0">
-							<div class="birdhouse"></div>
-							<div class="birdhouse_holes"></div>
-						</div>
-						<div class="icon-wrap icon-ribbon hide" data-idx="1">
-							<div class="ribbon"></div>
-						</div>
-						
-						<div class="icon-wrap icon-link hide" data-idx="2">
-							<div class="loopback_l"></div>
-							<div class="loopback_r"></div>
-						</div>
-						
-						
-						<div class="icon-wrap icon-me hide" data-idx="3">
-							<div class="user"></div>
-							<div class="shoulder"></div>
-						</div>
-						
-					</div>
-					
-				</div>
-				<div class="tips-box hide">
-					<div class="tips-arrow"></div>
-					<ul class="tips-inner">
-						<li>菜单</li>
-						<li>标签</li>
-						
-						<li>友情链接</li>
-						
-						
-						<li>关于我</li>
-						
-					</ul>
-				</div>
-			</div>
-		
 
-		<div class="switch-area">
-			<div class="switch-wrap">
-				<section class="switch-part switch-part1">
-					<nav class="header-menu">
-						<ul>
-						
-							<li><a href="/">主页</a></li>
-				        
-							<li><a href="/archives">所有文章</a></li>
-				        
-						</ul>
-					</nav>
-					<nav class="header-nav">
-						<div class="social">
-							
-								<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-					        
-								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-					        
-								<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-					        
-						</div>
-					</nav>
-				</section>
-				
-				
-				<section class="switch-part switch-part2">
-					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/Data-Structures/" style="font-size: 15px;">Data-Structures</a> <a href="/tags/Mistakes/" style="font-size: 10px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/字符编码/" style="font-size: 10px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 12.5px;">机器学习</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.5px;">计算机组成与体系结构</a>
-					</div>
-				</section>
-				
-				
-				
-				<section class="switch-part switch-part3">
-					<div id="js-friends">
-					
-			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.codewars.com/users/Forec">Forec的CodeWars</a>
-			        
-			        </div>
-				</section>
-				
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
 
-				
-				
-				<section class="switch-part switch-part4">
-				
-					<div id="js-aboutme">就读于北京邮电大学，代码爱好者。近期自学机器学习。</div>
-				</section>
-				
-			</div>
-		</div>
-	</header>				
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec的博客</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
 </div>
 
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
     </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-  	<div class="overlay">
-  		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide">Forec</h1>
-  	</div>
-	<div class="intrude-less">
-		<header id="header" class="inner">
-			<div class="profilepic">
-			
-				<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-			</div>
-			<hgroup>
-			  <h1 class="header-author">Forec</h1>
-			</hgroup>
-			
-			<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-			
-			<nav class="header-menu">
-				<ul>
-				
-					<li><a href="/">主页</a></li>
-		        
-					<li><a href="/archives">所有文章</a></li>
-		        
-		        <div class="clearfix"></div>
-				</ul>
-			</nav>
-			<nav class="header-nav">
-				<div class="social">
-					
-						<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-			        
-						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-			        
-						<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-			        
-				</div>
-			</nav>
-		</header>				
-	</div>
+  
 </nav>
 
-      <div class="body-wrap"><article id="post-Data-Structure-basis1" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/09/08/Data-Structure-basis1/" class="article-date">
-  	<time datetime="2015-09-08T10:01:00.000Z" itemprop="datePublished">2015-09-08</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      基础数据结构（需求和树相关）
-    </h1>
-  
+ </div>
+    </header>
 
-      </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
       
-      <div class="article-info article-info-post">
-        
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structures/">Data-Structures</a></li></ul>
-	</div>
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              基础数据结构（需求和树相关）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-08T18:01:00+08:00" content="2015-09-08">
+            2015-09-08
+          </time>
+        </span>
 
         
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Code/">Code</a>
-	</div>
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Code/" itemprop="url" rel="index">
+                  <span itemprop="name">Code</span>
+                </a>
+              </span>
 
+              
+              
 
-        <div class="clearfix"></div>
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/09/08/Data-Structure-basis1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/08/Data-Structure-basis1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
       </div>
+    </header>
+
+    <div class="post-body">
+
       
-    
-    <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
+
+      
+        <span itemprop="articleBody"><blockquote>
 <p>这篇文章中的C语言代码均为md编辑器中手打，仅作理解用，未经过编译测试。有错误请留言，将及时更正。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="u6458_u8981"><a href="#u6458_u8981" class="headerlink" title="摘要"></a>摘要</h1><ul>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><ul>
 <li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#1">需求</a></li>
 <li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#2">树</a></li>
 <li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#3">二叉查找树</a></li>
@@ -248,7 +264,7 @@
 <li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#5">红黑树</a></li>
 </ul>
 <p></p><h1 id="1">需求</h1><p></p>
-<h2 id="u57FA_u672C_u7684_u6570_u5B66_u77E5_u8BC6"><a href="#u57FA_u672C_u7684_u6570_u5B66_u77E5_u8BC6" class="headerlink" title="基本的数学知识"></a>基本的数学知识</h2><ul>
+<h2 id="基本的数学知识"><a href="#基本的数学知识" class="headerlink" title="基本的数学知识"></a>基本的数学知识</h2><ul>
 <li>指对数、级数、模运算，常用换底公式，几何/算术级数公式以及同余的一些相关公式。<ul>
 <li>log(a)B = log(c)B/log(c)A &nbsp;&nbsp;  （c &gt; 0）</li>
 <li>∑(0-&gt;N) A^i &lt; 1/(1-A) &nbsp;&nbsp;  （0 &lt; A &lt; 1）</li>
@@ -266,10 +282,10 @@
 </ul>
 </li>
 </ul>
-<h2 id="u4E09_u79CD_u57FA_u672C_u6570_u636E_u7ED3_u6784ADT"><a href="#u4E09_u79CD_u57FA_u672C_u6570_u636E_u7ED3_u6784ADT" class="headerlink" title="三种基本数据结构ADT"></a>三种基本数据结构ADT</h2><blockquote>
+<h2 id="三种基本数据结构ADT"><a href="#三种基本数据结构ADT" class="headerlink" title="三种基本数据结构ADT"></a>三种基本数据结构ADT</h2><blockquote>
 <p>抽象数据类型（abstract data type， ADT）是一些操作的集合：例如对于集合ADT，可以有如交、并、测定长度等操作，也可以只有交、并两种操作，这从集合上定义了两种不同的ADT。</p>
 </blockquote>
-<h3 id="u8868ADT"><a href="#u8868ADT" class="headerlink" title="表ADT"></a>表ADT</h3><ul>
+<h3 id="表ADT"><a href="#表ADT" class="headerlink" title="表ADT"></a>表ADT</h3><ul>
 <li>对表（list）的所有操作可以通过数组实现<ul>
 <li>需要估计表所需数组的最大长度，资源浪费  </li>
 <li>PrintList和FindItem以线性时间执行，且FindKth为常数时间</li>
@@ -284,7 +300,7 @@
 <li>数组模拟链表，类似图的前向星表示法，采用一组cursor实现（游标）。</li>
 <li>两个实例<a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#7">单向链表的类型声明及其ADT包含的操作</a>和<a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#8">链表实现基数排序</a>在本文底部。</li>
 </ul>
-<h3 id="u6808ADT"><a href="#u6808ADT" class="headerlink" title="栈ADT"></a>栈ADT</h3><ul>
+<h3 id="栈ADT"><a href="#栈ADT" class="headerlink" title="栈ADT"></a>栈ADT</h3><ul>
 <li>栈（stack）是的插入和删除操作只能在一个位置上进行的表，该位置为表的末端，称为栈顶（top）。<ul>
 <li>主要有push和pop操作，先进后出。</li>
 <li>通过链表或数组实现。链表操作调用的malloc和free函数开销较大。数组实现避免了指针，并且更流行，但需要提前声明大小，浪费资源。</li>
@@ -298,7 +314,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="u961F_u5217ADT"><a href="#u961F_u5217ADT" class="headerlink" title="队列ADT"></a>队列ADT</h3><ul>
+<h3 id="队列ADT"><a href="#队列ADT" class="headerlink" title="队列ADT"></a>队列ADT</h3><ul>
 <li>基本操作是入队(Enqueue)和出队(Dequeue)，先进先出。</li>
 <li>需要注意队列是否为空的条件。循环队列可以满足一些问题的模型，同时改善数组实现队列的空间利用率。</li>
 <li>应用<ul>
@@ -310,7 +326,7 @@
 </ul>
 <hr>
 <p></p><h1 id="2">树</h1><p></p>
-<h2 id="u6811_u7684_u5B9E_u73B0_u3001_u904D_u5386_u548C_u5E94_u7528"><a href="#u6811_u7684_u5B9E_u73B0_u3001_u904D_u5386_u548C_u5E94_u7528" class="headerlink" title="树的实现、遍历和应用"></a>树的实现、遍历和应用</h2><ul>
+<h2 id="树的实现、遍历和应用"><a href="#树的实现、遍历和应用" class="headerlink" title="树的实现、遍历和应用"></a>树的实现、遍历和应用</h2><ul>
 <li>基本概念<br>每个节点可以有任意多个子女，也可能没有子女。没有子女的节点为叶子结点（树叶），具有相同父亲的节点为兄弟。</li>
 <li><p>实现<br>每个节点包含一个指向其第一个子女的指针（向下），和一个指向其下一个兄弟的指针（平行）。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> TreeNode&#123;</span><br><span class="line">    ElementType element;</span><br><span class="line">    <span class="keyword">struct</span> TreeNode * firstChild;</span><br><span class="line">    <span class="keyword">struct</span> TreeNode * nextBrother;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -322,7 +338,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="u4E8C_u53C9_u6811"><a href="#u4E8C_u53C9_u6811" class="headerlink" title="二叉树"></a>二叉树</h2><blockquote>
+<h2 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h2><blockquote>
 <p>二叉树的每个节点不能有多于两个子女<br>平均二叉树的深度为O(sqrt(N))，二叉查找树的平均深度为O(logN)，可达最坏深度为N-1。</p>
 </blockquote>
 <ul>
@@ -350,7 +366,7 @@
 <li>类型声明<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> TreeNode&#123;</span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">struct</span> TreeNode * left;</span><br><span class="line">    <span class="keyword">struct</span> TreeNode * right;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">ifndef</span> _Tree_</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> TreeNode * node;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MakeEmpty</span><span class="params">( node root )</span></span>;</span><br><span class="line"><span class="function">node <span class="title">Find</span><span class="params">( <span class="keyword">int</span> x, node root )</span></span>;</span><br><span class="line"><span class="function">node <span class="title">Findmin</span><span class="params">( node root )</span></span>;</span><br><span class="line"><span class="function">node <span class="title">Findmax</span><span class="params">( node root )</span></span>;</span><br><span class="line"><span class="function">node <span class="title">Insert</span><span class="params">( <span class="keyword">int</span> x, node root )</span></span>;</span><br><span class="line"><span class="function">node <span class="title">Delete</span><span class="params">( <span class="keyword">int</span> x, node root )</span></span>;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h2 id="u64CD_u4F5C_u5B9E_u73B0"><a href="#u64CD_u4F5C_u5B9E_u73B0" class="headerlink" title="操作实现"></a>操作实现</h2><ul>
+<h2 id="操作实现"><a href="#操作实现" class="headerlink" title="操作实现"></a>操作实现</h2><ul>
 <li><p>Find（注意测试空树）</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">node <span class="title">Find</span><span class="params">( <span class="keyword">int</span> x, node root )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( root == <span class="literal">NULL</span> )</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span> ( x == root-&gt;value )</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    <span class="keyword">if</span> ( x &lt; root-&gt;value )</span><br><span class="line">        <span class="keyword">return</span> Find( x, root-&gt;left );</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">        <span class="keyword">return</span> Find( x, root-&gt;right );</span><br><span class="line">&#125;    <span class="comment">/*这里的尾递归可以用迭代代替，但其使用的栈空间只有O(logN)*/</span></span><br></pre></td></tr></table></figure>
 </li>
@@ -364,13 +380,13 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">node <span class="title">Delete</span><span class="params">( <span class="keyword">int</span> x, node root )</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( root == <span class="literal">NULL</span> )</span><br><span class="line">        Error(<span class="string">"Empty tree"</span>);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( x &lt; root-&gt;value )</span><br><span class="line">        root-&gt;left = Delete( x, root-&gt;left );</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( x &gt; root-&gt;value )</span><br><span class="line">        root-&gt;right = Delete( x, root-&gt;right );</span><br><span class="line">    <span class="keyword">else</span>   <span class="comment">/* Found */</span></span><br><span class="line">    <span class="keyword">if</span> ( root-&gt;left != <span class="literal">NULL</span> &amp;&amp; root-&gt;right != <span class="literal">NULL</span> )&#123;</span><br><span class="line">        node temp = Findmin( root-&gt;right );</span><br><span class="line">        root-&gt;value = temp-&gt;value;</span><br><span class="line">        root-&gt;right = Delete( root-&gt;value, root-&gt;right );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        node temp = root;</span><br><span class="line">        <span class="keyword">if</span> ( root-&gt;left == <span class="literal">NULL</span> )</span><br><span class="line">            root = root-&gt;right;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            root = root-&gt;left;</span><br><span class="line">        <span class="built_in">free</span>( temp );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h2 id="u5E73_u5747_u5206_u6790"><a href="#u5E73_u5747_u5206_u6790" class="headerlink" title="平均分析"></a>平均分析</h2><p> 当二叉查找树不够平衡时，或者退化成一条直线时，所有操作都会成为线性开销。常用的解决办法是为二叉查找树附加一个平衡结构条件，使得任何节点的深度都不能过深。这种做法非常麻烦，并且更新树结构需要很长时间，但防止了查找树的退化。例如最老的一种平衡查找树（AVL树），红黑树，treap等。比较新的做法是splay tree（伸展树或分裂树），放弃平衡条件，允许树有任意深度，但每次操作后要对树结构调整，使后面的操作效率提高。此时对于任意单个运算无法保证O(logN)的时间复杂度，但可证明连续M次操作在最坏情形下的花费时间为O(MlogN)。</p>
+<h2 id="平均分析"><a href="#平均分析" class="headerlink" title="平均分析"></a>平均分析</h2><p> 当二叉查找树不够平衡时，或者退化成一条直线时，所有操作都会成为线性开销。常用的解决办法是为二叉查找树附加一个平衡结构条件，使得任何节点的深度都不能过深。这种做法非常麻烦，并且更新树结构需要很长时间，但防止了查找树的退化。例如最老的一种平衡查找树（AVL树），红黑树，treap等。比较新的做法是splay tree（伸展树或分裂树），放弃平衡条件，允许树有任意深度，但每次操作后要对树结构调整，使后面的操作效率提高。此时对于任意单个运算无法保证O(logN)的时间复杂度，但可证明连续M次操作在最坏情形下的花费时间为O(MlogN)。</p>
 <hr>
 <p></p><h1 id="4">AVL树</h1><p></p>
 <blockquote>
 <p>一棵AVL树的每个节点的左子树和右子树的高度最多差1。</p>
 </blockquote>
-<h2 id="AVL_u6811_u7684_u5E73_u8861_u7EF4_u62A4"><a href="#AVL_u6811_u7684_u5E73_u8861_u7EF4_u62A4" class="headerlink" title="AVL树的平衡维护"></a>AVL树的平衡维护</h2><ul>
+<h2 id="AVL树的平衡维护"><a href="#AVL树的平衡维护" class="headerlink" title="AVL树的平衡维护"></a>AVL树的平衡维护</h2><ul>
 <li><p>AVL树平衡条件破坏的可能情况  </p>
 <ul>
 <li>在插入一个新节点之后，只有从插入点到根结点的路径上的节点可能不平衡，因为<strong>只有这些节点的子树可能发生变化</strong>。沿着这条路径上行到根并更新平衡信息，就可以找到某个平衡性被破坏的节点。假设这个平衡性被破坏的节点是X，因为任意节点最多能有两个孩子，所以高度不平衡的情况下，X的两棵子树高度差2。这种不平衡可能源于下面四种情况：  </li>
@@ -385,7 +401,7 @@
 </li>
 <li>对X左孩子的右子树插入。此时为（左-右）或（右-左）情况，发生在树的“内侧”，可以通过双旋转修正。<br>如下图所示是一个双旋转过程（图片来源于Vamei）<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/1.png" width="400px" alt="双旋转举例"><br>下面两张图分别是LR旋转（针对左孩子的右子树插入）和RL旋转（针对右孩子的左子树插入）。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/3.jpg" width="400px" alt="LR旋转"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/4.jpg" width="400px" alt="RL旋转"><br>以LR旋转为例，B节点处不满足AVL树性质，对B-C支作左旋转，使得C成为C-B支新的根，之后A-C支右旋转，使得C成为整棵树的新根，满足AVL树性质。</li>
 </ul>
-<h2 id="AVL_u6811_u7684_u4EE3_u7801_u5B9E_u73B0"><a href="#AVL_u6811_u7684_u4EE3_u7801_u5B9E_u73B0" class="headerlink" title="AVL树的代码实现"></a>AVL树的代码实现</h2><ul>
+<h2 id="AVL树的代码实现"><a href="#AVL树的代码实现" class="headerlink" title="AVL树的代码实现"></a>AVL树的代码实现</h2><ul>
 <li><p>节点声明  </p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">ifndef</span> _AvlTree_H</span></span><br><span class="line"><span class="keyword">struct</span> AvlNode;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> AvlNode *Position;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> AvlNode *AvlTree;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> ElementType;  <span class="comment">/* ElementType */</span></span><br><span class="line"></span><br><span class="line"><span class="function">AvlTree <span class="title">MakeEmpty</span><span class="params">( AvlTree T )</span></span>;</span><br><span class="line"><span class="function">AvlTree <span class="title">Insert</span><span class="params">( ElementType x, AvlTree T )</span></span>;</span><br><span class="line"><span class="function">AvlTree <span class="title">Delete</span><span class="params">( ElementType x, AvlTree T )</span></span>;</span><br><span class="line"><span class="function">Position <span class="title">Find</span><span class="params">( ElementType x, AvlTree T )</span></span>;</span><br><span class="line"><span class="function">Position <span class="title">Findmin</span><span class="params">( AvlTree T )</span></span>;</span><br><span class="line"><span class="function">Position <span class="title">Findmax</span><span class="params">( AvlTree T )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Destroy</span><span class="params">( AvlTree T )</span></span>;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span> <span class="comment">/* _AvlTree_H */</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> AvlNode&#123;</span><br><span class="line">    ElementType element;</span><br><span class="line">    AvlTree left;</span><br><span class="line">    AvlTree right;</span><br><span class="line">    <span class="keyword">int</span> height;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 </li>
@@ -417,7 +433,7 @@
 <blockquote>
 <p>红黑树也是一种二叉查找树，但在其每个节点上增加一个存储位表示节点的颜色（红或黑）。通过对节点着色的限制，可以使得红黑树没有任何一条路径可能比其他路径长两倍，因此整棵红黑树<strong>接近平衡</strong>。<br>采用一个哨兵NIL（外节点）来代替空指针，NIL是和红黑树内普通节点有相同域的对象，其color域为BLACK，其他域可以设置为任意值。所有指向NULL的指针都将指向NIL。</p>
 </blockquote>
-<h2 id="u7EA2_u9ED1_u6027_u8D28"><a href="#u7EA2_u9ED1_u6027_u8D28" class="headerlink" title="红黑性质"></a>红黑性质</h2><ul>
+<h2 id="红黑性质"><a href="#红黑性质" class="headerlink" title="红黑性质"></a>红黑性质</h2><ul>
 <li>每个节点或是红的或是黑的</li>
 <li>根节点是黑的，每个叶节点（NIL）也是黑的</li>
 <li>如果一个节点是红的，则它的两个子女都是黑的</li>
@@ -427,7 +443,7 @@
 <ul>
 <li>旋转操作：insert和delete都可能使新的红黑树违反红黑性质。下图展示了左旋和右旋两种状态的切换<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/红黑树旋转操作.jpg" width="400px" alt="红黑树左右旋转"></li>
 </ul>
-<h2 id="u7EA2_u9ED1_u6811_u7684_u4EE3_u7801_u5B9E_u73B0"><a href="#u7EA2_u9ED1_u6811_u7684_u4EE3_u7801_u5B9E_u73B0" class="headerlink" title="红黑树的代码实现"></a>红黑树的代码实现</h2><ul>
+<h2 id="红黑树的代码实现"><a href="#红黑树的代码实现" class="headerlink" title="红黑树的代码实现"></a>红黑树的代码实现</h2><ul>
 <li><p>类型声明</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">ifndef</span> _RBT_H</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> RbNode * Position;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> RbNode * RbTree;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LeftRotate</span><span class="params">( RbTree T, Position x )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RightRotate</span><span class="params">( RbTree T, Position x )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Insert</span><span class="params">( RbTree T, Position x )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Delete</span><span class="params">( RbTree T, Position x )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InsertFixup</span><span class="params">( RbTree T, Position x )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DeleteFixup</span><span class="params">( RbTree T, Position x )</span></span>;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> COLOR = &#123; RED , BLACK &#125;;</span><br><span class="line"><span class="keyword">struct</span> RbNode&#123;</span><br><span class="line">    ElementType value;</span><br><span class="line">    <span class="keyword">struct</span> RbNode * left;</span><br><span class="line">    <span class="keyword">struct</span> RbNode * right;</span><br><span class="line">    <span class="keyword">struct</span> RbNode * parent;</span><br><span class="line">    <span class="keyword">enum</span> COLOR color;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> RbNode * NIL = ( RbNode * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span> ( <span class="keyword">struct</span> RbNode ) );</span><br><span class="line"><span class="keyword">struct</span> RbNode * root = NIL;</span><br><span class="line">NIL-&gt;color = BLACK;</span><br></pre></td></tr></table></figure>
 </li>
@@ -466,141 +482,458 @@
 </ul>
 <hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/">原始出处</a>(<a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/">http://forec.github.io/2015/09/08/Data-Structure-basis1/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
-
+</span>
       
     </div>
-    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Data-Structures/" rel="tag">#Data-Structures</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/09/Data-Structure-example1/" rel="prev">部分问题例程</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/07/Algorithms-Must/" rel="next">排序和字符串匹配</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2015/09/09/Data-Structure-example1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
+
+ </div>
+
         
-          部分问题例程
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/09/08/Data-Structure-basis1/"
+                   data-title="基础数据结构（需求和树相关）" data-url="http://forec.github.io/2015/09/08/Data-Structure-basis1/">
+              </div>
+            
+          </div>
         
       </div>
-    </a>
+
+      
   
-  
-    <a href="/2015/09/07/Algorithms-Must/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">排序和字符串匹配</div>
-      <strong class="article-nav-caption">></strong>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-<div class="share_jia">
-	<!-- JiaThis Button BEGIN -->
-	<div class="jiathis_style">
-		<span class="jiathis_txt">分享到: &nbsp; </span>
-		<a class="jiathis_button_facebook"></a> 
-    <a class="jiathis_button_twitter"></a>
-    <a class="jiathis_button_plus"></a> 
-    <a class="jiathis_button_tsina"></a>
-		<a class="jiathis_button_cqq"></a>
-		<a class="jiathis_button_douban"></a>
-		<a class="jiathis_button_weixin"></a>
-		<a class="jiathis_button_tumblr"></a>
-    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	</div>
-	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
-	<!-- JiaThis Button END -->
-</div>
-
-
-
-
-
-
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="Data-Structure-basis1" data-title="基础数据结构（需求和树相关）" data-url="http://forec.github.io/2015/09/08/Data-Structure-basis1/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"forec"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
-
-
-
-
-</div>
-      <footer id="footer">
-  <div class="outer">
-    <div id="footer-info">
-    	<div class="footer-left">
-    		&copy; 2016 Forec
-    	</div>
-      	<div class="footer-right">
-      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
-      	</div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
-</footer>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1"><span class="nav-number">2.</span> <span class="nav-text">需求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本的数学知识"><span class="nav-number">2.1.</span> <span class="nav-text">基本的数学知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三种基本数据结构ADT"><span class="nav-number">2.2.</span> <span class="nav-text">三种基本数据结构ADT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#表ADT"><span class="nav-number">2.2.1.</span> <span class="nav-text">表ADT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#栈ADT"><span class="nav-number">2.2.2.</span> <span class="nav-text">栈ADT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#队列ADT"><span class="nav-number">2.2.3.</span> <span class="nav-text">队列ADT</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2"><span class="nav-number">3.</span> <span class="nav-text">树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#树的实现、遍历和应用"><span class="nav-number">3.1.</span> <span class="nav-text">树的实现、遍历和应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树"><span class="nav-number">3.2.</span> <span class="nav-text">二叉树</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3"><span class="nav-number">4.</span> <span class="nav-text">二叉查找树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#操作实现"><span class="nav-number">4.1.</span> <span class="nav-text">操作实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#平均分析"><span class="nav-number">4.2.</span> <span class="nav-text">平均分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4"><span class="nav-number">5.</span> <span class="nav-text">AVL树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AVL树的平衡维护"><span class="nav-number">5.1.</span> <span class="nav-text">AVL树的平衡维护</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AVL树的代码实现"><span class="nav-number">5.2.</span> <span class="nav-text">AVL树的代码实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5"><span class="nav-number">6.</span> <span class="nav-text">红黑树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#红黑性质"><span class="nav-number">6.1.</span> <span class="nav-text">红黑性质</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#红黑树的代码实现"><span class="nav-number">6.2.</span> <span class="nav-text">红黑树的代码实现</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
     </div>
-    
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  </aside>
 
 
-<script>
-	var yiliaConfig = {
-		fancybox: true,
-		mathjax: true,
-		animate: true,
-		isHome: false,
-		isPost: true,
-		isArchive: false,
-		isTag: false,
-		isCategory: false,
-		open_in_new: false
-	}
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
-<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
-<script src="/js/main.js" type="text/javascript"></script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
 
 
 
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
 
 
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
 
 <script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-        processEscapes: true,
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    }
-});
-
-MathJax.Hub.Queue(function() {
+  MathJax.Hub.Queue(function() {
     var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';                 
-    }       
-});
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
 </script>
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 
-  </div>
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
 </body>
 </html>

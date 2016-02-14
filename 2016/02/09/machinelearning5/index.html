@@ -1,12 +1,45 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
 <head>
-  <meta charset="utf-8">
   
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>机器学习笔记（Chapter 05 - Logistic回归） | Forec的博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Logistic回归根据现有数据对边界回归线建立回归公式，以此进行分类。训练分类器时的做法就是寻找最佳拟合参数，使用的是最优化算法。">
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec的博客" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="Logistic回归根据现有数据对边界回归线建立回归公式，以此进行分类。训练分类器时的做法就是寻找最佳拟合参数，使用的是最优化算法。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习笔记（Chapter 05 - Logistic回归）">
 <meta property="og:url" content="http://forec.github.io/2016/02/09/machinelearning5/index.html">
@@ -16,227 +49,210 @@
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/Logistic%E5%9B%9E%E5%BD%92-plotGD-%E7%AD%89%E9%AB%98%E7%BA%BF.png">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/Logistic%E5%9B%9E%E5%BD%92-plotSDerror-%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B.png">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/logistic%E5%9B%9E%E5%BD%92-sigmoid%E5%87%BD%E6%95%B0.png">
-<meta property="og:updated_time" content="2016-02-11T10:11:39.141Z">
+<meta property="og:updated_time" content="2016-02-14T07:47:21.211Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记（Chapter 05 - Logistic回归）">
 <meta name="twitter:description" content="Logistic回归根据现有数据对边界回归线建立回归公式，以此进行分类。训练分类器时的做法就是寻找最佳拟合参数，使用的是最优化算法。">
-  
-    <link rel="alternative" href="/atom.xml" title="Forec的博客" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 机器学习笔记（Chapter 05 - Logistic回归） | Forec的博客 </title>
 </head>
 
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-	<header id="header" class="inner">
-		<a href="/" class="profilepic">
-			
-			<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-		</a>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-		<hgroup>
-		  <h1 class="header-author"><a href="/">Forec</a></h1>
-		</hgroup>
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
 
-		
-		<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-		
 
-		
-			<div class="switch-btn">
-				<div class="icon">
-					<div class="icon-ctn">
-						<div class="icon-wrap icon-house" data-idx="0">
-							<div class="birdhouse"></div>
-							<div class="birdhouse_holes"></div>
-						</div>
-						<div class="icon-wrap icon-ribbon hide" data-idx="1">
-							<div class="ribbon"></div>
-						</div>
-						
-						<div class="icon-wrap icon-link hide" data-idx="2">
-							<div class="loopback_l"></div>
-							<div class="loopback_r"></div>
-						</div>
-						
-						
-						<div class="icon-wrap icon-me hide" data-idx="3">
-							<div class="user"></div>
-							<div class="shoulder"></div>
-						</div>
-						
-					</div>
-					
-				</div>
-				<div class="tips-box hide">
-					<div class="tips-arrow"></div>
-					<ul class="tips-inner">
-						<li>菜单</li>
-						<li>标签</li>
-						
-						<li>友情链接</li>
-						
-						
-						<li>关于我</li>
-						
-					</ul>
-				</div>
-			</div>
-		
 
-		<div class="switch-area">
-			<div class="switch-wrap">
-				<section class="switch-part switch-part1">
-					<nav class="header-menu">
-						<ul>
-						
-							<li><a href="/">主页</a></li>
-				        
-							<li><a href="/archives">所有文章</a></li>
-				        
-						</ul>
-					</nav>
-					<nav class="header-nav">
-						<div class="social">
-							
-								<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-					        
-								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-					        
-								<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-					        
-						</div>
-					</nav>
-				</section>
-				
-				
-				<section class="switch-part switch-part2">
-					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/Data-Structures/" style="font-size: 15px;">Data-Structures</a> <a href="/tags/Mistakes/" style="font-size: 10px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/字符编码/" style="font-size: 10px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 12.5px;">机器学习</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.5px;">计算机组成与体系结构</a>
-					</div>
-				</section>
-				
-				
-				
-				<section class="switch-part switch-part3">
-					<div id="js-friends">
-					
-			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.codewars.com/users/Forec">Forec的CodeWars</a>
-			        
-			        </div>
-				</section>
-				
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
 
-				
-				
-				<section class="switch-part switch-part4">
-				
-					<div id="js-aboutme">就读于北京邮电大学，代码爱好者。近期自学机器学习。</div>
-				</section>
-				
-			</div>
-		</div>
-	</header>				
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec的博客</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
 </div>
 
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
     </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-  	<div class="overlay">
-  		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide">Forec</h1>
-  	</div>
-	<div class="intrude-less">
-		<header id="header" class="inner">
-			<div class="profilepic">
-			
-				<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-			</div>
-			<hgroup>
-			  <h1 class="header-author">Forec</h1>
-			</hgroup>
-			
-			<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-			
-			<nav class="header-menu">
-				<ul>
-				
-					<li><a href="/">主页</a></li>
-		        
-					<li><a href="/archives">所有文章</a></li>
-		        
-		        <div class="clearfix"></div>
-				</ul>
-			</nav>
-			<nav class="header-nav">
-				<div class="social">
-					
-						<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-			        
-						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-			        
-						<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-			        
-				</div>
-			</nav>
-		</header>				
-	</div>
+  
 </nav>
 
-      <div class="body-wrap"><article id="post-machinelearning5" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/02/09/machinelearning5/" class="article-date">
-  	<time datetime="2016-02-09T10:57:05.000Z" itemprop="datePublished">2016-02-09</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      机器学习笔记（Chapter 05 - Logistic回归）
-    </h1>
-  
+ </div>
+    </header>
 
-      </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
       
-      <div class="article-info article-info-post">
-        
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li></ul>
-	</div>
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              机器学习笔记（Chapter 05 - Logistic回归）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-02-09T18:57:05+08:00" content="2016-02-09">
+            2016-02-09
+          </time>
+        </span>
 
         
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/大数据/">大数据</a>
-	</div>
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/大数据/" itemprop="url" rel="index">
+                  <span itemprop="name">大数据</span>
+                </a>
+              </span>
 
+              
+              
 
-        <div class="clearfix"></div>
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/02/09/machinelearning5/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/09/machinelearning5/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
       </div>
+    </header>
+
+    <div class="post-body">
+
       
-    
-    <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
+
+      
+        <span itemprop="articleBody"><blockquote>
 <p>Logistic回归根据现有数据对边界回归线建立回归公式，以此进行分类。训练分类器时的做法就是寻找最佳拟合参数，使用的是最优化算法。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="Logistic_u56DE_u5F52_u548CSigmoid_u51FD_u6570"><a href="#Logistic_u56DE_u5F52_u548CSigmoid_u51FD_u6570" class="headerlink" title="Logistic回归和Sigmoid函数"></a>Logistic回归和Sigmoid函数</h1><ul>
+<h1 id="Logistic回归和Sigmoid函数"><a href="#Logistic回归和Sigmoid函数" class="headerlink" title="Logistic回归和Sigmoid函数"></a>Logistic回归和Sigmoid函数</h1><ul>
 <li>Logistic回归过程<ul>
 <li>准备数据：需要进行距离运算，数据类型为数值型，结构化数据格式最佳。</li>
 <li>分析数据：任意方法。</li>
@@ -253,7 +269,7 @@
 </li>
 <li>Sigmoid函数：是近似海维塞德阶跃函数（单位阶跃函数），<code>σ(z)=1/(1+e^(-z))</code>。当x为0时，Sigmoid(0)=0.5，随着x的增大减小，σ(x)将逼近1和0。当横坐标刻度足够大，Sigmoid看起来类似阶跃函数。我们将输入数据的每个特征乘以对应的回归系数，得到的结果相加，作为Sigmoid函数的参数，得到一个范围在0-1之间的数值，若大于0.5则归入1，小于0.5则归入0。因此Logistic回归可以被看成概率估计。</li>
 </ul>
-<h1 id="u6700_u4F73_u56DE_u5F52_u7CFB_u6570_u786E_u5B9A"><a href="#u6700_u4F73_u56DE_u5F52_u7CFB_u6570_u786E_u5B9A" class="headerlink" title="最佳回归系数确定"></a>最佳回归系数确定</h1><ul>
+<h1 id="最佳回归系数确定"><a href="#最佳回归系数确定" class="headerlink" title="最佳回归系数确定"></a>最佳回归系数确定</h1><ul>
 <li>梯度上升法与梯度下降法类似，梯度上升算法用来求函数的最大值，梯度下降算法用来求函数的最小值。思想为要找到某函数的最大值，则沿着该函数的梯度方向探寻。梯度上升法到达每个点后会重新估计移动方向，循环迭代直至满足停止条件。对于线性回归系数，初始状态均为1，每次迭代的计算公式为<code>w:=w+α▽f(w)</code>，▽f(w)是在w处的梯度，α是沿梯度方向移动量大小，记为步长。该公式一直迭代执行，直到停止条件，比如迭代次数达到某个指定值，或误差达到指定精度。</li>
 <li><p>使用梯度上升找到最佳参数，R为迭代次数，流程如下：</p>
 <ul>
@@ -264,14 +280,14 @@
 <li><p>Code - gradAscent - logRegres.py</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(inX)</span>:</span>	<span class="comment"># the array from numpy can be used as a single parameter</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">1.0</span>/(<span class="number">1</span>+exp(-inX))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradAscent</span><span class="params">(dataMatIn, classLabels)</span>:</span></span><br><span class="line">	dataMatrix = mat(dataMatIn)    <span class="comment"># m*n</span></span><br><span class="line">	labelMat = mat(classLabels).transpose()    <span class="comment"># m*1</span></span><br><span class="line">	m, n = shape(dataMatrix)</span><br><span class="line">	alpha = <span class="number">0.001</span></span><br><span class="line">	maxCycles = <span class="number">500</span></span><br><span class="line">	weights = ones((n,<span class="number">1</span>))    <span class="comment"># n*1</span></span><br><span class="line">	<span class="keyword">for</span> k <span class="keyword">in</span> range(maxCycles):</span><br><span class="line">		h = sigmoid(dataMatrix*weights)	<span class="comment"># m*1</span></span><br><span class="line">		error = (labelMat - h)	<span class="comment"># counting error direction, m*1</span></span><br><span class="line">		weights = weights + alpha * dataMatrix.transpose() * error</span><br><span class="line">	<span class="keyword">return</span> weights</span><br></pre></td></tr></table></figure>
 </li>
-</ul>
+<li><p>Code - loadDataSet - logRegres.py ，loadDataSet函数导入testSet.txt，返回数据矩阵和标签。gradAscent接收数据矩阵和标签，并返回生成的回归系数向量。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">()</span>:</span></span><br><span class="line">	dataMat = []; labelMat = []</span><br><span class="line">	fr = open(<span class="string">'testSet.txt'</span>)</span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">		lineArr = line.strip().split()</span><br><span class="line">		dataMat.append([<span class="number">1.0</span>, float(lineArr[<span class="number">0</span>]), float(lineArr[<span class="number">1</span>])])</span><br><span class="line">		labelMat.append(int(lineArr[<span class="number">2</span>]))</span><br><span class="line">	<span class="keyword">return</span> dataMat, labelMat</span><br></pre></td></tr></table></figure>
-<p>loadDataSet函数导入testSet.txt，返回数据矩阵和标签。gradAscent接收数据矩阵和标签，并返回生成的回归系数向量。</p>
-<ul>
-<li>Code - plotBestFit - logRegres.py<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plotBestFit</span><span class="params">(weights)</span>:</span></span><br><span class="line">	<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">	dataMat, labelMat = loadDataSet()</span><br><span class="line">	dataArr = array(dataMat)</span><br><span class="line">	n = shape(dataArr)[<span class="number">0</span>]</span><br><span class="line">	xcord1 = []; ycord1 = []</span><br><span class="line">	xcord2 = []; ycord2 = []</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">		<span class="keyword">if</span> int(labelMat[i]) == <span class="number">1</span>:</span><br><span class="line">			xcord1.append(dataArr[i,<span class="number">1</span>]); ycord1.append(dataArr[i,<span class="number">2</span>])</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			xcord2.append(dataArr[i,<span class="number">1</span>]); ycord2.append(dataArr[i,<span class="number">2</span>])</span><br><span class="line">	fig = plt.figure()</span><br><span class="line">	ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line">	ax.scatter(xcord1, ycord1, s = <span class="number">30</span>, c = <span class="string">'red'</span>, marker = <span class="string">'s'</span>)</span><br><span class="line">	ax.scatter(xcord2, ycord2, s = <span class="number">30</span>, c = <span class="string">'green'</span>)</span><br><span class="line">	x = arange(-<span class="number">3.0</span>, <span class="number">3.0</span>, <span class="number">0.1</span>)</span><br><span class="line">	y = (-weights[<span class="number">0</span>]-weights[<span class="number">1</span>]*x)/weights[<span class="number">2</span>]</span><br><span class="line">	ax.plot(x,y)</span><br><span class="line">	plt.xlabel(<span class="string">'x1'</span>); plt.ylabel(<span class="string">'x2'</span>);</span><br><span class="line">	plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; import logRegres</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; dataArr, labelMat = logRegres.loadDataSet()</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; weights = logRegres.gradAscent(dataArr, labelMat)</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; logRegres.plotBestFit(weights.getA())</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Code - plotBestFit - logRegres.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plotBestFit</span><span class="params">(weights)</span>:</span></span><br><span class="line">	<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">	dataMat, labelMat = loadDataSet()</span><br><span class="line">	dataArr = array(dataMat)</span><br><span class="line">	n = shape(dataArr)[<span class="number">0</span>]</span><br><span class="line">	xcord1 = []; ycord1 = []</span><br><span class="line">	xcord2 = []; ycord2 = []</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">		<span class="keyword">if</span> int(labelMat[i]) == <span class="number">1</span>:</span><br><span class="line">			xcord1.append(dataArr[i,<span class="number">1</span>]); ycord1.append(dataArr[i,<span class="number">2</span>])</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			xcord2.append(dataArr[i,<span class="number">1</span>]); ycord2.append(dataArr[i,<span class="number">2</span>])</span><br><span class="line">	fig = plt.figure()</span><br><span class="line">	ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line">	ax.scatter(xcord1, ycord1, s = <span class="number">30</span>, c = <span class="string">'red'</span>, marker = <span class="string">'s'</span>)</span><br><span class="line">	ax.scatter(xcord2, ycord2, s = <span class="number">30</span>, c = <span class="string">'green'</span>)</span><br><span class="line">	x = arange(-<span class="number">3.0</span>, <span class="number">3.0</span>, <span class="number">0.1</span>)</span><br><span class="line">	y = (-weights[<span class="number">0</span>]-weights[<span class="number">1</span>]*x)/weights[<span class="number">2</span>]</span><br><span class="line">	ax.plot(x,y)</span><br><span class="line">	plt.xlabel(<span class="string">'x1'</span>); plt.ylabel(<span class="string">'x2'</span>);</span><br><span class="line">	plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; import logRegres</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; dataArr, labelMat = logRegres.loadDataSet()</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; weights = logRegres.gradAscent(dataArr, labelMat)</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; logRegres.plotBestFit(weights.getA())</span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h1 id="u968F_u673A_u68AF_u5EA6_u4E0A_u5347"><a href="#u968F_u673A_u68AF_u5EA6_u4E0A_u5347" class="headerlink" title="随机梯度上升"></a>随机梯度上升</h1><ul>
+<h1 id="随机梯度上升"><a href="#随机梯度上升" class="headerlink" title="随机梯度上升"></a>随机梯度上升</h1><ul>
 <li><p>gradAscent函数迭代五百次，并且每次计算都要遍历整个数据集，对于大规模数据复杂度过高。改进方法为每次仅用一个样本点来更新回归系数，只在新样本到来时对分类器进行增量式更新，是在线学习算法。流程如下。</p>
 <ul>
 <li>所有回归系数初始化为1</li>
@@ -279,20 +295,16 @@
 <li>返回回归系数值</li>
 </ul>
 </li>
-<li><p>Code - stocGradAscent0 - logRegres.py</p>
+<li><p>Code - stocGradAscent0 - logRegres.py，随机上升算法在200次迭代时的系数变化过程在《机器学习实战》82页，其中系数X2经过50次迭代后达到稳定，而系数1和0则需要更多次迭代。并且，在大的波动停止后，还有一些小的周期性波动，这源于数据中存在一些不能正确分类的样本点（数据集非线性可分），在每次迭代时会引发系统的剧烈震荡。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stocGradAscent0</span><span class="params">(dataMatrix, classLabels)</span>:</span></span><br><span class="line">	m, n = shape(dataMatrix)</span><br><span class="line">	weights = ones(n)</span><br><span class="line">	alpha = <span class="number">0.01</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">		h = sigmoid(sum(dataMatrix[i]*weights))</span><br><span class="line">		error = classLabels[i] - h</span><br><span class="line">		weights = weights + alpha * error * dataMatrix[i]</span><br><span class="line">	<span class="keyword">return</span> weights</span><br></pre></td></tr></table></figure>
 </li>
-</ul>
-<p>随机上升算法在200次迭代时的系数变化过程在《机器学习实战》82页，其中系数X2经过50次迭代后达到稳定，而系数1和0则需要更多次迭代。并且，在大的波动停止后，还有一些小的周期性波动，这源于数据中存在一些不能正确分类的样本点（数据集非线性可分），在每次迭代时会引发系统的剧烈震荡。</p>
-<ul>
-<li>Improve - Code -stocGradAscent1 - logRegres.py<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stocGradAscent1</span><span class="params">(dataMatrix, classLabels, numIter = <span class="number">150</span>)</span>:</span></span><br><span class="line">	m, n = shape(dataMatrix)</span><br><span class="line">	weights = ones(n)</span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> range(numIter):</span><br><span class="line">		dataIndex = range(m)</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">			alpha = <span class="number">4</span>/(<span class="number">1.0</span>+j+i)+<span class="number">0.0001</span></span><br><span class="line">			randIndex = int(random.uniform(<span class="number">0</span>, len(dataIndex)))</span><br><span class="line">			h = sigmoid(sum(dataMatrix[randIndex]*weights))</span><br><span class="line">			error = classLabels[randIndex] - h</span><br><span class="line">			weights = weights + alpha * error * dataMatrix[randIndex]</span><br><span class="line">			<span class="keyword">del</span>(dataIndex[randIndex])</span><br><span class="line">	<span class="keyword">return</span> weights</span><br></pre></td></tr></table></figure>
+<li><p>Improve - Code -stocGradAscent1 - logRegres.py，改进后的代码中，alpha每次迭代都会调整，这可以缓解高频波动，并且虽然alpha随着迭代次数减小，但永远不会减小到0（常数项存在），这样保证多次迭代之后新数据仍然对系数有影响。同样，这也避免了alpha的严格下降，避免参数的严格下降也常见于模拟退火算法等其他优化算法中。改进后的代码通过随机选取样本的方式更新回归系数，这样可以减少周期性波动。改进后的代码收敛速度更快，默认迭代次数150。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stocGradAscent1</span><span class="params">(dataMatrix, classLabels, numIter = <span class="number">150</span>)</span>:</span></span><br><span class="line">	m, n = shape(dataMatrix)</span><br><span class="line">	weights = ones(n)</span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> range(numIter):</span><br><span class="line">		dataIndex = range(m)</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">			alpha = <span class="number">4</span>/(<span class="number">1.0</span>+j+i)+<span class="number">0.0001</span></span><br><span class="line">			randIndex = int(random.uniform(<span class="number">0</span>, len(dataIndex)))</span><br><span class="line">			h = sigmoid(sum(dataMatrix[randIndex]*weights))</span><br><span class="line">			error = classLabels[randIndex] - h</span><br><span class="line">			weights = weights + alpha * error * dataMatrix[randIndex]</span><br><span class="line">			<span class="keyword">del</span>(dataIndex[randIndex])</span><br><span class="line">	<span class="keyword">return</span> weights</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>改进后的回归系数<img src="http://7xktmz.com1.z0.glb.clouddn.com/logistic%E5%9B%9E%E5%BD%92-%E9%9A%8F%E6%9C%BA%E6%A2%AF%E5%BA%A6%E4%B8%8A%E5%8D%87.png" width="500px"></p>
 </li>
 </ul>
-<p>改进后的代码中，alpha每次迭代都会调整，这可以缓解高频波动，并且虽然alpha随着迭代次数减小，但永远不会减小到0（常数项存在），这样保证多次迭代之后新数据仍然对系数有影响。同样，这也避免了alpha的严格下降，避免参数的严格下降也常见于模拟退火算法等其他优化算法中。改进后的代码通过随机选取样本的方式更新回归系数，这样可以减少周期性波动。改进后的代码收敛速度更快，默认迭代次数150。</p>
-<ul>
-<li>改进后的回归系数<img src="http://7xktmz.com1.z0.glb.clouddn.com/logistic%E5%9B%9E%E5%BD%92-%E9%9A%8F%E6%9C%BA%E6%A2%AF%E5%BA%A6%E4%B8%8A%E5%8D%87.png" width="500px"></li>
-</ul>
-<h1 id="u5904_u7406_u6570_u636E_u4E2D_u7684_u7F3A_u5931_u503C"><a href="#u5904_u7406_u6570_u636E_u4E2D_u7684_u7F3A_u5931_u503C" class="headerlink" title="处理数据中的缺失值"></a>处理数据中的缺失值</h1><ul>
+<h1 id="处理数据中的缺失值"><a href="#处理数据中的缺失值" class="headerlink" title="处理数据中的缺失值"></a>处理数据中的缺失值</h1><ul>
 <li>假设有1000个样本和20个特征，若某传感器损坏导致一个特征无效，其余数据仍可用。<ul>
 <li>使用可用特征的均值填补缺失值</li>
 <li>使用特殊值来填补确实值，如-1</li>
@@ -304,170 +316,487 @@
 <li><p>对于Logistic回归，确实只用0代替可以保留现有数据，并且无需对算法进行修改。如果在测试数据集中发现某一条数据的类别标签已经缺失，Logistic回归的简单做法是将该数据丢弃，但如果采用类似kNN的方法则不太可行。</p>
 </li>
 <li><p>Code 用logistic回归从疝气病症预测病马死亡率 - logRegres.py</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">classifyVector</span><span class="params">(inX, weights)</span>:</span></span><br><span class="line">	prob = sigmoid(sum(inX*weights))</span><br><span class="line">	<span class="keyword">if</span> prob &gt; <span class="number">0.5</span> : <span class="keyword">return</span> <span class="number">1.0</span></span><br><span class="line">	<span class="keyword">else</span>: <span class="keyword">return</span> <span class="number">0.0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">classifyVector</span><span class="params">(inX, weights)</span>:</span></span><br><span class="line">	prob = sigmoid(sum(inX*weights))</span><br><span class="line">	<span class="keyword">if</span> prob &gt; <span class="number">0.5</span> : <span class="keyword">return</span> <span class="number">1.0</span></span><br><span class="line">	<span class="keyword">else</span>: <span class="keyword">return</span> <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">colicTest</span><span class="params">()</span>:</span></span><br><span class="line">	frTrain = open(<span class="string">'horseColicTraining.txt'</span>)</span><br><span class="line">	frTest = open(<span class="string">'horseColicTest.txt'</span>)</span><br><span class="line">	trainingSet = []; trainingLabels = []</span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> frTrain.readlines():</span><br><span class="line">		currLine = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">		lineArr = []</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">21</span>):</span><br><span class="line">			lineArr.append(float(currLine[i]))</span><br><span class="line">		trainingSet.append(lineArr)</span><br><span class="line">		trainingLabels.append(float(currLine[<span class="number">21</span>]))</span><br><span class="line">	trainWeights = stocGradAscent1(array(trainingSet), trainingLabels, <span class="number">1000</span>)</span><br><span class="line">	errorCount = <span class="number">0</span>; numTestVec = <span class="number">0.0</span></span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> frTest.readlines():</span><br><span class="line">		numTestVec += <span class="number">1.0</span></span><br><span class="line">		currLine = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">		lineArr = []</span><br><span class="line">		<span class="keyword">for</span> i  <span class="keyword">in</span> range(<span class="number">21</span>):</span><br><span class="line">			lineArr.append(float(currLine[i]))</span><br><span class="line">		<span class="keyword">if</span> int(classifyVector(array(lineArr), trainWeights)) != int(currLine[<span class="number">21</span>]) :</span><br><span class="line">			errorCount += <span class="number">1</span></span><br><span class="line">	errorRate = (float(errorCount)/numTestVec)</span><br><span class="line">	<span class="keyword">print</span> <span class="string">"the error rate of this test is %f"</span> % errorRate</span><br><span class="line">	<span class="keyword">return</span> errorRate</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">multiTest</span><span class="params">()</span>:</span></span><br><span class="line">	numTests = <span class="number">10</span>; errorSum = <span class="number">0.0</span></span><br><span class="line">	<span class="keyword">for</span> k <span class="keyword">in</span> range(numTests):</span><br><span class="line">		errorSum += colicTest()</span><br><span class="line">	<span class="keyword">print</span> <span class="string">"after %d iterations the average error rate is: %f"</span> % (numTests, errorSum/float(numTests))</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">colicTest</span><span class="params">()</span>:</span></span><br><span class="line">	frTrain = open(<span class="string">'horseColicTraining.txt'</span>)</span><br><span class="line">	frTest = open(<span class="string">'horseColicTest.txt'</span>)</span><br><span class="line">	trainingSet = []; trainingLabels = []</span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> frTrain.readlines():</span><br><span class="line">		currLine = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">		lineArr = []</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">21</span>):</span><br><span class="line">			lineArr.append(float(currLine[i]))</span><br><span class="line">		trainingSet.append(lineArr)</span><br><span class="line">		trainingLabels.append(float(currLine[<span class="number">21</span>]))</span><br><span class="line">	trainWeights = stocGradAscent1(array(trainingSet), trainingLabels, <span class="number">1000</span>)</span><br><span class="line">	errorCount = <span class="number">0</span>; numTestVec = <span class="number">0.0</span></span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> frTest.readlines():</span><br><span class="line">		numTestVec += <span class="number">1.0</span></span><br><span class="line">		currLine = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">		lineArr = []</span><br><span class="line">		<span class="keyword">for</span> i  <span class="keyword">in</span> range(<span class="number">21</span>):</span><br><span class="line">			lineArr.append(float(currLine[i]))</span><br><span class="line">		<span class="keyword">if</span> int(classifyVector(array(lineArr), trainWeights)) != int(currLine[<span class="number">21</span>]) :</span><br><span class="line">			errorCount += <span class="number">1</span></span><br><span class="line">	errorRate = (float(errorCount)/numTestVec)</span><br><span class="line">	<span class="keyword">print</span> <span class="string">"the error rate of this test is %f"</span> % errorRate</span><br><span class="line">	<span class="keyword">return</span> errorRate</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">multiTest</span><span class="params">()</span>:</span></span><br><span class="line">	numTests = <span class="number">10</span>; errorSum = <span class="number">0.0</span></span><br><span class="line">	<span class="keyword">for</span> k <span class="keyword">in</span> range(numTests):</span><br><span class="line">		errorSum += colicTest()</span><br><span class="line">	<span class="keyword">print</span> <span class="string">"after %d iterations the average error rate is: %f"</span> % (numTests, errorSum/float(numTests))</span><br></pre></td></tr></table></figure>
-<h1 id="Matplotlib_u7ED8_u5236"><a href="#Matplotlib_u7ED8_u5236" class="headerlink" title="Matplotlib绘制"></a>Matplotlib绘制</h1><blockquote>
+<h1 id="Matplotlib绘制"><a href="#Matplotlib绘制" class="headerlink" title="Matplotlib绘制"></a>Matplotlib绘制</h1><blockquote>
 <p>备份下列几份代码（来自《机器学习实战》的github），大致了解matplotlib绘制的基本方法。</p>
 </blockquote>
 <ul>
-<li>绘制等高线 - plotGD.py<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.cm <span class="keyword">as</span> cm</span><br><span class="line"><span class="keyword">import</span> matplotlib.mlab <span class="keyword">as</span> mlab</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">leafNode = dict(boxstyle=<span class="string">"round4"</span>, fc=<span class="string">"0.8"</span>)</span><br><span class="line">arrow_args = dict(arrowstyle=<span class="string">"&lt;-"</span>)</span><br><span class="line"></span><br><span class="line">matplotlib.rcParams[<span class="string">'xtick.direction'</span>] = <span class="string">'out'</span></span><br><span class="line">matplotlib.rcParams[<span class="string">'ytick.direction'</span>] = <span class="string">'out'</span></span><br><span class="line"></span><br><span class="line">delta = <span class="number">0.025</span></span><br><span class="line">x = np.arange(-<span class="number">2.0</span>, <span class="number">2.0</span>, delta)</span><br><span class="line">y = np.arange(-<span class="number">2.0</span>, <span class="number">2.0</span>, delta)</span><br><span class="line">X, Y = np.meshgrid(x, y)</span><br><span class="line">Z1 = -((X-<span class="number">1</span>)**<span class="number">2</span>)</span><br><span class="line">Z2 = -(Y**<span class="number">2</span>)</span><br><span class="line"><span class="comment">#Z1 = mlab.bivariate_normal(X, Y, 1.0, 1.0, 0.0, 0.0)</span></span><br><span class="line"><span class="comment">#Z2 = mlab.bivariate_normal(X, Y, 1.5, 0.5, 1, 1)</span></span><br><span class="line"><span class="comment"># difference of Gaussians</span></span><br><span class="line">Z = <span class="number">1.0</span> * (Z2 + Z1)+<span class="number">5.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create a simple contour plot with labels using default colors.  The</span></span><br><span class="line"><span class="comment"># inline argument to clabel will control whether the labels are draw</span></span><br><span class="line"><span class="comment"># over the line segments of the contour, removing the lines beneath</span></span><br><span class="line"><span class="comment"># the label</span></span><br><span class="line">plt.figure()</span><br><span class="line">CS = plt.contour(X, Y, Z)</span><br><span class="line">plt.annotate(<span class="string">''</span>, xy=(<span class="number">0.05</span>, <span class="number">0.05</span>),  xycoords=<span class="string">'axes fraction'</span>,</span><br><span class="line">             xytext=(<span class="number">0.2</span>,<span class="number">0.2</span>), textcoords=<span class="string">'axes fraction'</span>,</span><br><span class="line">             va=<span class="string">"center"</span>, ha=<span class="string">"center"</span>, bbox=leafNode, arrowprops=arrow_args )</span><br><span class="line">plt.text(-<span class="number">1.9</span>, -<span class="number">1.8</span>, <span class="string">'P0'</span>)</span><br><span class="line">plt.annotate(<span class="string">''</span>, xy=(<span class="number">0.2</span>,<span class="number">0.2</span>),  xycoords=<span class="string">'axes fraction'</span>,</span><br><span class="line">             xytext=(<span class="number">0.35</span>,<span class="number">0.3</span>), textcoords=<span class="string">'axes fraction'</span>,</span><br><span class="line">             va=<span class="string">"center"</span>, ha=<span class="string">"center"</span>, bbox=leafNode, arrowprops=arrow_args )</span><br><span class="line">plt.text(-<span class="number">1.35</span>, -<span class="number">1.23</span>, <span class="string">'P1'</span>)</span><br><span class="line">plt.annotate(<span class="string">''</span>, xy=(<span class="number">0.35</span>,<span class="number">0.3</span>),  xycoords=<span class="string">'axes fraction'</span>,</span><br><span class="line">             xytext=(<span class="number">0.45</span>,<span class="number">0.35</span>), textcoords=<span class="string">'axes fraction'</span>,</span><br><span class="line">             va=<span class="string">"center"</span>, ha=<span class="string">"center"</span>, bbox=leafNode, arrowprops=arrow_args )</span><br><span class="line">plt.text(-<span class="number">0.7</span>, -<span class="number">0.8</span>, <span class="string">'P2'</span>)</span><br><span class="line">plt.text(-<span class="number">0.3</span>, -<span class="number">0.6</span>, <span class="string">'P3'</span>)</span><br><span class="line">plt.clabel(CS, inline=<span class="number">1</span>, fontsize=<span class="number">10</span>)</span><br><span class="line">plt.title(<span class="string">'Gradient Ascent'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'x'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'y'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<li><p>绘制等高线 - plotGD.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.cm <span class="keyword">as</span> cm</span><br><span class="line"><span class="keyword">import</span> matplotlib.mlab <span class="keyword">as</span> mlab</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">leafNode = dict(boxstyle=<span class="string">"round4"</span>, fc=<span class="string">"0.8"</span>)</span><br><span class="line">arrow_args = dict(arrowstyle=<span class="string">"&lt;-"</span>)</span><br><span class="line"></span><br><span class="line">matplotlib.rcParams[<span class="string">'xtick.direction'</span>] = <span class="string">'out'</span></span><br><span class="line">matplotlib.rcParams[<span class="string">'ytick.direction'</span>] = <span class="string">'out'</span></span><br><span class="line"></span><br><span class="line">delta = <span class="number">0.025</span></span><br><span class="line">x = np.arange(-<span class="number">2.0</span>, <span class="number">2.0</span>, delta)</span><br><span class="line">y = np.arange(-<span class="number">2.0</span>, <span class="number">2.0</span>, delta)</span><br><span class="line">X, Y = np.meshgrid(x, y)</span><br><span class="line">Z1 = -((X-<span class="number">1</span>)**<span class="number">2</span>)</span><br><span class="line">Z2 = -(Y**<span class="number">2</span>)</span><br><span class="line"><span class="comment">#Z1 = mlab.bivariate_normal(X, Y, 1.0, 1.0, 0.0, 0.0)</span></span><br><span class="line"><span class="comment">#Z2 = mlab.bivariate_normal(X, Y, 1.5, 0.5, 1, 1)</span></span><br><span class="line"><span class="comment"># difference of Gaussians</span></span><br><span class="line">Z = <span class="number">1.0</span> * (Z2 + Z1)+<span class="number">5.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create a simple contour plot with labels using default colors.  The</span></span><br><span class="line"><span class="comment"># inline argument to clabel will control whether the labels are draw</span></span><br><span class="line"><span class="comment"># over the line segments of the contour, removing the lines beneath</span></span><br><span class="line"><span class="comment"># the label</span></span><br><span class="line">plt.figure()</span><br><span class="line">CS = plt.contour(X, Y, Z)</span><br><span class="line">plt.annotate(<span class="string">''</span>, xy=(<span class="number">0.05</span>, <span class="number">0.05</span>),  xycoords=<span class="string">'axes fraction'</span>,</span><br><span class="line">             xytext=(<span class="number">0.2</span>,<span class="number">0.2</span>), textcoords=<span class="string">'axes fraction'</span>,</span><br><span class="line">             va=<span class="string">"center"</span>, ha=<span class="string">"center"</span>, bbox=leafNode, arrowprops=arrow_args )</span><br><span class="line">plt.text(-<span class="number">1.9</span>, -<span class="number">1.8</span>, <span class="string">'P0'</span>)</span><br><span class="line">plt.annotate(<span class="string">''</span>, xy=(<span class="number">0.2</span>,<span class="number">0.2</span>),  xycoords=<span class="string">'axes fraction'</span>,</span><br><span class="line">             xytext=(<span class="number">0.35</span>,<span class="number">0.3</span>), textcoords=<span class="string">'axes fraction'</span>,</span><br><span class="line">             va=<span class="string">"center"</span>, ha=<span class="string">"center"</span>, bbox=leafNode, arrowprops=arrow_args )</span><br><span class="line">plt.text(-<span class="number">1.35</span>, -<span class="number">1.23</span>, <span class="string">'P1'</span>)</span><br><span class="line">plt.annotate(<span class="string">''</span>, xy=(<span class="number">0.35</span>,<span class="number">0.3</span>),  xycoords=<span class="string">'axes fraction'</span>,</span><br><span class="line">             xytext=(<span class="number">0.45</span>,<span class="number">0.35</span>), textcoords=<span class="string">'axes fraction'</span>,</span><br><span class="line">             va=<span class="string">"center"</span>, ha=<span class="string">"center"</span>, bbox=leafNode, arrowprops=arrow_args )</span><br><span class="line">plt.text(-<span class="number">0.7</span>, -<span class="number">0.8</span>, <span class="string">'P2'</span>)</span><br><span class="line">plt.text(-<span class="number">0.3</span>, -<span class="number">0.6</span>, <span class="string">'P3'</span>)</span><br><span class="line">plt.clabel(CS, inline=<span class="number">1</span>, fontsize=<span class="number">10</span>)</span><br><span class="line">plt.title(<span class="string">'Gradient Ascent'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'x'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'y'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成图像如下<img src="http://7xktmz.com1.z0.glb.clouddn.com/Logistic%E5%9B%9E%E5%BD%92-plotGD-%E7%AD%89%E9%AB%98%E7%BA%BF.png" width="500px"></p>
+</li>
+<li><p>随机梯度上升过程中回归系数的变化 - plotGD.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> matplotlib.patches <span class="keyword">import</span> Rectangle</span><br><span class="line"><span class="keyword">import</span> logRegres</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stocGradAscent0</span><span class="params">(dataMatrix, classLabels)</span>:</span></span><br><span class="line">    m,n = shape(dataMatrix)</span><br><span class="line">    alpha = <span class="number">0.5</span></span><br><span class="line">    weights = ones(n)   <span class="comment">#initialize to all ones</span></span><br><span class="line">    weightsHistory=zeros((<span class="number">500</span>*m,n))</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">500</span>):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">            h = logRegres.sigmoid(sum(dataMatrix[i]*weights))</span><br><span class="line">            error = classLabels[i] - h</span><br><span class="line">            weights = weights + alpha * error * dataMatrix[i]</span><br><span class="line">            weightsHistory[j*m + i,:] = weights</span><br><span class="line">    <span class="keyword">return</span> weightsHistory</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stocGradAscent1</span><span class="params">(dataMatrix, classLabels)</span>:</span></span><br><span class="line">    m,n = shape(dataMatrix)</span><br><span class="line">    alpha = <span class="number">0.4</span></span><br><span class="line">    weights = ones(n)   <span class="comment">#initialize to all ones</span></span><br><span class="line">    weightsHistory=zeros((<span class="number">40</span>*m,n))</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">40</span>):</span><br><span class="line">        dataIndex = range(m)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">            alpha = <span class="number">4</span>/(<span class="number">1.0</span>+j+i)+<span class="number">0.01</span></span><br><span class="line">            randIndex = int(random.uniform(<span class="number">0</span>,len(dataIndex)))</span><br><span class="line">            h = logRegres.sigmoid(sum(dataMatrix[randIndex]*weights))</span><br><span class="line">            error = classLabels[randIndex] - h</span><br><span class="line">            <span class="comment">#print error</span></span><br><span class="line">            weights = weights + alpha * error * dataMatrix[randIndex]</span><br><span class="line">            weightsHistory[j*m + i,:] = weights</span><br><span class="line">            <span class="keyword">del</span>(dataIndex[randIndex])</span><br><span class="line">    <span class="keyword">print</span> weights</span><br><span class="line">    <span class="keyword">return</span> weightsHistory</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">dataMat,labelMat=logRegres.loadDataSet()</span><br><span class="line">dataArr = array(dataMat)</span><br><span class="line">myHist = stocGradAscent1(dataArr,labelMat)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n = shape(dataArr)[<span class="number">0</span>] <span class="comment">#number of points to create</span></span><br><span class="line">xcord1 = []; ycord1 = []</span><br><span class="line">xcord2 = []; ycord2 = []</span><br><span class="line"></span><br><span class="line">markers =[]</span><br><span class="line">colors =[]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fig = plt.figure()</span><br><span class="line">ax = fig.add_subplot(<span class="number">311</span>)    <span class="comment"># take care</span></span><br><span class="line">type1 = ax.plot(myHist[:,<span class="number">0</span>])</span><br><span class="line">plt.ylabel(<span class="string">'X0'</span>)</span><br><span class="line">ax = fig.add_subplot(<span class="number">312</span>)</span><br><span class="line">type1 = ax.plot(myHist[:,<span class="number">1</span>])</span><br><span class="line">plt.ylabel(<span class="string">'X1'</span>)</span><br><span class="line">ax = fig.add_subplot(<span class="number">313</span>)</span><br><span class="line">type1 = ax.plot(myHist[:,<span class="number">2</span>])</span><br><span class="line">plt.xlabel(<span class="string">'iteration'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'X2'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成图像如下<img src="http://7xktmz.com1.z0.glb.clouddn.com/Logistic%E5%9B%9E%E5%BD%92-plotSDerror-%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B.png" width="500px"></p>
+</li>
+<li><p>生成sigmoid函数 - sigmoidPlot.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> pylab <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">t = arange(-<span class="number">60.0</span>, <span class="number">60.3</span>, <span class="number">0.1</span>)</span><br><span class="line">s = <span class="number">1</span>/(<span class="number">1</span> + exp(-t))</span><br><span class="line">ax = subplot(<span class="number">211</span>)</span><br><span class="line">ax.plot(t,s)</span><br><span class="line"><span class="comment">#ax.axis([-5,5,0,1])</span></span><br><span class="line">plt.xlabel(<span class="string">'x'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'Sigmoid(x)'</span>)</span><br><span class="line">ax = subplot(<span class="number">212</span>)    <span class="comment"># x-y-index</span></span><br><span class="line">ax.plot(t,s)</span><br><span class="line">ax.axis([-<span class="number">60</span>,<span class="number">60</span>,<span class="number">0</span>,<span class="number">1</span>])    <span class="comment"># x-index width</span></span><br><span class="line">plt.xlabel(<span class="string">'x'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'Sigmoid(x)'</span>)</span><br><span class="line">show()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成图像如下<img src="http://7xktmz.com1.z0.glb.clouddn.com/logistic%E5%9B%9E%E5%BD%92-sigmoid%E5%87%BD%E6%95%B0.png" width="500px"></p>
 </li>
 </ul>
-<p>生成图像如下<img src="http://7xktmz.com1.z0.glb.clouddn.com/Logistic%E5%9B%9E%E5%BD%92-plotGD-%E7%AD%89%E9%AB%98%E7%BA%BF.png" width="500px"></p>
-<ul>
-<li>随机梯度上升过程中回归系数的变化 - plotGD.py<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> matplotlib.patches <span class="keyword">import</span> Rectangle</span><br><span class="line"><span class="keyword">import</span> logRegres</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stocGradAscent0</span><span class="params">(dataMatrix, classLabels)</span>:</span></span><br><span class="line">    m,n = shape(dataMatrix)</span><br><span class="line">    alpha = <span class="number">0.5</span></span><br><span class="line">    weights = ones(n)   <span class="comment">#initialize to all ones</span></span><br><span class="line">    weightsHistory=zeros((<span class="number">500</span>*m,n))</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">500</span>):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">            h = logRegres.sigmoid(sum(dataMatrix[i]*weights))</span><br><span class="line">            error = classLabels[i] - h</span><br><span class="line">            weights = weights + alpha * error * dataMatrix[i]</span><br><span class="line">            weightsHistory[j*m + i,:] = weights</span><br><span class="line">    <span class="keyword">return</span> weightsHistory</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stocGradAscent1</span><span class="params">(dataMatrix, classLabels)</span>:</span></span><br><span class="line">    m,n = shape(dataMatrix)</span><br><span class="line">    alpha = <span class="number">0.4</span></span><br><span class="line">    weights = ones(n)   <span class="comment">#initialize to all ones</span></span><br><span class="line">    weightsHistory=zeros((<span class="number">40</span>*m,n))</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">40</span>):</span><br><span class="line">        dataIndex = range(m)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">            alpha = <span class="number">4</span>/(<span class="number">1.0</span>+j+i)+<span class="number">0.01</span></span><br><span class="line">            randIndex = int(random.uniform(<span class="number">0</span>,len(dataIndex)))</span><br><span class="line">            h = logRegres.sigmoid(sum(dataMatrix[randIndex]*weights))</span><br><span class="line">            error = classLabels[randIndex] - h</span><br><span class="line">            <span class="comment">#print error</span></span><br><span class="line">            weights = weights + alpha * error * dataMatrix[randIndex]</span><br><span class="line">            weightsHistory[j*m + i,:] = weights</span><br><span class="line">            <span class="keyword">del</span>(dataIndex[randIndex])</span><br><span class="line">    <span class="keyword">print</span> weights</span><br><span class="line">    <span class="keyword">return</span> weightsHistory</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">dataMat,labelMat=logRegres.loadDataSet()</span><br><span class="line">dataArr = array(dataMat)</span><br><span class="line">myHist = stocGradAscent1(dataArr,labelMat)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n = shape(dataArr)[<span class="number">0</span>] <span class="comment">#number of points to create</span></span><br><span class="line">xcord1 = []; ycord1 = []</span><br><span class="line">xcord2 = []; ycord2 = []</span><br><span class="line"></span><br><span class="line">markers =[]</span><br><span class="line">colors =[]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fig = plt.figure()</span><br><span class="line">ax = fig.add_subplot(<span class="number">311</span>)    <span class="comment"># take care</span></span><br><span class="line">type1 = ax.plot(myHist[:,<span class="number">0</span>])</span><br><span class="line">plt.ylabel(<span class="string">'X0'</span>)</span><br><span class="line">ax = fig.add_subplot(<span class="number">312</span>)</span><br><span class="line">type1 = ax.plot(myHist[:,<span class="number">1</span>])</span><br><span class="line">plt.ylabel(<span class="string">'X1'</span>)</span><br><span class="line">ax = fig.add_subplot(<span class="number">313</span>)</span><br><span class="line">type1 = ax.plot(myHist[:,<span class="number">2</span>])</span><br><span class="line">plt.xlabel(<span class="string">'iteration'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'X2'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>生成图像如下<img src="http://7xktmz.com1.z0.glb.clouddn.com/Logistic%E5%9B%9E%E5%BD%92-plotSDerror-%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B.png" width="500px"></p>
-<ul>
-<li>生成sigmoid函数 - sigmoidPlot.py<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> pylab <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">t = arange(-<span class="number">60.0</span>, <span class="number">60.3</span>, <span class="number">0.1</span>)</span><br><span class="line">s = <span class="number">1</span>/(<span class="number">1</span> + exp(-t))</span><br><span class="line">ax = subplot(<span class="number">211</span>)</span><br><span class="line">ax.plot(t,s)</span><br><span class="line"><span class="comment">#ax.axis([-5,5,0,1])</span></span><br><span class="line">plt.xlabel(<span class="string">'x'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'Sigmoid(x)'</span>)</span><br><span class="line">ax = subplot(<span class="number">212</span>)    <span class="comment"># x-y-index</span></span><br><span class="line">ax.plot(t,s)</span><br><span class="line">ax.axis([-<span class="number">60</span>,<span class="number">60</span>,<span class="number">0</span>,<span class="number">1</span>])    <span class="comment"># x-index width</span></span><br><span class="line">plt.xlabel(<span class="string">'x'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'Sigmoid(x)'</span>)</span><br><span class="line">show()</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>生成图像如下<img src="http://7xktmz.com1.z0.glb.clouddn.com/logistic%E5%9B%9E%E5%BD%92-sigmoid%E5%87%BD%E6%95%B0.png" width="500px"></p>
-<h1 id="Logistic_u56DE_u5F52_u603B_u7ED3"><a href="#Logistic_u56DE_u5F52_u603B_u7ED3" class="headerlink" title="Logistic回归总结"></a>Logistic回归总结</h1><blockquote>
+<h1 id="Logistic回归总结"><a href="#Logistic回归总结" class="headerlink" title="Logistic回归总结"></a>Logistic回归总结</h1><blockquote>
 <p>Logistic回归的目的是寻找一个非线性函数Sigmoid的最佳拟合参数，求解过程可以由最优化算法完成。随机梯度上升算法可以简化梯度上升算法，获取几乎相同的效果，并且占用更少的计算资源，在新数据到来时完成在线更新，而不需要重新读取整个数据集。</p>
 </blockquote>
 <hr>
 <p>参考文献： 《机器学习实战 - 美Peter Harrington》</p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/09/machinelearning5/">原始出处</a>(<a href="http://forec.github.io/2016/02/09/machinelearning5/">http://forec.github.io/2016/02/09/machinelearning5/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
-
+</span>
       
     </div>
-    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/02/11/machinelearning6/" rel="prev">机器学习笔记（Chapter 06 - 支持向量机）</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/04/machinelearning1-4/" rel="next">机器学习笔记（Chapter 01-04）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2016/02/11/machinelearning6/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
+
+ </div>
+
         
-          机器学习笔记（Chapter 06 - 支持向量机）
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/02/09/machinelearning5/"
+                   data-title="机器学习笔记（Chapter 05 - Logistic回归）" data-url="http://forec.github.io/2016/02/09/machinelearning5/">
+              </div>
+            
+          </div>
         
       </div>
-    </a>
+
+      
   
-  
-    <a href="/2016/02/04/machinelearning1-4/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">机器学习笔记（Chapter 01-04）</div>
-      <strong class="article-nav-caption">></strong>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-<div class="share_jia">
-	<!-- JiaThis Button BEGIN -->
-	<div class="jiathis_style">
-		<span class="jiathis_txt">分享到: &nbsp; </span>
-		<a class="jiathis_button_facebook"></a> 
-    <a class="jiathis_button_twitter"></a>
-    <a class="jiathis_button_plus"></a> 
-    <a class="jiathis_button_tsina"></a>
-		<a class="jiathis_button_cqq"></a>
-		<a class="jiathis_button_douban"></a>
-		<a class="jiathis_button_weixin"></a>
-		<a class="jiathis_button_tumblr"></a>
-    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	</div>
-	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
-	<!-- JiaThis Button END -->
-</div>
-
-
-
-
-
-
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="machinelearning5" data-title="机器学习笔记（Chapter 05 - Logistic回归）" data-url="http://forec.github.io/2016/02/09/machinelearning5/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"forec"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
-
-
-
-
-</div>
-      <footer id="footer">
-  <div class="outer">
-    <div id="footer-info">
-    	<div class="footer-left">
-    		&copy; 2016 Forec
-    	</div>
-      	<div class="footer-right">
-      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
-      	</div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
-</footer>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Logistic回归和Sigmoid函数"><span class="nav-number">1.</span> <span class="nav-text">Logistic回归和Sigmoid函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最佳回归系数确定"><span class="nav-number">2.</span> <span class="nav-text">最佳回归系数确定</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#随机梯度上升"><span class="nav-number">3.</span> <span class="nav-text">随机梯度上升</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#处理数据中的缺失值"><span class="nav-number">4.</span> <span class="nav-text">处理数据中的缺失值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Matplotlib绘制"><span class="nav-number">5.</span> <span class="nav-text">Matplotlib绘制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Logistic回归总结"><span class="nav-number">6.</span> <span class="nav-text">Logistic回归总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
     </div>
-    
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  </aside>
 
 
-<script>
-	var yiliaConfig = {
-		fancybox: true,
-		mathjax: true,
-		animate: true,
-		isHome: false,
-		isPost: true,
-		isArchive: false,
-		isTag: false,
-		isCategory: false,
-		open_in_new: false
-	}
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
-<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
-<script src="/js/main.js" type="text/javascript"></script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
 
 
 
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
 
 
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
 
 <script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-        processEscapes: true,
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    }
-});
-
-MathJax.Hub.Queue(function() {
+  MathJax.Hub.Queue(function() {
     var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';                 
-    }       
-});
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
 </script>
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 
-  </div>
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
 </body>
 </html>

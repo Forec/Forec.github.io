@@ -1,12 +1,45 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
 <head>
-  <meta charset="utf-8">
   
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>C语言的一种错误传参做法 | Forec的博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="多次遇过的一个错误传参做法。">
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="Mistakes," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec的博客" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="多次遇过的一个错误传参做法。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C语言的一种错误传参做法">
 <meta property="og:url" content="http://forec.github.io/2015/12/28/parameter-error/index.html">
@@ -16,230 +49,213 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C语言的一种错误传参做法">
 <meta name="twitter:description" content="多次遇过的一个错误传参做法。">
-  
-    <link rel="alternative" href="/atom.xml" title="Forec的博客" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> C语言的一种错误传参做法 | Forec的博客 </title>
 </head>
 
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-	<header id="header" class="inner">
-		<a href="/" class="profilepic">
-			
-			<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-		</a>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-		<hgroup>
-		  <h1 class="header-author"><a href="/">Forec</a></h1>
-		</hgroup>
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
 
-		
-		<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-		
 
-		
-			<div class="switch-btn">
-				<div class="icon">
-					<div class="icon-ctn">
-						<div class="icon-wrap icon-house" data-idx="0">
-							<div class="birdhouse"></div>
-							<div class="birdhouse_holes"></div>
-						</div>
-						<div class="icon-wrap icon-ribbon hide" data-idx="1">
-							<div class="ribbon"></div>
-						</div>
-						
-						<div class="icon-wrap icon-link hide" data-idx="2">
-							<div class="loopback_l"></div>
-							<div class="loopback_r"></div>
-						</div>
-						
-						
-						<div class="icon-wrap icon-me hide" data-idx="3">
-							<div class="user"></div>
-							<div class="shoulder"></div>
-						</div>
-						
-					</div>
-					
-				</div>
-				<div class="tips-box hide">
-					<div class="tips-arrow"></div>
-					<ul class="tips-inner">
-						<li>菜单</li>
-						<li>标签</li>
-						
-						<li>友情链接</li>
-						
-						
-						<li>关于我</li>
-						
-					</ul>
-				</div>
-			</div>
-		
 
-		<div class="switch-area">
-			<div class="switch-wrap">
-				<section class="switch-part switch-part1">
-					<nav class="header-menu">
-						<ul>
-						
-							<li><a href="/">主页</a></li>
-				        
-							<li><a href="/archives">所有文章</a></li>
-				        
-						</ul>
-					</nav>
-					<nav class="header-nav">
-						<div class="social">
-							
-								<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-					        
-								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-					        
-								<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-					        
-						</div>
-					</nav>
-				</section>
-				
-				
-				<section class="switch-part switch-part2">
-					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/Data-Structures/" style="font-size: 15px;">Data-Structures</a> <a href="/tags/Mistakes/" style="font-size: 10px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/字符编码/" style="font-size: 10px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 12.5px;">机器学习</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.5px;">计算机组成与体系结构</a>
-					</div>
-				</section>
-				
-				
-				
-				<section class="switch-part switch-part3">
-					<div id="js-friends">
-					
-			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.codewars.com/users/Forec">Forec的CodeWars</a>
-			        
-			        </div>
-				</section>
-				
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
 
-				
-				
-				<section class="switch-part switch-part4">
-				
-					<div id="js-aboutme">就读于北京邮电大学，代码爱好者。近期自学机器学习。</div>
-				</section>
-				
-			</div>
-		</div>
-	</header>				
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec的博客</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
 </div>
 
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
     </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-  	<div class="overlay">
-  		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide">Forec</h1>
-  	</div>
-	<div class="intrude-less">
-		<header id="header" class="inner">
-			<div class="profilepic">
-			
-				<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-			</div>
-			<hgroup>
-			  <h1 class="header-author">Forec</h1>
-			</hgroup>
-			
-			<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-			
-			<nav class="header-menu">
-				<ul>
-				
-					<li><a href="/">主页</a></li>
-		        
-					<li><a href="/archives">所有文章</a></li>
-		        
-		        <div class="clearfix"></div>
-				</ul>
-			</nav>
-			<nav class="header-nav">
-				<div class="social">
-					
-						<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-			        
-						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-			        
-						<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-			        
-				</div>
-			</nav>
-		</header>				
-	</div>
+  
 </nav>
 
-      <div class="body-wrap"><article id="post-parameter-error" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/28/parameter-error/" class="article-date">
-  	<time datetime="2015-12-28T01:36:09.000Z" itemprop="datePublished">2015-12-28</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      C语言的一种错误传参做法
-    </h1>
-  
+ </div>
+    </header>
 
-      </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
       
-      <div class="article-info article-info-post">
-        
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mistakes/">Mistakes</a></li></ul>
-	</div>
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              C语言的一种错误传参做法
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-12-28T09:36:09+08:00" content="2015-12-28">
+            2015-12-28
+          </time>
+        </span>
 
         
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Language/">Language</a>
-	</div>
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Language/" itemprop="url" rel="index">
+                  <span itemprop="name">Language</span>
+                </a>
+              </span>
 
+              
+              
 
-        <div class="clearfix"></div>
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/12/28/parameter-error/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/28/parameter-error/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
       </div>
+    </header>
+
+    <div class="post-body">
+
       
-    
-    <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
+
+      
+        <span itemprop="articleBody"><blockquote>
 <p>多次遇过的一个错误传参做法。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="C/C++_u4E2D_u7684_u5806_u548C_u6808"><a href="#C/C++_u4E2D_u7684_u5806_u548C_u6808" class="headerlink" title="C/C++中的堆和栈"></a>C/C++中的堆和栈</h1><ul>
+<h1 id="C-C-中的堆和栈"><a href="#C-C-中的堆和栈" class="headerlink" title="C/C++中的堆和栈"></a>C/C++中的堆和栈</h1><ul>
 <li>栈区由编译器自动分配和释放，存放函数的参数值，局部变量值等，下面称之为系统栈，因为由编译器环境系统为其分配。 </li>
 <li>堆区由程序员通过malloc, realloc, calloc分配和释放，若程序员申请堆空间后不free，程序结束时可能由操作系统回收。堆区的内存空间分配类似数据结构中的链表和散列表结合，在可用的内存/虚拟内存空间中寻找一块足够大的、满足malloc等分配函数要求的空间，标记该块空间为已使用，并返回该块空间的首地址。</li>
 <li>全局区/静态区存放全局变量和静态变量，其中在代码中初始化的全局变量和静态变量在一块区域，未初始化的全局变量和未初始化的静态变量在相邻的另一块区域。程序结束后该区域由系统释放。</li>
 <li>文字常量区，存放const常量、字符串等。程序结束后由系统释放。</li>
 <li>程序代码区，存放函数体的二进制代码。  </li>
 </ul>
-<h1 id="u6309_u503C_u4F20_u9012"><a href="#u6309_u503C_u4F20_u9012" class="headerlink" title="按值传递"></a>按值传递</h1><blockquote>
+<h1 id="按值传递"><a href="#按值传递" class="headerlink" title="按值传递"></a>按值传递</h1><blockquote>
 <p>C语言没有C++的按引用传递，要在子函数中修改父函数里声明的局部变量，需要将该变量的地址作为参数传入子函数，在子函数中通过类似(*str)的方法修改str指向的内存中存储的值。</p>
 </blockquote>
 <p>一个简单的测试如下<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func1</span><span class="params">( <span class="keyword">int</span> a )</span></span>&#123;</span><br><span class="line">	a = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	func1(a);	<span class="comment">/* 传递a的拷贝 */</span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"%d\n"</span>, a);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -248,7 +264,7 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func1</span><span class="params">( <span class="keyword">int</span> * a, <span class="keyword">int</span> * b )</span></span>&#123;</span><br><span class="line">	a = b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> a = <span class="number">1</span>, b = <span class="number">2</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"%d %d\n"</span>, &amp;a, &amp;b);</span><br><span class="line">	func1( &amp;a, &amp;b);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"%d %d\n"</span>, &amp;a, &amp;b);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>得到的运行结果不定（在不同时间、不同计算机上执行，内存地址不同），但格式类似如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[forec@forec ~]$ gcc wrongparameter2.c -o t</span><br><span class="line">[forec@forec ~]$ ./t</span><br><span class="line"><span class="number">493409228</span> <span class="number">493409224</span></span><br><span class="line"><span class="number">493409228</span> <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
 <p>上面运行结果说明，main函数中的&amp;a在执行func1前后没有变化，这和最初给出的错误传参做法是一致的，将父函数中a的地址&amp;a作为参数传入子函数，<strong>子函数无法修改&amp;a的值（也就是main里变量a的地址），只能修改&amp;a指向的内存块的值</strong>。</p>
-<h1 id="u9519_u8BEF_u4F20_u53C2_u6D4B_u8BD5"><a href="#u9519_u8BEF_u4F20_u53C2_u6D4B_u8BD5" class="headerlink" title="错误传参测试"></a>错误传参测试</h1><h2 id="u4E00_u7EF4_u6570_u7EC4_u5728_u5B50_u51FD_u6570_u4E2D_u52A8_u6001_u5206_u914D"><a href="#u4E00_u7EF4_u6570_u7EC4_u5728_u5B50_u51FD_u6570_u4E2D_u52A8_u6001_u5206_u914D" class="headerlink" title="一维数组在子函数中动态分配"></a>一维数组在子函数中动态分配</h2><p>下面给出一种错误的一维数组动态分配示例。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func1</span><span class="params">(<span class="keyword">int</span> * str1)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"starting malloc str1 with 10 * int ..."</span>);</span><br><span class="line">	str1 = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>)*<span class="number">10</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"In func1, after malloc, the value of str1 is %d\n"</span>, str1 );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; <span class="number">10</span> ; i++ )</span><br><span class="line">		str1[i] = i;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"In func1, the value of str1[] is"</span>);</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; <span class="number">10</span> ; i++ )</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d "</span>,str1[i]);</span><br><span class="line">	<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> * str, i;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"Before func1, the value of array str is"</span>);</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; <span class="number">10</span> ; i++ )</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d "</span>, str[i] );</span><br><span class="line">	<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"In main function, str is %d\n"</span>, str );</span><br><span class="line">	func1(str);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"After func1, str is %d\n"</span>, str );</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"After func1, the value of array str is"</span>);</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; <span class="number">10</span> ; i++ )</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d "</span>, str[i] );</span><br><span class="line">	<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="错误传参测试"><a href="#错误传参测试" class="headerlink" title="错误传参测试"></a>错误传参测试</h1><h2 id="一维数组在子函数中动态分配"><a href="#一维数组在子函数中动态分配" class="headerlink" title="一维数组在子函数中动态分配"></a>一维数组在子函数中动态分配</h2><p>下面给出一种错误的一维数组动态分配示例。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func1</span><span class="params">(<span class="keyword">int</span> * str1)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"starting malloc str1 with 10 * int ..."</span>);</span><br><span class="line">	str1 = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>)*<span class="number">10</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"In func1, after malloc, the value of str1 is %d\n"</span>, str1 );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; <span class="number">10</span> ; i++ )</span><br><span class="line">		str1[i] = i;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"In func1, the value of str1[] is"</span>);</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; <span class="number">10</span> ; i++ )</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d "</span>,str1[i]);</span><br><span class="line">	<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> * str, i;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"Before func1, the value of array str is"</span>);</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; <span class="number">10</span> ; i++ )</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d "</span>, str[i] );</span><br><span class="line">	<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"In main function, str is %d\n"</span>, str );</span><br><span class="line">	func1(str);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"After func1, str is %d\n"</span>, str );</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"After func1, the value of array str is"</span>);</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; <span class="number">10</span> ; i++ )</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d "</span>, str[i] );</span><br><span class="line">	<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>执行上面的代码，运行结果如下<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Before func1, the value of <span class="built_in">array</span> str is</span><br><span class="line"><span class="number">1</span> <span class="number">0</span> -<span class="number">649909861</span> <span class="number">32764</span> <span class="number">0</span> <span class="number">0</span> -<span class="number">649909857</span> <span class="number">32764</span> -<span class="number">649909841</span> <span class="number">32764</span> </span><br><span class="line">In main function, str is -<span class="number">649916608</span></span><br><span class="line">starting <span class="built_in">malloc</span> str1 with <span class="number">10</span> * <span class="keyword">int</span> ...</span><br><span class="line">In func1, after <span class="built_in">malloc</span>, the value of str1 is <span class="number">30027792</span></span><br><span class="line">In func1, the value of str1[] is</span><br><span class="line"><span class="number">0</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span> <span class="number">9</span> </span><br><span class="line">After func1, str is -<span class="number">649916608</span></span><br><span class="line">After func1, the value of <span class="built_in">array</span> str is</span><br><span class="line"><span class="number">1</span> <span class="number">0</span> -<span class="number">649909861</span> <span class="number">32764</span> <span class="number">0</span> <span class="number">0</span> -<span class="number">649909857</span> <span class="number">32764</span> -<span class="number">649909841</span> <span class="number">32764</span></span><br></pre></td></tr></table></figure></p>
 <p>在代码中，为了突出区分str和传给func1的str的拷贝，将func1的参数用str1表示。可以看出，str的值（str是一个int * 变量，其值就是指向的int型的指针）在func1前后都没有变化，func1函数中变化的仅仅是str的拷贝str1。因此上面代码的传参方法有误。可行的传参方法有下面两种，下面的第一种是正确的，第二种在C语言中可行，因为C语言不存在垃圾回收，但这种习惯不好，容易造成野指针。并且在支持垃圾回收的语言中，函数结束后会释放函数执行过程中产生的垃圾。</p>
 <p><strong>可行做法1</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func1</span><span class="params">(<span class="keyword">int</span> ** str1)</span></span>&#123;	<span class="comment">/* 要为int *类型赋值，传入int** */</span></span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"starting malloc str1 with 10 * int ..."</span>);</span><br><span class="line">	*str1 = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>)*<span class="number">10</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"In func1, after malloc, the value of str1 is %d\n"</span>, *str1 );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; <span class="number">10</span> ; i++ )</span><br><span class="line">		(*str1)[i] = i;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"In func1, the value of str1[] is"</span>);</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; <span class="number">10</span> ; i++ )</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d "</span>,(*str1)[i]);</span><br><span class="line">	<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> * str, i;</span><br><span class="line">	......</span><br><span class="line">	func1(&amp;str);	<span class="comment">/* 传入指针str所在的地址 */</span></span><br><span class="line">	......</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -256,7 +272,7 @@
 <p><strong>可行做法2</strong></p>
 <figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> * func1( <span class="keyword">int</span> * <span class="keyword">str</span> )&#123;</span><br><span class="line">	......</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">str</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> main()&#123;</span><br><span class="line">	<span class="keyword">int</span> * <span class="keyword">str</span>, i;</span><br><span class="line">	......</span><br><span class="line">	<span class="keyword">str</span> = func1( <span class="keyword">str</span> );</span><br><span class="line">	......</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>为func1设一个int *类型的返回值，之所以func1对str1的修改无法影响str，是因为str1仅仅是str的拷贝。因此在func1结束时把str1返回，并赋值给str。运行结果和上面的做法1相同。</p>
-<h2 id="u4E8C_u7EF4_u6570_u7EC4_u5728_u5B50_u51FD_u6570_u4E2D_u52A8_u6001_u5206_u914D"><a href="#u4E8C_u7EF4_u6570_u7EC4_u5728_u5B50_u51FD_u6570_u4E2D_u52A8_u6001_u5206_u914D" class="headerlink" title="二维数组在子函数中动态分配"></a>二维数组在子函数中动态分配</h2><p>这类错误引发的主要场景在二维数组，尤其是结构体数组的分配上。考虑下面测试代码。</p>
+<h2 id="二维数组在子函数中动态分配"><a href="#二维数组在子函数中动态分配" class="headerlink" title="二维数组在子函数中动态分配"></a>二维数组在子函数中动态分配</h2><p>这类错误引发的主要场景在二维数组，尤其是结构体数组的分配上。考虑下面测试代码。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func2</span><span class="params">(<span class="keyword">int</span> ** str2)</span></span>&#123;</span><br><span class="line">	str2 = (<span class="keyword">int</span>**)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>*)*<span class="number">10</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"In func2, the value of str2 is %d\n"</span>,str2);</span><br><span class="line">	<span class="keyword">int</span> i, j;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">		str2[i] = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>)*<span class="number">10</span>);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">" The value of str2[%d] is %d\n"</span>, i, str2[i]);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"And the value of the array is "</span>);</span><br><span class="line">		<span class="keyword">for</span> ( j = <span class="number">0</span> ; j &lt; <span class="number">10</span> ; j++ )&#123;</span><br><span class="line">			str2[i][j] = i * <span class="number">10</span> + j;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"%d "</span>, str2[i][j]);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> ** str2; 				<span class="comment">/* str2 is stored in stack, which was not initialized */</span></span><br><span class="line">	<span class="keyword">int</span> i, j ;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Before run func2, the str2 is %d\n"</span>, str2);</span><br><span class="line">	func2(str2);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"After run func2, return to main, the str2 is %d\n"</span>, str2);</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; <span class="number">10</span> ; i++ )</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"str2[i] is %d\n"</span>, str2[i]);</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"The value of total str2 is :"</span>);</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; <span class="number">10</span> ; i++ )&#123;</span><br><span class="line">		<span class="keyword">for</span> ( j = <span class="number">0</span> ; j &lt; <span class="number">10</span> ; j++ )</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"%d "</span>, str2[i][j]);</span><br><span class="line">		<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运行结果如下<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">Before run func2, the str2 is -<span class="number">1427732048</span></span><br><span class="line">In func2, the value of str2 is <span class="number">10940432</span></span><br><span class="line"> The value of str2[<span class="number">0</span>] is <span class="number">10940528</span></span><br><span class="line">And the value of the <span class="built_in">array</span> is <span class="number">0</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span> <span class="number">9</span> </span><br><span class="line"> The value of str2[<span class="number">1</span>] is <span class="number">10940576</span></span><br><span class="line">And the value of the <span class="built_in">array</span> is <span class="number">10</span> <span class="number">11</span> <span class="number">12</span> <span class="number">13</span> <span class="number">14</span> <span class="number">15</span> <span class="number">16</span> <span class="number">17</span> <span class="number">18</span> <span class="number">19</span> </span><br><span class="line"> The value of str2[<span class="number">2</span>] is <span class="number">10940624</span></span><br><span class="line">And the value of the <span class="built_in">array</span> is <span class="number">20</span> <span class="number">21</span> <span class="number">22</span> <span class="number">23</span> <span class="number">24</span> <span class="number">25</span> <span class="number">26</span> <span class="number">27</span> <span class="number">28</span> <span class="number">29</span> </span><br><span class="line"> The value of str2[<span class="number">3</span>] is <span class="number">10940672</span></span><br><span class="line">And the value of the <span class="built_in">array</span> is <span class="number">30</span> <span class="number">31</span> <span class="number">32</span> <span class="number">33</span> <span class="number">34</span> <span class="number">35</span> <span class="number">36</span> <span class="number">37</span> <span class="number">38</span> <span class="number">39</span> </span><br><span class="line"> The value of str2[<span class="number">4</span>] is <span class="number">10940720</span></span><br><span class="line">And the value of the <span class="built_in">array</span> is <span class="number">40</span> <span class="number">41</span> <span class="number">42</span> <span class="number">43</span> <span class="number">44</span> <span class="number">45</span> <span class="number">46</span> <span class="number">47</span> <span class="number">48</span> <span class="number">49</span> </span><br><span class="line"> The value of str2[<span class="number">5</span>] is <span class="number">10940768</span></span><br><span class="line">And the value of the <span class="built_in">array</span> is <span class="number">50</span> <span class="number">51</span> <span class="number">52</span> <span class="number">53</span> <span class="number">54</span> <span class="number">55</span> <span class="number">56</span> <span class="number">57</span> <span class="number">58</span> <span class="number">59</span> </span><br><span class="line"> The value of str2[<span class="number">6</span>] is <span class="number">10940816</span></span><br><span class="line">And the value of the <span class="built_in">array</span> is <span class="number">60</span> <span class="number">61</span> <span class="number">62</span> <span class="number">63</span> <span class="number">64</span> <span class="number">65</span> <span class="number">66</span> <span class="number">67</span> <span class="number">68</span> <span class="number">69</span> </span><br><span class="line"> The value of str2[<span class="number">7</span>] is <span class="number">10940864</span></span><br><span class="line">And the value of the <span class="built_in">array</span> is <span class="number">70</span> <span class="number">71</span> <span class="number">72</span> <span class="number">73</span> <span class="number">74</span> <span class="number">75</span> <span class="number">76</span> <span class="number">77</span> <span class="number">78</span> <span class="number">79</span> </span><br><span class="line"> The value of str2[<span class="number">8</span>] is <span class="number">10940912</span></span><br><span class="line">And the value of the <span class="built_in">array</span> is <span class="number">80</span> <span class="number">81</span> <span class="number">82</span> <span class="number">83</span> <span class="number">84</span> <span class="number">85</span> <span class="number">86</span> <span class="number">87</span> <span class="number">88</span> <span class="number">89</span> </span><br><span class="line"> The value of str2[<span class="number">9</span>] is <span class="number">10940960</span></span><br><span class="line">And the value of the <span class="built_in">array</span> is <span class="number">90</span> <span class="number">91</span> <span class="number">92</span> <span class="number">93</span> <span class="number">94</span> <span class="number">95</span> <span class="number">96</span> <span class="number">97</span> <span class="number">98</span> <span class="number">99</span> </span><br><span class="line">After run func2, <span class="keyword">return</span> to main, the str2 is -<span class="number">1427732048</span></span><br><span class="line">str2[i] is <span class="number">1</span></span><br><span class="line">str2[i] is -<span class="number">1427727973</span></span><br><span class="line">str2[i] is <span class="number">0</span></span><br><span class="line">str2[i] is -<span class="number">1427727969</span></span><br><span class="line">str2[i] is -<span class="number">1427727953</span></span><br><span class="line">str2[i] is -<span class="number">1427727942</span></span><br><span class="line">str2[i] is -<span class="number">1427727925</span></span><br><span class="line">str2[i] is -<span class="number">1427727831</span></span><br><span class="line">str2[i] is -<span class="number">1427727796</span></span><br><span class="line">str2[i] is -<span class="number">1427727780</span></span><br><span class="line">The value of total str2 is :</span><br><span class="line">段错误 (核心已转储)</span><br></pre></td></tr></table></figure></p>
 <p>可以看出，main中的str2并没有受func2执行的影响。联系上面一维数组的动态分配，可以联想到，要么让func2返回str2的值，要么传入str2的地址，而func2接收int <em>*</em> 类型的参数。</p>
@@ -264,144 +280,461 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func2</span><span class="params">(<span class="keyword">int</span> *** str2)</span></span>&#123;</span><br><span class="line">	*str2 = (<span class="keyword">int</span>**)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>*)*<span class="number">10</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"In func2, the value of str2 is %d\n"</span>,*str2);</span><br><span class="line">	<span class="keyword">int</span> i, j;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">		(*str2)[i] = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>)*<span class="number">10</span>);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">" The value of str2[%d] is %d\n"</span>, i, (*str2)[i]);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"And the value of the array is "</span>);</span><br><span class="line">		<span class="keyword">for</span> ( j = <span class="number">0</span> ; j &lt; <span class="number">10</span> ; j++ )&#123;</span><br><span class="line">			(*str2)[i][j] = i * <span class="number">10</span> + j;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"%d "</span>, (*str2)[i][j]);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> ** str2, i, j;</span><br><span class="line">	......</span><br><span class="line">	func2(&amp;str2);</span><br><span class="line">	......</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>正确做法2</strong></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> ** <span class="title">func2</span><span class="params">(<span class="keyword">int</span> ** str2)</span></span>&#123;</span><br><span class="line">	......</span><br><span class="line">	<span class="keyword">return</span> str2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="u91CE_u6307_u9488"><a href="#u91CE_u6307_u9488" class="headerlink" title="野指针"></a>野指针</h2><p>对malloc分配的堆空间，free对应的首地址后一定要将指针变量赋为NULL。如<code>p = ( int * )malloc(sizeof(int) * 10)</code>，若free(p)，则一定要 p = NULL，否则p指向的内存空间已经释放，而p指向了垃圾内存，成为野指针。再次调用p会引发不允许的内存访问。</p>
+<h2 id="野指针"><a href="#野指针" class="headerlink" title="野指针"></a>野指针</h2><p>对malloc分配的堆空间，free对应的首地址后一定要将指针变量赋为NULL。如<code>p = ( int * )malloc(sizeof(int) * 10)</code>，若free(p)，则一定要 p = NULL，否则p指向的内存空间已经释放，而p指向了垃圾内存，成为野指针。再次调用p会引发不允许的内存访问。</p>
 <hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/12/28/parameter-error/">原始出处</a>(<a href="http://forec.github.io/2015/12/28/parameter-error/">http://forec.github.io/2015/12/28/parameter-error/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
-
+</span>
       
     </div>
-    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Mistakes/" rel="tag">#Mistakes</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/02/04/machinelearning1-4/" rel="prev">机器学习笔记（Chapter 01-04）</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/25/Graph-Algorithms7-flow/" rel="next">最大流（一）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2016/02/04/machinelearning1-4/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
+
+ </div>
+
         
-          机器学习笔记（Chapter 01-04）
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/12/28/parameter-error/"
+                   data-title="C语言的一种错误传参做法" data-url="http://forec.github.io/2015/12/28/parameter-error/">
+              </div>
+            
+          </div>
         
       </div>
-    </a>
+
+      
   
-  
-    <a href="/2015/12/25/Graph-Algorithms7-flow/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">最大流（一）</div>
-      <strong class="article-nav-caption">></strong>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-<div class="share_jia">
-	<!-- JiaThis Button BEGIN -->
-	<div class="jiathis_style">
-		<span class="jiathis_txt">分享到: &nbsp; </span>
-		<a class="jiathis_button_facebook"></a> 
-    <a class="jiathis_button_twitter"></a>
-    <a class="jiathis_button_plus"></a> 
-    <a class="jiathis_button_tsina"></a>
-		<a class="jiathis_button_cqq"></a>
-		<a class="jiathis_button_douban"></a>
-		<a class="jiathis_button_weixin"></a>
-		<a class="jiathis_button_tumblr"></a>
-    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	</div>
-	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
-	<!-- JiaThis Button END -->
-</div>
-
-
-
-
-
-
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="parameter-error" data-title="C语言的一种错误传参做法" data-url="http://forec.github.io/2015/12/28/parameter-error/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"forec"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
-
-
-
-
-</div>
-      <footer id="footer">
-  <div class="outer">
-    <div id="footer-info">
-    	<div class="footer-left">
-    		&copy; 2016 Forec
-    	</div>
-      	<div class="footer-right">
-      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
-      	</div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
-</footer>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-C-中的堆和栈"><span class="nav-number">1.</span> <span class="nav-text">C/C++中的堆和栈</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#按值传递"><span class="nav-number">2.</span> <span class="nav-text">按值传递</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#错误传参测试"><span class="nav-number">3.</span> <span class="nav-text">错误传参测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一维数组在子函数中动态分配"><span class="nav-number">3.1.</span> <span class="nav-text">一维数组在子函数中动态分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二维数组在子函数中动态分配"><span class="nav-number">3.2.</span> <span class="nav-text">二维数组在子函数中动态分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#野指针"><span class="nav-number">3.3.</span> <span class="nav-text">野指针</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
     </div>
-    
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  </aside>
 
 
-<script>
-	var yiliaConfig = {
-		fancybox: true,
-		mathjax: true,
-		animate: true,
-		isHome: false,
-		isPost: true,
-		isArchive: false,
-		isTag: false,
-		isCategory: false,
-		open_in_new: false
-	}
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
-<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
-<script src="/js/main.js" type="text/javascript"></script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
 
 
 
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
 
 
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
 
 <script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-        processEscapes: true,
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    }
-});
-
-MathJax.Hub.Queue(function() {
+  MathJax.Hub.Queue(function() {
     var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';                 
-    }       
-});
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
 </script>
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 
-  </div>
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
 </body>
 </html>

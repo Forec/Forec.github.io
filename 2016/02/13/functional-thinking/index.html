@@ -1,238 +1,254 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
 <head>
-  <meta charset="utf-8">
   
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>《函数式编程思维》笔记 | Forec的博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="函数式编程," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec的博客" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《函数式编程思维》笔记">
 <meta property="og:url" content="http://forec.github.io/2016/02/13/functional-thinking/index.html">
 <meta property="og:site_name" content="Forec的博客">
 <meta property="og:description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
-<meta property="og:updated_time" content="2016-02-13T03:13:23.053Z">
+<meta property="og:updated_time" content="2016-02-14T07:34:24.022Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《函数式编程思维》笔记">
 <meta name="twitter:description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
-  
-    <link rel="alternative" href="/atom.xml" title="Forec的博客" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 《函数式编程思维》笔记 | Forec的博客 </title>
 </head>
 
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-	<header id="header" class="inner">
-		<a href="/" class="profilepic">
-			
-			<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-		</a>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-		<hgroup>
-		  <h1 class="header-author"><a href="/">Forec</a></h1>
-		</hgroup>
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
 
-		
-		<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-		
 
-		
-			<div class="switch-btn">
-				<div class="icon">
-					<div class="icon-ctn">
-						<div class="icon-wrap icon-house" data-idx="0">
-							<div class="birdhouse"></div>
-							<div class="birdhouse_holes"></div>
-						</div>
-						<div class="icon-wrap icon-ribbon hide" data-idx="1">
-							<div class="ribbon"></div>
-						</div>
-						
-						<div class="icon-wrap icon-link hide" data-idx="2">
-							<div class="loopback_l"></div>
-							<div class="loopback_r"></div>
-						</div>
-						
-						
-						<div class="icon-wrap icon-me hide" data-idx="3">
-							<div class="user"></div>
-							<div class="shoulder"></div>
-						</div>
-						
-					</div>
-					
-				</div>
-				<div class="tips-box hide">
-					<div class="tips-arrow"></div>
-					<ul class="tips-inner">
-						<li>菜单</li>
-						<li>标签</li>
-						
-						<li>友情链接</li>
-						
-						
-						<li>关于我</li>
-						
-					</ul>
-				</div>
-			</div>
-		
 
-		<div class="switch-area">
-			<div class="switch-wrap">
-				<section class="switch-part switch-part1">
-					<nav class="header-menu">
-						<ul>
-						
-							<li><a href="/">主页</a></li>
-				        
-							<li><a href="/archives">所有文章</a></li>
-				        
-						</ul>
-					</nav>
-					<nav class="header-nav">
-						<div class="social">
-							
-								<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-					        
-								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-					        
-								<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-					        
-						</div>
-					</nav>
-				</section>
-				
-				
-				<section class="switch-part switch-part2">
-					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/Data-Structures/" style="font-size: 15px;">Data-Structures</a> <a href="/tags/Mistakes/" style="font-size: 10px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/字符编码/" style="font-size: 10px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 12.5px;">机器学习</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.5px;">计算机组成与体系结构</a>
-					</div>
-				</section>
-				
-				
-				
-				<section class="switch-part switch-part3">
-					<div id="js-friends">
-					
-			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.codewars.com/users/Forec">Forec的CodeWars</a>
-			        
-			        </div>
-				</section>
-				
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
 
-				
-				
-				<section class="switch-part switch-part4">
-				
-					<div id="js-aboutme">就读于北京邮电大学，代码爱好者。近期自学机器学习。</div>
-				</section>
-				
-			</div>
-		</div>
-	</header>				
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec的博客</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
 </div>
 
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
     </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-  	<div class="overlay">
-  		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide">Forec</h1>
-  	</div>
-	<div class="intrude-less">
-		<header id="header" class="inner">
-			<div class="profilepic">
-			
-				<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-			</div>
-			<hgroup>
-			  <h1 class="header-author">Forec</h1>
-			</hgroup>
-			
-			<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-			
-			<nav class="header-menu">
-				<ul>
-				
-					<li><a href="/">主页</a></li>
-		        
-					<li><a href="/archives">所有文章</a></li>
-		        
-		        <div class="clearfix"></div>
-				</ul>
-			</nav>
-			<nav class="header-nav">
-				<div class="social">
-					
-						<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-			        
-						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-			        
-						<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-			        
-				</div>
-			</nav>
-		</header>				
-	</div>
+  
 </nav>
 
-      <div class="body-wrap"><article id="post-functional-thinking" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/02/13/functional-thinking/" class="article-date">
-  	<time datetime="2016-02-13T01:36:15.000Z" itemprop="datePublished">2016-02-13</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      《函数式编程思维》笔记
-    </h1>
-  
+ </div>
+    </header>
 
-      </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
       
-      <div class="article-info article-info-post">
-        
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程/">函数式编程</a></li></ul>
-	</div>
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              《函数式编程思维》笔记
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-02-13T09:36:15+08:00" content="2016-02-13">
+            2016-02-13
+          </time>
+        </span>
 
         
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Code/">Code</a>
-	</div>
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Code/" itemprop="url" rel="index">
+                  <span itemprop="name">Code</span>
+                </a>
+              </span>
 
+              
+              
 
-        <div class="clearfix"></div>
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/02/13/functional-thinking/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/13/functional-thinking/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
       </div>
+    </header>
+
+    <div class="post-body">
+
       
-    
-    <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
+
+      
+        <span itemprop="articleBody"><blockquote>
 <p>函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="u601D_u7EF4_u8F6C_u53D8"><a href="#u601D_u7EF4_u8F6C_u53D8" class="headerlink" title="思维转变"></a>思维转变</h1><ul>
+<h1 id="思维转变"><a href="#思维转变" class="headerlink" title="思维转变"></a>思维转变</h1><ul>
 <li><p>命令式编程风格通常 <strong>迫使我们出于性能考虑，把不同的任务交织起来，以便能够用一次循环来完成多个任务</strong> 。而函数式编程用map、filter这些高阶函数把我们解放出来，让我们 <strong>站在更高的抽象层次上去考虑问题</strong> ，把问题看得更清楚。</p>
 </li>
 <li><p>把控制权让渡给语言（运行时）。“人生苦短，远离malloc”。函数式编程语言让我们用高阶抽象从容取代基本的控制结构，将琐碎的细节（如垃圾处理）交托给运行时。 <em>面向对象编程通过封装不确定因素来使代码能被人理解；函数式编程通过尽量减少不确定因素来使代码能被人理解。——Michael Feathers</em> 。与其建立种种机制来控制可变的状态，不如尽可能消灭可变的状态这个不确定因素。</p>
@@ -241,34 +257,30 @@
 <li>换用函数式语言不是关键，转变看待问题的角度才是必不可少的。命令式编程是按照“程序是一系列改变状态的命令”来建模的一种编程风格，鼓励程序员将操作安排在循环内部执行。 <strong>函数式语言希望尽可能减少可变的状态</strong> ，因此更多发展了通用性的计算设施。</li>
 <li>高阶函数消除了摩擦。语法上的便利是非常重要的方面， <strong>在语法处处掣肘下塑造出的抽象，很难配合我们的思维过程而不产生所谓的摩擦</strong> 。迭代需要让位于高阶函数，如果能用高阶函数把希望执行的操作表达出来，语言将会把操作安排的更高效。</li>
 </ul>
-<h1 id="u6743_u8D23_u8BA9_u6E21"><a href="#u6743_u8D23_u8BA9_u6E21" class="headerlink" title="权责让渡"></a>权责让渡</h1><ul>
+<h1 id="权责让渡"><a href="#权责让渡" class="headerlink" title="权责让渡"></a>权责让渡</h1><ul>
 <li><p><strong>理解掌握的抽象层次永远要比日常使用的抽象层次更深一层</strong> 。</p>
 </li>
 <li><p><strong>闭包</strong> （closure）实际上是一种特殊的函数，在暗地里绑定了函数内部引用的所有变量，换句话说，这种函数把它所引用的所有东西都放在一个上下文里包了起来。下面的代码先定义了一个Employee类，其中带有name和salary字段，接着定义带有amount参数的paidMore函数，其返回值是一个以Employee实例为参数的 <strong>代码块</strong> ，或者叫闭包。数值100000随着<code>isHighPaid = paidMore(100000)</code>这一步操作永久的和代码块绑定在一起。第二部分代码执行闭包。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class Employee&#123;</span><br><span class="line">    def name, salary</span><br><span class="line">&#125;</span><br><span class="line">def paidMore(amount) &#123;</span><br><span class="line">    return &#123;Employee e -&gt; e.salary &gt; amount &#125;</span><br><span class="line">&#125;</span><br><span class="line">isHighPaid = paidMore(100000)</span><br></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee</span>&#123;</span></span><br><span class="line">    <span class="keyword">def</span> name, salary</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">def</span> paidMore(amount) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;Employee e -&gt; e.salary &gt; amount &#125;</span><br><span class="line">&#125;</span><br><span class="line">isHighPaid = paidMore(<span class="number">100000</span>)</span><br><span class="line">  </span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> Smithers = <span class="keyword">new</span> Employee(<span class="string">name:</span><span class="string">"Fred"</span>, <span class="string">salary:</span><span class="number">120000</span>)</span><br><span class="line"><span class="keyword">def</span> Homer = <span class="keyword">new</span> Employee(<span class="string">name:</span><span class="string">"Homer"</span>, <span class="string">salary:</span><span class="number">80000</span>)</span><br><span class="line">println isHighPaid(Smithers)</span><br><span class="line">println isHighPaid(Homer)</span><br></pre></td></tr></table></figure>
 </li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">def Smithers = new Employee(name:"Fred", salary:120000)</span><br><span class="line">def Homer = new Employee(name:"Homer", salary:80000)</span><br><span class="line">println isHighPaid(Smithers)</span><br><span class="line">println isHighPaid(Homer)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>闭包经常被函数式语言和框架当作一种 <strong>异地执行的机制</strong> ，用来传递待执行的变换代码，如map之类的高阶函数。注意闭包是代码块，而不是一个值，各个闭包内部状态都是独立的，尽管局部变量不在代码块内定义，但只要代码块引用了该变量，两者就被绑定在一起，这种联系在代码块实例的全部生命期内一直保持着。从实现的角度说， <strong>代码块实例从它被创建的一刻起，就持有其作用域内一切事物的封闭副本</strong> 。下面的代码展示了闭包的异地执行。<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def Closure makeCounter()&#123;</span><br><span class="line">    def local_variable = 0</span><br><span class="line">    return &#123; return local_variable += 1&#125;</span><br><span class="line">&#125;</span><br><span class="line">c1 = makeCounter()</span><br><span class="line">c1()</span><br><span class="line">c1()</span><br><span class="line">c1()</span><br><span class="line">c2 = makeCounter()</span><br><span class="line">println "C1 = $&#123;c1()&#125;, C2 = $&#123;c2()&#125;"</span><br><span class="line">// output: C1 = 4, C2 = 1 //</span><br></pre></td></tr></table></figure>
+<li><p>闭包经常被函数式语言和框架当作一种 <strong>异地执行的机制</strong> ，用来传递待执行的变换代码，如map之类的高阶函数。注意闭包是代码块，而不是一个值，各个闭包内部状态都是独立的，尽管局部变量不在代码块内定义，但只要代码块引用了该变量，两者就被绑定在一起，这种联系在代码块实例的全部生命期内一直保持着。从实现的角度说， <strong>代码块实例从它被创建的一刻起，就持有其作用域内一切事物的封闭副本</strong> 。下面的代码展示了闭包的异地执行。闭包所表现出来的函数式思维就是，“让运行时去管理状态”。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> Closure makeCounter()&#123;</span><br><span class="line">    <span class="keyword">def</span> local_variable = <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="keyword">return</span> local_variable += <span class="number">1</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line">c1 = makeCounter()</span><br><span class="line">c1()</span><br><span class="line">c1()</span><br><span class="line">c1()</span><br><span class="line">c2 = makeCounter()</span><br><span class="line">println <span class="string">"C1 = $&#123;c1()&#125;, C2 = $&#123;c2()&#125;"</span></span><br><span class="line"><span class="comment">// output: C1 = 4, C2 = 1 //</span></span><br></pre></td></tr></table></figure>
 </li>
-</ul>
-<p>闭包所表现出来的函数式思维就是，“让运行时去管理状态”，同时也是推迟执行的绝佳样板。</p>
-<ul>
-<li><strong>柯里化</strong> 指的是从一个多参数函数变成 <strong>一连串单参数函数</strong> 的变换。它描述的是 <strong>变换的过程</strong> ，不涉及变换之后对函数的调用。调用者可以决定对多少个参数实施变换，余下的部分将衍生成一个参数数目较少的新函数。举例来说，函数process(x, y, z)完全柯里化之后变成process(x)(y)(z)的性质，其中process(x)和process(x)(y)都是单参数的函数。如果只对第一个参数柯里化，那么process(x)的返回值将是一个单参数的函数，而这个唯一的参数又接受另一个参数的输入。 <strong>函数柯里化的结果是返回链条中的下一个函数</strong> 。</li>
+<li><p><strong>柯里化</strong> 指的是从一个多参数函数变成 <strong>一连串单参数函数</strong> 的变换。它描述的是 <strong>变换的过程</strong> ，不涉及变换之后对函数的调用。调用者可以决定对多少个参数实施变换，余下的部分将衍生成一个参数数目较少的新函数。举例来说，函数process(x, y, z)完全柯里化之后变成process(x)(y)(z)的性质，其中process(x)和process(x)(y)都是单参数的函数。如果只对第一个参数柯里化，那么process(x)的返回值将是一个单参数的函数，而这个唯一的参数又接受另一个参数的输入。 <strong>函数柯里化的结果是返回链条中的下一个函数</strong> 。</p>
+</li>
 <li><p><strong>部分施用</strong> 指提前代入一部分参数值，使一个多参数得以省略部分参数，从而转化为一个参数数目较少的函数。 <strong>部分施用是把参数的取值绑定到用户在操作中提供的具体值上</strong> 。 </p>
 </li>
 <li><p><strong>递归</strong> 的核心在于对一个不断变短的列表反复做同一件事，利用递归，将状态的管理责任推给运行时。递归没有成为一种平常的操作，一个主要原因是栈的增长。使用尾调用优化的写法来帮助运行时科夫栈的增长问题。当递归调用是函数执行的最后一个调用时，运行时往往可以在栈里就地更新，而不需要增加新的栈空间。因此 <strong>尽可能多的使用尾递归的写法</strong> 。</p>
 </li>
 </ul>
-<h1 id="u8BB0_u5FC6_u548C_u7F13_u6C42_u503C"><a href="#u8BB0_u5FC6_u548C_u7F13_u6C42_u503C" class="headerlink" title="记忆和缓求值"></a>记忆和缓求值</h1><ul>
+<h1 id="记忆和缓求值"><a href="#记忆和缓求值" class="headerlink" title="记忆和缓求值"></a>记忆和缓求值</h1><ul>
 <li><p>只有对纯函数才能放心地使用函数缓存的结果，这刚好符合函数式特性。对于Groovy，可以先将记忆的函数定义为闭包，再对闭包使用memoize()方法获得一个新函数，这个新函数调用的时候结果就会被缓存起来。在Haskell中好像下面的链接可以实现。我们写出来的缓存决不可能比语言开发者设计的更高效，因为语言设计者可以无视他们给语言设定的规定。 <strong>语言设计者实现出来的机制总是比开发者自己做的效率高</strong> 。<a href="https://wiki.haskell.org/Memoization" target="_blank" rel="external">Haskell-Wiki上的Memoization</a></p>
 </li>
 <li><p>缓求值的好处：昂贵的运算只有到了绝对必要的时候才执行；可以建立无限大的集合，只要一接到请求就一直送出元素；按缓求值的方式使用map、filter等，可以产生更高效的代码。特别适合于资源生产成本较高的情况。Haskell的惰性求值就是这样的特性，是非严格求值的。在严格求值的语言运行下面代码会报错，而非严格求值的语言会得出4。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> length([<span class="number">2</span>+<span class="number">1</span>, <span class="number">3</span>*<span class="number">2</span>, <span class="number">1</span>/<span class="number">0</span>, <span class="number">5</span>-<span class="number">4</span>])</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h1 id="u8BED_u8A00_u6F14_u5316"><a href="#u8BED_u8A00_u6F14_u5316" class="headerlink" title="语言演化"></a>语言演化</h1><ul>
+<h1 id="语言演化"><a href="#语言演化" class="headerlink" title="语言演化"></a>语言演化</h1><ul>
 <li><p>少量的数据结构搭配大量的操作。函数式语言有很多操作，但对应的数据结构很少。面向对象语言鼓励建立专门针对某个类的方法，我们从类的关系中发现重复出现的模式并加以重用。 <strong>函数式语言的重用表现在函数的通用性上，他们鼓励在数据结构上使用各种共通的变换，并通过高阶函数来调整操作以满足具体事项的要求</strong> 。 <em>100个函数操作一种数据结构的组合，要好过10个函数操作10种数据结构的组合。——Alan Perlis</em></p>
 </li>
 <li><p><strong>让语言去迎合问题</strong> ，不要拿问题硬套语言，而是想法揉捏手中的语言来迎合问题。Lisp家族的语言传承了无可比拟的灵活性，对DSL的支持比主流语言要强得多。</p>
@@ -280,132 +292,458 @@
 <hr>
 <p>参考文献： 《函数式编程思维 - 美 Neal Ford》</p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/13/functional-thinking/">原始出处</a>(<a href="http://forec.github.io/2016/02/13/functional-thinking/">http://forec.github.io/2016/02/13/functional-thinking/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
-
+</span>
       
     </div>
-    
-  </div>
-  
-    
-<nav id="article-nav">
-  
-  
-    <a href="/2016/02/11/machinelearning6/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">机器学习笔记（Chapter 06 - 支持向量机）</div>
-      <strong class="article-nav-caption">></strong>
-    </a>
-  
-</nav>
 
-  
-</article>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/函数式编程/" rel="tag">#函数式编程</a>
+          
+        </div>
+      
 
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/02/14/machinelearning7/" rel="prev">AdaBoost元算法</a>
+            
+          </div>
 
-<div class="share_jia">
-	<!-- JiaThis Button BEGIN -->
-	<div class="jiathis_style">
-		<span class="jiathis_txt">分享到: &nbsp; </span>
-		<a class="jiathis_button_facebook"></a> 
-    <a class="jiathis_button_twitter"></a>
-    <a class="jiathis_button_plus"></a> 
-    <a class="jiathis_button_tsina"></a>
-		<a class="jiathis_button_cqq"></a>
-		<a class="jiathis_button_douban"></a>
-		<a class="jiathis_button_weixin"></a>
-		<a class="jiathis_button_tumblr"></a>
-    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	</div>
-	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
-	<!-- JiaThis Button END -->
-</div>
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/11/machinelearning6/" rel="next">机器学习笔记（Chapter 06 - 支持向量机）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
 
 
 
-
-
-
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="functional-thinking" data-title="《函数式编程思维》笔记" data-url="http://forec.github.io/2016/02/13/functional-thinking/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"forec"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
-
-
-
-
-</div>
-      <footer id="footer">
-  <div class="outer">
-    <div id="footer-info">
-    	<div class="footer-left">
-    		&copy; 2016 Forec
-    	</div>
-      	<div class="footer-right">
-      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
-      	</div>
+    <div class="post-spread">
+      
     </div>
   </div>
-</footer>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/02/13/functional-thinking/"
+                   data-title="《函数式编程思维》笔记" data-url="http://forec.github.io/2016/02/13/functional-thinking/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
-    
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#思维转变"><span class="nav-number">1.</span> <span class="nav-text">思维转变</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#权责让渡"><span class="nav-number">2.</span> <span class="nav-text">权责让渡</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#记忆和缓求值"><span class="nav-number">3.</span> <span class="nav-text">记忆和缓求值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#语言演化"><span class="nav-number">4.</span> <span class="nav-text">语言演化</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
 
 
-<script>
-	var yiliaConfig = {
-		fancybox: true,
-		mathjax: true,
-		animate: true,
-		isHome: false,
-		isPost: true,
-		isArchive: false,
-		isTag: false,
-		isCategory: false,
-		open_in_new: false
-	}
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
-<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
-<script src="/js/main.js" type="text/javascript"></script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
 
 
 
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
 
 
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
 
 <script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-        processEscapes: true,
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    }
-});
-
-MathJax.Hub.Queue(function() {
+  MathJax.Hub.Queue(function() {
     var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';                 
-    }       
-});
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
 </script>
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 
-  </div>
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
 </body>
 </html>

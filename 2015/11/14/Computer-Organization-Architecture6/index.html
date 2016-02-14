@@ -1,12 +1,45 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
 <head>
-  <meta charset="utf-8">
   
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>计组与体系结构笔记（六） | Forec的博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="输入/输出和存储系统。">
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="计算机组成与体系结构," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec的博客" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="输入/输出和存储系统。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计组与体系结构笔记（六）">
 <meta property="og:url" content="http://forec.github.io/2015/11/14/Computer-Organization-Architecture6/index.html">
@@ -22,223 +55,206 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计组与体系结构笔记（六）">
 <meta name="twitter:description" content="输入/输出和存储系统。">
-  
-    <link rel="alternative" href="/atom.xml" title="Forec的博客" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 计组与体系结构笔记（六） | Forec的博客 </title>
 </head>
 
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-	<header id="header" class="inner">
-		<a href="/" class="profilepic">
-			
-			<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-		</a>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-		<hgroup>
-		  <h1 class="header-author"><a href="/">Forec</a></h1>
-		</hgroup>
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
 
-		
-		<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-		
 
-		
-			<div class="switch-btn">
-				<div class="icon">
-					<div class="icon-ctn">
-						<div class="icon-wrap icon-house" data-idx="0">
-							<div class="birdhouse"></div>
-							<div class="birdhouse_holes"></div>
-						</div>
-						<div class="icon-wrap icon-ribbon hide" data-idx="1">
-							<div class="ribbon"></div>
-						</div>
-						
-						<div class="icon-wrap icon-link hide" data-idx="2">
-							<div class="loopback_l"></div>
-							<div class="loopback_r"></div>
-						</div>
-						
-						
-						<div class="icon-wrap icon-me hide" data-idx="3">
-							<div class="user"></div>
-							<div class="shoulder"></div>
-						</div>
-						
-					</div>
-					
-				</div>
-				<div class="tips-box hide">
-					<div class="tips-arrow"></div>
-					<ul class="tips-inner">
-						<li>菜单</li>
-						<li>标签</li>
-						
-						<li>友情链接</li>
-						
-						
-						<li>关于我</li>
-						
-					</ul>
-				</div>
-			</div>
-		
 
-		<div class="switch-area">
-			<div class="switch-wrap">
-				<section class="switch-part switch-part1">
-					<nav class="header-menu">
-						<ul>
-						
-							<li><a href="/">主页</a></li>
-				        
-							<li><a href="/archives">所有文章</a></li>
-				        
-						</ul>
-					</nav>
-					<nav class="header-nav">
-						<div class="social">
-							
-								<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-					        
-								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-					        
-								<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-					        
-						</div>
-					</nav>
-				</section>
-				
-				
-				<section class="switch-part switch-part2">
-					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/Data-Structures/" style="font-size: 15px;">Data-Structures</a> <a href="/tags/Mistakes/" style="font-size: 10px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/字符编码/" style="font-size: 10px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 12.5px;">机器学习</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.5px;">计算机组成与体系结构</a>
-					</div>
-				</section>
-				
-				
-				
-				<section class="switch-part switch-part3">
-					<div id="js-friends">
-					
-			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.codewars.com/users/Forec">Forec的CodeWars</a>
-			        
-			        </div>
-				</section>
-				
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
 
-				
-				
-				<section class="switch-part switch-part4">
-				
-					<div id="js-aboutme">就读于北京邮电大学，代码爱好者。近期自学机器学习。</div>
-				</section>
-				
-			</div>
-		</div>
-	</header>				
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec的博客</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
 </div>
 
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
     </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-  	<div class="overlay">
-  		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide">Forec</h1>
-  	</div>
-	<div class="intrude-less">
-		<header id="header" class="inner">
-			<div class="profilepic">
-			
-				<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-			</div>
-			<hgroup>
-			  <h1 class="header-author">Forec</h1>
-			</hgroup>
-			
-			<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-			
-			<nav class="header-menu">
-				<ul>
-				
-					<li><a href="/">主页</a></li>
-		        
-					<li><a href="/archives">所有文章</a></li>
-		        
-		        <div class="clearfix"></div>
-				</ul>
-			</nav>
-			<nav class="header-nav">
-				<div class="social">
-					
-						<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-			        
-						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-			        
-						<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-			        
-				</div>
-			</nav>
-		</header>				
-	</div>
+  
 </nav>
 
-      <div class="body-wrap"><article id="post-Computer-Organization-Architecture6" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/14/Computer-Organization-Architecture6/" class="article-date">
-  	<time datetime="2015-11-14T08:48:06.000Z" itemprop="datePublished">2015-11-14</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      计组与体系结构笔记（六）
-    </h1>
-  
+ </div>
+    </header>
 
-      </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
       
-      <div class="article-info article-info-post">
-        
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/计算机组成与体系结构/">计算机组成与体系结构</a></li></ul>
-	</div>
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              计组与体系结构笔记（六）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-11-14T16:48:06+08:00" content="2015-11-14">
+            2015-11-14
+          </time>
+        </span>
 
         
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-	</div>
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/计算机理论基础/" itemprop="url" rel="index">
+                  <span itemprop="name">计算机理论基础</span>
+                </a>
+              </span>
 
+              
+              
 
-        <div class="clearfix"></div>
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/11/14/Computer-Organization-Architecture6/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/14/Computer-Organization-Architecture6/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
       </div>
+    </header>
+
+    <div class="post-body">
+
       
-    
-    <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
+
+      
+        <span itemprop="articleBody"><blockquote>
 <p>输入/输出和存储系统。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="AMDAHL_u5B9A_u5F8B_u3001_u8F93_u5165/_u8F93_u51FA_u7ED3_u6784"><a href="#AMDAHL_u5B9A_u5F8B_u3001_u8F93_u5165/_u8F93_u51FA_u7ED3_u6784" class="headerlink" title="AMDAHL定律、输入/输出结构"></a>AMDAHL定律、输入/输出结构</h1><ul>
+<h1 id="AMDAHL定律、输入-输出结构"><a href="#AMDAHL定律、输入-输出结构" class="headerlink" title="AMDAHL定律、输入/输出结构"></a>AMDAHL定律、输入/输出结构</h1><ul>
 <li>计算机系统整体性能的速度提升取决于某个特定部件本身的加速率和该部件在系统中的使用率。公式表示为 S = ( (1-f)+f/k )^-1。式中，S为系统整体性能的加速率，f表示较快部件完成的工作部分，k为新部件的加速率。例如，某计算机需要70%时间执行CPU操作和30%时间等待磁盘服务，当前有两种升级方案：10000￥使得处理器价格提高50%，或7000￥使得磁盘处理能力为当前系统的250%。若选择升级处理器，则f = 0.70，k = 1.5，S = 1 / ((1-0.7)+0.7/1.5) = 1.30；若选择升级磁盘，则f = 0.30，k = 2.5，S约为1.22。由此可看出升级处理器带来的整体性能提升更高，但考虑价格因素，对提升的每个百分点，升级CPU需要333￥，而升级磁盘只要318￥。</li>
 <li>输入/输出定义为在外部设备和由CPU、主存储器组成的主机系统之间移动编码数据的一个子系统部件。</li>
 <li>输入输出子系统包括<ul>
@@ -252,7 +268,7 @@
 <li>通常处理大量数据信息的外部设备都有缓冲存储器，如打印机、磁带驱动器等，缓冲器允许主机系统以尽可能快的方式将大量数据发送到外围设备中。设备控制电路负责从系统的缓冲器中提取或输入数据，例如包括在写数据时对磁盘定位，将打印头或激光术移动到下一字符位置，启动打印头，弹出打印纸等操作。</li>
 <li>磁盘和磁带属于<strong>持久性存储</strong>，其相对易失性存储时间更长。数据在磁性介质中可以保存约5年，在光学介质中可保存大约100年。</li>
 </ul>
-<h1 id="I/O_u63A7_u5236_u65B9_u6CD5"><a href="#I/O_u63A7_u5236_u65B9_u6CD5" class="headerlink" title="I/O控制方法"></a>I/O控制方法</h1><ul>
+<h1 id="I-O控制方法"><a href="#I-O控制方法" class="headerlink" title="I/O控制方法"></a>I/O控制方法</h1><ul>
 <li><strong>程序控制的I/O</strong>：系统为每个I/O设备至少分配一个专用的寄存器，CPU持续不断的监视每个寄存器，等待数据到达，该方法称为<strong>轮询</strong>。一旦CPU检测到某个“数据就绪”的条件，就为该寄存器准备指令执行等操作。该方法的优点在于：可以通过编程控制每个外部设备的行为，改变程序就可以调整系统所控制的外部设备的数目和类型，以及轮询的权限和时间间隔。缺点在于：不断对寄存器轮询使得<strong>CPU持续处于繁忙等待循环</strong>中，直到开始服务某个I/O请求。如果没有任何I/O任务要处理，CPU就无法从事任何有用的操作。因此程序控制的I/O最适合用于自动提款机等一些用来控制或监视外部事件的系统。</li>
 <li><strong>中断控制的I/O</strong>：在有数据发送需求时由外部设备通知CPU，如果没有外部设备发出服务请求来中断CPU，则CPU继续执行其他任务。通常使用CPU的标志寄存器中的一个二进制位表示中断信号，该位称为中断标志。一旦中断标志置位，操作系统就会中断正在执行的程序，并保存该程序的状态和各种可变的信息，提取请求中断的I/O设备的地址矢量。在完成I/O操作后CPU会完全恢复到中断前状态并继续执行。该方法和程序控制I/O的相似之处为：都可以对I/O服务程序进行修改以适应外部硬件的改变。许多主流操作系统均使用中断控制的I/O，为防止病毒制造者修改I/O设备地址矢量指向恶意代码，操作系统均提供了保护机制防止这类操作。</li>
 <li><strong>直接存储器存取（DMA）</strong>：无论何种中断控制的I/O，CPU都需要从I/O设备移入和移出数据。在这个过程中，CPU会完全运行一些类似如下为代码的指令<figure class="highlight monkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">WHILE</span> More-input <span class="literal">AND</span> <span class="keyword">NOT</span> <span class="built_in">Error</span></span><br><span class="line">	ADD <span class="number">1</span> <span class="keyword">TO</span> Byte-count</span><br><span class="line">	<span class="keyword">IF</span> Byte-count &gt; Total-bytes-<span class="keyword">to</span>-be-transferred <span class="keyword">THEN</span></span><br><span class="line">		<span class="keyword">EXIT</span></span><br><span class="line">	<span class="keyword">ENDIF</span></span><br><span class="line">	Place byte in destination buffer</span><br><span class="line">	Raise byte-ready signal</span><br><span class="line">	Initialize timer</span><br><span class="line">	<span class="keyword">REPEAT</span></span><br><span class="line">		WAIT</span><br><span class="line">	<span class="keyword">UNTIL</span> Byte-acknowledged, Timeout, <span class="literal">OR</span> <span class="built_in">Error</span></span><br><span class="line">ENDWHILE</span><br></pre></td></tr></table></figure>
@@ -262,10 +278,10 @@
 <ul>
 <li><strong>通道控制的I/O</strong>：DMA适用于小型单用户计算机，对于大型多用户计算机通常采用I/O通道的智能型DMA接口。一个或多个的I/O处理器可以控制多条不同的I/O路径，这些路径被称为通道路径。对于慢速设备如打印机，通道路径可以复用，允许几个这类设备仅通过一个控制器管理。在IBM的大型计算机中，一个多路复用的通道路径称为<strong>多路复用器通道</strong>，而服务于磁盘控制器和其他快速设备的通道称为<strong>选择器通道</strong>。I/O通道由一些被称为I/O处理器（IOP）的小CPU控制，IOP具有执行程序的能力，其与DMA的主要区别在于1）<strong>I/O处理器的智能特性</strong>：能够对协议进行协商，发出各种设备命令，独立于CPU传输，CPU只负责为其创建程序指令、通知其指令所在地址。2）通道控制的I/O系统都配备单独的总线，用来格力主机和I/O操作，<strong>IOP只在从主存储器提取指令时才使用系统存储器总线</strong>。因此通道控制的I/O通常在高吞吐量的环境中使用。</li>
 </ul>
-<h1 id="u78C1_u76D8_u6280_u672F"><a href="#u78C1_u76D8_u6280_u672F" class="headerlink" title="磁盘技术"></a>磁盘技术</h1><blockquote>
+<h1 id="磁盘技术"><a href="#磁盘技术" class="headerlink" title="磁盘技术"></a>磁盘技术</h1><blockquote>
 <p>磁盘驱动器技术出现前，顺序存储介质如打孔卡片、磁带、纸带等是唯一可用的持久性存储介质。如果某个用户所需的数据写在磁带卷轴的尾部，必须读完整卷才能读取，并且每次只能阅读一个记录。1956年IBM公司发布第一台商用磁盘计算机，简称RAMAC，使用随机访问方法的会计和控制计算机。其使用的磁盘驱动器，每个磁盘直径24英寸，磁盘每一面只能容纳50000个7位字符，售价数百万美元。到2000年，IBM推广的磁盘直径尺寸仅为1英寸，保存1GB字节数据，平均访问时间15ms，价格低于300$。</p>
 </blockquote>
-<h2 id="u78C1_u76D8_u9A71_u52A8_u5668"><a href="#u78C1_u76D8_u9A71_u52A8_u5668" class="headerlink" title="磁盘驱动器"></a>磁盘驱动器</h2><ul>
+<h2 id="磁盘驱动器"><a href="#磁盘驱动器" class="headerlink" title="磁盘驱动器"></a>磁盘驱动器</h2><ul>
 <li>磁盘驱动器被称为<strong>随机存储设备</strong>，或直接存储设备。磁盘上的每个存储单元被称为<strong>扇区</strong>，有独一无二的存取地址。这些扇区按照同心圆环的形式划分为一圈一圈的<strong>磁道</strong>（每个同心圆环为一个磁道），每个磁道上的扇区数都相同，因此数据在磁盘中心写入的数据比磁盘边缘更加密集。有的厂商会把全部扇区制作为近似相同的容量，这样外部磁道可以放置比内部磁道更多的扇区，存储更多信息，这种方法称为<strong>分区位</strong>，现在很少被使用，因为需要更复杂的驱动控制电路。磁道从磁盘最外的磁道0开始编号，在一条磁道分布的圆周上，<strong>扇区的分配顺序可能不连续</strong>，这样允许驱动器电路有时间在读取下一个扇区之前处理完扇区进程的内容，这种技术称为<strong>交叉存储技术</strong>。现代磁盘驱动器大多一次读取一条磁道，而不是一次读取一个扇区，因此交叉存储技术已经不再流行。</li>
 <li>磁盘（hard）包括控制电路和一个或多个金属/玻璃盘片，称为碟片。盘片上镀有一层薄的磁性材料薄膜，碟片堆叠在转轴上，通过一个马达带动磁盘碟片旋转，速度可达每分钟15000rpm，典型的磁盘转速为5400rpm和7200rpm。磁盘的读写头安装在一个旋转的磁盘驱动臂上，磁盘驱动臂通过其转轴上缠绕的线圈的感应磁场来进行准确定位，<strong>整个梳状的读写头可以向磁盘中心移动或从磁盘中心移开</strong>。<img src="http://7xktmz.com1.z0.glb.clouddn.com/磁盘.jpg" alt="磁盘扇区格式">对于一个堆叠的磁盘结构，磁盘上的各个磁道上下一一对应，形成一个圆柱面。<strong>一组梳状的读写头每次可以访问一个柱面</strong>。通常磁盘的可用面上都有一个磁头，但对于一些老式的磁盘系统特别是移动磁盘，最上层碟片的上表面和最下层磁盘的下表面常常都是不用的。<strong>磁盘磁头从来都不会触及磁盘的表面，而是悬浮在磁盘表面的上方</strong>，之间仅仅相隔几个微米厚的空气层。当磁盘系统断电后，磁头退到一个安全的地方，这一过程称为<strong>停靠磁头</strong>。如果读写头接触到磁盘表面，就会损坏磁盘，称为<strong>磁头撞损</strong>。</li>
 <li><strong>寻道时间</strong>指磁盘驱动臂定位到指定的磁道上所需的时间。寻道时间并不包括磁头读取磁盘目录的时间。<strong>磁盘目录</strong>将逻辑文件信息如my_story.doc，映射到对应的物理扇区位置，如第7柱面中第3表面的第72扇区。部分高性能的磁盘会在每个可用面的每个磁道上都提供一个读写头，消除了寻道时间。<strong>旋转延迟</strong>是指读写头定位到指定的扇区所需的时间。旋转延迟和寻道时间的和为存取时间。</li>
@@ -277,7 +293,7 @@
 <li>FAT是一个简单的表结构，采用位图形式记录磁盘上每个区块的基本信息，指示区块是否处于空闲、保留、数据占用或坏区状态。因为每个1.44MB磁盘包含18×80×2 = 2880个扇区，所以每个FAT条目需要12位用来指出一个区块。实际上每个FAT条目都为16位宽，因此称为<strong>FAT16</strong>。若一个文件跨越多个区块，则该文件的第一个FAT条目中同样包含一个转向该文件下一个FAT条目的指针。</li>
 <li>举例：假设文件占用了从扇区121开始的4个扇区，读取文件时会进行如下操作<table><tbody><tr><td>FAT索引</td><td>120</td><td>121</td><td>122</td><td>123</td><td>124</td><td>125</td><td>126</td><td>127</td></tr><tr><td>FAT内容</td><td>97</td><td>124</td><td>EOF</td><td>1258</td><td>126</td><td><bad></bad></td><td>122</td><td>577</td></tr></tbody></table>1.读取磁盘目录查找文件起始区块121,读取第一个区块取回文件第一部分。2.读取位于区块121的FAT条目查找文件剩余部分，表中可得下一数据区块对应的FAT条目为124。3.读取区块124和相应的FAT条目，之处下一数据在126。4.读取区块126和相应的FAT条目，之处下一数据在122。5.读取区块122和对应的FAT，在下一扇区位置找到<eof>标志，因此结束。</eof></li>
 </ul>
-<h1 id="u72EC_u7ACB_u78C1_u76D8_u5197_u4F59_u9635_u5217"><a href="#u72EC_u7ACB_u78C1_u76D8_u5197_u4F59_u9635_u5217" class="headerlink" title="独立磁盘冗余阵列"></a>独立磁盘冗余阵列</h1><blockquote>
+<h1 id="独立磁盘冗余阵列"><a href="#独立磁盘冗余阵列" class="headerlink" title="独立磁盘冗余阵列"></a>独立磁盘冗余阵列</h1><blockquote>
 <p>1988年美国加州大学伯克利分校的David Patterson、Garth Gibson和Randy Katz三人发表了“廉价磁盘冗余阵列的实例”的论文，创造RAID一词，介绍了如何利用若干数量的廉价小磁盘替代大型机上的大型昂贵的单磁盘。论文中三人定义了5种类型（称为级）的RAID，每一级RAID具有不同的性能和可靠性，后来经过各厂商发展，增加了其他RAID级。更高编号的RAID层次不一定是更好的RAID系统，下面使用的编号方法保留了Berkeley命名方法。</p>
 </blockquote>
 <ul>
@@ -290,157 +306,474 @@
 <li>RAID Level 6：前面所有的RAID系统只能允许最多有一个磁盘出错，但通常磁盘驱动器出错呈现成簇的倾向（寿命相同，灾难性事件）。RAID-6对每排数据使用两组纠错条带，除使用奇偶校验位外还使用Reed-Soloman纠错编码提供二层保护。RAID-6的写入性能很差，并且生成Reed-Soloman编码需要的代价很大，因此目前没有商业配置的RAID-6系统。</li>
 <li>RAID混合系统：如RAID-10，将RAID-0的分带和RAID-1的镜像结合。</li>
 </ul>
-<h1 id="u6570_u636E_u538B_u7F29"><a href="#u6570_u636E_u538B_u7F29" class="headerlink" title="数据压缩"></a>数据压缩</h1><ul>
+<h1 id="数据压缩"><a href="#数据压缩" class="headerlink" title="数据压缩"></a>数据压缩</h1><ul>
 <li>压缩系数 = 1 - 压缩后的文件大小/压缩前的文件大小 × 100%</li>
 <li>字符的熵：衡量一个消息中的信息量。如果某个符号x在一个消息中出现的概率为P(x)，则该字符的熵H = -P(x)×log(2)P(x)。整个消息的平均熵则为消息中所有n个符号的熵求和取平均。<strong>熵为编码一个消息所需的二进制位数建立了低限</strong>。除了这个低限外的其他位不会增加信息。例如“Hello World!”中，平均的符号熵为3.022，因此低限为3.022×12个字符 = 36.26或37位，因此如果用8位ASCII编码表示，则冗余位为8×12 - 37 = 59个。</li>
 </ul>
-<h2 id="u8D6B_u592B_u66FC_u7F16_u7801"><a href="#u8D6B_u592B_u66FC_u7F16_u7801" class="headerlink" title="赫夫曼编码"></a>赫夫曼编码</h2><ul>
+<h2 id="赫夫曼编码"><a href="#赫夫曼编码" class="headerlink" title="赫夫曼编码"></a>赫夫曼编码</h2><ul>
 <li>按照消息中不同字符出现的频率构成赫夫曼树，之后按照左分支标记0，右分支标记1的方式编码。这样频率最高的符号在编码中占用最少的位，并产生的是前缀编码。</li>
 <li>赫夫曼编码实际将实数集的元素映射为整数子集中的元素，因此精度上的欠缺可能使产生的编码有冗余，不能刚好使用平均熵的位数压缩。</li>
 </ul>
-<h2 id="u7B97_u672F_u7F16_u7801"><a href="#u7B97_u672F_u7F16_u7801" class="headerlink" title="算术编码"></a>算术编码</h2><ul>
+<h2 id="算术编码"><a href="#算术编码" class="headerlink" title="算术编码"></a>算术编码</h2><ul>
 <li>编码方式：将实数集映射到实数集中，利用消息中符号集的概率在0和1之间分割实数轴。使用越频繁的符号，分割所得到的区间快越大。</li>
 <li>举例：“HELLO WORLD!”在该语句中共有12个字符，这些符号中出现最低的概率是1/12，其他概率都是1/12的整数倍，因此可将0到1之间的区间划分为12个部分。除了L和O之外，其他每个符号都分配了1/12的区间，符号L和O则分配了3/12和2/12的区间。区间映射关系如下表<table><tbody><tr><td>符号</td><td>频率</td><td>区间</td><td>符号</td><td>频率</td><td>区间</td></tr><tr><td>D</td><td>1/12</td><td>[0.0…0.083)</td><td>R</td><td>1/12</td><td>[0.667…0.750)</td></tr><tr><td>E</td><td>1/12</td><td>[0.083…0.167)</td><td>W</td><td>1/12</td><td>[0.750…0.833)</td></tr><tr><td>H</td><td>1/12</td><td>[0.167…0.250)</td><td>(space)</td><td>1/12</td><td>[0.833…0.917)</td></tr><tr><td>L</td><td>3/12</td><td>[0.250…0.500)</td><td>!</td><td>1/12</td><td>[0.917…1.0)</td></tr><tr><td>O</td><td>2/12</td><td>[0.500…0.667)</td><td> </td><td> </td><td> </td></tr></tbody></table>通过连续划分与符号所分配区间成比例的数值范围（0.0到1.0）来对消息进行编码。例如当前区间位置为1/8，而字母L获得了1/4的当前区间，如上表，接下来对L编码，将1/8乘以1/4得到L的新的当前区间1/32。如果下一个字符是另一个字母L，则将1/32再乘以1/4得到当前的区间值1/128。这个编码过程会一直持续下去，直到整条消息编码完成。过程可用伪代码描述。<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ALGORITHM Arith_Code( Message )</span><br><span class="line">    HiVal &lt;- <span class="number">1.0</span></span><br><span class="line">    LoVal &lt;- <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">WHILE</span> ( more characters <span class="keyword">to</span> process )</span><br><span class="line">        <span class="built_in">Char</span> &lt;- <span class="keyword">Next</span> message character</span><br><span class="line">        Interval &lt;- Hival - Loval</span><br><span class="line">        CharHival &lt;- Upper interval limit <span class="keyword">for</span> <span class="built_in">Char</span></span><br><span class="line">        CharLoval &lt;- Lower interval limit <span class="keyword">for</span> <span class="built_in">Char</span></span><br><span class="line">        HiVal &lt;- Loval + Interval * CharHival</span><br><span class="line">        LoVal &lt;- Loval + Interval * CharLoval</span><br><span class="line">    ENDWHILE</span><br><span class="line">    OUTPUT ( Loval )</span><br><span class="line"><span class="keyword">END</span> Arith_Code</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>该过程用表格表示：<table><tbody><tr><td>符号</td><td>区间</td><td>CharLoVal</td><td>CharHiVal</td><td>LoVal</td><td>HiVal</td></tr><tr><td> </td><td> </td><td> </td><td> </td><td>0.0</td><td>1.0</td></tr><tr><td>H</td><td>1.0</td><td>0.167</td><td>0.25</td><td>0.167</td><td>0.25</td></tr><tr><td>E</td><td>0.083</td><td>0.083</td><td>0.167</td><td>0.173889</td><td>0.180861</td></tr><tr><td>L</td><td>0.006972</td><td>0.25</td><td>0.5</td><td>0.1756320</td><td>0.1773750</td></tr><tr><td>L</td><td>0.001743</td><td>0.25</td><td>0.5</td><td>0.17606775</td><td>0.17650350</td></tr><tr><td>O</td><td>0.00043575</td><td>0.5</td><td>0.667</td><td>0.176285625</td><td>0.176358395</td></tr><tr><td>(space)</td><td>0.00007277025</td><td>0.833</td><td>0.917</td><td>0.1763462426</td><td>0.1763523553</td></tr><tr><td>W</td><td>0.00000611270</td><td>0.75</td><td>0.833</td><td>0.1763508271</td><td>0.1763513345</td></tr><tr><td>O</td><td>0.00000050735</td><td>0.5</td><td>0.667</td><td>0.1763510808</td><td>0.1763511655</td></tr><tr><td>R</td><td>0.00000008473</td><td>0.667</td><td>0.75</td><td>0.1763511373</td><td>0.176351444</td></tr><tr><td>L</td><td>0.00000000703</td><td>0.25</td><td>0.5</td><td>0.1763511391</td><td>0.1763511409</td></tr><tr><td>D</td><td>0.00000000176</td><td>0</td><td>0.083</td><td>0.1763511391</td><td>0.1763511392</td></tr><tr><td>!</td><td>0.00000000015</td><td>0.917</td><td>1.0</td><td>0.176351139227</td><td>0.176351139239</td></tr><tr><td> </td><td> </td><td> </td><td> </td><td>0.176351139227</td><td> </td></tr></tbody></table></p>
-<h2 id="Ziv-Lempel_u5B57_u5178_u7CFB_u7EDF"><a href="#Ziv-Lempel_u5B57_u5178_u7CFB_u7EDF" class="headerlink" title="Ziv-Lempel字典系统"></a>Ziv-Lempel字典系统</h2><h2 id="JPEG_u538B_u7F29"><a href="#JPEG_u538B_u7F29" class="headerlink" title="JPEG压缩"></a>JPEG压缩</h2><hr>
+<h2 id="Ziv-Lempel字典系统"><a href="#Ziv-Lempel字典系统" class="headerlink" title="Ziv-Lempel字典系统"></a>Ziv-Lempel字典系统</h2><h2 id="JPEG压缩"><a href="#JPEG压缩" class="headerlink" title="JPEG压缩"></a>JPEG压缩</h2><hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/11/14/Computer-Organization-Architectur6/">原始出处</a>(<a href="http://forec.github.io/2015/11/14/Computer-Organization-Architecture6/">http://forec.github.io/2015/11/14/Computer-Organization-Architecture6/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
-
+</span>
       
     </div>
-    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机组成与体系结构/" rel="tag">#计算机组成与体系结构</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/23/Graph-Algorithms5/" rel="prev">最短路径</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/01/Computer-Organization-Architecture5/" rel="next">计组与体系结构笔记（五）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2015/12/23/Graph-Algorithms5/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
+
+ </div>
+
         
-          最短路径
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/11/14/Computer-Organization-Architecture6/"
+                   data-title="计组与体系结构笔记（六）" data-url="http://forec.github.io/2015/11/14/Computer-Organization-Architecture6/">
+              </div>
+            
+          </div>
         
       </div>
-    </a>
+
+      
   
-  
-    <a href="/2015/11/01/Computer-Organization-Architecture5/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">计组与体系结构笔记（五）</div>
-      <strong class="article-nav-caption">></strong>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-<div class="share_jia">
-	<!-- JiaThis Button BEGIN -->
-	<div class="jiathis_style">
-		<span class="jiathis_txt">分享到: &nbsp; </span>
-		<a class="jiathis_button_facebook"></a> 
-    <a class="jiathis_button_twitter"></a>
-    <a class="jiathis_button_plus"></a> 
-    <a class="jiathis_button_tsina"></a>
-		<a class="jiathis_button_cqq"></a>
-		<a class="jiathis_button_douban"></a>
-		<a class="jiathis_button_weixin"></a>
-		<a class="jiathis_button_tumblr"></a>
-    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	</div>
-	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
-	<!-- JiaThis Button END -->
-</div>
-
-
-
-
-
-
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="Computer-Organization-Architecture6" data-title="计组与体系结构笔记（六）" data-url="http://forec.github.io/2015/11/14/Computer-Organization-Architecture6/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"forec"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
-
-
-
-
-</div>
-      <footer id="footer">
-  <div class="outer">
-    <div id="footer-info">
-    	<div class="footer-left">
-    		&copy; 2016 Forec
-    	</div>
-      	<div class="footer-right">
-      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
-      	</div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
-</footer>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#AMDAHL定律、输入-输出结构"><span class="nav-number">1.</span> <span class="nav-text">AMDAHL定律、输入/输出结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#I-O控制方法"><span class="nav-number">2.</span> <span class="nav-text">I/O控制方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#磁盘技术"><span class="nav-number">3.</span> <span class="nav-text">磁盘技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#磁盘驱动器"><span class="nav-number">3.1.</span> <span class="nav-text">磁盘驱动器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#独立磁盘冗余阵列"><span class="nav-number">4.</span> <span class="nav-text">独立磁盘冗余阵列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据压缩"><span class="nav-number">5.</span> <span class="nav-text">数据压缩</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#赫夫曼编码"><span class="nav-number">5.1.</span> <span class="nav-text">赫夫曼编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算术编码"><span class="nav-number">5.2.</span> <span class="nav-text">算术编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ziv-Lempel字典系统"><span class="nav-number">5.3.</span> <span class="nav-text">Ziv-Lempel字典系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JPEG压缩"><span class="nav-number">5.4.</span> <span class="nav-text">JPEG压缩</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
     </div>
-    
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  </aside>
 
 
-<script>
-	var yiliaConfig = {
-		fancybox: true,
-		mathjax: true,
-		animate: true,
-		isHome: false,
-		isPost: true,
-		isArchive: false,
-		isTag: false,
-		isCategory: false,
-		open_in_new: false
-	}
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
-<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
-<script src="/js/main.js" type="text/javascript"></script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
 
 
 
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
 
 
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
 
 <script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-        processEscapes: true,
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    }
-});
-
-MathJax.Hub.Queue(function() {
+  MathJax.Hub.Queue(function() {
     var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';                 
-    }       
-});
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
 </script>
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 
-  </div>
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
 </body>
 </html>

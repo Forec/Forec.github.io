@@ -1,238 +1,254 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
 <head>
-  <meta charset="utf-8">
   
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>机器学习笔记（Chapter 06 - 支持向量机） | Forec的博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="支持向量机（Support Vector Machineds，SVM）是一个二类问题的分类器，实现方法多样，这里采用了序列最小优化（SMO）实现方法，并通过核函数拓展到非线性可分的SVM。">
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec的博客" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="支持向量机（Support Vector Machineds，SVM）是一个二类问题的分类器，实现方法多样，这里采用了序列最小优化（SMO）实现方法，并通过核函数拓展到非线性可分的SVM。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习笔记（Chapter 06 - 支持向量机）">
 <meta property="og:url" content="http://forec.github.io/2016/02/11/machinelearning6/index.html">
 <meta property="og:site_name" content="Forec的博客">
 <meta property="og:description" content="支持向量机（Support Vector Machineds，SVM）是一个二类问题的分类器，实现方法多样，这里采用了序列最小优化（SMO）实现方法，并通过核函数拓展到非线性可分的SVM。">
-<meta property="og:updated_time" content="2016-02-11T10:16:25.965Z">
+<meta property="og:updated_time" content="2016-02-14T07:43:11.224Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记（Chapter 06 - 支持向量机）">
 <meta name="twitter:description" content="支持向量机（Support Vector Machineds，SVM）是一个二类问题的分类器，实现方法多样，这里采用了序列最小优化（SMO）实现方法，并通过核函数拓展到非线性可分的SVM。">
-  
-    <link rel="alternative" href="/atom.xml" title="Forec的博客" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 机器学习笔记（Chapter 06 - 支持向量机） | Forec的博客 </title>
 </head>
 
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-	<header id="header" class="inner">
-		<a href="/" class="profilepic">
-			
-			<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-		</a>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-		<hgroup>
-		  <h1 class="header-author"><a href="/">Forec</a></h1>
-		</hgroup>
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
 
-		
-		<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-		
 
-		
-			<div class="switch-btn">
-				<div class="icon">
-					<div class="icon-ctn">
-						<div class="icon-wrap icon-house" data-idx="0">
-							<div class="birdhouse"></div>
-							<div class="birdhouse_holes"></div>
-						</div>
-						<div class="icon-wrap icon-ribbon hide" data-idx="1">
-							<div class="ribbon"></div>
-						</div>
-						
-						<div class="icon-wrap icon-link hide" data-idx="2">
-							<div class="loopback_l"></div>
-							<div class="loopback_r"></div>
-						</div>
-						
-						
-						<div class="icon-wrap icon-me hide" data-idx="3">
-							<div class="user"></div>
-							<div class="shoulder"></div>
-						</div>
-						
-					</div>
-					
-				</div>
-				<div class="tips-box hide">
-					<div class="tips-arrow"></div>
-					<ul class="tips-inner">
-						<li>菜单</li>
-						<li>标签</li>
-						
-						<li>友情链接</li>
-						
-						
-						<li>关于我</li>
-						
-					</ul>
-				</div>
-			</div>
-		
 
-		<div class="switch-area">
-			<div class="switch-wrap">
-				<section class="switch-part switch-part1">
-					<nav class="header-menu">
-						<ul>
-						
-							<li><a href="/">主页</a></li>
-				        
-							<li><a href="/archives">所有文章</a></li>
-				        
-						</ul>
-					</nav>
-					<nav class="header-nav">
-						<div class="social">
-							
-								<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-					        
-								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-					        
-								<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-					        
-						</div>
-					</nav>
-				</section>
-				
-				
-				<section class="switch-part switch-part2">
-					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/Data-Structures/" style="font-size: 15px;">Data-Structures</a> <a href="/tags/Mistakes/" style="font-size: 10px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/函数式编程/" style="font-size: 10px;">函数式编程</a> <a href="/tags/字符编码/" style="font-size: 10px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 12.5px;">机器学习</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.5px;">计算机组成与体系结构</a>
-					</div>
-				</section>
-				
-				
-				
-				<section class="switch-part switch-part3">
-					<div id="js-friends">
-					
-			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.codewars.com/users/Forec">Forec的CodeWars</a>
-			        
-			        </div>
-				</section>
-				
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
 
-				
-				
-				<section class="switch-part switch-part4">
-				
-					<div id="js-aboutme">就读于北京邮电大学，代码爱好者。近期自学机器学习。</div>
-				</section>
-				
-			</div>
-		</div>
-	</header>				
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec的博客</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
 </div>
 
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
     </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-  	<div class="overlay">
-  		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide">Forec</h1>
-  	</div>
-	<div class="intrude-less">
-		<header id="header" class="inner">
-			<div class="profilepic">
-			
-				<img lazy-src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%A4%B4%E5%83%8F.jpg" class="js-avatar">
-			
-			</div>
-			<hgroup>
-			  <h1 class="header-author">Forec</h1>
-			</hgroup>
-			
-			<p class="header-subtitle">奋斗在Code Farm的在校生</p>
-			
-			<nav class="header-menu">
-				<ul>
-				
-					<li><a href="/">主页</a></li>
-		        
-					<li><a href="/archives">所有文章</a></li>
-		        
-		        <div class="clearfix"></div>
-				</ul>
-			</nav>
-			<nav class="header-nav">
-				<div class="social">
-					
-						<a class="github" target="_blank" href="http://github.com/forec" title="github">github</a>
-			        
-						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/forect" title="zhihu">zhihu</a>
-			        
-						<a class="mail" target="_blank" href="mailto://forec@bupt.edu.cn" title="mail">mail</a>
-			        
-				</div>
-			</nav>
-		</header>				
-	</div>
+  
 </nav>
 
-      <div class="body-wrap"><article id="post-machinelearning6" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/02/11/machinelearning6/" class="article-date">
-  	<time datetime="2016-02-11T10:05:05.000Z" itemprop="datePublished">2016-02-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      机器学习笔记（Chapter 06 - 支持向量机）
-    </h1>
-  
+ </div>
+    </header>
 
-      </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
       
-      <div class="article-info article-info-post">
-        
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li></ul>
-	</div>
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              机器学习笔记（Chapter 06 - 支持向量机）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-02-11T18:05:05+08:00" content="2016-02-11">
+            2016-02-11
+          </time>
+        </span>
 
         
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/大数据/">大数据</a>
-	</div>
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/大数据/" itemprop="url" rel="index">
+                  <span itemprop="name">大数据</span>
+                </a>
+              </span>
 
+              
+              
 
-        <div class="clearfix"></div>
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/02/11/machinelearning6/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/11/machinelearning6/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
       </div>
+    </header>
+
+    <div class="post-body">
+
       
-    
-    <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
+
+      
+        <span itemprop="articleBody"><blockquote>
 <p>支持向量机（Support Vector Machineds，SVM）是一个二类问题的分类器，实现方法多样，这里采用了序列最小优化（SMO）实现方法，并通过核函数拓展到非线性可分的SVM。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="SVM_u548C_u6700_u5927_u8FB9_u7F18_u8D85_u5E73_u9762"><a href="#SVM_u548C_u6700_u5927_u8FB9_u7F18_u8D85_u5E73_u9762" class="headerlink" title="SVM和最大边缘超平面"></a>SVM和最大边缘超平面</h1><ul>
+<h1 id="SVM和最大边缘超平面"><a href="#SVM和最大边缘超平面" class="headerlink" title="SVM和最大边缘超平面"></a>SVM和最大边缘超平面</h1><ul>
 <li>SVM的优缺点<ul>
 <li>优点：泛化错误率低，计算开销不大撒，结果易解释</li>
 <li>缺点：<strong>对参数调节和核函数的选择敏感</strong>，原始分类器不加修改情况下仅适用于处理二类问题</li>
@@ -243,7 +259,7 @@
 <li>支持向量：离分隔超平面最近的那些点，支持向量机决策只依赖支持向量。</li>
 <li>寻找最大间隔：用向量的形式<code>W·X+b</code>书写分隔超平面不需要考虑空间维度，其中向量W和常量b描述了所给数据的分隔超平面。因此SVM需要寻找使分隔超平面成为最大边缘超平面的W和b。</li>
 </ul>
-<h1 id="u5206_u9694_u8D85_u5E73_u9762_u76EE_u6807_u51FD_u6570_u7684_u4F18_u5316"><a href="#u5206_u9694_u8D85_u5E73_u9762_u76EE_u6807_u51FD_u6570_u7684_u4F18_u5316" class="headerlink" title="分隔超平面目标函数的优化"></a>分隔超平面目标函数的优化</h1><ul>
+<h1 id="分隔超平面目标函数的优化"><a href="#分隔超平面目标函数的优化" class="headerlink" title="分隔超平面目标函数的优化"></a>分隔超平面目标函数的优化</h1><ul>
 <li>SVM工作原理：与Logistic回归类似，使用一个类似海维赛德阶跃函数的函数对所给数据的W·X+b的结果判定分类，如果结果大于0则输出+1，否则输出-1。使用+1和-1而不使用1和0的作用在于，可以通过一个统一公式来表示间隔或者数据点到分隔超平面的距离。</li>
 <li><p>函数间隔和几何间隔：点到分隔超平面的函数间隔为<code>y*(wx+b)</code>，其中y是函数的类别标签（+1或-1）；点到超平面的几何间隔为<code>y*(wx+b)/||w||</code>。SVM使用几何间隔定义数据点和超平面的距离，因为如果使用函数间隔，则随着w的放大，（wx+b）的值也随之不断增大，此时最优化（最大化）距离无法确定w。《机器学习实战》对SVM的原理介绍很粗略，并且直接给出了最终的可以解决线性不可分情况的公式。《机器学习实战》中SMO之前的部分在<a href="http://www.cnblogs.com/v-July-v/archive/2012/06/01/2539022.html" target="_blank" rel="external">July的支持向量机通俗导论</a>的第一层有比较清楚的介绍。</p>
 <blockquote>
@@ -254,31 +270,34 @@
 </li>
 <li>不可分情况的处理：如果有少数数据噪声，需要引入正值的松弛变量ε，修改约束条件为<code>y(wx+b)-(1-ε)&gt;=0</code>，假设直线wx+b=-1+ε经过数据点P，并且平行于决策边界，那么P到wx+b=-1的距离是ε/||w||。因此，ε提供了决策边界在训练样本P上的误差估计。同样，因为我们在决策边界上允许了一定的错误，可能导致误分许多的实例，所以<strong>对松弛变量很大的边界进行惩罚</strong>，修改后的目标函数为<code>f(w) = ||w||^2 /2 +C(∑ε)^k</code>，其中C和k是用户指定的参数，用于对误分的数据进行惩罚。假定k=1。这样修改后问题的拉格朗日函数多了一项<code>-∑με</code>，利用KKT条件约束，一阶导数为0，得到额外条件<code>μ+λ =C</code>，因此0&lt;=λ&lt;=C，配合<code>∑λy = 0</code>，这就是书中最终给出的约束公式。</li>
 </ul>
-<h2 id="SMO_u6C42_u89E3_u6700_u4F18_u5316_u95EE_u9898"><a href="#SMO_u6C42_u89E3_u6700_u4F18_u5316_u95EE_u9898" class="headerlink" title="SMO求解最优化问题"></a>SMO求解最优化问题</h2><blockquote>
+<h2 id="SMO求解最优化问题"><a href="#SMO求解最优化问题" class="headerlink" title="SMO求解最优化问题"></a>SMO求解最优化问题</h2><blockquote>
 <p>推荐<a href="http://www.cnblogs.com/jerrylead/archive/2011/03/18/1988419.html" target="_blank" rel="external">JerryLead博客中的支持向量机（五）SMO算法</a>。</p>
 </blockquote>
 <ul>
 <li><p>SMO算法的目标是求出一系列α和b，这里的α就是上面约束条件中的λ（拉格朗日乘子），因为参考的博客和书中都用α，下面也都用α。只要求出了α，根据<code>w=∑αyx</code>，就能够求出w。工作原理是每次循环选择两个alpha进行优化处理，一旦找到一对可以优化的α，就增大其中一个，同时减少另外一个。这两个α的选择方法决定了SMO的效率和正确率。</p>
 </li>
 <li><p>SMO算法里的辅助函数</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">(fileName)</span>:</span></span><br><span class="line">	dataMat = []; labelMat = []</span><br><span class="line">	fr = open(fileName)</span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">		lineArr = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">		dataMat.append([float(lineArr[<span class="number">0</span>]), float(lineArr[<span class="number">1</span>])])</span><br><span class="line">		labelMat.append(float(lineArr[<span class="number">2</span>]))</span><br><span class="line">	<span class="keyword">return</span> dataMat, labelMat</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">(fileName)</span>:</span></span><br><span class="line">	dataMat = []; labelMat = []</span><br><span class="line">	fr = open(fileName)</span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">		lineArr = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">		dataMat.append([float(lineArr[<span class="number">0</span>]), float(lineArr[<span class="number">1</span>])])</span><br><span class="line">		labelMat.append(float(lineArr[<span class="number">2</span>]))</span><br><span class="line">	<span class="keyword">return</span> dataMat, labelMat</span><br><span class="line">	</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">selectJrand</span><span class="params">(i, m)</span>:</span></span><br><span class="line">	j = i</span><br><span class="line">	<span class="keyword">while</span> (j == i):</span><br><span class="line">		j = int(random.uniform(<span class="number">0</span>,m))</span><br><span class="line">	<span class="keyword">return</span> j</span><br><span class="line">	</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clipAlpha</span><span class="params">(aj, H, L)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> aj &gt; H:</span><br><span class="line">		aj = H</span><br><span class="line">	<span class="keyword">if</span> L &gt; aj:</span><br><span class="line">		aj = L</span><br><span class="line">	<span class="keyword">return</span> aj</span><br></pre></td></tr></table></figure>
 </li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">selectJrand</span><span class="params">(i, m)</span>:</span></span><br><span class="line">	j = i</span><br><span class="line">	<span class="keyword">while</span> (j == i):</span><br><span class="line">		j = int(random.uniform(<span class="number">0</span>,m))</span><br><span class="line">	<span class="keyword">return</span> j</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clipAlpha</span><span class="params">(aj, H, L)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> aj &gt; H:</span><br><span class="line">		aj = H</span><br><span class="line">	<span class="keyword">if</span> L &gt; aj:</span><br><span class="line">		aj = L</span><br><span class="line">	<span class="keyword">return</span> aj</span><br></pre></td></tr></table></figure>
-<ul>
 <li><p>《机器学习实战》书中先给了简化版的SMO算法，每次先选定一个α，然后随机选取另一个α。如果所有向量都没有被优化，就增加迭代次数，直到达到要求的迭代次数。书中给出平均速度14.5s。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">smoSimple</span><span class="params">(dataMatIn, classLabels, C, toler, maxIter)</span>:</span></span><br><span class="line">	dataMatrix = mat(dataMatIn); labelMat = mat(classLabels).transpose() <span class="comment"># m * 1</span></span><br><span class="line">	b = <span class="number">0</span>; m, n = shape(dataMatrix)</span><br><span class="line">	alphas = mat(zeros((m,<span class="number">1</span>)))</span><br><span class="line">	iter = <span class="number">0</span></span><br><span class="line">	<span class="keyword">while</span> ( iter &lt; maxIter ):</span><br><span class="line">		alphaPairsChanged = <span class="number">0</span></span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">			fXi = float(multiply(alphas, labelMat).T *\</span><br><span class="line">				 (dataMatrix*dataMatrix[i,:].T)) + b  <span class="comment"># 1*m*(m*n)*(n*1) = 1 * 1</span></span><br><span class="line">			Ei = fXi - float(labelMat[i])	<span class="comment"># 1*1 - 1*1</span></span><br><span class="line">			<span class="keyword">if</span> ((labelMat[i] * Ei &lt; - toler) <span class="keyword">and</span> (alphas[i] &lt; C)) <span class="keyword">or</span> \</span><br><span class="line">				((labelMat[[i] * Ei &gt; toler]) <span class="keyword">and</span> (alphas[i] &gt; <span class="number">0</span>)):		<span class="comment"># vector i can be improved</span></span><br><span class="line">				j = selectJrand(i,m)	<span class="comment"># randomly choose another data vector</span></span><br><span class="line">				fXj = float(multiply(alphas, labelMat).T *\</span><br><span class="line">					(dataMatrix*dataMatrix[j,:].T)) + b</span><br><span class="line">				Ej = fXj - float(labelMat[j])</span><br><span class="line">				alphaIold = alphas[i].copy()</span><br><span class="line">				alphaJold = alphas[j].copy()</span><br><span class="line">				<span class="keyword">if</span> (labelMat[i] != labelMat[j]):</span><br><span class="line">					L = max(<span class="number">0</span>, alphas[j] - alphas[i])</span><br><span class="line">					H = min(C, C + alphas[j] - alphas[i])</span><br><span class="line">				<span class="keyword">else</span>:</span><br><span class="line">					L = max(<span class="number">0</span>, alphas[j] + alphas[i] - C)</span><br><span class="line">					H = min(C, alphas[j] + alphas[i])</span><br><span class="line">				<span class="keyword">if</span> L == H:</span><br><span class="line">					<span class="keyword">print</span> <span class="string">"LL==H"</span>; <span class="keyword">continue</span></span><br><span class="line">				eta = <span class="number">2.0</span> * dataMatrix[i,:] * dataMatrix[j,:].T - \</span><br><span class="line">					dataMatrix[i,:] * dataMatrix[i,:].T - \</span><br><span class="line">					dataMatrix[j,:] * dataMatrix[j,:].T</span><br><span class="line">				<span class="keyword">if</span> eta &gt;= <span class="number">0</span>: <span class="keyword">print</span> <span class="string">"eta&gt;=0"</span>; <span class="keyword">continue</span></span><br><span class="line">				alphas[j] -= labelMat[j] * (Ei -Ej) / eta</span><br><span class="line">				alphas[j] = clipAlpha(alphas[j], H, L)</span><br><span class="line">				<span class="keyword">if</span> (abs(alphas[j] - alphaJold) &lt; <span class="number">0.00001</span>):</span><br><span class="line">					<span class="keyword">print</span> <span class="string">"j not moving enough"</span>; <span class="keyword">continue</span></span><br><span class="line">				alphas[i] += labelMat[j] * labelMat[i] * \</span><br><span class="line">					(alphaJold - alphas[j])</span><br><span class="line">				b1 = b - Ei - labelMat[i] * (alphas[i] - alphaIold) *\</span><br><span class="line">					dataMatrix[i,:] * dataMatrix[i,:].T - \</span><br><span class="line">					labelMat[j] * (alphas[j] - alphaJold) * \</span><br><span class="line">					dataMatrix[i,:] * dataMatrix[j,:].T</span><br><span class="line">				b2 = b - Ej - labelMat[i] * (alphas[i] - alphaIold) *\</span><br><span class="line">					dataMatrix[i,:] * dataMatrix[j,:].T -\</span><br><span class="line">					labelMat[j] * (alphas[j] - alphaJold) * \</span><br><span class="line">					dataMatrix[j,:] * dataMatrix[j,:].T</span><br><span class="line">				<span class="keyword">if</span> ( <span class="number">0</span> &lt; alphas[i] ) <span class="keyword">and</span> ( C &gt; alphas[i] ): b = b1</span><br><span class="line">				<span class="keyword">elif</span> ( <span class="number">0</span> &lt; alphas[j] ) <span class="keyword">and</span> ( C &gt; alphas[j] ): b = b2</span><br><span class="line">				<span class="keyword">else</span>: b = (b1+b2)/<span class="number">2.0</span></span><br><span class="line">				alphaPairsChanged += <span class="number">1</span></span><br><span class="line">				<span class="keyword">print</span> <span class="string">"iter: %d i: %d, pairs changed %d"</span> % \</span><br><span class="line">					(iter, i ,alphaPairsChanged)</span><br><span class="line">		<span class="keyword">if</span> (alphaPairsChanged == <span class="number">0</span>): iter += <span class="number">1</span></span><br><span class="line">		<span class="keyword">else</span>: iter = <span class="number">0</span></span><br><span class="line">		<span class="keyword">print</span> <span class="string">"iteration number: %d"</span> % iter</span><br><span class="line">	<span class="keyword">return</span> b, alphas</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">smoSimple</span><span class="params">(dataMatIn, classLabels, C, toler, maxIter)</span>:</span></span><br><span class="line">    dataMatrix = mat(dataMatIn); labelMat = mat(classLabels).transpose()</span><br><span class="line">    b = <span class="number">0</span>; m,n = shape(dataMatrix)</span><br><span class="line">    alphas = mat(zeros((m,<span class="number">1</span>)))</span><br><span class="line">    iter = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> (iter &lt; maxIter):</span><br><span class="line">        alphaPairsChanged = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">            fXi = float(multiply(alphas,labelMat).T*(dataMatrix*dataMatrix[i,:].T)) + b</span><br><span class="line">            Ei = fXi - float(labelMat[i])<span class="comment">#if checks if an example violates KKT conditions</span></span><br><span class="line">            <span class="keyword">if</span> ((labelMat[i]*Ei &lt; -toler) <span class="keyword">and</span> (alphas[i] &lt; C)) <span class="keyword">or</span> ((labelMat[i]*Ei &gt; toler) <span class="keyword">and</span> (alphas[i] &gt; <span class="number">0</span>)):</span><br><span class="line">                j = selectJrand(i,m)</span><br><span class="line">                fXj = float(multiply(alphas,labelMat).T*(dataMatrix*dataMatrix[j,:].T)) + b</span><br><span class="line">                Ej = fXj - float(labelMat[j])</span><br><span class="line">                alphaIold = alphas[i].copy(); alphaJold = alphas[j].copy();</span><br><span class="line">                <span class="keyword">if</span> (labelMat[i] != labelMat[j]):</span><br><span class="line">                    L = max(<span class="number">0</span>, alphas[j] - alphas[i])</span><br><span class="line">                    H = min(C, C + alphas[j] - alphas[i])</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    L = max(<span class="number">0</span>, alphas[j] + alphas[i] - C)</span><br><span class="line">                    H = min(C, alphas[j] + alphas[i])</span><br><span class="line">                <span class="keyword">if</span> L==H: <span class="keyword">print</span> <span class="string">"L==H"</span>; <span class="keyword">continue</span></span><br><span class="line">                eta = <span class="number">2.0</span> * dataMatrix[i,:]*dataMatrix[j,:].T - dataMatrix[i,:]*dataMatrix[i,:].T - dataMatrix[j,:]*dataMatrix[j,:].T</span><br><span class="line">                <span class="keyword">if</span> eta &gt;= <span class="number">0</span>: <span class="keyword">print</span> <span class="string">"eta&gt;=0"</span>; <span class="keyword">continue</span></span><br><span class="line">                alphas[j] -= labelMat[j]*(Ei - Ej)/eta</span><br><span class="line">                alphas[j] = clipAlpha(alphas[j],H,L)</span><br><span class="line">                <span class="keyword">if</span> (abs(alphas[j] - alphaJold) &lt; <span class="number">0.00001</span>): <span class="keyword">print</span> <span class="string">"j not moving enough"</span>; <span class="keyword">continue</span></span><br><span class="line">                alphas[i] += labelMat[j]*labelMat[i]*(alphaJold - alphas[j])<span class="comment">#update i by the same amount as j</span></span><br><span class="line">                                                                        <span class="comment">#the update is in the oppostie direction</span></span><br><span class="line">                b1 = b - Ei- labelMat[i]*(alphas[i]-alphaIold)*dataMatrix[i,:]*dataMatrix[i,:].T - labelMat[j]*(alphas[j]-alphaJold)*dataMatrix[i,:]*dataMatrix[j,:].T</span><br><span class="line">                b2 = b - Ej- labelMat[i]*(alphas[i]-alphaIold)*dataMatrix[i,:]*dataMatrix[j,:].T - labelMat[j]*(alphas[j]-alphaJold)*dataMatrix[j,:]*dataMatrix[j,:].T</span><br><span class="line">                <span class="keyword">if</span> (<span class="number">0</span> &lt; alphas[i]) <span class="keyword">and</span> (C &gt; alphas[i]): b = b1</span><br><span class="line">                <span class="keyword">elif</span> (<span class="number">0</span> &lt; alphas[j]) <span class="keyword">and</span> (C &gt; alphas[j]): b = b2</span><br><span class="line">                <span class="keyword">else</span>: b = (b1 + b2)/<span class="number">2.0</span></span><br><span class="line">                alphaPairsChanged += <span class="number">1</span></span><br><span class="line">                <span class="keyword">print</span> <span class="string">"iter: %d i:%d, pairs changed %d"</span> % (iter,i,alphaPairsChanged)</span><br><span class="line">        <span class="keyword">if</span> (alphaPairsChanged == <span class="number">0</span>): iter += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>: iter = <span class="number">0</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"iteration number: %d"</span> % iter</span><br><span class="line">    <span class="keyword">return</span> b,alphas</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>启发式选择方法：每次选择α时，优先选择样本前面系数0&lt;α&lt;C的α作优化，因为在界上（α为0或C）的样例对应的α一般不会更改。这种启发式搜索方法是选择第一个α用的，只要选择出来的两个α中有一个违背了KKT条件，那么目标函数在一步迭代后值会减小。违背KKT条件不代表0&lt;α&lt;C，在界上也有可能会违背。因此<strong>在给定初始值α1=0后，先对所有样例进行循环，循环中碰到违背KKT条件的（不管界上还是界内）都进行迭代更新。等这轮过后，如果没有收敛，第二轮就只针对的样例进行迭代更新</strong>。在第一个α选择后，第二个α也使用启发式方法选择，<strong>第二个α的迭代步长大致正比于|E1-E2|，选择第二个α能够最大化|E1-E2|</strong>。即当E1为正时选择负的绝对值最大的E2，反之，选择正值最大的E2。最后的收敛条件是在界内（0&lt;α&lt;C）的样例都能够遵循KKT条件，且其对应的α只在极小的范围内变动。 </p>
 </li>
-<li>完整的Platt SMO算法，书上数据平均时间0.78秒。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">optStruct</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,dataMatIn, classLabels, C, toler)</span>:</span>  <span class="comment"># Initialize the structure with the parameters </span></span><br><span class="line">        self.X = dataMatIn</span><br><span class="line">        self.labelMat = classLabels</span><br><span class="line">        self.C = C</span><br><span class="line">        self.tol = toler</span><br><span class="line">        self.m = shape(dataMatIn)[<span class="number">0</span>]</span><br><span class="line">        self.alphas = mat(zeros((self.m,<span class="number">1</span>)))</span><br><span class="line">        self.b = <span class="number">0</span></span><br><span class="line">        self.eCache = mat(zeros((self.m,<span class="number">2</span>))) <span class="comment">#first column is valid flag</span></span><br><span class="line">        </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calcEk</span><span class="params">(oS, k)</span>:</span></span><br><span class="line">    fXk = float(multiply(oS.alphas,oS.labelMat).T*(oS.X*oS.X[k,:].T)) + oS.b</span><br><span class="line">    Ek = fXk - float(oS.labelMat[k])</span><br><span class="line">    <span class="keyword">return</span> Ek</span><br><span class="line">        </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">selectJK</span><span class="params">(i, oS, Ei)</span>:</span>         <span class="comment">#this is the second choice -heurstic, and calcs Ej</span></span><br><span class="line">    maxK = -<span class="number">1</span>; maxDeltaE = <span class="number">0</span>; Ej = <span class="number">0</span></span><br><span class="line">    oS.eCache[i] = [<span class="number">1</span>,Ei]  <span class="comment">#set valid #choose the alpha that gives the maximum delta E</span></span><br><span class="line">    validEcacheList = nonzero(oS.eCache[:,<span class="number">0</span>].A)[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">if</span> (len(validEcacheList)) &gt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> validEcacheList:   <span class="comment">#loop through valid Ecache values and find the one that maximizes delta E</span></span><br><span class="line">            <span class="keyword">if</span> k == i: <span class="keyword">continue</span> <span class="comment">#don't calc for i, waste of time</span></span><br><span class="line">            Ek = calcEk(oS, k)</span><br><span class="line">            deltaE = abs(Ei - Ek)</span><br><span class="line">            <span class="keyword">if</span> (deltaE &gt; maxDeltaE):</span><br><span class="line">                maxK = k; maxDeltaE = deltaE; Ej = Ek</span><br><span class="line">        <span class="keyword">return</span> maxK, Ej</span><br><span class="line">    <span class="keyword">else</span>:   <span class="comment">#in this case (first time around) we don't have any valid eCache values</span></span><br><span class="line">        j = selectJrand(i, oS.m)</span><br><span class="line">        Ej = calcEk(oS, j)</span><br><span class="line">    <span class="keyword">return</span> j, Ej</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateEkK</span><span class="params">(oS, k)</span>:</span><span class="comment">#after any alpha has changed update the new value in the cache</span></span><br><span class="line">    Ek = calcEk(oS, k)</span><br><span class="line">    oS.eCache[k] = [<span class="number">1</span>,Ek]</span><br></pre></td></tr></table></figure>
+<li><p>完整的Platt SMO算法，书上数据平均时间0.78秒，下面是用到的辅助函数和结构。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">optStruct</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,dataMatIn, classLabels, C, toler)</span>:</span>  <span class="comment"># Initialize the structure with the parameters </span></span><br><span class="line">        self.X = dataMatIn</span><br><span class="line">        self.labelMat = classLabels</span><br><span class="line">        self.C = C</span><br><span class="line">        self.tol = toler</span><br><span class="line">        self.m = shape(dataMatIn)[<span class="number">0</span>]</span><br><span class="line">        self.alphas = mat(zeros((self.m,<span class="number">1</span>)))</span><br><span class="line">        self.b = <span class="number">0</span></span><br><span class="line">        self.eCache = mat(zeros((self.m,<span class="number">2</span>))) <span class="comment">#first column is valid flag</span></span><br><span class="line">        </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calcEk</span><span class="params">(oS, k)</span>:</span></span><br><span class="line">    fXk = float(multiply(oS.alphas,oS.labelMat).T*(oS.X*oS.X[k,:].T)) + oS.b</span><br><span class="line">    Ek = fXk - float(oS.labelMat[k])</span><br><span class="line">    <span class="keyword">return</span> Ek</span><br><span class="line">        </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">selectJK</span><span class="params">(i, oS, Ei)</span>:</span>         <span class="comment">#this is the second choice -heurstic, and calcs Ej</span></span><br><span class="line">    maxK = -<span class="number">1</span>; maxDeltaE = <span class="number">0</span>; Ej = <span class="number">0</span></span><br><span class="line">    oS.eCache[i] = [<span class="number">1</span>,Ei]  <span class="comment">#set valid #choose the alpha that gives the maximum delta E</span></span><br><span class="line">    validEcacheList = nonzero(oS.eCache[:,<span class="number">0</span>].A)[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">if</span> (len(validEcacheList)) &gt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> validEcacheList:   <span class="comment">#loop through valid Ecache values and find the one that maximizes delta E</span></span><br><span class="line">            <span class="keyword">if</span> k == i: <span class="keyword">continue</span> <span class="comment">#don't calc for i, waste of time</span></span><br><span class="line">            Ek = calcEk(oS, k)</span><br><span class="line">            deltaE = abs(Ei - Ek)</span><br><span class="line">            <span class="keyword">if</span> (deltaE &gt; maxDeltaE):</span><br><span class="line">                maxK = k; maxDeltaE = deltaE; Ej = Ek</span><br><span class="line">        <span class="keyword">return</span> maxK, Ej</span><br><span class="line">    <span class="keyword">else</span>:   <span class="comment">#in this case (first time around) we don't have any valid eCache values</span></span><br><span class="line">        j = selectJrand(i, oS.m)</span><br><span class="line">        Ej = calcEk(oS, j)</span><br><span class="line">    <span class="keyword">return</span> j, Ej</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">updateEkK</span><span class="params">(oS, k)</span>:</span><span class="comment">#after any alpha has changed update the new value in the cache</span></span><br><span class="line">    Ek = calcEk(oS, k)</span><br><span class="line">    oS.eCache[k] = [<span class="number">1</span>,Ek]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>完整SMO的内循环</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">innerL</span><span class="params">(i, oS)</span>:</span></span><br><span class="line">    Ei = calcEk(oS, i)</span><br><span class="line">    <span class="keyword">if</span> ((oS.labelMat[i]*Ei &lt; -oS.tol) <span class="keyword">and</span> (oS.alphas[i] &lt; oS.C)) <span class="keyword">or</span> ((oS.labelMat[i]*Ei &gt; oS.tol) <span class="keyword">and</span> (oS.alphas[i] &gt; <span class="number">0</span>)):</span><br><span class="line">        j,Ej = selectJ(i, oS, Ei) <span class="comment">#this has been changed from selectJrand</span></span><br><span class="line">        alphaIold = oS.alphas[i].copy(); alphaJold = oS.alphas[j].copy();</span><br><span class="line">        <span class="keyword">if</span> (oS.labelMat[i] != oS.labelMat[j]):</span><br><span class="line">            L = max(<span class="number">0</span>, oS.alphas[j] - oS.alphas[i])</span><br><span class="line">            H = min(oS.C, oS.C + oS.alphas[j] - oS.alphas[i])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            L = max(<span class="number">0</span>, oS.alphas[j] + oS.alphas[i] - oS.C)</span><br><span class="line">            H = min(oS.C, oS.alphas[j] + oS.alphas[i])</span><br><span class="line">        <span class="keyword">if</span> L==H: <span class="keyword">print</span> <span class="string">"L==H"</span>; <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        eta = <span class="number">2.0</span> * oS.X[i,:]*oS.X[j,:].T - oS.X[i,:]*oS.X[i,:].T - oS.X[j,:]*oS.X[j,:].T</span><br><span class="line">        <span class="keyword">if</span> eta &gt;= <span class="number">0</span>: <span class="keyword">print</span> <span class="string">"eta&gt;=0"</span>; <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        oS.alphas[j] -= oS.labelMat[j]*(Ei - Ej)/eta</span><br><span class="line">        oS.alphas[j] = clipAlpha(oS.alphas[j],H,L)</span><br><span class="line">        updateEk(oS, j) <span class="comment">#added this for the Ecache</span></span><br><span class="line">        <span class="keyword">if</span> (abs(oS.alphas[j] - alphaJold) &lt; <span class="number">0.00001</span>): <span class="keyword">print</span> <span class="string">"j not moving enough"</span>; <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        oS.alphas[i] += oS.labelMat[j]*oS.labelMat[i]*(alphaJold - oS.alphas[j])<span class="comment">#update i by the same amount as j</span></span><br><span class="line">        updateEk(oS, i) <span class="comment">#added this for the Ecache                    #the update is in the oppostie direction</span></span><br><span class="line">        b1 = oS.b - Ei- oS.labelMat[i]*(oS.alphas[i]-alphaIold)*oS.X[i,:]*oS.X[i,:].T - oS.labelMat[j]*(oS.alphas[j]-alphaJold)*oS.X[i,:]*oS.X[j,:].T</span><br><span class="line">        b2 = oS.b - Ej- oS.labelMat[i]*(oS.alphas[i]-alphaIold)*oS.X[i,:]*oS.X[j,:].T - oS.labelMat[j]*(oS.alphas[j]-alphaJold)*oS.X[j,:]*oS.X[j,:].T</span><br><span class="line">        <span class="keyword">if</span> (<span class="number">0</span> &lt; oS.alphas[i]) <span class="keyword">and</span> (oS.C &gt; oS.alphas[i]): oS.b = b1</span><br><span class="line">        <span class="keyword">elif</span> (<span class="number">0</span> &lt; oS.alphas[j]) <span class="keyword">and</span> (oS.C &gt; oS.alphas[j]): oS.b = b2</span><br><span class="line">        <span class="keyword">else</span>: oS.b = (b1 + b2)/<span class="number">2.0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>: <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下面是外循环代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">smoP</span><span class="params">(dataMatIn, classLabels, C, toler, maxIter)</span>:</span>    <span class="comment">#full Platt SMO</span></span><br><span class="line">    oS = optStruct(mat(dataMatIn),mat(classLabels).transpose(),C,toler)</span><br><span class="line">    iter = <span class="number">0</span></span><br><span class="line">    entireSet = <span class="keyword">True</span>; alphaPairsChanged = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> (iter &lt; maxIter) <span class="keyword">and</span> ((alphaPairsChanged &gt; <span class="number">0</span>) <span class="keyword">or</span> (entireSet)):</span><br><span class="line">        alphaPairsChanged = <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> entireSet:   <span class="comment">#go over all</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(oS.m):        </span><br><span class="line">                alphaPairsChanged += innerL(i,oS)</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"fullSet, iter: %d i:%d, pairs changed %d"</span> % (iter,i,alphaPairsChanged)</span><br><span class="line">            iter += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:<span class="comment">#go over non-bound (railed) alphas</span></span><br><span class="line">            nonBoundIs = nonzero((oS.alphas.A &gt; <span class="number">0</span>) * (oS.alphas.A &lt; C))[<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> nonBoundIs:</span><br><span class="line">                alphaPairsChanged += innerL(i,oS)</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"non-bound, iter: %d i:%d, pairs changed %d"</span> % (iter,i,alphaPairsChanged)</span><br><span class="line">            iter += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> entireSet: entireSet = <span class="keyword">False</span> <span class="comment">#toggle entire set loop</span></span><br><span class="line">        <span class="keyword">elif</span> (alphaPairsChanged == <span class="number">0</span>): entireSet = <span class="keyword">True</span>  </span><br><span class="line">        <span class="keyword">print</span> <span class="string">"iteration number: %d"</span> % iter</span><br><span class="line">    <span class="keyword">return</span> oS.b,oS.alphas</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下面是求W和分类函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calcWs</span><span class="params">(alphas, dataArr, classLabels)</span>:</span> </span><br><span class="line">	X = mat(dataArr); labelMat = mat(classLabels).transpose()</span><br><span class="line">	m, n = shape(X)</span><br><span class="line">	w = zeros((n,<span class="number">1</span>))	<span class="comment"># n*1</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">		w += multiply(alphas[i] * labelMat[i], X[i,:].T)	<span class="comment"># n*1*1 (1*n)^T</span></span><br><span class="line">	<span class="keyword">return</span> w</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">classified</span><span class="params">(dat, ws, b)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> dat * mat(ws) + b &gt; <span class="number">0</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">return</span> -<span class="number">1</span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">innerL</span><span class="params">(i, oS)</span>:</span></span><br><span class="line">    Ei = calcEk(oS, i)</span><br><span class="line">    <span class="keyword">if</span> ((oS.labelMat[i]*Ei &lt; -oS.tol) <span class="keyword">and</span> (oS.alphas[i] &lt; oS.C)) <span class="keyword">or</span> ((oS.labelMat[i]*Ei &gt; oS.tol) <span class="keyword">and</span> (oS.alphas[i] &gt; <span class="number">0</span>)):</span><br><span class="line">        j,Ej = selectJ(i, oS, Ei) <span class="comment">#this has been changed from selectJrand</span></span><br><span class="line">        alphaIold = oS.alphas[i].copy(); alphaJold = oS.alphas[j].copy();</span><br><span class="line">        <span class="keyword">if</span> (oS.labelMat[i] != oS.labelMat[j]):</span><br><span class="line">            L = max(<span class="number">0</span>, oS.alphas[j] - oS.alphas[i])</span><br><span class="line">            H = min(oS.C, oS.C + oS.alphas[j] - oS.alphas[i])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            L = max(<span class="number">0</span>, oS.alphas[j] + oS.alphas[i] - oS.C)</span><br><span class="line">            H = min(oS.C, oS.alphas[j] + oS.alphas[i])</span><br><span class="line">        <span class="keyword">if</span> L==H: <span class="keyword">print</span> <span class="string">"L==H"</span>; <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        eta = <span class="number">2.0</span> * oS.X[i,:]*oS.X[j,:].T - oS.X[i,:]*oS.X[i,:].T - oS.X[j,:]*oS.X[j,:].T</span><br><span class="line">        <span class="keyword">if</span> eta &gt;= <span class="number">0</span>: <span class="keyword">print</span> <span class="string">"eta&gt;=0"</span>; <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        oS.alphas[j] -= oS.labelMat[j]*(Ei - Ej)/eta</span><br><span class="line">        oS.alphas[j] = clipAlpha(oS.alphas[j],H,L)</span><br><span class="line">        updateEk(oS, j) <span class="comment">#added this for the Ecache</span></span><br><span class="line">        <span class="keyword">if</span> (abs(oS.alphas[j] - alphaJold) &lt; <span class="number">0.00001</span>): <span class="keyword">print</span> <span class="string">"j not moving enough"</span>; <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        oS.alphas[i] += oS.labelMat[j]*oS.labelMat[i]*(alphaJold - oS.alphas[j])<span class="comment">#update i by the same amount as j</span></span><br><span class="line">        updateEk(oS, i) <span class="comment">#added this for the Ecache                    #the update is in the oppostie direction</span></span><br><span class="line">        b1 = oS.b - Ei- oS.labelMat[i]*(oS.alphas[i]-alphaIold)*oS.X[i,:]*oS.X[i,:].T - oS.labelMat[j]*(oS.alphas[j]-alphaJold)*oS.X[i,:]*oS.X[j,:].T</span><br><span class="line">        b2 = oS.b - Ej- oS.labelMat[i]*(oS.alphas[i]-alphaIold)*oS.X[i,:]*oS.X[j,:].T - oS.labelMat[j]*(oS.alphas[j]-alphaJold)*oS.X[j,:]*oS.X[j,:].T</span><br><span class="line">        <span class="keyword">if</span> (<span class="number">0</span> &lt; oS.alphas[i]) <span class="keyword">and</span> (oS.C &gt; oS.alphas[i]): oS.b = b1</span><br><span class="line">        <span class="keyword">elif</span> (<span class="number">0</span> &lt; oS.alphas[j]) <span class="keyword">and</span> (oS.C &gt; oS.alphas[j]): oS.b = b2</span><br><span class="line">        <span class="keyword">else</span>: oS.b = (b1 + b2)/<span class="number">2.0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>: <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p>下面是外循环代码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">smoP</span><span class="params">(dataMatIn, classLabels, C, toler, maxIter)</span>:</span>    <span class="comment">#full Platt SMO</span></span><br><span class="line">    oS = optStruct(mat(dataMatIn),mat(classLabels).transpose(),C,toler)</span><br><span class="line">    iter = <span class="number">0</span></span><br><span class="line">    entireSet = <span class="keyword">True</span>; alphaPairsChanged = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> (iter &lt; maxIter) <span class="keyword">and</span> ((alphaPairsChanged &gt; <span class="number">0</span>) <span class="keyword">or</span> (entireSet)):</span><br><span class="line">        alphaPairsChanged = <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> entireSet:   <span class="comment">#go over all</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(oS.m):        </span><br><span class="line">                alphaPairsChanged += innerL(i,oS)</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"fullSet, iter: %d i:%d, pairs changed %d"</span> % (iter,i,alphaPairsChanged)</span><br><span class="line">            iter += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:<span class="comment">#go over non-bound (railed) alphas</span></span><br><span class="line">            nonBoundIs = nonzero((oS.alphas.A &gt; <span class="number">0</span>) * (oS.alphas.A &lt; C))[<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> nonBoundIs:</span><br><span class="line">                alphaPairsChanged += innerL(i,oS)</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"non-bound, iter: %d i:%d, pairs changed %d"</span> % (iter,i,alphaPairsChanged)</span><br><span class="line">            iter += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> entireSet: entireSet = <span class="keyword">False</span> <span class="comment">#toggle entire set loop</span></span><br><span class="line">        <span class="keyword">elif</span> (alphaPairsChanged == <span class="number">0</span>): entireSet = <span class="keyword">True</span>  </span><br><span class="line">        <span class="keyword">print</span> <span class="string">"iteration number: %d"</span> % iter</span><br><span class="line">    <span class="keyword">return</span> oS.b,oS.alphas</span><br></pre></td></tr></table></figure></p>
-<p>下面是求W和分类函数<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calcWs</span><span class="params">(alphas, dataArr, classLabels)</span>:</span> </span><br><span class="line">	X = mat(dataArr); labelMat = mat(classLabels).transpose()</span><br><span class="line">	m, n = shape(X)</span><br><span class="line">	w = zeros((n,<span class="number">1</span>))	<span class="comment"># n*1</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">		w += multiply(alphas[i] * labelMat[i], X[i,:].T)	<span class="comment"># n*1*1 (1*n)^T</span></span><br><span class="line">	<span class="keyword">return</span> w</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">classified</span><span class="params">(dat, ws, b)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> dat * mat(ws) + b &gt; <span class="number">0</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">return</span> -<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
-<h1 id="u6838_u51FD_u6570"><a href="#u6838_u51FD_u6570" class="headerlink" title="核函数"></a>核函数</h1><blockquote>
+<h1 id="核函数"><a href="#核函数" class="headerlink" title="核函数"></a>核函数</h1><blockquote>
 <p>来自《数据挖掘导论》，并参考<a href="https://www.zhihu.com/question/24627666" target="_blank" rel="external">知乎上关于机器学习中核函数的讨论</a></p>
 </blockquote>
 <ul>
@@ -287,14 +306,17 @@
 <li><p>核函数和SVM是两个正交的概念，通过核函数可以将当前维度无法线性划分的数据转移到高维（无穷维度）。SVM核的变换后空间也称为<strong>再生核希尔伯特空间（RKHS）</strong>，使用核函数计算点积开销更小，并且计算在原空间进行，无须担心维灾难问题。</p>
 </li>
 <li>Mercer定理：对非线性SVM使用的核函数的主要要求是，必须存在一个相应的变换，使得计算一对向量的核函数等价于在变换后的空间中计算这对向量的点积。核函数K可以表示为<code>K(u, v) = Φ(u)Φ(v)</code>，当且仅当对于任意满足<code>∫g(x)^2dx</code>为有限值得函数g(x)，则<code>∫K(x,y)g(x)g(y)dxdy &gt;= 0</code>。满足这个定理的核函数称为正定核函数。例如<code>K(x,y) = (x·y+1)^p</code>，<code>K(x,y) = e^(-(|x-y|^2)/2σ^2))</code>，<code>K(x,y) = tanh(ky·y - δ)</code>。</li>
-<li>在测试中使用核函数<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">kernelTrans</span><span class="params">(X, A, kTup)</span>:</span></span><br><span class="line">	m, n = shape(X)</span><br><span class="line">	K = mat(zeros((m,<span class="number">1</span>)))</span><br><span class="line">	<span class="keyword">if</span> kTup[<span class="number">0</span>] == <span class="string">'lin'</span>: K = X*A.T</span><br><span class="line">	<span class="keyword">elif</span> kTup[<span class="number">0</span>] == <span class="string">'rbf'</span>:</span><br><span class="line">		<span class="keyword">for</span> j <span class="keyword">in</span> range(m):</span><br><span class="line">			deltaRow = X[j,:] - A</span><br><span class="line">			K[j] = deltaRow * deltaRow.T</span><br><span class="line">		K = exp(K / (-<span class="number">1</span>*kTup[<span class="number">1</span>]**<span class="number">2</span>))</span><br><span class="line">	<span class="keyword">else</span>: <span class="keyword">raise</span> NameError(<span class="string">"Houston We Have a Problem -- \</span><br><span class="line">		That kernel is not recognized"</span>)</span><br><span class="line">	<span class="keyword">return</span> K</span><br></pre></td></tr></table></figure>
+<li><p>核函数转换</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">kernelTrans</span><span class="params">(X, A, kTup)</span>:</span></span><br><span class="line">	m, n = shape(X)</span><br><span class="line">	K = mat(zeros((m,<span class="number">1</span>)))</span><br><span class="line">	<span class="keyword">if</span> kTup[<span class="number">0</span>] == <span class="string">'lin'</span>: K = X*A.T</span><br><span class="line">	<span class="keyword">elif</span> kTup[<span class="number">0</span>] == <span class="string">'rbf'</span>:</span><br><span class="line">		<span class="keyword">for</span> j <span class="keyword">in</span> range(m):</span><br><span class="line">			deltaRow = X[j,:] - A</span><br><span class="line">			K[j] = deltaRow * deltaRow.T</span><br><span class="line">		K = exp(K / (-<span class="number">1</span>*kTup[<span class="number">1</span>]**<span class="number">2</span>))</span><br><span class="line">	<span class="keyword">else</span>: <span class="keyword">raise</span> NameError(<span class="string">"Houston We Have a Problem -- \</span><br><span class="line">		That kernel is not recognized"</span>)</span><br><span class="line">	<span class="keyword">return</span> K</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下面是测试函数，需要对函数innerL和calcEk和类optStruct做一定修改。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">testRbf</span><span class="params">(k1=<span class="number">1.3</span>)</span>:</span></span><br><span class="line">	dataArr, labelArr = loadDataSet(<span class="string">'testSetRBF.txt'</span>)</span><br><span class="line">	b, alphas = smoP(dataArr, labelArr, <span class="number">200</span>, <span class="number">0.0001</span>, <span class="number">10000</span>, (<span class="string">'rbf'</span>,k1))</span><br><span class="line">	datMat = mat(dataArr); labelMat = mat(labelArr).transpose()</span><br><span class="line">	svInd = nonzero(alphas.A &gt; <span class="number">0</span>)[<span class="number">0</span>]</span><br><span class="line">	sVs = datMat[svInd]</span><br><span class="line">	labelSV = labelMat[svInd]</span><br><span class="line">	<span class="keyword">print</span> <span class="string">"there are %d Support Vectors"</span> % shape(sVs)[<span class="number">0</span>]</span><br><span class="line">	m, n = shape(datMat)</span><br><span class="line">	errorCount = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">		kernelEval = kernelTrans(sVs, datMat[i,:], (<span class="string">'rbf'</span>,k1))</span><br><span class="line">		predict = kernelEval.T * multiply(labelSV, alphas[svInd]) + b</span><br><span class="line">		<span class="keyword">if</span> sign(predict) != sign(labelArr[i]) : errorCount += <span class="number">1</span></span><br><span class="line">	<span class="keyword">print</span> <span class="string">"the training error rate is %f"</span> % (float(errorCount)/m) </span><br><span class="line">	dataArr, labelArr = loadDataSet(<span class="string">'testSetRBF2.txt'</span>)</span><br><span class="line">	datMat = mat(dataArr); labelMat = mat(labelArr).transpose()</span><br><span class="line">	m, n = shape(datMat)</span><br><span class="line">	errorCount = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">		kernelEval = kernelTrans(sVs, datMat[i,:], (<span class="string">'rbf'</span>,k1))</span><br><span class="line">		predict = kernelEval.T * multiply(labelSV, alphas[svInd]) + b</span><br><span class="line">		<span class="keyword">if</span> sign(predict) != sign(labelArr[i]) : errorCount += <span class="number">1</span></span><br><span class="line">	<span class="keyword">print</span> <span class="string">"the test error rate is %f"</span> % (float(errorCount)/m)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>原代码需要修改的地方</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">innerL</span><span class="params">()</span>:</span></span><br><span class="line">        ···</span><br><span class="line">        eta = <span class="number">2.0</span> * oS.K[i,j] - oS.K[i,i] - oS.K[j,j]</span><br><span class="line">        ···</span><br><span class="line">        b1 = oS.b - Ei - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.K[i,i] -\</span><br><span class="line">    			oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.K[i,j]</span><br><span class="line">    		b2 = oS.b - Ej - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.K[i,j] - \</span><br><span class="line">    			oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.K[j,j]</span><br><span class="line">    	···</span><br><span class="line">    	</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calcEk</span><span class="params">(oS, k)</span>:</span></span><br><span class="line">    	fXk = float(multiply(oS.alphas, oS.labelMat).T * oS.K[:,k] + oS.b)</span><br><span class="line">    	Ek = fXk - float(oS.labelMat[k])</span><br><span class="line">    	<span class="keyword">return</span> Ek</span><br><span class="line">    	</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">optStruct</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dataMatIn, classLabels, C, toler, kTup)</span>:</span></span><br><span class="line">		self.X = dataMatIn</span><br><span class="line">		self.labelMat = classLabels</span><br><span class="line">		self.C = C</span><br><span class="line">		self.tol = toler</span><br><span class="line">		self.m = shape(dataMatIn)[<span class="number">0</span>]</span><br><span class="line">		self.alphas = mat(zeros((self.m,<span class="number">1</span>)))</span><br><span class="line">		self.b = <span class="number">0</span></span><br><span class="line">		self.eCache = mat(zeros((self.m,<span class="number">2</span>)))</span><br><span class="line">		self.K = mat(zeros((self.m, self.m)))</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(self.m):</span><br><span class="line">			self.K[:,i] = kernelTrans(self.X, self.X[i,:], kTup)</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<p>下面是测试函数，需要对函数innerL和calcEk和类optStruct做一定修改。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">testRbf</span><span class="params">(k1=<span class="number">1.3</span>)</span>:</span></span><br><span class="line">	dataArr, labelArr = loadDataSet(<span class="string">'testSetRBF.txt'</span>)</span><br><span class="line">	b, alphas = smoP(dataArr, labelArr, <span class="number">200</span>, <span class="number">0.0001</span>, <span class="number">10000</span>, (<span class="string">'rbf'</span>,k1))</span><br><span class="line">	datMat = mat(dataArr); labelMat = mat(labelArr).transpose()</span><br><span class="line">	svInd = nonzero(alphas.A &gt; <span class="number">0</span>)[<span class="number">0</span>]</span><br><span class="line">	sVs = datMat[svInd]</span><br><span class="line">	labelSV = labelMat[svInd]</span><br><span class="line">	<span class="keyword">print</span> <span class="string">"there are %d Support Vectors"</span> % shape(sVs)[<span class="number">0</span>]</span><br><span class="line">	m, n = shape(datMat)</span><br><span class="line">	errorCount = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">		kernelEval = kernelTrans(sVs, datMat[i,:], (<span class="string">'rbf'</span>,k1))</span><br><span class="line">		predict = kernelEval.T * multiply(labelSV, alphas[svInd]) + b</span><br><span class="line">		<span class="keyword">if</span> sign(predict) != sign(labelArr[i]) : errorCount += <span class="number">1</span></span><br><span class="line">	<span class="keyword">print</span> <span class="string">"the training error rate is %f"</span> % (float(errorCount)/m) </span><br><span class="line">	dataArr, labelArr = loadDataSet(<span class="string">'testSetRBF2.txt'</span>)</span><br><span class="line">	datMat = mat(dataArr); labelMat = mat(labelArr).transpose()</span><br><span class="line">	m, n = shape(datMat)</span><br><span class="line">	errorCount = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">		kernelEval = kernelTrans(sVs, datMat[i,:], (<span class="string">'rbf'</span>,k1))</span><br><span class="line">		predict = kernelEval.T * multiply(labelSV, alphas[svInd]) + b</span><br><span class="line">		<span class="keyword">if</span> sign(predict) != sign(labelArr[i]) : errorCount += <span class="number">1</span></span><br><span class="line">	<span class="keyword">print</span> <span class="string">"the test error rate is %f"</span> % (float(errorCount)/m)</span><br></pre></td></tr></table></figure></p>
-<p>修改的地方<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">innerL</span><span class="params">()</span>:</span></span><br><span class="line">    ···</span><br><span class="line">    eta = <span class="number">2.0</span> * oS.K[i,j] - oS.K[i,i] - oS.K[j,j]</span><br><span class="line">    ···</span><br><span class="line">    b1 = oS.b - Ei - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.K[i,i] -\</span><br><span class="line">			oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.K[i,j]</span><br><span class="line">		b2 = oS.b - Ej - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.K[i,j] - \</span><br><span class="line">			oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.K[j,j]</span><br><span class="line">	···</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calcEk</span><span class="params">(oS, k)</span>:</span></span><br><span class="line">	fXk = float(multiply(oS.alphas, oS.labelMat).T * oS.K[:,k] + oS.b)</span><br><span class="line">	Ek = fXk - float(oS.labelMat[k])</span><br><span class="line">	<span class="keyword">return</span> Ek</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">```<span class="class"><span class="keyword">class</span> <span class="title">optStruct</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dataMatIn, classLabels, C, toler, kTup)</span>:</span></span><br><span class="line">		self.X = dataMatIn</span><br><span class="line">		self.labelMat = classLabels</span><br><span class="line">		self.C = C</span><br><span class="line">		self.tol = toler</span><br><span class="line">		self.m = shape(dataMatIn)[<span class="number">0</span>]</span><br><span class="line">		self.alphas = mat(zeros((self.m,<span class="number">1</span>)))</span><br><span class="line">		self.b = <span class="number">0</span></span><br><span class="line">		self.eCache = mat(zeros((self.m,<span class="number">2</span>)))</span><br><span class="line">		self.K = mat(zeros((self.m, self.m)))</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(self.m):</span><br><span class="line">			self.K[:,i] = kernelTrans(self.X, self.X[i,:], kTup)</span><br></pre></td></tr></table></figure>
-<h2 id="kNN_u624B_u5199_u95EE_u9898_u56DE_u987E"><a href="#kNN_u624B_u5199_u95EE_u9898_u56DE_u987E" class="headerlink" title="kNN手写问题回顾"></a>kNN手写问题回顾</h2><ul>
+<h2 id="kNN手写问题回顾"><a href="#kNN手写问题回顾" class="headerlink" title="kNN手写问题回顾"></a>kNN手写问题回顾</h2><ul>
 <li><p>SVM是二类分类器，将非9的数字判为-1，否则判为1。</p>
 </li>
 <li><p>Code - testDigits - svmMLiA.py</p>
@@ -303,13 +325,13 @@
 <li><p>修改径向基核函数的参数σ，观察错误率。σ下降，则训练错误率降低，测试错误率上升。最小的训练错误率并不对应于最小的向量支持数目。另外线性和函数的效果并不很糟糕，可以牺牲线性核函数的错误率来换取分类速度的提高。</p>
 </li>
 </ul>
-<h1 id="u591A_u7C7B_u5206_u7C7B_u95EE_u9898"><a href="#u591A_u7C7B_u5206_u7C7B_u95EE_u9898" class="headerlink" title="多类分类问题"></a>多类分类问题</h1><ul>
+<h1 id="多类分类问题"><a href="#多类分类问题" class="headerlink" title="多类分类问题"></a>多类分类问题</h1><ul>
 <li>第一种方法将多类问题分解为K个二类问题，对于类别yi，属于类别yi的为一类，不属于yi的为另一类。此方法称为一对其他（1-r）方法。</li>
 <li>第二种方法为一对一（1-1）方法，构建K(K-1)/2个分类器，没一个分类器用来区分一对类(yi,yj)，此时忽略其他类的样本。</li>
 <li>以上两种方法都使用二类分类器的组合预测，并投票表决，票数多的分类为最终分类。这种方法可能导致不同类的平局。</li>
 <li>纠错输出编码：1-r和1-1方法都对二元分类的错误太敏感。可以参考海明编码，为每个类别分配一个码字，码字的每个二进制位训练一个二元分类器。</li>
 </ul>
-<h1 id="u652F_u6301_u5411_u91CF_u673A_u603B_u7ED3"><a href="#u652F_u6301_u5411_u91CF_u673A_u603B_u7ED3" class="headerlink" title="支持向量机总结"></a>支持向量机总结</h1><blockquote>
+<h1 id="支持向量机总结"><a href="#支持向量机总结" class="headerlink" title="支持向量机总结"></a>支持向量机总结</h1><blockquote>
 <p>支持向量机是一种二类分类器，通过求解一个二次优化问题来最大化分类间隔。通过SMO算法每次优化两个α可以提升SVM的训练速度。核函数可以从一个低维空间的非线性数据映射到一个高维空间的线性数据i，此部分可以参考知乎。</p>
 <p>SVM问题可以表示为凸优化问题，利用已知的有效算法发现目标函数的全局最小值。通过最大化决策边界的边缘来控制模型的能力，用户必须提供其他参数，如核函数类型、松弛变量带来的惩罚C。</p>
 </blockquote>
@@ -317,141 +339,458 @@
 <p>参考文献： 《机器学习实战 - 美Peter Harrington》、《数据挖掘导论 - 美Pang-Ning Tan等》</p>
 <p>参考的文章等：<a href="http://www.cnblogs.com/v-July-v/archive/2012/06/01/2539022.html" target="_blank" rel="external">July的文章</a>，<a href="http://www.cnblogs.com/jerrylead/archive/2011/03/18/1988419.html" target="_blank" rel="external">JerryLead的文章</a>，<a href="https://www.zhihu.com/question/24627666" target="_blank" rel="external">王赟 Maigo等在知乎上的答案</a></p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/11/machinelearning6/">原始出处</a>(<a href="http://forec.github.io/2016/02/11/machinelearning6/">http://forec.github.io/2016/02/11/machinelearning6/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
-
+</span>
       
     </div>
-    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/02/13/functional-thinking/" rel="prev">《函数式编程思维》笔记</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/09/machinelearning5/" rel="next">机器学习笔记（Chapter 05 - Logistic回归）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2016/02/13/functional-thinking/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
+
+ </div>
+
         
-          《函数式编程思维》笔记
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/02/11/machinelearning6/"
+                   data-title="机器学习笔记（Chapter 06 - 支持向量机）" data-url="http://forec.github.io/2016/02/11/machinelearning6/">
+              </div>
+            
+          </div>
         
       </div>
-    </a>
+
+      
   
-  
-    <a href="/2016/02/09/machinelearning5/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">机器学习笔记（Chapter 05 - Logistic回归）</div>
-      <strong class="article-nav-caption">></strong>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-<div class="share_jia">
-	<!-- JiaThis Button BEGIN -->
-	<div class="jiathis_style">
-		<span class="jiathis_txt">分享到: &nbsp; </span>
-		<a class="jiathis_button_facebook"></a> 
-    <a class="jiathis_button_twitter"></a>
-    <a class="jiathis_button_plus"></a> 
-    <a class="jiathis_button_tsina"></a>
-		<a class="jiathis_button_cqq"></a>
-		<a class="jiathis_button_douban"></a>
-		<a class="jiathis_button_weixin"></a>
-		<a class="jiathis_button_tumblr"></a>
-    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	</div>
-	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
-	<!-- JiaThis Button END -->
-</div>
-
-
-
-
-
-
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="machinelearning6" data-title="机器学习笔记（Chapter 06 - 支持向量机）" data-url="http://forec.github.io/2016/02/11/machinelearning6/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"forec"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
-
-
-
-
-</div>
-      <footer id="footer">
-  <div class="outer">
-    <div id="footer-info">
-    	<div class="footer-left">
-    		&copy; 2016 Forec
-    	</div>
-      	<div class="footer-right">
-      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
-      	</div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
-</footer>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SVM和最大边缘超平面"><span class="nav-number">1.</span> <span class="nav-text">SVM和最大边缘超平面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分隔超平面目标函数的优化"><span class="nav-number">2.</span> <span class="nav-text">分隔超平面目标函数的优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SMO求解最优化问题"><span class="nav-number">2.1.</span> <span class="nav-text">SMO求解最优化问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#核函数"><span class="nav-number">3.</span> <span class="nav-text">核函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#kNN手写问题回顾"><span class="nav-number">3.1.</span> <span class="nav-text">kNN手写问题回顾</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多类分类问题"><span class="nav-number">4.</span> <span class="nav-text">多类分类问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#支持向量机总结"><span class="nav-number">5.</span> <span class="nav-text">支持向量机总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
     </div>
-    
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  </aside>
 
 
-<script>
-	var yiliaConfig = {
-		fancybox: true,
-		mathjax: true,
-		animate: true,
-		isHome: false,
-		isPost: true,
-		isArchive: false,
-		isTag: false,
-		isCategory: false,
-		open_in_new: false
-	}
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
-<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
-<script src="/js/main.js" type="text/javascript"></script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
 
 
 
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
 
 
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
 
 <script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-        processEscapes: true,
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    }
-});
-
-MathJax.Hub.Queue(function() {
+  MathJax.Hub.Queue(function() {
     var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';                 
-    }       
-});
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
 </script>
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 
-  </div>
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
 </body>
 </html>
