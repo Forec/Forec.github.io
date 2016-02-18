@@ -1,0 +1,811 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec的博客" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="回归是前面监督学习方法的延续，监督学习指的是有目标变量或者预测目标的机器学习方法。回归于分类的不同在于其目标变量是连续数值型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记（Chapter 08 - 回归）">
+<meta property="og:url" content="http://forec.github.io/2016/02/18/machinelearning8/index.html">
+<meta property="og:site_name" content="Forec的博客">
+<meta property="og:description" content="回归是前面监督学习方法的延续，监督学习指的是有目标变量或者预测目标的机器学习方法。回归于分类的不同在于其目标变量是连续数值型。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ch08-%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E7%82%B9.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ch08-%E6%A0%87%E5%87%86%E5%9B%9E%E5%BD%92%E5%87%BD%E6%95%B0.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/%E4%B8%8D%E5%90%8Ck%E5%8F%96%E5%80%BC%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E5%9B%9E%E5%BD%92%E7%BB%93%E6%9E%9C.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/%E5%B2%AD%E5%9B%9E%E5%BD%92%E5%9B%9E%E5%BD%92%E7%B3%BB%E6%95%B0%E5%8F%98%E5%8C%96%E5%9B%BE.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/%E9%80%90%E6%AD%A5%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%B3%BB%E6%95%B0%E4%B8%8E%E8%BF%AD%E4%BB%A3%E6%AC%A1%E6%95%B0%E5%85%B3%E7%B3%BB.png">
+<meta property="og:updated_time" content="2016-02-18T12:10:50.218Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记（Chapter 08 - 回归）">
+<meta name="twitter:description" content="回归是前面监督学习方法的延续，监督学习指的是有目标变量或者预测目标的机器学习方法。回归于分类的不同在于其目标变量是连续数值型。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 机器学习笔记（Chapter 08 - 回归） | Forec的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec的博客</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              机器学习笔记（Chapter 08 - 回归）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-02-18T20:07:58+08:00" content="2016-02-18">
+            2016-02-18
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/大数据/" itemprop="url" rel="index">
+                  <span itemprop="name">大数据</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/02/18/machinelearning8/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/18/machinelearning8/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>回归是前面监督学习方法的延续，监督学习指的是有目标变量或者预测目标的机器学习方法。回归于分类的不同在于其目标变量是连续数值型。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="线性回归找到最佳拟合曲线"><a href="#线性回归找到最佳拟合曲线" class="headerlink" title="线性回归找到最佳拟合曲线"></a>线性回归找到最佳拟合曲线</h1><ul>
+<li>线性回归结果易于理解，计算上不复杂，但对非线性的数据拟合不好。适用于数值型和标称型数据。</li>
+<li><strong>回归的目的是预测数值型的目标值</strong>。最直接的办法是根据输入写出一个目标值的计算公式，这个公式就是回归方程。求解回归系数的过程就是回归。回归一般指线性回归，本章中二者同义。线性回归意味着可以将输入项分别乘以一些常量，再将结果加起来得到输出，而非线性回归模型则认为输出可能是输入的乘积。</li>
+<li>回归的一般方法<ul>
+<li>收集数据：任意方法</li>
+<li>准备数据：需要数值型数据，标称型数据将被转换成二值型数据。</li>
+<li>分析数据：绘出数据的可视化二维图有助于对数据做出理解和分析。在采用所见发求得新回归系数后，可以将新拟合线在图上作为对比。</li>
+<li>训练算法：找到回归系数。</li>
+<li>测试算法：使用R^2或者预测值和数据的拟合度来分析模型的效果。</li>
+<li>使用算法：使用回归可以在给定一个输入的时候预测一个数值，这是对分类方法的提升，可以预测连续性数据而不仅仅是离散的类别标签。</li>
+</ul>
+</li>
+<li>求解回归系数：假定输入数据存放在矩阵X中，回归系数存放在向量W中，对于给定的数据X1，预测结果会通过Y1=X^T·W给出。要找到W，最常用的方法是找出使误差最小的W。误差指预测y值和真实y值之间的差值，使用该误差的简单累加会使正负误差相互抵消，因此采用平方误差。平方误差写作<code>∑(y&#39;-x^T·W)^2</code>，用矩阵表示写作<code>(y-Xw)^T·(y-Xw)</code>，如果对w求导，就得到<code>X^T·(Y-Xw)</code>，令其为零，解出<code>w=(X^T·X)^(-1)·X^T·y</code>。注意公式中包含了<code>(X^T·X)^(-1)</code>，因此要在代码中判断矩阵是否可逆。该方法称为<strong>OLS</strong>（普通最小二乘法）。</li>
+<li><p>下面是原始数据点的分布<img src="http://7xktmz.com1.z0.glb.clouddn.com/ch08-%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E7%82%B9.png" width="500px"></p>
+</li>
+<li><p>标准回归函数和数据导入函数 - regression.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">(fileName)</span>:</span></span><br><span class="line">    numFeat = len(open(fileName).readline().split(<span class="string">'\t'</span>)) - <span class="number">1</span></span><br><span class="line">    dataMat = []; labelMat = []</span><br><span class="line">    fr = open(fileName)</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">        lineArr = []</span><br><span class="line">        curLine = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(numFeat):</span><br><span class="line">            lineArr.append(float(curLine[i]))</span><br><span class="line">        dataMat.append(lineArr)</span><br><span class="line">        labelMat.append(float(curLine[-<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">return</span> dataMat, labelMat</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">standRegres</span><span class="params">(xArr, yArr)</span>:</span></span><br><span class="line">    xMat = mat(xArr); yMat = mat(yArr).T</span><br><span class="line">    xTx = xMat.T * xMat</span><br><span class="line">    <span class="keyword">if</span> linalg.det(xTx) == <span class="number">0.0</span>:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"This matrix is singular, cannot do reverse"</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    ws = xTx.I * (xMat.T * yMat)</span><br><span class="line">    <span class="keyword">return</span> ws</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成的线性回归效果图如下<img src="http://7xktmz.com1.z0.glb.clouddn.com/ch08-%E6%A0%87%E5%87%86%E5%9B%9E%E5%BD%92%E5%87%BD%E6%95%B0.png" width="500px"></p>
+</li>
+<li><p>Numpy库提供了corrcoef(yEstimate, yActure)方法来计算预测值和真实值的相关性。下面的交互代码结果中，yMat和自己匹配是最完美的，而yHat和yMat的相关系数为0.98。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yHat = xMat * ws</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>corrcoef(yHat.T, yMat)</span><br><span class="line">array([[<span class="number">1.</span>        , <span class="number">0.98647356</span>],</span><br><span class="line">       [<span class="number">0.98647356</span>, <span class="number">1.</span>        ]])</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="局部加权线性回归-LWLR"><a href="#局部加权线性回归-LWLR" class="headerlink" title="局部加权线性回归 LWLR"></a>局部加权线性回归 LWLR</h1><ul>
+<li>最佳拟合直线方法将数据视为直线建模，但数据似乎有其他潜在模式。线性回归的一个问题是有可能出现欠拟合现象，因为他求的是具有最小均方误差的无偏估计。因此有些方法允许在估计中引入一些偏差，从而降低预测的均方误差。其中一个方法是局部加权线性回归（Locally Weighted Linear Regression）。在该算法中，为待测点附近的每个点赋予一定的权重，然后在这个子集上基于最小均方差来进行普通的回归。和kNN一样，这种算法每次预测都需要先选取出对应的数据子集。解出回归系数w的形式如下<code>w=(X^T·WX)^(-1)·X^T·W·y</code>，其中W是一个矩阵，用来给每个数据点赋予权重。</li>
+<li><p>LWLR使用“核”（和SVM类似）来为附近的点赋予更高的权重。类似kNN，<strong>LWLR认为样本点距离越近，越有可能符合同一个线性模型</strong>。高斯核对应权重如下<code>w(i,i) = exp(|x&#39;-x|/(-2k^2))</code>。这样就构建了只含对角元素的权重矩阵W，并且点x和x(i)越近，w(i,i)就越大。参数k由用户指定，决定了对附近的点赋予多大的权重。当k较大时，更多的数据被用来训练回归模型，当k较小时，仅有很少的局部点被用来训练回归模型。</p>
+</li>
+<li><p>局部加权线性回归函数 - regression.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lwlr</span><span class="params">(testPoint, xArr, yArr, k = <span class="number">1.0</span>)</span>:</span></span><br><span class="line">    xMat = mat(xArr); yMat = mat(yArr).T</span><br><span class="line">    m = shape(xMat)[<span class="number">0</span>]</span><br><span class="line">    weights = mat(eye(m))</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(m):</span><br><span class="line">        diffMat = testPoint - xMat[j,:]</span><br><span class="line">        weights[j,j] = exp(diffMat*diffMat.T/(-<span class="number">2.0</span>*k**<span class="number">2</span>))</span><br><span class="line">    xTx = xMat.T * (weights * xMat)</span><br><span class="line">    <span class="keyword">if</span> linalg.det(xTx) == <span class="number">0.0</span>:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"This matrix is singular, cannot do reverse"</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    ws = xTx.I * (xMat.T * (weights * yMat))</span><br><span class="line">    <span class="keyword">return</span> testPoint * ws</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lwlrTest</span><span class="params">(testArr, xArr, yArr, k = <span class="number">1.0</span>)</span>:</span></span><br><span class="line">    m = shape(testArr)[<span class="number">0</span>]</span><br><span class="line">    yHat = zeros(m)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">        yHat[i] = lwlr(testArr[i], xArr, yArr, k)</span><br><span class="line">    <span class="keyword">return</span> yHat</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加代码绘制在不同k的情况下局部加权线性回归结果的拟合情况。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">drawPlotAboutK</span><span class="params">()</span>:</span></span><br><span class="line">    xArr, yArr = loadDataSet(<span class="string">'ex0.txt'</span>)</span><br><span class="line">    xMat = mat(xArr)</span><br><span class="line">    srtInd = xMat[:,<span class="number">1</span>].argsort(<span class="number">0</span>)</span><br><span class="line">    xSrot = xMat[srtInd][:,<span class="number">0</span>,:]</span><br><span class="line">    <span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">    fig = plt.figure()</span><br><span class="line">    ax = fig.add_subplot(<span class="number">211</span>)</span><br><span class="line">    yHat01 = lwlrTest(xArr, xArr, yArr, <span class="number">0.01</span>)</span><br><span class="line">    ax.plot(xSrot[:,<span class="number">1</span>],yHat01[srtInd])</span><br><span class="line">    ax.scatter(xMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>], mat(yArr).T.flatten().A[<span class="number">0</span>], s =<span class="number">2</span>, c=<span class="string">'green'</span>)</span><br><span class="line">    ax = fig.add_subplot(<span class="number">212</span>)</span><br><span class="line">    yHat001 = lwlrTest(xArr, xArr, yArr, <span class="number">0.003</span>)</span><br><span class="line">    ax.plot(xSrot[:,<span class="number">1</span>],yHat001[srtInd])</span><br><span class="line">    ax.scatter(xMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>], mat(yArr).T.flatten().A[<span class="number">0</span>], s =<span class="number">2</span>, c=<span class="string">'green'</span>)</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上面代码绘制出结果如下，可以看出当k=0.003时纳入了太多的噪声点，k=1时的结果和使用最小二乘法的标准线性回归类似，k=0.01时的模型效果最好，平滑并且挖掘出数据内在规律。上图是k=0.01的情况，下图是k=0.003的情况。<img src="http://7xktmz.com1.z0.glb.clouddn.com/%E4%B8%8D%E5%90%8Ck%E5%8F%96%E5%80%BC%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E5%9B%9E%E5%BD%92%E7%BB%93%E6%9E%9C.png" width="500px"></p>
+</li>
+<li>局部加权线性回归也存在问题，即增加了计算量。因为其对每个点做预测时都要使用整个数据集，虽然k=0.01时得到了很好的估计，但大多数数据点的权重接近0，如果避免这些运算，可以减少程序运行时间，从而缓解因计算量增加带来的问题。</li>
+</ul>
+<h1 id="预测鲍鱼年龄"><a href="#预测鲍鱼年龄" class="headerlink" title="预测鲍鱼年龄"></a>预测鲍鱼年龄</h1><ul>
+<li>向regression.py中加入下面代码，用于计算两个参数间误差的大小。可以看出，使用较小的核会得到较低的误差，但使用较小的核会造成过拟合，对新数据不一定能达到最好的预测效果。在新数据中，核大小等于10时误差最小，但核为10时的训练误差却是最大的。通过比较，简单线性回归达到了与局部加权线性回归相似的效果，因此必须<strong>在未知数据集上比较效果才能选取到最佳模型</strong>。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rssError</span><span class="params">(yArr, yHatArr)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> ((yArr - yHatArr)**<span class="number">2</span>).sum()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>abX, abY = regression.loadDataSet(<span class="string">'abalone.txt'</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yHat01 = regression.lwlrTest(abX[<span class="number">0</span>:<span class="number">99</span>], abX[<span class="number">0</span>:<span class="number">99</span>], abY[<span class="number">0</span>:<span class="number">99</span>], <span class="number">0.1</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yHat1 = regression.lwlrTest(abX[<span class="number">0</span>:<span class="number">99</span>], abX[<span class="number">0</span>:<span class="number">99</span>], abY[<span class="number">0</span>:<span class="number">99</span>], <span class="number">1.0</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yHat10 = regression.lwlrTest(abX[<span class="number">0</span>:<span class="number">99</span>], abX[<span class="number">0</span>:<span class="number">99</span>], abY[<span class="number">0</span>:<span class="number">99</span>], <span class="number">10.0</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regression.rssError(abY[<span class="number">0</span>:<span class="number">99</span>], yHat01.T)</span><br><span class="line"><span class="number">56.782850757712595</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regression.rssError(abY[<span class="number">0</span>:<span class="number">99</span>], yHat1.T)</span><br><span class="line"><span class="number">429.89056187011101</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regression.rssError(abY[<span class="number">0</span>:<span class="number">99</span>], yHat10.T)</span><br><span class="line"><span class="number">549.11817088259465</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yHat01 = regression.lwlrTest(abX[<span class="number">100</span>:<span class="number">199</span>], abX[<span class="number">0</span>:<span class="number">99</span>], abY[<span class="number">0</span>:<span class="number">99</span>], <span class="number">0.1</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yHat1 = regression.lwlrTest(abX[<span class="number">100</span>:<span class="number">199</span>], abX[<span class="number">0</span>:<span class="number">99</span>], abY[<span class="number">0</span>:<span class="number">99</span>], <span class="number">1.0</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yHat10 = regression.lwlrTest(abX[<span class="number">100</span>:<span class="number">199</span>], abX[<span class="number">0</span>:<span class="number">99</span>], abY[<span class="number">0</span>:<span class="number">99</span>], <span class="number">10.0</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regression.rssError(abY[<span class="number">100</span>:<span class="number">199</span>], yHat01.T)</span><br><span class="line"><span class="number">14772.633501680577</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regression.rssError(abY[<span class="number">100</span>:<span class="number">199</span>], yHat1.T)</span><br><span class="line"><span class="number">573.5261441898798</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regression.rssError(abY[<span class="number">100</span>:<span class="number">199</span>], yHat10.T)</span><br><span class="line"><span class="number">517.57119053849158</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ws = regression.standRegres(abX[<span class="number">0</span>:<span class="number">99</span>], abY[<span class="number">0</span>:<span class="number">99</span>])</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yHat = mat(abX[<span class="number">100</span>:<span class="number">199</span>]) * ws</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regression.rssError(abY[<span class="number">100</span>:<span class="number">199</span>], yHat.T.A)</span><br><span class="line"><span class="number">518.63631532464785</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="缩减系数来“理解”数据"><a href="#缩减系数来“理解”数据" class="headerlink" title="缩减系数来“理解”数据"></a>缩减系数来“理解”数据</h1><blockquote>
+<p>当数据特征数大于样本点，此时输入数据的矩阵X不是满秩矩阵，因此计算<code>(X^T·X)^(-1)</code>时会出错。为了解决该问题，引入“岭回归”（ridge regression）概念和lasso方法。</p>
+</blockquote>
+<h2 id="岭回归"><a href="#岭回归" class="headerlink" title="岭回归"></a>岭回归</h2><ul>
+<li><p>简单说岭回归就是在矩阵X^T·X上增加一个λI从而使矩阵非奇异，进而能对<code>X^T·X+λI</code>求逆，其中矩阵I是一个m·m的单位矩阵。在这种情况下，回归系数的计算公式为<code>(X^T·X+λI)^(-1)·X^T·y)</code>。岭回归最先用来处理特征数多于样本数的情况，现在也用于在估计中加入偏差，从而得到更好的估计。这里通过引入λ来限制了所有w的和，通过引入该惩罚项，能够减少不重要的参数，称为“缩减”，缩减方法可以去掉不重要的参数，因此能更好的理解数据。</p>
+</li>
+<li><p>下面的代码包含计算回归系数的ridgeRegres函数和用于在一组λ上测试的ridgeTest函数。为了使用岭回归和缩减技术，首先要对数据标准化处理，使每维数据具有同样的重要性。具体的做法是所有特征都减去各自的均值并除以方差。代码中的λ以指数级变化，可以看出λ在去非常小的值和非常大的值时对结果造成的不同影响。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ridgeRegres</span><span class="params">(xMat, yMat, lam = <span class="number">0.2</span>)</span>:</span></span><br><span class="line">    xTx = xMat.T * xMat</span><br><span class="line">    denom = xTx + eye(shape(xMat)[<span class="number">1</span>]) * lam</span><br><span class="line">    <span class="keyword">if</span> linalg.det(denom) == <span class="number">0.0</span>:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"This matrix is singular, cannot do reverse"</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    ws = denom.I * (xMat.T * yMat)</span><br><span class="line">    <span class="keyword">return</span> ws</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ridgeTest</span><span class="params">(xArr, yArr)</span>:</span></span><br><span class="line">    xMat = mat(xArr); yMat = mat(yArr).T</span><br><span class="line">    yMean = mean(yMat, <span class="number">0</span>)</span><br><span class="line">    yMean1 = mean(yMat, <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">print</span> yMean, yMean1</span><br><span class="line">    yMat = yMat - yMean</span><br><span class="line">    xMeans = mean(xMat, <span class="number">0</span>)</span><br><span class="line">    xVar = var(xMat, <span class="number">0</span>)</span><br><span class="line">    xMat = (xMat - xMeans) / xVar</span><br><span class="line">    numTestPts = <span class="number">30</span></span><br><span class="line">    wMat = zeros((numTestPts, shape(xMat)[<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(numTestPts):</span><br><span class="line">        ws = ridgeRegres(xMat, yMat, exp(i-<span class="number">10</span>))</span><br><span class="line">        wMat[i,:] = ws.T</span><br><span class="line">    <span class="keyword">return</span> wMat</span><br><span class="line">    </span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>abX, abY = regression.loadDataSet(<span class="string">'abalone.txt'</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ridgeWeights = regression.ridgeTest(abX, abY)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>fig = plt.figure()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax.plot(ridgeWeights)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>plt.show()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上面代码最后的cpython交互部分代码给出了岭回归的回归系数变化图，如下。在最左边即λ最小时，可以得到所有系数的原始值（和线性回归一致），在最右边，系数全部缩减为0。在中间的某个值可以取得最好的预测效果。<img src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%B2%AD%E5%9B%9E%E5%BD%92%E5%9B%9E%E5%BD%92%E7%B3%BB%E6%95%B0%E5%8F%98%E5%8C%96%E5%9B%BE.png" width="500px"></p>
+</li>
+</ul>
+<h2 id="lasso"><a href="#lasso" class="headerlink" title="lasso"></a>lasso</h2><ul>
+<li>在增加约束<code>∑w^2&lt;=λ</code>的情况下，普通的最小二乘法会得到与岭回归同样的公式，这个限制条件限定了所有回归系数的平方和不能大于λ。使用普通的最小二乘法回归在当两个或更多的特征相关时，可能会得出一个很大的正系数和一个很大的负系数。正是因为上面限制条件的存在，岭回归可以避免这个问题。与岭回归类似，另一个缩减方法lasso也对回归系数做了限定，但约束为<code>∑|w|&lt;=λ</code>，这个约束条件用绝对值取代平方和。虽然形式变化不大，但结果差距明显。当λ足够小时，一些系数会因此被迫缩减到0，这个特性可以帮助我们更好地理解数据。在这个新的约束条件下求解回归系数极大的增加了计算复杂度，需要使用二次规划算法。</li>
+</ul>
+<h2 id="前向逐步回归"><a href="#前向逐步回归" class="headerlink" title="前向逐步回归"></a>前向逐步回归</h2><ul>
+<li><p>前向逐步回归算法可以得到与lasso差不多的效果，但更简单。它属于一种贪心算法，即每一步尽可能减少误差。一开始所有权重设为1，然后每一步的决策是对某个权重增加或减少一个很小的值。伪代码如下。</p>
+<ul>
+<li>数据标准化，使其满足0均值和单位方差</li>
+<li>在每轮迭代过程中：设置当前最小误差lowestError为正无穷。</li>
+<li>在每轮迭代过程中：对每个特征：增大或减小：改变一个系数得到新的W，计算新W的误差，如果误差Error小于当前最小误差lowestError，设置Wbest等于当前的W。</li>
+<li>返回Wbest</li>
+</ul>
+</li>
+<li><p>前向逐步线性回归函数 - regression.py。stageWise是逐步线性回归算法的实现，输入包括输入数据xArr和预测变量yArr，每次迭代要调整的步长eps和迭代次数numIt。函数首先将输入数据转换并存入矩阵，然后把特征按照均值为0方差为1进行标准化处理。之后迭代numIt次，更新最佳W矩阵。从运行得出的数据看出，w1和w6都是0，队结果没有任何影响，因此这两个特征很可能是不需要的。另外，在eps=0.01的情况下，一段时间后系数就已经在特定值之间来回震荡，这是因为步长太大，如第一个特征在0.04和0.05之间震荡。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stageWise</span><span class="params">(xArr, yArr, eps=<span class="number">0.01</span>, numIt = <span class="number">100</span>)</span>:</span></span><br><span class="line">    xMat = mat(xArr); yMat = mat(yArr).T</span><br><span class="line">    yMean = mean(yMat, <span class="number">0</span>)</span><br><span class="line">    yMat = yMat - yMean</span><br><span class="line">    xMat = regularize(xMat)</span><br><span class="line">    m, n = shape(xMat)</span><br><span class="line">    returnMat = zeros((numIt, n))</span><br><span class="line">    ws = zeros((n,<span class="number">1</span>)); wsTest = ws.copy(); wsMax = ws.copy()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(numIt):</span><br><span class="line">        <span class="keyword">print</span> ws.T</span><br><span class="line">        lowestError = inf</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">            <span class="keyword">for</span> sign <span class="keyword">in</span> [-<span class="number">1</span>, <span class="number">1</span>]:</span><br><span class="line">                wsTest = ws.copy()</span><br><span class="line">                wsTest[j] += eps*sign</span><br><span class="line">                yTest = xMat * wsTest</span><br><span class="line">                rssE = rssError(yMat.A, yTest.A)</span><br><span class="line">                <span class="keyword">if</span> rssE &lt; lowestError:</span><br><span class="line">                    lowestError = rssE</span><br><span class="line">                    wsMax = wsTest</span><br><span class="line">        ws = wsMax.copy()</span><br><span class="line">        returnMat[i,:] = ws.T</span><br><span class="line">    <span class="keyword">return</span> returnMat</span><br><span class="line"></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regression.stageWise(xArr, yArr, <span class="number">0.01</span>, <span class="number">200</span>)</span><br><span class="line">array([[ <span class="number">0.</span>  ,  <span class="number">0.</span>  ,  <span class="number">0.</span>  , ...,  <span class="number">0.</span>  ,  <span class="number">0.</span>  ,  <span class="number">0.</span>  ],</span><br><span class="line">       [ <span class="number">0.</span>  ,  <span class="number">0.</span>  ,  <span class="number">0.</span>  , ...,  <span class="number">0.</span>  ,  <span class="number">0.</span>  ,  <span class="number">0.</span>  ],</span><br><span class="line">       [ <span class="number">0.</span>  ,  <span class="number">0.</span>  ,  <span class="number">0.</span>  , ...,  <span class="number">0.</span>  ,  <span class="number">0.</span>  ,  <span class="number">0.</span>  ],</span><br><span class="line">       ...,</span><br><span class="line">       [ <span class="number">0.05</span>,  <span class="number">0.</span>  ,  <span class="number">0.09</span>, ..., -<span class="number">0.64</span>,  <span class="number">0.</span>  ,  <span class="number">0.36</span>],</span><br><span class="line">       [ <span class="number">0.04</span>,  <span class="number">0.</span>  ,  <span class="number">0.09</span>, ..., -<span class="number">0.64</span>,  <span class="number">0.</span>  ,  <span class="number">0.36</span>],</span><br><span class="line">       [ <span class="number">0.05</span>,  <span class="number">0.</span>  ,  <span class="number">0.09</span>, ..., -<span class="number">0.64</span>,  <span class="number">0.</span>  ,  <span class="number">0.36</span>]])</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>换用更小的步长，并和常规最小二乘法比较。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regression.stageWise(xArr, yArr, <span class="number">0.001</span>, <span class="number">5000</span>)</span><br><span class="line">array([[ <span class="number">0.</span>   ,  <span class="number">0.</span>   ,  <span class="number">0.</span>   , ...,  <span class="number">0.</span>   ,  <span class="number">0.</span>   ,  <span class="number">0.</span>   ],</span><br><span class="line">       [ <span class="number">0.</span>   ,  <span class="number">0.</span>   ,  <span class="number">0.</span>   , ...,  <span class="number">0.</span>   ,  <span class="number">0.</span>   ,  <span class="number">0.</span>   ],</span><br><span class="line">       [ <span class="number">0.</span>   ,  <span class="number">0.</span>   ,  <span class="number">0.</span>   , ...,  <span class="number">0.</span>   ,  <span class="number">0.</span>   ,  <span class="number">0.</span>   ],</span><br><span class="line">       ...,</span><br><span class="line">       [ <span class="number">0.043</span>, -<span class="number">0.011</span>,  <span class="number">0.12</span> , ..., -<span class="number">0.963</span>, -<span class="number">0.105</span>,  <span class="number">0.187</span>],</span><br><span class="line">       [ <span class="number">0.044</span>, -<span class="number">0.011</span>,  <span class="number">0.12</span> , ..., -<span class="number">0.963</span>, -<span class="number">0.105</span>,  <span class="number">0.187</span>],</span><br><span class="line">       [ <span class="number">0.043</span>, -<span class="number">0.011</span>,  <span class="number">0.12</span> , ..., -<span class="number">0.963</span>, -<span class="number">0.105</span>,  <span class="number">0.187</span>]])</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>xMat = mat(xArr); yMat = mat(yArr).T</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>xMat = regression.regularize(xMat)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yM = mean(yMat, <span class="number">0</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yMat = yMat - yM</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>weights = regression.standRegres(xMat, yMat.T)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>weights.T</span><br><span class="line">matrix([[ <span class="number">0.0430442</span> , -<span class="number">0.02274163</span>,  <span class="number">0.13214087</span>,  <span class="number">0.02075182</span>,  <span class="number">2.22403814</span>,</span><br><span class="line">         -<span class="number">0.99895312</span>, -<span class="number">0.11725427</span>,  <span class="number">0.16622915</span>]])</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从数据可以看出，5000次迭代后，逐步线性回归算法和组常规的最小二乘法效果类似，使用0.001的ε值并经过5000次迭代的效果如下图。逐步线性回归算法的好处在于它可以帮助人们理解现有的模型并做出改进。当构建了一个模型后，可以运行该算法找出重要的特征，这样有可能及时停止那些不重要特征的收集。如果用于测试，该算法每100次迭代后就可以构建出一个模型，可以使用类似10折交叉验证的方法比较这些模型，选择误差最小的模型。<strong>当应用缩减方法（如逐步线性回归或岭回归）时，模型也就增加了偏差，与此同时减小了模型的方差</strong>。<img src="http://7xktmz.com1.z0.glb.clouddn.com/%E9%80%90%E6%AD%A5%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%B3%BB%E6%95%B0%E4%B8%8E%E8%BF%AD%E4%BB%A3%E6%AC%A1%E6%95%B0%E5%85%B3%E7%B3%BB.png" width="500px"></p>
+</li>
+</ul>
+<h1 id="权衡偏差与方差"><a href="#权衡偏差与方差" class="headerlink" title="权衡偏差与方差"></a>权衡偏差与方差</h1><ul>
+<li>当发现模型和测量值之间存在差异，说明出现了误差。当对复杂的过程进行简化时，会导致模型和测量值之间出现“噪声”或者误差，若无法理解数据的真是生成过程，也会导致差异发生。另外，测量过程本身也可能产生“噪声”。</li>
+<li>如果降低核的大小，训练误差将变小，而测试误差则不一定。以模型复杂度为横轴，预测误差为纵轴，则训练误差的图象类似<code>y = e^(-x)</code>，而测试误差的图像类似<code>y=(x-1)^2</code>。使用缩减法将一些系数缩减成很小的值或直接缩减为0，这就减少了模型的复杂度。例子里有8个特征，消除其中两个既使模型易于理解，又降低了预测误差。</li>
+<li>方差可以度量，取任意两个随机样本集，得出的回归系数都是不同的，这些回归系数间的差异大小就是模型方差大小的反应。偏差（预测值和真实值）和方差（不同回归系数间差异）折中的概念在机器学习十分流行且反复出现。</li>
+</ul>
+<h1 id="预测乐高玩具套装价格"><a href="#预测乐高玩具套装价格" class="headerlink" title="预测乐高玩具套装价格"></a>预测乐高玩具套装价格</h1><ul>
+<li><p>用回归法预测乐高套装价格流程</p>
+<ul>
+<li>收集数据：使用Google Shopping的API。</li>
+<li>准备数据：从返回的json数据中抽取价格。</li>
+<li>分析数据：可视化并观察数据。</li>
+<li>训练算法：构建不同的模型，采用逐步线性回归和直接的线性回归模型。</li>
+<li>测试算法：使用交叉验证来测试不同的模型。</li>
+</ul>
+</li>
+<li><p>获取购物信息的函数searchForSet和setDataCollect，regression.py。searchForSet函数调用google购物api并保证数据抽取的正确性。初始休眠10秒防止短时间内过多的api调用。对得到的数据用简单的方法判断是否为二手套装（价格低于原始价格一半），并过滤掉这些信息。似乎现在这个URL已经404错误了，当然是挂了VPN的情况下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">searchForSet</span><span class="params">(retX, retY, setNum, yr, numPce, origPrc)</span>:</span></span><br><span class="line">    sleep(<span class="number">10</span>)</span><br><span class="line">    myAPIstr = <span class="string">'AIzaSyD2cR2KFyx12hXu6PFU-wrWot3NXvko8vY'</span></span><br><span class="line">    searchURL = <span class="string">'https://www.googleapis.com/shopping/search/v1/public/products?key=%s&amp;country=US&amp;q=lego+%d&amp;alt=json'</span> % (myAPIstr, setNum)</span><br><span class="line">    pg = urllib2.urlopen(searchURL)</span><br><span class="line">    retDict = json.loads(pg.read())</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(retDict[<span class="string">'items'</span>])):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            currItem = retDict[<span class="string">'items'</span>][i]</span><br><span class="line">            <span class="keyword">if</span> currItem[<span class="string">'product'</span>][<span class="string">'condition'</span>] == <span class="string">'new'</span>:</span><br><span class="line">                newFlag = <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                newFlag = <span class="number">0</span></span><br><span class="line">            listOfInv = currItem[<span class="string">'product'</span>][<span class="string">'inventories'</span>]</span><br><span class="line">            <span class="keyword">for</span> item <span class="keyword">in</span> listOfInv:</span><br><span class="line">                sellingPrice = item[<span class="string">'price'</span>]</span><br><span class="line">                <span class="keyword">if</span> sellingPrice &gt; origPrc * <span class="number">0.5</span>:</span><br><span class="line">                    <span class="keyword">print</span> <span class="string">"%d\t%d\t%d\t%f\t%f"</span> % \</span><br><span class="line">                        (yr, numPce, newFlag, origPrc, newFlag, origPrc)</span><br><span class="line">                    retX.append([yr, numPce, newFlag, origPrc])</span><br><span class="line">                    retY.append(sellingPrice)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">print</span> <span class="string">'problem with item %d'</span> % i</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">setDataCollect</span><span class="params">(retX, retY)</span>:</span></span><br><span class="line">    searchForSet(retX, retY, <span class="number">8288</span>, <span class="number">2006</span>, <span class="number">800</span>, <span class="number">49.99</span>)</span><br><span class="line">    searchForSet(retX, retY, <span class="number">10030</span>, <span class="number">2002</span>, <span class="number">3096</span>, <span class="number">269.99</span>)</span><br><span class="line">    searchForSet(retX, retY, <span class="number">10179</span>, <span class="number">2007</span>, <span class="number">5195</span>, <span class="number">499.99</span>)</span><br><span class="line">    searchForSet(retX, retY, <span class="number">10181</span>, <span class="number">2007</span>, <span class="number">3428</span>, <span class="number">199.99</span>)</span><br><span class="line">    searchForSet(retX, retY, <span class="number">10189</span>, <span class="number">2008</span>, <span class="number">5922</span>, <span class="number">299.99</span>)</span><br><span class="line">    searchForSet(retX, retY, <span class="number">10196</span>, <span class="number">2009</span>, <span class="number">3263</span>, <span class="number">249.99</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>根据书上的结果，用常规最小二乘法得到的回归公式是<code>55319.97-27.59*Year-0.00268*NumPieces-11.22*NewOrUsed+2.57*OriginalPrice</code>，即售价和套装里的零部件数目和崭新程度成反比，显然不合常理。下面交叉验证测试岭回归。随机生成10组交叉验证的数据集，并在每组数据上调用岭回归产生的30组回归系数，最后选取使10组数据集误差均值最小的回归系数。最终的结果和常规最小二乘法没有太大差异，显然我们要寻找一个更易于理解的模型的期望没有达到。但我们可以查看岭回归过程中，回归系数在迭代中缩减的情况，因为系数是经过不同程度的缩减得到的，因此在特征非常多时，它<strong>可以指出哪些特征是必须的而哪些是不必要的</strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">crossValidation</span><span class="params">(xArr, yArr, numVal = <span class="number">10</span>)</span>:</span></span><br><span class="line">    m = len(yArr)</span><br><span class="line">    indexList = range(m)</span><br><span class="line">    errorMat = zeros((numVal, <span class="number">30</span>))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(numVal):</span><br><span class="line">        trainX = []; trainY = []</span><br><span class="line">        testX = []; testY = []</span><br><span class="line">        random.shuffle(indexList)</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(m):</span><br><span class="line">            <span class="keyword">if</span> j &lt; m * <span class="number">0.9</span>:</span><br><span class="line">                trainX.append(xArr[indexList[j]])</span><br><span class="line">                trainY.append(yArr[indexList[j]])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                testX.append(xArr[indexList[j]])</span><br><span class="line">                testY.append(yArr[indexList[j]])</span><br><span class="line">        wMat = ridgeTest(trainX, trainY)</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(<span class="number">30</span>):</span><br><span class="line">            matTestX = mat(testX); matTrainX = mat(trainX)</span><br><span class="line">            meanTrain = mean(matTrainX, <span class="number">0</span>)</span><br><span class="line">            varTrain = var(matTrainX, <span class="number">0</span>)</span><br><span class="line">            matTestX = (matTestX - meanTrain) / varTrain</span><br><span class="line">            yEst = matTestX * mat(wMat[k,:]).T + mean(trainY)</span><br><span class="line">            errorMat[i,k] = rssError(yEst.T.A, array(testY))</span><br><span class="line">    meanErrors = mean(errorMat, <span class="number">0</span>)</span><br><span class="line">    minMean = float(min(meanErrors))</span><br><span class="line">    bestWeights = wMat[nonzero(meanErrors==minMean)]</span><br><span class="line">    xMat = mat(xArr); yMat = mat(yArr)</span><br><span class="line">    meanX = mean(xMat, <span class="number">0</span>); varX = var(xMat, <span class="number">0</span>)</span><br><span class="line">    unReg = bestWeights/varX</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"the best model from Ridge Regression is: \n"</span> , unReg</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"with constant term: "</span>, -<span class="number">1</span>*sum(multiply(meanX, unReg)) + mean(yMat)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="回归预测数值型数据-总结"><a href="#回归预测数值型数据-总结" class="headerlink" title="回归预测数值型数据 总结"></a>回归预测数值型数据 总结</h1><blockquote>
+<p>回归也是预测目标值的过程，但预测的目标是连续性变量。在回归方程中，求得特征对应的最佳回归系数的方法是最小化误差平方和。给定输入矩阵X，如果<code>X^T·X</code>的逆存在，则可使用标准回归法。标准回归法可能会出现欠拟合现象，如果在估计中引入一些偏差，就可以降低预测的均方误差，其中一个方法是局部加权线性回归。如果数据的样本数比特征数都要小，特征很可能高度相关，此时<code>X^T·X</code>必然不是满秩矩阵，无法求逆。此时可以考虑使用岭回归，岭回归是缩减法的一种，相当于为回归系数的大小增加了限制。另一种缩减法是lasso，可以用计算简便的逐步线性回归方法求得近似结果。缩减法可以看成是对一个模型增加偏差的同时减小方差，偏差方差折中可以帮助我们理解现有模型并做出改进。</p>
+</blockquote>
+<hr>
+<p>参考文献： 《机器学习实战 - 美Peter Harrington》</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/18/machinelearning8/">原始出处</a>(<a href="http://forec.github.io/2016/02/18/machinelearning8/">http://forec.github.io/2016/02/18/machinelearning8/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/14/machinelearning7/" rel="next">机器学习笔记（Chapter 07 - AdaBoost元算法）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/02/18/machinelearning8/"
+                   data-title="机器学习笔记（Chapter 08 - 回归）" data-url="http://forec.github.io/2016/02/18/machinelearning8/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线性回归找到最佳拟合曲线"><span class="nav-number">1.</span> <span class="nav-text">线性回归找到最佳拟合曲线</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#局部加权线性回归-LWLR"><span class="nav-number">2.</span> <span class="nav-text">局部加权线性回归 LWLR</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#预测鲍鱼年龄"><span class="nav-number">3.</span> <span class="nav-text">预测鲍鱼年龄</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缩减系数来“理解”数据"><span class="nav-number">4.</span> <span class="nav-text">缩减系数来“理解”数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#岭回归"><span class="nav-number">4.1.</span> <span class="nav-text">岭回归</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lasso"><span class="nav-number">4.2.</span> <span class="nav-text">lasso</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前向逐步回归"><span class="nav-number">4.3.</span> <span class="nav-text">前向逐步回归</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#权衡偏差与方差"><span class="nav-number">5.</span> <span class="nav-text">权衡偏差与方差</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#预测乐高玩具套装价格"><span class="nav-number">6.</span> <span class="nav-text">预测乐高玩具套装价格</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#回归预测数值型数据-总结"><span class="nav-number">7.</span> <span class="nav-text">回归预测数值型数据 总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
