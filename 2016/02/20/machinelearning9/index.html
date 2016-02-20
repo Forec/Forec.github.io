@@ -1,0 +1,781 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec的博客" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="第8章的线性回归创建的模型需要拟合所有的样本点（除了局部加权线性回归）。当数据拥有众多特征并且特征之间关系十分复杂时，构建全局模型的想法就比较困难，并且生活中很多问题是非线性的，无法用全局线性模型来拟合所有数据。一种方法是将数据集递归地切分成很多份易建模的数据，并对可以拟合的小数据集用线性回归建模。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记（Chapter 09 - 树回归）">
+<meta property="og:url" content="http://forec.github.io/2016/02/20/machinelearning9/index.html">
+<meta property="og:site_name" content="Forec的博客">
+<meta property="og:description" content="第8章的线性回归创建的模型需要拟合所有的样本点（除了局部加权线性回归）。当数据拥有众多特征并且特征之间关系十分复杂时，构建全局模型的想法就比较困难，并且生活中很多问题是非线性的，无法用全局线性模型来拟合所有数据。一种方法是将数据集递归地切分成很多份易建模的数据，并对可以拟合的小数据集用线性回归建模。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ch09-ex00%E6%95%B0%E6%8D%AE%E7%82%B9%E5%88%86%E5%B8%83.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ch09-ex0%E6%95%B0%E6%8D%AE%E7%82%B9%E5%88%86%E5%B8%83.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ch09-%E6%A8%A1%E5%9E%8B%E6%A0%91%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ch09-gui%E7%95%8C%E9%9D%A21.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ch09-gui%E7%95%8C%E9%9D%A22.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ch09-gui%E7%95%8C%E9%9D%A23.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ch09-gui%E7%95%8C%E9%9D%A24.png">
+<meta property="og:updated_time" content="2016-02-20T03:46:28.122Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记（Chapter 09 - 树回归）">
+<meta name="twitter:description" content="第8章的线性回归创建的模型需要拟合所有的样本点（除了局部加权线性回归）。当数据拥有众多特征并且特征之间关系十分复杂时，构建全局模型的想法就比较困难，并且生活中很多问题是非线性的，无法用全局线性模型来拟合所有数据。一种方法是将数据集递归地切分成很多份易建模的数据，并对可以拟合的小数据集用线性回归建模。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 机器学习笔记（Chapter 09 - 树回归） | Forec的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec的博客</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              机器学习笔记（Chapter 09 - 树回归）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-02-20T11:44:31+08:00" content="2016-02-20">
+            2016-02-20
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/大数据/" itemprop="url" rel="index">
+                  <span itemprop="name">大数据</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/02/20/machinelearning9/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/20/machinelearning9/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>第8章的线性回归创建的模型需要拟合所有的样本点（除了局部加权线性回归）。当数据拥有众多特征并且特征之间关系十分复杂时，构建全局模型的想法就比较困难，并且生活中很多问题是非线性的，无法用全局线性模型来拟合所有数据。一种方法是将数据集递归地切分成很多份易建模的数据，并对可以拟合的小数据集用线性回归建模。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="复杂数据的局部性建模"><a href="#复杂数据的局部性建模" class="headerlink" title="复杂数据的局部性建模"></a>复杂数据的局部性建模</h1><ul>
+<li>在Chapter03中介绍了贪心算法的决策树，构建算法是ID3，每次选取当前最佳特征来分割数据，并且按照这个特征的所有可能取值来划分，一旦切分完成，这个特征在之后的执行过程中不会再有任何用处。这种方法切分过于迅速，并且需要将连续型数据离散化后才能处理，这样就破坏了连续变量的内在性质。</li>
+<li>二元切分法是另一种树构建算法，每次将数据集切分成两半，如果数据的某个特征满足这个切分的条件，就将这些数据放入左子树，否则右子树。二元切分法也节省了树的构建时间，但树一般都是离线构建，因此意义不大。CART（Classification And Regression Trees，分类回归树）使用二元切分来处理连续型变量，并用<code>R^2</code>取代香农熵来分析模型的效果。</li>
+</ul>
+<h1 id="连续和离散型特征的树的构建"><a href="#连续和离散型特征的树的构建" class="headerlink" title="连续和离散型特征的树的构建"></a>连续和离散型特征的树的构建</h1><ul>
+<li><p>使用字典存储树的数据结构，每个节点包含以下四个元素：待切分的特征、待切分的特征值、左子树、右子树。Chapter03中的每个节点可能有多个孩子，因此使用字典存储，而CART可以固定数据结构，因为每个非叶节点固定包含两个子树。下面创建回归树（叶节点包含单个值）和模型树（叶节点存储一个线性方程），创建树的代码可以重用，伪代码大致如下。</p>
+<ul>
+<li>找到最佳的待切分特征：</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;如果该节点不能再分，将该节点存为叶节点</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;执行二元切分</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;在左右子树分别递归调用</li>
+</ul>
+</li>
+<li><p>CART算法实现 - regTrees.py。binSplitDataSet通过数组过滤切分数据集，createTree递归建立树，输入参数决定树的类型，leafType给出建立叶节点的函数，因此该参数也决定了要建立的是模型树还是回归树，errType代表误差计算函数，ops是一个包含树构建所需的其他参数的元组。代码中的chooseBestSplit函数选取最佳分类方式，尚未实现。github上的附书源码有错误，binSplitDataSet的两行最后没有<code>[0]</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">(fileName)</span>:</span></span><br><span class="line">    dataMat = []</span><br><span class="line">    fr = open(fileName)</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">        curLine = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">        fltLine = map(float, curLine)</span><br><span class="line">        dataMat.append(fltLine)</span><br><span class="line">    <span class="keyword">return</span> dataMat</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">binSplitDataSet</span><span class="params">(dataSet, feature, value)</span>:</span></span><br><span class="line">    mat0 = dataSet[nonzero(dataSet[:,feature] &gt; value)[<span class="number">0</span>], :]</span><br><span class="line">    mat1 = dataSet[nonzero(dataSet[:,feature] &lt;= value)[<span class="number">0</span>], :]</span><br><span class="line">    <span class="keyword">return</span> mat0, mat1</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createTree</span><span class="params">(dataSet, leafType = regLeaf, errType = regErr, ops=<span class="params">(<span class="number">1</span>,<span class="number">4</span>)</span>)</span>:</span></span><br><span class="line">    feat, val = chooseBestSplit(dataSet, leafType, errType, ops)</span><br><span class="line">    <span class="keyword">if</span> feat == <span class="keyword">None</span>:    <span class="keyword">return</span> val</span><br><span class="line">    retTree = &#123;&#125;</span><br><span class="line">    retTree[<span class="string">'spInd'</span>] = feat</span><br><span class="line">    retTree[<span class="string">'spVal'</span>] = val</span><br><span class="line">    lSet, rSet = binSplitDataSet(dataSet, feat, val)</span><br><span class="line">    retTree[<span class="string">'left'</span>] = createTree(lSet, leafType, errType, ops)</span><br><span class="line">    retTree[<span class="string">'right'</span>] = createTree(rSet, leafType, errType, ops)</span><br><span class="line">    <span class="keyword">return</span> retTree</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="将CART算法用于回归"><a href="#将CART算法用于回归" class="headerlink" title="将CART算法用于回归"></a>将CART算法用于回归</h1><ul>
+<li>如何实现数据切分要取决于叶节点的建模方式，回归树假设叶节点是常数值，可以通过计算数据的总方差代替香农熵判断数据的混乱度。</li>
+<li><p>函数chooseBestSplit的目标是找到数据切分的最佳位置，它遍历所有的特征及其可能的取值来找到使误差最小化的划分阈值。伪代码大致如下。</p>
+<ul>
+<li>对每个特征：对每个特征值：</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;将数据集划分为两份</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;计算切分的误差</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;若当前误差小于最小误差，则更新</li>
+<li>返回最佳切分特征和阈值</li>
+</ul>
+</li>
+<li><p>回归树切分函数 - regTrees.py，regLeaf负责生成叶节点，在回归树中，该模型是目标变量的均值。regErr是误差估计函数，计算目标变量总方差。chooseBestSplit的参数中为ops设定了tolS和tolN，tolS是容许的误差下降值，tolN是切分的最小样本数。在三种情况下chooseBestSplit会停止切分：误差下降不够大、切分子集数目小、剩余的特征值都相同。github的附书源码也有问题，chooseBestSplit函数中，<code>for splitVal in set(dataSet[:,featIndex]):</code>要增加<code>.T.tolist()[0]</code>否则会报无法hash的错误。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">regLeaf</span><span class="params">(dataSet)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> mean(dataSet[:,-<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">regErr</span><span class="params">(dataSet)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> var(dataSet[:,-<span class="number">1</span>]) * shape(dataSet)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">chooseBestSplit</span><span class="params">(dataSet, leafType = regLeaf, errType = regErr, ops = <span class="params">(<span class="number">1</span>,<span class="number">4</span>)</span>)</span>:</span></span><br><span class="line">    tolS = ops[<span class="number">0</span>]; tolN = ops[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">if</span> len(set(dataSet[:,-<span class="number">1</span>].T.tolist()[<span class="number">0</span>])) == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span>, leafType(dataSet)</span><br><span class="line">    m, n = shape(dataSet)</span><br><span class="line">    S = errType(dataSet)</span><br><span class="line">    bestS = inf; bestIndex = <span class="number">0</span>; bestValue = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> featIndex <span class="keyword">in</span> range(n-<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> splitVal <span class="keyword">in</span> set(dataSet[:,featIndex].T.tolist()[<span class="number">0</span>]):</span><br><span class="line">            mat0, mat1 = binSplitDataSet(dataSet, featIndex, splitVal)</span><br><span class="line">            <span class="keyword">if</span> (shape(mat0)[<span class="number">0</span>] &lt; tolN) <span class="keyword">or</span> (shape(mat1)[<span class="number">0</span>] &lt; tolN):</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            newS = errType(mat0) + errType(mat1)</span><br><span class="line">            <span class="keyword">if</span> newS &lt; bestS:</span><br><span class="line">                bestIndex = featIndex</span><br><span class="line">                bestValue = splitVal</span><br><span class="line">                bestS = newS</span><br><span class="line">    <span class="keyword">if</span> (S - bestS) &lt; tolS:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span>, leafType(dataSet)</span><br><span class="line">    mat0, mat1 = binSplitDataSet(dataSet, bestIndex, bestValue)</span><br><span class="line">    <span class="keyword">if</span> (shape(mat0)[<span class="number">0</span>] &lt; tolN) <span class="keyword">or</span> (shape(mat1)[<span class="number">0</span>] &lt; tolN):</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span>, leafType(dataSet)</span><br><span class="line">    <span class="keyword">return</span> bestIndex, bestValue</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试代码效果，数据来自ex00.txt和ex0.txt，用matplotlib绘制的图像如下。<img src="http://7xktmz.com1.z0.glb.clouddn.com/ch09-ex00%E6%95%B0%E6%8D%AE%E7%82%B9%E5%88%86%E5%B8%83.png" width="500px"><img src="http://7xktmz.com1.z0.glb.clouddn.com/ch09-ex0%E6%95%B0%E6%8D%AE%E7%82%B9%E5%88%86%E5%B8%83.png" width="500px"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>reload(regTrees)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>myDat = mat(regTrees.loadDataSet(<span class="string">'ex00.txt'</span>))</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regTrees.createTree(myMat)</span><br><span class="line">&#123;<span class="string">'spInd'</span>: <span class="number">0</span>, <span class="string">'spVal'</span>: <span class="number">0.48813</span>, <span class="string">'right'</span>: -<span class="number">0.044650285714285719</span>, <span class="string">'left'</span>: <span class="number">1.0180967672413792</span>&#125;</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>myDat1 = mat(regTrees.loadDataSet(<span class="string">'ex0.txt'</span>))</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regTrees.createTree(myDat1)</span><br><span class="line">&#123;<span class="string">'spInd'</span>: <span class="number">1</span>, <span class="string">'spVal'</span>: <span class="number">0.39435</span>, <span class="string">'right'</span>: &#123;<span class="string">'spInd'</span>: <span class="number">1</span>, <span class="string">'spVal'</span>: <span class="number">0.197834</span>, <span class="string">'right'</span>: -<span class="number">0.023838155555555553</span>, <span class="string">'left'</span>: <span class="number">1.0289583666666666</span>&#125;, <span class="string">'left'</span>: &#123;<span class="string">'spInd'</span>: <span class="number">1</span>, <span class="string">'spVal'</span>: <span class="number">0.582002</span>, <span class="string">'right'</span>: <span class="number">1.980035071428571</span>, <span class="string">'left'</span>: &#123;<span class="string">'spInd'</span>: <span class="number">1</span>, <span class="string">'spVal'</span>: <span class="number">0.797583</span>, <span class="string">'right'</span>: <span class="number">2.9836209534883724</span>, <span class="string">'left'</span>: <span class="number">3.9871631999999999</span>&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="树剪枝"><a href="#树剪枝" class="headerlink" title="树剪枝"></a>树剪枝</h1><blockquote>
+<p>如果树节点过多，则该模型可能对数据过拟合，通过降低决策树的复杂度来避免过拟合的过程称为剪枝。在函数chooseBestSplit中的三个提前终止条件是“预剪枝”操作，另一种形式的剪枝需要使用测试集和训练集，称作“后剪枝”。</p>
+</blockquote>
+<h2 id="预剪枝"><a href="#预剪枝" class="headerlink" title="预剪枝"></a>预剪枝</h2><ul>
+<li>树构建算法对输入的tolS和tolN非常敏感，将ops换为(0,1)会发现生成的树非常臃肿，几乎为数据集中的每个样本都分配了一个叶节点。加载ex2.txt的数据，该数据集和前面ex00.txt的数据分布类似，但数量级是后者的100倍，在这种情况下，ex00构建出的树只有两个叶节点，而ex2构建出的树有非常多的叶节点。原因在于停止条件tolS对误差的数量级非常敏感。显然，通过不断修改停止条件并且比较哪个条件更好并不合理，多数情况下我们并不确定要寻找什么样的结果，计算机应该给出总体的概貌。</li>
+</ul>
+<h2 id="后剪枝"><a href="#后剪枝" class="headerlink" title="后剪枝"></a>后剪枝</h2><ul>
+<li>使用后剪枝方法需要将数据集交叉验证，首先给定参数，使得构建出的树足够复杂，之后从上而下找到叶节点，判断合并两个叶节点是否能够取得更好的测试误差，如果是就合并。下面是回归树剪枝函数。函数isTree测试输入变量是否为一棵树，getMean对树进行塌陷处理，计算整棵树的平均值。prune函数对树剪枝，参数tree为待剪枝的树，testData是测试集。需要注意的是，测试集合训练集样本的取值范围不一定相同。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isTree</span><span class="params">(obj)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> (type(obj).__name__ ==<span class="string">'dict'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getMean</span><span class="params">(tree)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isTree(tree[<span class="string">'right'</span>]): tree[<span class="string">'right'</span>] = getMean(tree[<span class="string">'right'</span>])</span><br><span class="line">    <span class="keyword">if</span> isTree(tree[<span class="string">'left'</span>]): tree[<span class="string">'left'</span>] = getMean(tree[<span class="string">'left'</span>])</span><br><span class="line">    <span class="keyword">return</span> (tree[<span class="string">'left'</span>] + tree[<span class="string">'right'</span>])/<span class="number">2.0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prune</span><span class="params">(tree, testData)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> shape(testData)[<span class="number">0</span>] == <span class="number">0</span>: <span class="keyword">return</span> getMean(tree)</span><br><span class="line">    <span class="keyword">if</span> (isTree(tree[<span class="string">'right'</span>]) <span class="keyword">or</span> isTree(tree[<span class="string">'left'</span>])):</span><br><span class="line">        lSet, rSet = binSplitDataSet(testData, tree[<span class="string">'spInd'</span>], tree[<span class="string">'spVal'</span>])</span><br><span class="line">    <span class="keyword">if</span> isTree(tree[<span class="string">'left'</span>]): tree[<span class="string">'left'</span>] = prune(tree[<span class="string">'left'</span>], lSet)</span><br><span class="line">    <span class="keyword">if</span> isTree(tree[<span class="string">'right'</span>]): tree[<span class="string">'right'</span>] = prune(tree[<span class="string">'right'</span>], rSet)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> isTree(tree[<span class="string">'left'</span>]) <span class="keyword">and</span> <span class="keyword">not</span> isTree(tree[<span class="string">'right'</span>]):</span><br><span class="line">        lSet, rSet = binSplitDataSet(testData, tree[<span class="string">'spInd'</span>], tree[<span class="string">'spVal'</span>])</span><br><span class="line">        errNoMerge = sum(power(lSet[:,-<span class="number">1</span>] - tree[<span class="string">'left'</span>], <span class="number">2</span>)) +\</span><br><span class="line">            sum(power(rSet[:,-<span class="number">1</span>] - tree[<span class="string">'right'</span>], <span class="number">2</span>))</span><br><span class="line">        treeMean = (tree[<span class="string">'left'</span>]+tree[<span class="string">'right'</span>])/<span class="number">2.0</span></span><br><span class="line">        errorMerge = sum(power(testData[:,-<span class="number">1</span>] - treeMean, <span class="number">2</span>))</span><br><span class="line">        <span class="keyword">if</span> errorMerge &lt; errNoMerge:</span><br><span class="line">            <span class="keyword">print</span> <span class="string">"merging"</span></span><br><span class="line">            <span class="keyword">return</span> treeMean</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> tree</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> tree</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="模型树"><a href="#模型树" class="headerlink" title="模型树"></a>模型树</h1><ul>
+<li>将叶节点设置为分段线性函数，分段线性指模型由多个线性片段组成。例如下图的数据，可以由0.0~0.3和0.3~1.0的两条直线组成。决策树相比其他机器学习算法易于理解，而模型树的可解释性是它优于回归树的特性之一。模型树同时具备更高的预测准确度。<img src="http://7xktmz.com1.z0.glb.clouddn.com/ch09-%E6%A8%A1%E5%9E%8B%E6%A0%91%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83.png" width="500px"></li>
+<li>前面的代码已经给出了构建树的代码，只要修改参数errType和leafType。对于给定的数据集，先用现行的模型对它进行拟合，然后计算真实目标值和模型预测值之间的差距。最后求这些差值的平方和作为误差。modelLeaf函数生成叶节点，linearSolve返回回归系数，modelErr在数据集上调用linearSove，返回yHat和y之间的平方误差。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">linearSolve</span><span class="params">(dataSet)</span>:</span></span><br><span class="line">    m, n = shape(dataSet)</span><br><span class="line">    X = mat(ones((m,n))); Y = mat(ones((m,<span class="number">1</span>)))</span><br><span class="line">    X[:,<span class="number">1</span>:n] = dataSet[:,<span class="number">0</span>:n-<span class="number">1</span>]; Y = dataSet[:,-<span class="number">1</span>]</span><br><span class="line">    xTx = X.T * X</span><br><span class="line">    <span class="keyword">if</span> linalg.det(xTx) == <span class="number">0.0</span>:</span><br><span class="line">        <span class="keyword">raise</span> NameError(<span class="string">'This matrix is singular, cannot do inverses,\n\</span><br><span class="line">            try increasing the second value of ops'</span>)</span><br><span class="line">    ws = xTx.I * (X.T * Y)</span><br><span class="line">    <span class="keyword">return</span> ws, X, Y</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">modelLeaf</span><span class="params">(dataSet)</span>:</span></span><br><span class="line">    ws, X, Y = linearSolve(dataSet)</span><br><span class="line">    <span class="keyword">return</span> ws</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">modelErr</span><span class="params">(dataSet)</span>:</span></span><br><span class="line">    ws, X, Y = linearSolve(dataSet)</span><br><span class="line">    yHat = X * ws</span><br><span class="line">    <span class="keyword">return</span> sum(power(Y - yHat, <span class="number">2</span>))</span><br><span class="line"></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>myMat2 = mat(regTrees.loadDataSet(<span class="string">'exp2.txt'</span>))</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regTrees.createTree(myMat2, regTrees.modelLeaf, regTrees.modelErr, (<span class="number">1</span>,<span class="number">10</span>))</span><br><span class="line">&#123;<span class="string">'spInd'</span>: <span class="number">0</span>, <span class="string">'spVal'</span>: <span class="number">0.285477</span>, <span class="string">'right'</span>: matrix([[ <span class="number">3.46877936</span>],</span><br><span class="line">        [ <span class="number">1.18521743</span>]]), <span class="string">'left'</span>: matrix([[  <span class="number">1.69855694e-03</span>],</span><br><span class="line">        [  <span class="number">1.19647739e+01</span>]])&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="树回归和标准回归的比较"><a href="#树回归和标准回归的比较" class="headerlink" title="树回归和标准回归的比较"></a>树回归和标准回归的比较</h1><ul>
+<li><p>对于输入的单个数据点，函数treeForeCast返回一个预测值。参数modelEval是对叶节点数据进行预测的函数的引用，函数treeForeCast自顶向下遍历整棵树，直到命中叶节点为止。一旦到达叶节点，它会在输入数据上调用modelEval，该参数默认值是regTreeEval。要对回归树叶节点预测，就调用regTreeEval，要对模型树节点预测，调用modelTreeEval。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">regTreeEval</span><span class="params">(model, inDat)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> float(model)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">modelTreeEval</span><span class="params">(model, inDat)</span>:</span></span><br><span class="line">    n = shape(inDat)[<span class="number">1</span>]</span><br><span class="line">    X = mat(ones((<span class="number">1</span>,n+<span class="number">1</span>)))</span><br><span class="line">    X[:,<span class="number">1</span>:n+<span class="number">1</span>] = inDat</span><br><span class="line">    <span class="keyword">return</span> float(X*model)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">treeForeCast</span><span class="params">(tree, inData, modelEval = regTreeEval)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> isTree(tree): <span class="keyword">return</span> modelEval(tree, inData)</span><br><span class="line">    <span class="keyword">if</span> inData[tree[<span class="string">'spInd'</span>]] &gt; tree[<span class="string">'spVal'</span>]:</span><br><span class="line">        <span class="keyword">if</span> isTree(tree[<span class="string">'left'</span>]):</span><br><span class="line">            <span class="keyword">return</span> treeForeCast(tree[<span class="string">'left'</span>], inData, modelEval)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> modelEval(tree[<span class="string">'left'</span>], inData)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> isTree(tree[<span class="string">'right'</span>]):</span><br><span class="line">            <span class="keyword">return</span> treeForeCast(tree[<span class="string">'right'</span>], inData, modelEval)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> modelEval(tree[<span class="string">'right'</span>], inData)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createForeCast</span><span class="params">(tree, testData, modelEval = regTreeEval)</span>:</span></span><br><span class="line">    m = len(testData)</span><br><span class="line">    yHat = mat(zeros((m,<span class="number">1</span>)))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">        yHat[i,<span class="number">0</span>] = treeForeCast(tree, mat(testData[i]), modelEval)</span><br><span class="line">    <span class="keyword">return</span> yHat</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>比较回归树、模型树和标准线性回归的<code>R^2</code>数值。可以看出，模型树的结果比回归树好，而树回归方法在预测复杂数据时会比简单的线性模型更有效。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>trainMat = mat(regTrees.loadDataSet(<span class="string">'bikeSpeedVsIq_train.txt'</span>))</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>testMat = mat(regTrees.loadDataSet(<span class="string">'bikeSpeedVsIq_test.txt'</span>))</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>myTree = regTrees.createTree(trainMat, ops=(<span class="number">1</span>,<span class="number">20</span>))</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yHat = regTrees.createForeCast(myTree, testMat[:,<span class="number">0</span>])</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>corrcoef(yHat, testMat[:,<span class="number">1</span>], rowvar=<span class="number">0</span>)[<span class="number">0</span>,<span class="number">1</span>]</span><br><span class="line"><span class="number">0.96408523182221395</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>myTree = regTrees.createTree(trainMat, regTrees.modelLeaf, regTrees.modelErr, ops=(<span class="number">1</span>,<span class="number">20</span>))</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yHat = regTrees.createForeCast(myTree, testMat[:,<span class="number">0</span>], regTrees.modelTreeEval)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>corrcoef(yHat, testMat[:,<span class="number">1</span>], rowvar=<span class="number">0</span>)[<span class="number">0</span>,<span class="number">1</span>]</span><br><span class="line"><span class="number">0.97604121913806363</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ws, X, Y = regTrees.linearSolve(trainMat)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ws</span><br><span class="line">matrix([[ <span class="number">37.58916794</span>],</span><br><span class="line">        [  <span class="number">6.18978355</span>]])</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">for</span> i <span class="keyword">in</span> range(shape(testMat)[<span class="number">0</span>]):</span><br><span class="line"><span class="prompt">... </span>    yHat[i] = testMat[i,<span class="number">0</span>]*ws[<span class="number">1</span>,<span class="number">0</span>]+ws[<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>corrcoef(yHat, testMat[:,<span class="number">1</span>], rowvar=<span class="number">0</span>)[<span class="number">0</span>,<span class="number">1</span>]</span><br><span class="line"><span class="number">0.94346842356747584</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="Tkinter库创建GUI"><a href="#Tkinter库创建GUI" class="headerlink" title="Tkinter库创建GUI"></a>Tkinter库创建GUI</h1><ul>
+<li><p>Tkinter模块的.grid()方法将widget安排在一个二维表格内，，默认widget会显示在0行0列，可以通过设定columnspan和rowspan来告诉布局管理器是否允许一个widget跨行或跨列。界面代码如下 - treeExplore.py。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Tkinter <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> regTrees</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">redraw</span><span class="params">(tolS, tolN)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">drawNewTree</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">root = Tk()</span><br><span class="line">Label(root, text=<span class="string">"Plot Place Holder"</span>).grid(row = <span class="number">0</span>, columnspan = <span class="number">3</span>)</span><br><span class="line">Label(root, text=<span class="string">"tolN"</span>).grid(row = <span class="number">1</span>, column = <span class="number">0</span>)</span><br><span class="line">tolNentry = Entry(root)</span><br><span class="line">tolNentry.grid(row = <span class="number">1</span>, column = <span class="number">1</span>)</span><br><span class="line">tolNentry.insert(<span class="number">0</span>,<span class="string">'10'</span>)</span><br><span class="line">Label(root, text=<span class="string">"tolS"</span>).grid(row = <span class="number">2</span>, column =<span class="number">0</span> )</span><br><span class="line">tolSentry = Entry(root)</span><br><span class="line">tolSentry.grid(row = <span class="number">2</span>, column = <span class="number">1</span>)</span><br><span class="line">tolSentry.insert(<span class="number">0</span>,<span class="string">'1.0'</span>)</span><br><span class="line">Label(root, text=<span class="string">"path"</span>).grid(row = <span class="number">3</span>, column = <span class="number">0</span>)</span><br><span class="line">datPentry = Entry(root)</span><br><span class="line">datPentry.grid(row = <span class="number">3</span>, column = <span class="number">1</span>)</span><br><span class="line">datPentry.insert(<span class="number">0</span>,<span class="string">'sine.txt'</span>)</span><br><span class="line"></span><br><span class="line">Button(root, text=<span class="string">"ReDraw"</span>, command = drawNewTree).grid(row = <span class="number">1</span>, column =<span class="number">2</span>, rowspan =<span class="number">3</span>)</span><br><span class="line">chkBtnVar = IntVar()</span><br><span class="line">chkBtn = Checkbutton(root, text=<span class="string">"Model Tree"</span>, variable = chkBtnVar)</span><br><span class="line">chkBtn.grid(row = <span class="number">4</span>, column = <span class="number">0</span>, columnspan=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">reDraw.rawDat = mat(regTrees.loadDataSet(<span class="string">'sine.txt'</span>))</span><br><span class="line">reDraw.testDat = arange(min(reDraw.rawDat[:,<span class="number">0</span>]), max(reDraw.rawDat[:,<span class="number">0</span>]), <span class="number">0.01</span>)</span><br><span class="line">reDraw(<span class="number">1.0</span>, <span class="number">10</span>)</span><br><span class="line">root.mainloop()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Matplotlib的构建程序包含一个前端面向用户，如plot和scatter方法等，同时创建一个后端，用于实现绘图和不同应用程序之间的接口。改变后端可以将图像绘制不同格式的文件上，将后端在设置为TkAgg，可以在所选GUI框架上调用Agg，呈现在画布上。下面的代码填补了上面的两个占位函数，另外将上面代码中加载文件的语句移入了按钮事件。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line">matplotlib.use(<span class="string">'TkAgg'</span>)</span><br><span class="line"><span class="keyword">from</span> matplotlib.backends.backend_tkagg <span class="keyword">import</span> FigureCanvasTkAgg</span><br><span class="line"><span class="keyword">from</span> matplotlib.figure <span class="keyword">import</span> Figure</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">reDraw</span><span class="params">(tolS, tolN)</span>:</span></span><br><span class="line">    reDraw.f.clf()</span><br><span class="line">    reDraw.a = reDraw.f.add_subplot(<span class="number">111</span>)</span><br><span class="line">    <span class="keyword">if</span> chkBtnVar.get():</span><br><span class="line">        <span class="keyword">if</span> tolN &lt; <span class="number">2</span>: tolN = <span class="number">2</span></span><br><span class="line">        myTree = regTrees.createTree(reDraw.rawDat, regTrees.modelLeaf, regTrees.modelErr, (tolS, tolN))</span><br><span class="line">        yHat = regTrees.createForeCast(myTree, reDraw.testDat, regTrees.modelTreeEval)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        myTree = regTrees.createTree(reDraw.rawDat, ops=(tolS, tolN))</span><br><span class="line">        yHat = regTrees.createForeCast(myTree, reDraw.testDat)</span><br><span class="line">    reDraw.a.scatter(reDraw.rawDat[:,<span class="number">0</span>], reDraw.rawDat[:,<span class="number">1</span>], s=<span class="number">5</span>)</span><br><span class="line">    reDraw.a.plot(reDraw.testDat, yHat, linewidth = <span class="number">2.0</span>)</span><br><span class="line">    reDraw.canvas.show()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getInputs</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">try</span>: tolN = int(tolNentry.get())</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        tolN = <span class="number">10</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"enter Integer for tolN"</span></span><br><span class="line">        tolNentry.delete(<span class="number">0</span>, END)</span><br><span class="line">        tolNentry.insert(<span class="number">0</span>, <span class="string">'10'</span>)</span><br><span class="line">    <span class="keyword">try</span>: tolS = float(tolSentry.get())</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        tolS = <span class="number">1.0</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"enter Integer for tolS"</span></span><br><span class="line">        tolSentry.delete(<span class="number">0</span>, END)</span><br><span class="line">        tolSentry.insert(<span class="number">0</span>, <span class="string">'1.0'</span>)</span><br><span class="line">    <span class="keyword">try</span>: datPath = str(datPentry.get())</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        datPath = <span class="string">''</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"enter path for test data"</span></span><br><span class="line">        tolSentry.delete(<span class="number">0</span>, END)</span><br><span class="line">        tolSentry.insert(<span class="number">0</span>, <span class="string">''</span>)</span><br><span class="line">    <span class="keyword">return</span> datPath, tolS, tolN</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">drawNewTree</span><span class="params">()</span>:</span></span><br><span class="line">    datPath, tolS, tolN = getInputs()</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        reDraw.rawDat = mat(regTrees.loadDataSet(datPath))</span><br><span class="line">        reDraw.testDat = arange(min(reDraw.rawDat[:,<span class="number">0</span>]), max(reDraw.rawDat[:,<span class="number">0</span>]), <span class="number">0.01</span>)</span><br><span class="line">        reDraw(tolS, tolN)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"Cannot find file %s"</span> % datPath</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>绘制出的GUI界面如下。<img src="http://7xktmz.com1.z0.glb.clouddn.com/ch09-gui%E7%95%8C%E9%9D%A21.png" width="400px"><img src="http://7xktmz.com1.z0.glb.clouddn.com/ch09-gui%E7%95%8C%E9%9D%A22.png" width="400px"><img src="http://7xktmz.com1.z0.glb.clouddn.com/ch09-gui%E7%95%8C%E9%9D%A23.png" width="400px"><img src="http://7xktmz.com1.z0.glb.clouddn.com/ch09-gui%E7%95%8C%E9%9D%A24.png" width="400px"></p>
+</li>
+</ul>
+<hr>
+<p>参考文献： 《机器学习实战 - 美Peter Harrington》</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/20/machinelearning9/">原始出处</a>(<a href="http://forec.github.io/2016/02/20/machinelearning9/">http://forec.github.io/2016/02/20/machinelearning9/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/18/machinelearning8/" rel="next">机器学习笔记（Chapter 08 - 回归）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/02/20/machinelearning9/"
+                   data-title="机器学习笔记（Chapter 09 - 树回归）" data-url="http://forec.github.io/2016/02/20/machinelearning9/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#复杂数据的局部性建模"><span class="nav-number">1.</span> <span class="nav-text">复杂数据的局部性建模</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#连续和离散型特征的树的构建"><span class="nav-number">2.</span> <span class="nav-text">连续和离散型特征的树的构建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#将CART算法用于回归"><span class="nav-number">3.</span> <span class="nav-text">将CART算法用于回归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#树剪枝"><span class="nav-number">4.</span> <span class="nav-text">树剪枝</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#预剪枝"><span class="nav-number">4.1.</span> <span class="nav-text">预剪枝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后剪枝"><span class="nav-number">4.2.</span> <span class="nav-text">后剪枝</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模型树"><span class="nav-number">5.</span> <span class="nav-text">模型树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#树回归和标准回归的比较"><span class="nav-number">6.</span> <span class="nav-text">树回归和标准回归的比较</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tkinter库创建GUI"><span class="nav-number">7.</span> <span class="nav-text">Tkinter库创建GUI</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
