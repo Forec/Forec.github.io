@@ -1,0 +1,760 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec的博客" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="聚类是一种无监督学习，将相似的对象归到同一个簇中，类似全自动分类，即类别体系也是自动构建的。聚类方法几乎可以应用于所有对性，簇内的对象越相似，聚类效果越好。K-均值聚类算法可以发现k个不同的簇，且每个簇的中心采用簇中所含值的均值构成。聚类与分类的区别在于，分类的目标事先已知，而聚类未知。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记（Chapter 10 - K-均值聚类算法）">
+<meta property="og:url" content="http://forec.github.io/2016/02/21/machinelearning10/index.html">
+<meta property="og:site_name" content="Forec的博客">
+<meta property="og:description" content="聚类是一种无监督学习，将相似的对象归到同一个簇中，类似全自动分类，即类别体系也是自动构建的。聚类方法几乎可以应用于所有对性，簇内的对象越相似，聚类效果越好。K-均值聚类算法可以发现k个不同的簇，且每个簇的中心采用簇中所含值的均值构成。聚类与分类的区别在于，分类的目标事先已知，而聚类未知。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ch10-%E5%9C%B0%E5%9B%BE%E7%82%B9%E8%81%9A%E7%B1%BB.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ch10-%E5%9C%B0%E5%9B%BE%E7%82%B9%E8%81%9A%E7%B1%BB-7.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ch10-%E5%9C%B0%E5%9B%BE%E7%82%B9%E8%81%9A%E7%B1%BB-7-2.png">
+<meta property="og:updated_time" content="2016-02-21T13:09:57.315Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记（Chapter 10 - K-均值聚类算法）">
+<meta name="twitter:description" content="聚类是一种无监督学习，将相似的对象归到同一个簇中，类似全自动分类，即类别体系也是自动构建的。聚类方法几乎可以应用于所有对性，簇内的对象越相似，聚类效果越好。K-均值聚类算法可以发现k个不同的簇，且每个簇的中心采用簇中所含值的均值构成。聚类与分类的区别在于，分类的目标事先已知，而聚类未知。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 机器学习笔记（Chapter 10 - K-均值聚类算法） | Forec的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec的博客</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              机器学习笔记（Chapter 10 - K-均值聚类算法）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-02-21T21:07:41+08:00" content="2016-02-21">
+            2016-02-21
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/大数据/" itemprop="url" rel="index">
+                  <span itemprop="name">大数据</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/02/21/machinelearning10/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/21/machinelearning10/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>聚类是一种无监督学习，将相似的对象归到同一个簇中，类似全自动分类，即类别体系也是自动构建的。聚类方法几乎可以应用于所有对性，簇内的对象越相似，聚类效果越好。K-均值聚类算法可以发现k个不同的簇，且每个簇的中心采用簇中所含值的均值构成。聚类与分类的区别在于，分类的目标事先已知，而聚类未知。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="K-均值聚类"><a href="#K-均值聚类" class="headerlink" title="K-均值聚类"></a>K-均值聚类</h1><ul>
+<li>K-均值聚类算法的优点在于容易实现，缺点在于可能收敛到局部最小值，并且在大规模数据上收集较慢。适用于数值型数据。</li>
+<li>K-均值聚类算法发现给定数据集的k个簇，这里的k是用户指定的，其的工作流程如下：首先随机确定k个初始点作为质心（注意这里的k个初始点不一定是数据集中的点，但一定在数据集的range内），然后对数据集中的每个点，寻找距离这个点最近的质心，并将其分配给这个质心对应的簇，该步完成后将每个簇的质心修改为该簇所有点的平均值。伪代码表示如下：<ul>
+<li>创建k个点作为起始质心（通常随机选择）</li>
+<li>当任意一个点的簇分配结果发生改变时：</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;对数据集中的每个点：</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;对每个质心：</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;计算质心与数据点之间的距离</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将数据点分配到距离其最近的簇</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;对每一个簇，计算簇中所有点的均值并将均值作为质心。</li>
+</ul>
+</li>
+<li><p>K-均值算法要寻找最近的质心，因此需要进行某种距离计算，数据集上K-均值算法的性能会受到所选距离计算方法的影响。函数rendCent用于对数据集dataSet随机初始化k个簇质心，随机质心的大小在测试数据集的最小值和最大值之间。distEclud用于计算两个点之间的欧式距离，也可以切换成其他距离函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">(fileName)</span>:</span></span><br><span class="line">    dataMat = []</span><br><span class="line">    fr = open(fileName)</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">        curLine = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">        fltLine = map(float, curLine)</span><br><span class="line">        dataMat.append(fltLine)</span><br><span class="line">    <span class="keyword">return</span> dataMat</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">distEclud</span><span class="params">(vecA, vecB)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> sqrt(sum(power(vecA - vecB, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">randCent</span><span class="params">(dataSet, k)</span>:</span></span><br><span class="line">    n = shape(dataSet)[<span class="number">1</span>]</span><br><span class="line">    centroids = mat(zeros((k,n)))</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">        minJ = min(dataSet[:,j])</span><br><span class="line">        rangeJ = float(max(dataSet[:,j]) - minJ)</span><br><span class="line">        centroids[:,j] = minJ + rangeJ * random.rand(k,<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> centroids</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>函数kMeans接受四个输入参数，用户需要指定数据集和划分的簇数k。kMeans函数一开始确定数据中数据点总数，clusterAssment记录簇分配结果，第一列记录簇索引值，第二列存储误差（当前点到簇的质心的距离）。按照计算质心-&gt;分配-&gt;重新计算的过程反复迭代，直到所有数据点的簇分配结果不再改变为止。选项axis=0表示沿着矩阵的列方向计算均值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">kMeans</span><span class="params">(dataSet, k, distMeas = distEclud, createCent = randCent)</span>:</span></span><br><span class="line">    m = shape(dataSet)[<span class="number">0</span>]</span><br><span class="line">    clusterAssment = mat(zeros((m,<span class="number">2</span>)))</span><br><span class="line">    centroids = createCend(dataSet, k)</span><br><span class="line">    clusterChanged = <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">while</span> clusterChanged:</span><br><span class="line">        clusterChanged = <span class="keyword">False</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">            minDist = inf; minIndex = -<span class="number">1</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(k):</span><br><span class="line">                distJI = distMeas(centroids[j,:], dataSet[i,:])</span><br><span class="line">                <span class="keyword">if</span> distJI &lt; minDist:</span><br><span class="line">                    minDist = distJI; minIndex = j</span><br><span class="line">            <span class="keyword">if</span> clusterAssment[i,<span class="number">0</span>] != minIndex: clusterChanged = <span class="keyword">True</span></span><br><span class="line">            clusterAssment[i,:] = minIndex, minDist**<span class="number">2</span></span><br><span class="line">        <span class="comment">#print centroids</span></span><br><span class="line">        <span class="keyword">for</span> cent <span class="keyword">in</span> range(k):</span><br><span class="line">            ptsInClust = dataSet[nonzero(clusterAssment[:,<span class="number">0</span>].A == cent)[<span class="number">0</span>]]</span><br><span class="line">            centroids[cent,:] = mean(ptsInClust, axis=<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> centroids, clusterAssment</span><br><span class="line"></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> kMeans</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>datMat = mat(kMeans.loadDataSet(<span class="string">'testSet.txt'</span>))</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>myCentroids, clustAssing = kMeans.kMeans(datMat, <span class="number">4</span>)</span><br><span class="line">[[-<span class="number">2.46154315</span>  <span class="number">2.78737555</span>]</span><br><span class="line"> [-<span class="number">3.38237045</span> -<span class="number">2.9473363</span> ]</span><br><span class="line"> [ <span class="number">2.80293085</span> -<span class="number">2.7315146</span> ]</span><br><span class="line"> [ <span class="number">2.6265299</span>   <span class="number">3.10868015</span>]]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="二分K-均值算法"><a href="#二分K-均值算法" class="headerlink" title="二分K-均值算法"></a>二分K-均值算法</h1><ul>
+<li><strong>后处理</strong>：在K-均值聚类中簇的数目k是用户定义参数，可以利用clusterAssment中的误差值评价聚类分簇的正确性和质量。考虑下图的聚类结果，K-均值聚类算法收敛但聚类效果较差的原因是K-均值算法收敛到了局部最小值，而非全局最小值。可以使用SSE（误差平方和，clusterAssment[:,1]的和）评价聚类好坏，SSE值越小表示数据点越接近于它们的质心，聚类效果也越好。因为对误差取平方，因此更加重视远离质心的点。增加簇的个数必然降低SSE的值，但不符合聚类目标。一种方法是对聚类生成的簇进行后处理，将具有最大SSE值得簇划分为两个簇，具体实现只要将属于最大簇的数据点用K-均值聚类，设定簇数k=2即可。为了保证簇总数不变，可以合并最近的质心，或者合并两个使得SSE值增幅最小的质心。</li>
+<li>二分K-均值类似后处理的切分思想，初始状态所有数据点属于一个大簇，之后每次选择一个簇切分成两个簇，这个切分满足使SSE值最大程度降低，直到簇数目达到k。另一种思路是每次选择SSE值最大的一个簇进行切分。前者伪代码如下。<ul>
+<li>将所有点看成一个簇</li>
+<li>当簇数目小于k时</li>
+<li>对于每一个簇：</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;计算总误差</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;在给定的簇上面进行K-均值聚类（k=2）</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;计算将该簇一分为二后的总误差</li>
+<li>选择使得误差最小的那个簇进行划分操作</li>
+</ul>
+</li>
+<li><p>函数biKmeans是上面二分K-均值聚类算法的实现，首先创建clusterAssment储存数据集中每个点的分类结果和平方误差，用centList保存所有已经划分的簇，初始状态为整个数据集。while循环不停对簇进行划分，寻找使得SSE值最大程度减小的簇并更新，添加新的簇到centList中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">biKmeans</span><span class="params">(dataSet, k, distMeas=distEclud)</span>:</span></span><br><span class="line">    m = shape(dataSet)[<span class="number">0</span>]</span><br><span class="line">    clusterAssment = mat(zeros((m,<span class="number">2</span>)))</span><br><span class="line">    centroid0 = mean(dataSet, axis = <span class="number">0</span>).tolist()[<span class="number">0</span>]</span><br><span class="line">    centList = [centroid0]</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(m):</span><br><span class="line">        clusterAssment[j,<span class="number">1</span>] = distMeas(mat(centroid0), dataSet[j,:])**<span class="number">2</span></span><br><span class="line">    <span class="keyword">while</span> (len(centList) &lt; k):</span><br><span class="line">        lowestSSE = inf</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(centList)):</span><br><span class="line">            ptsInCurrCluster = dataSet[nonzero(clusterAssment[:,<span class="number">0</span>].A==i)[<span class="number">0</span>],:]</span><br><span class="line">            centroidMat, splitClustAss = kMeans(ptsInCurrCluster, <span class="number">2</span>, distMeas)</span><br><span class="line">            sseSplit = sum(splitClustAss[:,<span class="number">1</span>])</span><br><span class="line">            sseNotSplit = sum(clusterAssment[nonzero(clusterAssment[:,<span class="number">0</span>].A!=i)[<span class="number">0</span>],<span class="number">1</span>])</span><br><span class="line">            <span class="keyword">print</span> <span class="string">"sseSplit, and notSplit: "</span>, sseSplit, sseNotSplit</span><br><span class="line">            <span class="keyword">if</span> (sseSplit + sseNotSplit) &lt; lowestSSE:</span><br><span class="line">                bestCentToSplit = i</span><br><span class="line">                bestNewCents = centroidMat</span><br><span class="line">                bestClustAss = splitClustAss.copy()</span><br><span class="line">                lowestSSE = sseSplit + sseNotSplit</span><br><span class="line">        bestClustAss[nonzero(bestClustAss[:,<span class="number">0</span>].A==<span class="number">1</span>)[<span class="number">0</span>], <span class="number">0</span>] = len(centList)</span><br><span class="line">        bestClustAss[nonzero(bestClustAss[:,<span class="number">0</span>].A==<span class="number">0</span>)[<span class="number">0</span>], <span class="number">0</span>] = bestCentToSplit</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"The bestCentToSplit is: "</span>, bestCentToSplit</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"The len of bestClustAss is: "</span>, len(bestClustAss)</span><br><span class="line">        centList[bestCentToSplit] = bestNewCents[<span class="number">0</span>,:].tolist()[<span class="number">0</span>]</span><br><span class="line">        centList.append(bestNewCents[<span class="number">1</span>,:].tolist()[<span class="number">0</span>])</span><br><span class="line">        clusterAssment[nonzero(clusterAssment[:,<span class="number">0</span>].A==bestCentToSplit)[<span class="number">0</span>],:] = bestClustAss</span><br><span class="line">            <span class="comment"># 按顺序更新</span></span><br><span class="line">    <span class="keyword">return</span> mat(centList), clusterAssment</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行上述函数多次，聚类会收敛到全局最小值，而kMeans函数偶尔会陷入局部最小值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>datMat3 = mat(kMeans.loadDataSet(<span class="string">'testSet2.txt'</span>))</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>centList, myNewAssments = kMeans.biKmeans(datMat3,<span class="number">3</span>)</span><br><span class="line">sseSplit, <span class="keyword">and</span> notSplit:  <span class="number">453.033489581</span> <span class="number">0.0</span></span><br><span class="line">The bestCentToSplit <span class="keyword">is</span>:  <span class="number">0</span></span><br><span class="line">The len of bestClustAss <span class="keyword">is</span>:  <span class="number">60</span></span><br><span class="line">sseSplit, <span class="keyword">and</span> notSplit:  <span class="number">12.7532631369</span> <span class="number">423.876240137</span></span><br><span class="line">sseSplit, <span class="keyword">and</span> notSplit:  <span class="number">77.5922493178</span> <span class="number">29.1572494441</span></span><br><span class="line">The bestCentToSplit <span class="keyword">is</span>:  <span class="number">1</span></span><br><span class="line">The len of bestClustAss <span class="keyword">is</span>:  <span class="number">40</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="对地图上的点进行聚类"><a href="#对地图上的点进行聚类" class="headerlink" title="对地图上的点进行聚类"></a>对地图上的点进行聚类</h1><ul>
+<li><p>使用Yahho！PlaceFinder API收集数据，筛选出目标地点的经纬度，用matplotlib构建一个二位数据图，包含簇、位置和地图。将俄勒冈州的70个地点聚类，地址列表为portlandClubs,txt。可以在<a href="http://developer.yahoo.com" target="_blank" rel="external">Yahoo开发者网络</a>进行注册，创建一个桌面应用以获取appid。书上给出的yahooAPI的baseurl已经改变，并且yahoo目前的placefinder需要OAuth2验证，要使用该api，须在header里或者get方法中加入六个必须的参数。github上有oauth2供python使用，但是yahoo的BOOS GEO好像OAuth2验证出了问题，虽然写了新的placeFinder调用api的代码，仍然会有403错误，yahoo单方面的问题。几个链接，要vpn：<a href="https://developer.yahoo.com/boss/geo/docs/oauth_model_geo.html" target="_blank" rel="external">yahoo BOSS GEO的OAuth说明</a>，<a href="https://developer.yahoo.com/boss/geo/docs/requests-pf.html" target="_blank" rel="external">yahoo placeFinder指南</a>。上面的代码来自书上，下面的是适用于新的api的代码，但会返回403。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">geoGrab</span><span class="params">(stAddress, city)</span>:</span></span><br><span class="line">    apiStem = <span class="string">'http://where.yahooapis.com/geocode?'</span></span><br><span class="line">    params = &#123;&#125;</span><br><span class="line">    params[<span class="string">'flags'</span>] = <span class="string">'J'</span></span><br><span class="line">    params[<span class="string">'appid'</span>] = <span class="string">'ppp68N8t'</span></span><br><span class="line">    params[<span class="string">'location'</span>] = <span class="string">'%s %s'</span> % (stAddress, city)</span><br><span class="line">    url_params = urllib.urlencode(params)</span><br><span class="line">    yahooApi = apiStem + url_params</span><br><span class="line">    <span class="keyword">print</span> yahooApi</span><br><span class="line">    c = urllib.urlopen(yahooApi)</span><br><span class="line">    <span class="keyword">print</span> c.read()</span><br><span class="line">    <span class="keyword">return</span> json.loads(c.read())</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">massPlaceFind</span><span class="params">(fileName)</span>:</span></span><br><span class="line">    fw = open(<span class="string">'places.txt'</span>, <span class="string">'w'</span>)</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> open(fileName).readlines():</span><br><span class="line">        line = line.strip()</span><br><span class="line">        lineArr = line.split(<span class="string">'\t'</span>)</span><br><span class="line">        retDict = geoGrab(lineArr[<span class="number">1</span>], lineArr[<span class="number">2</span>])</span><br><span class="line">        <span class="keyword">if</span> retDict[<span class="string">'ResultSet'</span>][<span class="string">'Error'</span>] == <span class="number">0</span>:</span><br><span class="line">            lat = float(retDict[<span class="string">'ResultSet'</span>][<span class="string">'Results'</span>][<span class="number">0</span>][<span class="string">'latitude'</span>])</span><br><span class="line">            lng = float(retDict[<span class="string">'ResultSet'</span>][<span class="string">'Results'</span>][<span class="number">0</span>][<span class="string">'longitude'</span>])</span><br><span class="line">            <span class="keyword">print</span> <span class="string">"%s\t%f\t%f"</span> % (lineArr[<span class="number">0</span>], lat, lng)</span><br><span class="line">            fw.write(<span class="string">'%s\t%f\t%f'</span> % (line, lat, lng))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">print</span> <span class="string">"error fetching"</span></span><br><span class="line">        sleep(<span class="number">1</span>)</span><br><span class="line">    fw.close()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Upper codes are from the book.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># pst.py(codes for new apis)</span></span><br><span class="line"><span class="keyword">import</span> urllib2</span><br><span class="line"><span class="keyword">import</span> oauth2 <span class="keyword">as</span> oauth</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">OAUTH_CONSUMER_KEY = <span class="string">"dj0yJmk9OTRRNmJWaEQwSWhPJm********RHdzROekV5TjJFbWN\</span><br><span class="line">HbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD03OQ--"</span></span><br><span class="line">OAUTH_CONSUMER_SECRET = <span class="string">"8caf5cfb4e8****2c30418f26805f99aa8e49728"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">oauth_request</span><span class="params">(url, params,method=<span class="string">"GET"</span>)</span>:</span></span><br><span class="line">    params[<span class="string">'oauth_version'</span>] = <span class="string">"1.0"</span> <span class="comment">#,</span></span><br><span class="line">    params[<span class="string">'oauth_nonce'</span>] = oauth.generate_nonce() <span class="comment">#,</span></span><br><span class="line">    params[<span class="string">'oauth_timestamp'</span>] = int(time.time())</span><br><span class="line">    consumer = oauth.Consumer(key=OAUTH_CONSUMER_KEY,</span><br><span class="line">                              secret=OAUTH_CONSUMER_SECRET)</span><br><span class="line">    params[<span class="string">'oauth_consumer_key'</span>] = consumer.key</span><br><span class="line">    req = oauth.Request(method=method, url=url, parameters=params)</span><br><span class="line">    req.sign_request(oauth.SignatureMethod_HMAC_SHA1(), consumer, <span class="keyword">None</span>)</span><br><span class="line">    <span class="keyword">return</span> req</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    url = <span class="string">"http://yboss.yahooapis.com/geo/placefinder?"</span></span><br><span class="line">    req = oauth_request(url, params=&#123;<span class="string">"q"</span>: <span class="string">"lianyungang"</span>&#125;)</span><br><span class="line">    <span class="comment"># This one is a bit nasty. Apparently the BOSS API does not like</span></span><br><span class="line">    <span class="comment"># "+" in its URLs so you have to replace "%20" manually.</span></span><br><span class="line">    <span class="comment"># Not sure if the API should be expected to accept either.</span></span><br><span class="line">    <span class="comment"># Not sure why to_url does not just return %20 instead...</span></span><br><span class="line">    <span class="comment"># Also, oauth2.Request seems to store parameters as unicode and forget</span></span><br><span class="line">    <span class="comment"># to encode to utf8 prior to percentage encoding them in its to_url</span></span><br><span class="line">    <span class="comment"># method. However, it's handled correctly for generating signatures.</span></span><br><span class="line">    <span class="comment"># to_url fails when query parameters contain non-ASCII characters. To</span></span><br><span class="line">    <span class="comment"># work around, manually utf8 encode the request parameters.</span></span><br><span class="line">    req[<span class="string">'q'</span>] = req[<span class="string">'q'</span>].encode(<span class="string">'utf8'</span>)</span><br><span class="line">    req_url = req.to_url().replace(<span class="string">'+'</span>, <span class="string">'%20'</span>)</span><br><span class="line">    <span class="keyword">print</span> req_url</span><br><span class="line">    result = urllib2.urlopen(req_url)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>github附书代码里有生成好的place.txt，直接拿来使用。下面代码中，distSLC用球面余弦定理计算地球表面两个点之间的距离，clusterClubs将文件中的地点进行聚类并画出结果。为了画出这些簇，首先创建一幅图和一个矩形，然后用该矩形决定绘制图的哪一部分。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">distSLC</span><span class="params">(vecA, vecB)</span>:</span></span><br><span class="line">    a = sin(vecA[<span class="number">0</span>,<span class="number">1</span>]*pi/<span class="number">180</span>) * sin(vecB[<span class="number">0</span>,<span class="number">1</span>]*pi/<span class="number">180</span>)</span><br><span class="line">    b = cos(vecA[<span class="number">0</span>,<span class="number">1</span>]*pi/<span class="number">180</span>) * cos(vecB[<span class="number">0</span>,<span class="number">1</span>]*pi/<span class="number">180</span>) *\</span><br><span class="line">     cos(pi*(vecB[<span class="number">0</span>,<span class="number">0</span>]-vecA[<span class="number">0</span>,<span class="number">0</span>])/<span class="number">180</span>)</span><br><span class="line">    <span class="keyword">return</span> arccos(a+b)*<span class="number">6371.0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clusterClubs</span><span class="params">(numClust=<span class="number">5</span>)</span>:</span></span><br><span class="line">    datList = []</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> open(<span class="string">'places.txt'</span>).readlines():</span><br><span class="line">        lineArr = line.split(<span class="string">'\t'</span>)</span><br><span class="line">        datList.append([float(lineArr[<span class="number">4</span>]), float(lineArr[<span class="number">3</span>])])</span><br><span class="line">    datMat = mat(datList)</span><br><span class="line">    myCentroids, clustAssing = biKmeans(datMat, numClust, distMeas = distSLC)</span><br><span class="line">    fig = plt.figure()</span><br><span class="line">    rect = [<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.8</span>, <span class="number">0.8</span>]</span><br><span class="line">    scatterMarkers = [<span class="string">'s'</span>, <span class="string">'o'</span>, <span class="string">'^'</span>, <span class="string">'8'</span>, <span class="string">'p'</span>, <span class="string">'d'</span>, <span class="string">'v'</span>, <span class="string">'h'</span>, <span class="string">'&gt;'</span>, <span class="string">'&lt;'</span>]</span><br><span class="line">    axprops = dict(xticks=[], yticks=[])</span><br><span class="line">    ax0 = fig.add_axes(rect, label = <span class="string">'ax0'</span>, **axprops)</span><br><span class="line">    imgP = plt.imread(<span class="string">'Portland.png'</span>)</span><br><span class="line">    ax0.imshow(imgP)</span><br><span class="line">    ax1 = fig.add_axes(rect, label = <span class="string">'ax1'</span>, frameon = <span class="keyword">False</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(numClust):</span><br><span class="line">        ptsInCurrCluster = datMat[nonzero(clustAssing[:,<span class="number">0</span>].A == i)[<span class="number">0</span>],:]</span><br><span class="line">        markerSytle = scatterMarkers[i%len(scatterMarkers)]</span><br><span class="line">        ax1.scatter(ptsInCurrCluster[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>], \</span><br><span class="line">            ptsInCurrCluster[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],\</span><br><span class="line">            marker = markerSytle, s=<span class="number">90</span>)</span><br><span class="line">    ax1.scatter(myCentroids[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>], myCentroids[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],\</span><br><span class="line">        marker = <span class="string">'+'</span>, s=<span class="number">300</span>)</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行结果如下，分别是划分为5个簇、7个簇的情况。多次运行可以找到最佳的分簇数目和方法。<img src="http://7xktmz.com1.z0.glb.clouddn.com/ch10-%E5%9C%B0%E5%9B%BE%E7%82%B9%E8%81%9A%E7%B1%BB.png" width="400px"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/ch10-%E5%9C%B0%E5%9B%BE%E7%82%B9%E8%81%9A%E7%B1%BB-7.png" width="400px"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/ch10-%E5%9C%B0%E5%9B%BE%E7%82%B9%E8%81%9A%E7%B1%BB-7-2.png" width="400px"></p>
+</li>
+</ul>
+<h1 id="K-均值聚类算法总结"><a href="#K-均值聚类算法总结" class="headerlink" title="K-均值聚类算法总结"></a>K-均值聚类算法总结</h1><blockquote>
+<p>无监督学习指事先不知道要寻找的内容，没有目标变量。聚类将数据点归到多个簇中，可以使用多种方法计算相似度，实际使用时也应多次运行取较优结果。K-均值算法是一种广泛使用的聚类算法，k是用户指定的要创建的簇的数目，该算法非常有效但容易受到初始簇质心的影响。可以使用二分K-均值聚类算法获得更好的效果。</p>
+</blockquote>
+<hr>
+<p>参考文献： 《机器学习实战 - 美Peter Harrington》</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/21/machinelearning10/">原始出处</a>(<a href="http://forec.github.io/2016/02/21/machinelearning10/">http://forec.github.io/2016/02/21/machinelearning10/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/20/machinelearning9/" rel="next">机器学习笔记（Chapter 09 - 树回归）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/02/21/machinelearning10/"
+                   data-title="机器学习笔记（Chapter 10 - K-均值聚类算法）" data-url="http://forec.github.io/2016/02/21/machinelearning10/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#K-均值聚类"><span class="nav-number">1.</span> <span class="nav-text">K-均值聚类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二分K-均值算法"><span class="nav-number">2.</span> <span class="nav-text">二分K-均值算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对地图上的点进行聚类"><span class="nav-number">3.</span> <span class="nav-text">对地图上的点进行聚类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#K-均值聚类算法总结"><span class="nav-number">4.</span> <span class="nav-text">K-均值聚类算法总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
