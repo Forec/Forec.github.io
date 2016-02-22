@@ -1,0 +1,757 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="Algorithms,机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec's Notes" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="商店通过会员卡等忠诚度计划，可以获取顾客所购买商品的组合信息，从而更好地安排商品定价、市场促销等。从大规模数据集中寻找物品间的隐含关系被称作关联分析或者关联规则学习。Apriori算法可以解决计算代价极高的物品组合问题，从而在合理的时间范围内找到频繁项集和关联规则。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记（Chapter 11 - Apriori算法）">
+<meta property="og:url" content="http://forec.github.io/2016/02/22/machinelearning11/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="商店通过会员卡等忠诚度计划，可以获取顾客所购买商品的组合信息，从而更好地安排商品定价、市场促销等。从大规模数据集中寻找物品间的隐含关系被称作关联分析或者关联规则学习。Apriori算法可以解决计算代价极高的物品组合问题，从而在合理的时间范围内找到频繁项集和关联规则。">
+<meta property="og:updated_time" content="2016-02-22T13:33:08.344Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记（Chapter 11 - Apriori算法）">
+<meta name="twitter:description" content="商店通过会员卡等忠诚度计划，可以获取顾客所购买商品的组合信息，从而更好地安排商品定价、市场促销等。从大规模数据集中寻找物品间的隐含关系被称作关联分析或者关联规则学习。Apriori算法可以解决计算代价极高的物品组合问题，从而在合理的时间范围内找到频繁项集和关联规则。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 机器学习笔记（Chapter 11 - Apriori算法） | Forec's Notes </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec's Notes</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              机器学习笔记（Chapter 11 - Apriori算法）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-02-22T21:17:17+08:00" content="2016-02-22">
+            2016-02-22
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/大数据/" itemprop="url" rel="index">
+                  <span itemprop="name">大数据</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/02/22/machinelearning11/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/22/machinelearning11/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>商店通过会员卡等忠诚度计划，可以获取顾客所购买商品的组合信息，从而更好地安排商品定价、市场促销等。从大规模数据集中寻找物品间的隐含关系被称作关联分析或者关联规则学习。Apriori算法可以解决计算代价极高的物品组合问题，从而在合理的时间范围内找到频繁项集和关联规则。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="关联分析"><a href="#关联分析" class="headerlink" title="关联分析"></a>关联分析</h1><ul>
+<li>关联分析是一种在大规模数据集中寻找关系的任务，这些关系可以有两种形式：频繁项集或者关联规则。频繁项集是经常出现在一起的物品的集合，关联规则暗示两种物品之间存在很强的因果关系。经典的例子如“啤酒与尿布”。</li>
+<li>定义“频繁”和“关联”：一个项集的支持度被定义为数据集中包含该项集的记录所占的比例。可信度或置信度是针对一条例如{尿布}→{啤酒}的关联规则定义的，这条规则的可信度被定义为<code>支持度({尿布，啤酒})/支持度({尿布})</code>。假设这条规则的置信度是75%，那么对于所有包含“尿布”的记录，这条规则对其中的75%都适用。</li>
+</ul>
+<h1 id="Apriori原理"><a href="#Apriori原理" class="headerlink" title="Apriori原理"></a>Apriori原理</h1><ul>
+<li>Apriori算法易于编写，但在大数据集上效率不高。适用于数值型或者标称型数据。</li>
+<li>假设现在有n件商品，不考虑购买的数量重叠，消费者购买的可能组合就有2^n-1种。这2^N-1种项集组合无法全部遍历，因此通过Apriori原理过滤到不可能“频繁”出现的项集。<strong>Apriori原理指如果某个项集是频繁的，那么它的所有子集也是频繁的</strong>。实际应用时，通常对原理取反：<strong>如果一个项集是非频繁集，那么它的所有超集也都是非频繁的</strong>。Apriori意指“来自以前”，即定义问题时通常使用先验知识或者假设，例如在贝叶斯统计中使用先验知识作为条件进行推断，这些先验知识可能来自领域知识、先前的测量结果等。</li>
+<li>Apriori算法通过已经得到的支持度达标的项集来构造更复杂的项集，因此可以看作迭代的过程。初始状态每个项集仅包含一个物品，通过统计这些长度为1的项集的支持度，筛选掉不达标的项集，再用达标项集生成长度为2的项集。过程不断重复直到所有的项集筛选完成。</li>
+</ul>
+<h1 id="Apriori算法寻找频繁集"><a href="#Apriori算法寻找频繁集" class="headerlink" title="Apriori算法寻找频繁集"></a>Apriori算法寻找频繁集</h1><h2 id="生成候选项集"><a href="#生成候选项集" class="headerlink" title="生成候选项集"></a>生成候选项集</h2><ul>
+<li><p>函数createC1()用于构建集合C1。Ck是大小为k的所有候选项集集合，注意生成的C1通过map冰冻，意味着每个值都无法改变。scanD函数用于从Ck中筛选出支持度符合要求的项集，构成集合Lk。loadDataSet初始化一个数据集。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> [[<span class="number">1</span>,<span class="number">3</span>,<span class="number">4</span>], [<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>], [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>], [<span class="number">2</span>,<span class="number">5</span>]]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createC1</span><span class="params">(dataSet)</span>:</span></span><br><span class="line">    C1 = []</span><br><span class="line">    <span class="keyword">for</span> transcation <span class="keyword">in</span> dataSet:</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> transcation:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> [item] <span class="keyword">in</span> C1:</span><br><span class="line">                C1.append([item])</span><br><span class="line">    C1.sort()</span><br><span class="line">    <span class="keyword">return</span> map(frozenset, C1)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">scanD</span><span class="params">(D, Ck, minSupport)</span>:</span></span><br><span class="line">    ssCnt = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> tid <span class="keyword">in</span> D:</span><br><span class="line">        <span class="keyword">for</span> can <span class="keyword">in</span> Ck:</span><br><span class="line">            <span class="keyword">if</span> can.issubset(tid):</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> ssCnt.has_key(can): ssCnt[can] = <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>: ssCnt[can] += <span class="number">1</span></span><br><span class="line">    numItems = float(len(D))</span><br><span class="line">    retList = []</span><br><span class="line">    supportData = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> key <span class="keyword">in</span> ssCnt:</span><br><span class="line">        support = ssCnt[key]/numItems</span><br><span class="line">        <span class="keyword">if</span> support &gt;= minSupport:</span><br><span class="line">            retList.insert(<span class="number">0</span>, key)</span><br><span class="line">        supportData[key] = support</span><br><span class="line">    <span class="keyword">return</span> retList, supportData</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>对原始数据集初始化后的C1，L1如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> apriori</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>dataSet=  apriori.loadDataSet()</span><br><span class="line">[[<span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>], [<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>], [<span class="number">2</span>, <span class="number">5</span>]]</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>C1 = apriori.createC1(dataSet)</span><br><span class="line">[frozenset([<span class="number">1</span>]), frozenset([<span class="number">2</span>]), frozenset([<span class="number">3</span>]), frozenset([<span class="number">4</span>]), frozenset([<span class="number">5</span>])]</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>D = map(set, dataSet)</span><br><span class="line">[set([<span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>]), set([<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>]), set([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>]), set([<span class="number">2</span>, <span class="number">5</span>])]</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>L1, supportData0 = apriori.scanD(D, C1, <span class="number">0.5</span>)</span><br><span class="line">[frozenset([<span class="number">1</span>]), frozenset([<span class="number">3</span>]), frozenset([<span class="number">2</span>]), frozenset([<span class="number">5</span>])]</span><br><span class="line">&#123;frozenset([<span class="number">4</span>]): <span class="number">0.25</span>, frozenset([<span class="number">5</span>]): <span class="number">0.75</span>, frozenset([<span class="number">2</span>]): <span class="number">0.75</span>, frozenset([<span class="number">3</span>]): <span class="number">0.75</span>, frozenset([<span class="number">1</span>]): <span class="number">0.5</span>&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="组织完整的Apriori算法"><a href="#组织完整的Apriori算法" class="headerlink" title="组织完整的Apriori算法"></a>组织完整的Apriori算法</h2><ul>
+<li><p>Apriori整个算法流程如下：当当前集合Lk中的筛选出的频繁项集数大于0，则生成Ck+1，直到所有可能的组合都筛选完成。函数aprioriGen取频繁项集列表Lk和k作为参数，生成Ck，具体实现是对Lk中的每个元素，比较这个元素和其他元素，如果两个元素有k-1个项相同，就可以将两个元素合并成Ck+1中的一个。apriori函数取数据集、支持度作为参数，首先用createC1创建C1，用scanD筛选出L1，之后迭代生成Lk。apriori函数返回所有的频繁项集和项集的支持度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">aprioriGen</span><span class="params">(Lk, k)</span>:</span></span><br><span class="line">    retList = []</span><br><span class="line">    lenLk = len(Lk)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(lenLk):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(i+<span class="number">1</span>, lenLk):</span><br><span class="line">            L1 = list(Lk[i])[:k-<span class="number">2</span>]; L2 = list(Lk[j])[:k-<span class="number">2</span>]</span><br><span class="line">            L1.sort(); L2.sort()</span><br><span class="line">            <span class="keyword">if</span> L1 == L2:</span><br><span class="line">                retList.append(Lk[i] | Lk[j])</span><br><span class="line">    <span class="keyword">return</span> retList</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">apriori</span><span class="params">(dataSet, minSupport = <span class="number">0.5</span>)</span>:</span></span><br><span class="line">    C1 = createC1(dataSet)</span><br><span class="line">    D = map(set, dataSet)</span><br><span class="line">    L1, supportData = scanD(D, C1, minSupport)</span><br><span class="line">    L = [L1]</span><br><span class="line">    k = <span class="number">2</span></span><br><span class="line">    <span class="keyword">while</span> (len(L[k-<span class="number">2</span>]) &gt; <span class="number">0</span>):</span><br><span class="line">        Ck = aprioriGen(L[k-<span class="number">2</span>], k)</span><br><span class="line">        Lk, supK = scanD(D, Ck, minSupport)</span><br><span class="line">        supportData.update(supK)</span><br><span class="line">        L.append(Lk)</span><br><span class="line">        k += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> L, supportData</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行效果。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>reload(apriori)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>L, suppData = apriori.apriori(dataSet)</span><br><span class="line">[[frozenset([<span class="number">1</span>]), frozenset([<span class="number">3</span>]), frozenset([<span class="number">2</span>]), frozenset([<span class="number">5</span>])], [frozenset([<span class="number">1</span>, <span class="number">3</span>]), frozenset([<span class="number">2</span>, <span class="number">5</span>]), frozenset([<span class="number">2</span>, <span class="number">3</span>]), frozenset([<span class="number">3</span>, <span class="number">5</span>])], [frozenset([<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>])], []]</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>apriori.aprioriGen(L[<span class="number">0</span>], <span class="number">2</span>)</span><br><span class="line">[frozenset([<span class="number">1</span>, <span class="number">3</span>]), frozenset([<span class="number">1</span>, <span class="number">2</span>]), frozenset([<span class="number">1</span>, <span class="number">5</span>]), frozenset([<span class="number">2</span>, <span class="number">3</span>]), frozenset([<span class="number">3</span>, <span class="number">5</span>]), frozenset([<span class="number">2</span>, <span class="number">5</span>])]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="从频繁项集中挖掘关联规则"><a href="#从频繁项集中挖掘关联规则" class="headerlink" title="从频繁项集中挖掘关联规则"></a>从频繁项集中挖掘关联规则</h1><ul>
+<li>关联规则不一定是可逆的，{尿布}→{啤酒}不意味着{啤酒}→{牛奶}。对于一个频繁项，可以将其中包含的元素划分为两部分，左端称为前件，如{尿布}→{啤酒}中的尿布，右端称为后件。对于一个固定的频繁项，前件与后件的元素个数之和固定，但前件后件数目可以调配。为了减少产生的规则数目，可以发现，如果某条规则并不满足最小可信度要求，那么这条规则的所有子集也不满足最小可信度要求。例如，{0，1，2}→{3}的规则不满足可信度，则所有前件是{0，1，2}子集的规则都不满足可信度。</li>
+<li><p>构造方法如下：首先从一个频繁项集开始，创建一个规则列表，其中规则右部只包含一个元素，然后对这些规则测试，接下来合并所有剩余规则来创建一个新的规则列表，此时右部包含两个元素，以此类推，称为分级法。函数generateRules取频繁项集列表L、项集支持度supportData和最小可信阈值minConf作为参数，遍历L中的每一个频繁项集并对每个频繁项集创建只包含单个元素集合的列表H1。注意因为无法从单个元素的项集中构建关联规则，所以从包含两个或者更多元素的项集开始。如果频繁项集的元素数目大于2，则考虑对其做进一步合并，产生其他规则，通过rulesFromConseq完成，否则直接calcConf计算可信值。rulesFromConseq中的<code>if (lne(freqSet)&gt;(m+1))</code>的判断目的在于确定当前的频繁项是否大到可以移除长为m的子集。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generateRules</span><span class="params">(L, supportData, minConf = <span class="number">0.7</span>)</span>:</span></span><br><span class="line">    bigRuleList = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(L)):</span><br><span class="line">        <span class="keyword">for</span> freqSet <span class="keyword">in</span> L[i]:</span><br><span class="line">            H1 = [frozenset([item]) <span class="keyword">for</span> item <span class="keyword">in</span> freqSet]</span><br><span class="line">            <span class="keyword">if</span> (i &gt; <span class="number">1</span>):</span><br><span class="line">                rulesFromConseq(freqSet, H1, supportData, bigRuleList, minConf)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                calcConf(freqSet, H1, supportData, bigRuleList, minConf)</span><br><span class="line">    <span class="keyword">return</span> bigRuleList</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calcConf</span><span class="params">(freqSet, H, supportData, brl, minConf = <span class="number">0.7</span>)</span>:</span></span><br><span class="line">    prunedH = []</span><br><span class="line">    <span class="keyword">for</span> conseq <span class="keyword">in</span> H:</span><br><span class="line">        conf = supportData[freqSet]/supportData[freqSet-conseq]</span><br><span class="line">        <span class="keyword">if</span> conf &gt;= minConf:</span><br><span class="line">            <span class="keyword">print</span> freqSet-conseq, <span class="string">'--&gt;'</span>, conseq, <span class="string">'conf:'</span>, conf</span><br><span class="line">            brl.append((freqSet-conseq, conseq, conf))</span><br><span class="line">            prunedH.append(conseq)</span><br><span class="line">    <span class="keyword">return</span> prunedH</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rulesFromConseq</span><span class="params">(freqSet, H, supportData, brl, minConf = <span class="number">0.7</span>)</span>:</span></span><br><span class="line">    m = len(H[<span class="number">0</span>])</span><br><span class="line">    <span class="keyword">if</span> (len(freqSet) &gt; (m+<span class="number">1</span>)):</span><br><span class="line">        Hmp1 = aprioriGen(H, m+<span class="number">1</span>)</span><br><span class="line">        Hmp1 = calcConf(freqSet, Hmp1, supportData, brl, minConf)</span><br><span class="line">        <span class="keyword">if</span> (len(Hmp1) &gt; <span class="number">1</span>):</span><br><span class="line">            rulesFromConseq(freqSet, Hmp1, supportData, brl, minConf)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行结果</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; reload(apriori)</span><br><span class="line">&gt;&gt;&gt; L, suppData = apriori.apriori(dataSet, minSupport = 0.5)</span><br><span class="line">&gt;&gt;&gt; rules = apriori.generateRules(L, suppData, minConf = 0.7)</span><br><span class="line">frozenset([1]) --&gt; frozenset([3]) conf: 1.0</span><br><span class="line">frozenset([5]) --&gt; frozenset([2]) conf: 1.0</span><br><span class="line">frozenset([2]) --&gt; frozenset([5]) conf: 1.0</span><br><span class="line">&gt;&gt;&gt; rules = apriori.generateRules(L, suppData, minConf = 0.5)</span><br><span class="line">frozenset([3]) --&gt; frozenset([1]) conf: 0.666666666667</span><br><span class="line">frozenset([1]) --&gt; frozenset([3]) conf: 1.0</span><br><span class="line">frozenset([5]) --&gt; frozenset([2]) conf: 1.0</span><br><span class="line">frozenset([2]) --&gt; frozenset([5]) conf: 1.0</span><br><span class="line">frozenset([3]) --&gt; frozenset([2]) conf: 0.666666666667</span><br><span class="line">frozenset([2]) --&gt; frozenset([3]) conf: 0.666666666667</span><br><span class="line">frozenset([5]) --&gt; frozenset([3]) conf: 0.666666666667</span><br><span class="line">frozenset([3]) --&gt; frozenset([5]) conf: 0.666666666667</span><br><span class="line">frozenset([5]) --&gt; frozenset([2, 3]) conf: 0.666666666667</span><br><span class="line">frozenset([3]) --&gt; frozenset([2, 5]) conf: 0.666666666667</span><br><span class="line">frozenset([2]) --&gt; frozenset([3, 5]) conf: 0.666666666667</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="发现国会投票中的模式和毒蘑菇的相似特征"><a href="#发现国会投票中的模式和毒蘑菇的相似特征" class="headerlink" title="发现国会投票中的模式和毒蘑菇的相似特征"></a>发现国会投票中的模式和毒蘑菇的相似特征</h1><h2 id="国会投票"><a href="#国会投票" class="headerlink" title="国会投票"></a>国会投票</h2><ul>
+<li><p><a href="http://www.votesmart.org" target="_blank" rel="external">智能投票工程</a>提供了公共API来访问国会投票记录，Sunlight实验室写了一个<a href="https://github.com/sunlightlabs/python-votesmart" target="_blank" rel="external">python-votesmart</a>用于访问该API。需要先<a href="http://votesmart.org/share/api/register" target="_blank" rel="external">注册</a>一个API key。需要一个工作日左右来处理申请API请求，成功后的API授权代码会发送到注册邮箱。时差关系大概晚上注册会比较好。通过<code>votesmart.apikey</code>来告知votesmart库你的api授权代码，通过<code>votesmart.votes.getBillsByStateRecent()</code>来获取最近的100条议案，对于返回结果中的每条bill，可以查看<code>bill.title</code>和<code>bill.billId</code>。例如某条议案的ID是11820，可以通过<code>votesmart.votes.getBill(11820)</code>来获取详细信息。对于某个议案bill的投票行为，可以通过<code>for action in bill.actions and action.stage==&#39;Passage&#39;</code>来获得每个投票action。<code>action.actionId</code>可以得到这个投票行为的ID，例如某个投票action是31670，可以通过<code>votesmart.votes.getBillActionVotes(31670)</code>来获得详细信息。下面代码是Peter Harrington给出的，里面的api代码已经过期了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="keyword">from</span> votesmart <span class="keyword">import</span> votesmart</span><br><span class="line">votesmart.apikey = <span class="string">'a7fa40adec6f4a77178799fae4441030'</span></span><br><span class="line"><span class="comment">#votesmart.apikey = 'get your api key first'</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getActionIds</span><span class="params">()</span>:</span></span><br><span class="line">    actionIdList = []; billTitleList = []</span><br><span class="line">    fr = open(<span class="string">'recent20bills.txt'</span>) </span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">        billNum = int(line.split(<span class="string">'\t'</span>)[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            billDetail = votesmart.votes.getBill(billNum) <span class="comment">#api call</span></span><br><span class="line">            <span class="keyword">for</span> action <span class="keyword">in</span> billDetail.actions:</span><br><span class="line">                <span class="keyword">if</span> action.level == <span class="string">'House'</span> <span class="keyword">and</span> \</span><br><span class="line">                (action.stage == <span class="string">'Passage'</span> <span class="keyword">or</span> action.stage == <span class="string">'Amendment Vote'</span>):</span><br><span class="line">                    actionId = int(action.actionId)</span><br><span class="line">                    <span class="keyword">print</span> <span class="string">'bill: %d has actionId: %d'</span> % (billNum, actionId)</span><br><span class="line">                    actionIdList.append(actionId)</span><br><span class="line">                    billTitleList.append(line.strip().split(<span class="string">'\t'</span>)[<span class="number">1</span>])</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">print</span> <span class="string">"problem getting bill %d"</span> % billNum</span><br><span class="line">        sleep(<span class="number">1</span>)                                      <span class="comment">#delay to be polite</span></span><br><span class="line">    <span class="keyword">return</span> actionIdList, billTitleList</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下面的代码生成食物数据库，对每个actionId，抓取不同政客的投票。关系不大，不予讨论。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getTransList</span><span class="params">(actionIdList, billTitleList)</span>:</span> <span class="comment">#this will return a list of lists containing ints</span></span><br><span class="line">    itemMeaning = [<span class="string">'Republican'</span>, <span class="string">'Democratic'</span>]<span class="comment">#list of what each item stands for</span></span><br><span class="line">    <span class="keyword">for</span> billTitle <span class="keyword">in</span> billTitleList:<span class="comment">#fill up itemMeaning list</span></span><br><span class="line">        itemMeaning.append(<span class="string">'%s -- Nay'</span> % billTitle)</span><br><span class="line">        itemMeaning.append(<span class="string">'%s -- Yea'</span> % billTitle)</span><br><span class="line">    transDict = &#123;&#125;<span class="comment">#list of items in each transaction (politician) </span></span><br><span class="line">    voteCount = <span class="number">2</span></span><br><span class="line">    <span class="keyword">for</span> actionId <span class="keyword">in</span> actionIdList:</span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'getting votes for actionId: %d'</span> % actionId</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            voteList = votesmart.votes.getBillActionVotes(actionId)</span><br><span class="line">            <span class="keyword">for</span> vote <span class="keyword">in</span> voteList:</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> transDict.has_key(vote.candidateName): </span><br><span class="line">                    transDict[vote.candidateName] = []</span><br><span class="line">                    <span class="keyword">if</span> vote.officeParties == <span class="string">'Democratic'</span>:</span><br><span class="line">                        transDict[vote.candidateName].append(<span class="number">1</span>)</span><br><span class="line">                    <span class="keyword">elif</span> vote.officeParties == <span class="string">'Republican'</span>:</span><br><span class="line">                        transDict[vote.candidateName].append(<span class="number">0</span>)</span><br><span class="line">                <span class="keyword">if</span> vote.action == <span class="string">'Nay'</span>:</span><br><span class="line">                    transDict[vote.candidateName].append(voteCount)</span><br><span class="line">                <span class="keyword">elif</span> vote.action == <span class="string">'Yea'</span>:</span><br><span class="line">                    transDict[vote.candidateName].append(voteCount + <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">except</span>: </span><br><span class="line">            <span class="keyword">print</span> <span class="string">"problem getting actionId: %d"</span> % actionId</span><br><span class="line">        voteCount += <span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> transDict, itemMeaning</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="毒蘑菇相似特征"><a href="#毒蘑菇相似特征" class="headerlink" title="毒蘑菇相似特征"></a>毒蘑菇相似特征</h2><ul>
+<li>文件mushroom.dat的每一行第一个特征用1或者2表示可食用或有毒，其余列都是某种蘑菇的特征。通过apriori算法寻找包含特征值为2的频繁项集。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>mushDatSet = [line.split() <span class="keyword">for</span> line <span class="keyword">in</span> open(<span class="string">'mushroom.dat'</span>).readlines()]</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>L, suppData = apriori.apriori(mushDatSet, minSupport = <span class="number">0.3</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">for</span> item <span class="keyword">in</span> L[<span class="number">1</span>]:</span><br><span class="line"><span class="prompt">... </span>    <span class="keyword">if</span> item.intersection(<span class="string">'2'</span>): <span class="keyword">print</span> item</span><br><span class="line">frozenset([<span class="string">'2'</span>, <span class="string">'59'</span>])</span><br><span class="line">frozenset([<span class="string">'39'</span>, <span class="string">'2'</span>])</span><br><span class="line">frozenset([<span class="string">'2'</span>, <span class="string">'67'</span>])</span><br><span class="line">frozenset([<span class="string">'2'</span>, <span class="string">'34'</span>])</span><br><span class="line">frozenset([<span class="string">'2'</span>, <span class="string">'23'</span>])</span><br><span class="line">....</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">for</span> item <span class="keyword">in</span> L[<span class="number">3</span>]:</span><br><span class="line"><span class="prompt">... </span>    <span class="keyword">if</span> item.intersection(<span class="string">'2'</span>): <span class="keyword">print</span> item</span><br><span class="line">frozenset([<span class="string">'63'</span>, <span class="string">'59'</span>, <span class="string">'2'</span>, <span class="string">'93'</span>])</span><br><span class="line">frozenset([<span class="string">'39'</span>, <span class="string">'2'</span>, <span class="string">'53'</span>, <span class="string">'34'</span>])</span><br><span class="line">frozenset([<span class="string">'2'</span>, <span class="string">'59'</span>, <span class="string">'23'</span>, <span class="string">'85'</span>])</span><br><span class="line">frozenset([<span class="string">'2'</span>, <span class="string">'59'</span>, <span class="string">'90'</span>, <span class="string">'85'</span>])</span><br><span class="line">frozenset([<span class="string">'39'</span>, <span class="string">'2'</span>, <span class="string">'36'</span>, <span class="string">'34'</span>])</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="Apriori算法总结"><a href="#Apriori算法总结" class="headerlink" title="Apriori算法总结"></a>Apriori算法总结</h1><blockquote>
+<p>关联分析适用于发现大数据集中元素间关系的一个工具集，可以通过频繁项集给出经常在一起出现的元素项或者关联规则给出元素项之间的因果关系来量化。Apriori算法减少了在数据库上检查的集合的数目，如果一个元素项是不频繁的，那么它的超集也都是不频繁的。关联分析可以用在许多不同物品上，商店商品购买和网站访问历史都是常见的例子。每次增加频繁项集的大小，Apriori算法都要重新扫描整个数据集，当数据集很大，这会掀桌降低频繁项集发现的速度。</p>
+</blockquote>
+<hr>
+<p>参考文献： 《机器学习实战 - 美Peter Harrington》</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/22/machinelearning11/">原始出处</a>(<a href="http://forec.github.io/2016/02/22/machinelearning11/">http://forec.github.io/2016/02/22/machinelearning11/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Algorithms/" rel="tag">#Algorithms</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/21/machinelearning10/" rel="next">机器学习笔记（Chapter 10 - K-均值聚类算法）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/02/22/machinelearning11/"
+                   data-title="机器学习笔记（Chapter 11 - Apriori算法）" data-url="http://forec.github.io/2016/02/22/machinelearning11/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关联分析"><span class="nav-number">1.</span> <span class="nav-text">关联分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Apriori原理"><span class="nav-number">2.</span> <span class="nav-text">Apriori原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Apriori算法寻找频繁集"><span class="nav-number">3.</span> <span class="nav-text">Apriori算法寻找频繁集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成候选项集"><span class="nav-number">3.1.</span> <span class="nav-text">生成候选项集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组织完整的Apriori算法"><span class="nav-number">3.2.</span> <span class="nav-text">组织完整的Apriori算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#从频繁项集中挖掘关联规则"><span class="nav-number">4.</span> <span class="nav-text">从频繁项集中挖掘关联规则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发现国会投票中的模式和毒蘑菇的相似特征"><span class="nav-number">5.</span> <span class="nav-text">发现国会投票中的模式和毒蘑菇的相似特征</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#国会投票"><span class="nav-number">5.1.</span> <span class="nav-text">国会投票</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#毒蘑菇相似特征"><span class="nav-number">5.2.</span> <span class="nav-text">毒蘑菇相似特征</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Apriori算法总结"><span class="nav-number">6.</span> <span class="nav-text">Apriori算法总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
