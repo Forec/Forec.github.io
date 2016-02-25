@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="函数式编程," />
+  <meta name="keywords" content="Algorithms,机器学习," />
 
 
 
@@ -39,16 +39,20 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
+<meta name="description" content="在低维下，数据更容易进行处理，其相关特征可能在数据中明确显示出来。PCA是降维技术中最广泛的一种。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《函数式编程思维》笔记">
-<meta property="og:url" content="http://forec.github.io/2016/02/13/functional-thinking/index.html">
+<meta property="og:title" content="机器学习笔记（Chapter 13 - PCA简化）">
+<meta property="og:url" content="http://forec.github.io/2016/02/25/machinelearning13/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
-<meta property="og:updated_time" content="2016-02-14T07:34:24.022Z">
+<meta property="og:description" content="在低维下，数据更容易进行处理，其相关特征可能在数据中明确显示出来。PCA是降维技术中最广泛的一种。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/pca%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/pca%E9%99%8D%E7%BB%B42.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/pca%E9%99%8D%E7%BB%B4.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/pca%E6%96%B9%E5%B7%AE%E5%8D%A0%E6%AF%94.png">
+<meta property="og:updated_time" content="2016-02-25T04:18:10.621Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《函数式编程思维》笔记">
-<meta name="twitter:description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
+<meta name="twitter:title" content="机器学习笔记（Chapter 13 - PCA简化）">
+<meta name="twitter:description" content="在低维下，数据更容易进行处理，其相关特征可能在数据中明确显示出来。PCA是降维技术中最广泛的一种。">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -58,7 +62,7 @@
   };
 </script>
 
-  <title> 《函数式编程思维》笔记 | Forec's Notes </title>
+  <title> 机器学习笔记（Chapter 13 - PCA简化） | Forec's Notes </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -194,7 +198,7 @@
           
           
             
-              《函数式编程思维》笔记
+              机器学习笔记（Chapter 13 - PCA简化）
             
           
         </h1>
@@ -203,8 +207,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2016-02-13T09:36:15+08:00" content="2016-02-13">
-            2016-02-13
+          <time itemprop="dateCreated" datetime="2016-02-25T12:15:43+08:00" content="2016-02-25">
+            2016-02-25
           </time>
         </span>
 
@@ -213,8 +217,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Code/" itemprop="url" rel="index">
-                  <span itemprop="name">Code</span>
+                <a href="/categories/大数据/" itemprop="url" rel="index">
+                  <span itemprop="name">大数据</span>
                 </a>
               </span>
 
@@ -229,8 +233,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/02/13/functional-thinking/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/13/functional-thinking/" itemprop="commentsCount"></span>
+              <a href="/2016/02/25/machinelearning13/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/25/machinelearning13/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -245,53 +249,41 @@
 
       
         <span itemprop="articleBody"><blockquote>
-<p>函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。</p>
+<p>在低维下，数据更容易进行处理，其相关特征可能在数据中明确显示出来。PCA是降维技术中最广泛的一种。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="思维转变"><a href="#思维转变" class="headerlink" title="思维转变"></a>思维转变</h1><ul>
-<li><p>命令式编程风格通常 <strong>迫使我们出于性能考虑，把不同的任务交织起来，以便能够用一次循环来完成多个任务</strong> 。而函数式编程用map、filter这些高阶函数把我们解放出来，让我们 <strong>站在更高的抽象层次上去考虑问题</strong> ，把问题看得更清楚。</p>
-</li>
-<li><p>把控制权让渡给语言（运行时）。“人生苦短，远离malloc”。函数式编程语言让我们用高阶抽象从容取代基本的控制结构，将琐碎的细节（如垃圾处理）交托给运行时。 <em>面向对象编程通过封装不确定因素来使代码能被人理解；函数式编程通过尽量减少不确定因素来使代码能被人理解。——Michael Feathers</em> 。与其建立种种机制来控制可变的状态，不如尽可能消灭可变的状态这个不确定因素。</p>
-</li>
-<li>函数式语言提倡 <strong>在有限的几种关键数据结构（list、set、map）上运用针对这些数据结构高度优化过的操作</strong> ，以此形成基本的运转架构；面向对象程序员喜欢不断的创建新的数据结构和附属的操作，因为OOP范式就是建立新的类和类间的消息。比起一味创建新的类结构体系，把封装的单元降低到函数级别，更有利于达到细颗粒度的、基础层面的重用。</li>
-<li>换用函数式语言不是关键，转变看待问题的角度才是必不可少的。命令式编程是按照“程序是一系列改变状态的命令”来建模的一种编程风格，鼓励程序员将操作安排在循环内部执行。 <strong>函数式语言希望尽可能减少可变的状态</strong> ，因此更多发展了通用性的计算设施。</li>
-<li>高阶函数消除了摩擦。语法上的便利是非常重要的方面， <strong>在语法处处掣肘下塑造出的抽象，很难配合我们的思维过程而不产生所谓的摩擦</strong> 。迭代需要让位于高阶函数，如果能用高阶函数把希望执行的操作表达出来，语言将会把操作安排的更高效。</li>
+<h1 id="降维技术"><a href="#降维技术" class="headerlink" title="降维技术"></a>降维技术</h1><ul>
+<li>数据往往拥有超出显示能力的更多特征，简化数据不止使得数据容易显示，同时降低算法计算开销、去除噪声、使得结果易懂。</li>
+<li>主成分分析（Principal Component Analysis，PCA）将数据从原来的坐标系转移到新的坐标系，新坐标系的选择由数据本身决定，新坐标系的第一个坐标轴是原始数据中方差最大的方向，新坐标系的第二个坐标轴和第一个坐标轴正交、并且具有最大方差。该过程一直重复，次数为原始数据中维度。大部分方差都包含在前面几个新坐标轴中，因此可以忽略剩下的坐标轴。</li>
+<li>因子分析（Factor Analysis）假设观察数据的生成中有一些观察不到的隐变量，即观察数据是由这些隐变量和某些噪声的线性组合，那么隐变量的数据可能比观察数据的数目少，找到隐变量就可以实现数据的降维。</li>
+<li>独立成分分析（Independent Component Analysis，ICA）假设数据从N个数据源生成，类似因子分析，假设这些数据源之间在统计上相互独立，如果数据源数目少于观察数据数目，就实现降维过程。</li>
 </ul>
-<h1 id="权责让渡"><a href="#权责让渡" class="headerlink" title="权责让渡"></a>权责让渡</h1><ul>
-<li><p><strong>理解掌握的抽象层次永远要比日常使用的抽象层次更深一层</strong> 。</p>
+<h1 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h1><ul>
+<li>PCA可以降低数据复杂性，识别最重要的多个特征，但有时不一定需要，并且可能损失有用信息。适用于数值型数据。</li>
+<li>对于下图的数据，要找出一条直线尽可能覆盖这些点，第一条坐标轴旋转到最大方差的方向，数据的最大方差给出了数据的最重要的信息。在选择了覆盖数据最大差异性的坐标轴之后，选择第二条坐标轴与第一条正交。<img src="http://7xktmz.com1.z0.glb.clouddn.com/pca%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE.png" width="400px">在下面的示例中，只需要一维信息，另一维信息只是对分类缺乏贡献的噪声数据。可以采用决策树，也可以使用SVM获得更好的分类间隔，但是分类超平面很难解释。PCA降维可以同时获得SVM和决策树的优点。<img src="http://7xktmz.com1.z0.glb.clouddn.com/pca%E9%99%8D%E7%BB%B42.png" width="400px"></li>
+<li><p>PCA过程实现：第一个主成分从数据差异性最大的方向获取，可以通过数据集的<a href="http://pinkyjie.com/2010/08/31/covariance/" target="_blank" rel="external">协方差矩阵 Convariance</a>和<a href="http://www.tongji.edu.cn/~math/xxds/kcja/kcja_b/5-2.htm" target="_blank" rel="external">特征值</a>分析求得。下面pca函数的流程为，首先去除平均值，之后计算协方差矩阵<code>cov</code>，计算协方差矩阵的特征值和特征向量<code>linalg.eig</code>，将特征值从大到小排序，保留对应的最上面的N个特征向量，最后将数据转换到上述N个特征向量构建的新空间中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">(fileName, delim = <span class="string">'\t'</span>)</span>:</span></span><br><span class="line">    fr = open(fileName)</span><br><span class="line">    stringArr = [line.strip().split(delim) <span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines()]</span><br><span class="line">    datArr = [map(float, line) <span class="keyword">for</span> line <span class="keyword">in</span> stringArr]</span><br><span class="line">    <span class="keyword">return</span> mat(datArr)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pca</span><span class="params">(dataMat, topNfeat = <span class="number">999999</span>)</span>:</span></span><br><span class="line">    meanVals = mean(dataMat, axis = <span class="number">0</span>)</span><br><span class="line">    meanRemoved = dataMat - meanVals</span><br><span class="line">    covMat = cov(meanRemoved, rowvar = <span class="number">0</span>)   <span class="comment"># n*n</span></span><br><span class="line">    eigVals, eigVects = linalg.eig(mat(covMat))</span><br><span class="line">        <span class="comment"># 1*n, n*n</span></span><br><span class="line">    eigValInd = argsort(eigVals)</span><br><span class="line">    eigValInd = eigValInd[:-(topNfeat+<span class="number">1</span>):-<span class="number">1</span>]</span><br><span class="line">    redEigVects = eigVects[:,eigValInd]</span><br><span class="line">    lowDDataMat = meanRemoved * redEigVects</span><br><span class="line">    reconMat = (lowDDataMat * redEigVects.T) + meanVals</span><br><span class="line">    <span class="keyword">return</span> lowDDataMat, reconMat</span><br></pre></td></tr></table></figure>
 </li>
-<li><p><strong>闭包</strong> （closure）实际上是一种特殊的函数，在暗地里绑定了函数内部引用的所有变量，换句话说，这种函数把它所引用的所有东西都放在一个上下文里包了起来。下面的代码先定义了一个Employee类，其中带有name和salary字段，接着定义带有amount参数的paidMore函数，其返回值是一个以Employee实例为参数的 <strong>代码块</strong> ，或者叫闭包。数值100000随着<code>isHighPaid = paidMore(100000)</code>这一步操作永久的和代码块绑定在一起。第二部分代码执行闭包。</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee</span>&#123;</span></span><br><span class="line">    <span class="keyword">def</span> name, salary</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">def</span> paidMore(amount) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;Employee e -&gt; e.salary &gt; amount &#125;</span><br><span class="line">&#125;</span><br><span class="line">isHighPaid = paidMore(<span class="number">100000</span>)</span><br><span class="line">  </span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> Smithers = <span class="keyword">new</span> Employee(<span class="string">name:</span><span class="string">"Fred"</span>, <span class="string">salary:</span><span class="number">120000</span>)</span><br><span class="line"><span class="keyword">def</span> Homer = <span class="keyword">new</span> Employee(<span class="string">name:</span><span class="string">"Homer"</span>, <span class="string">salary:</span><span class="number">80000</span>)</span><br><span class="line">println isHighPaid(Smithers)</span><br><span class="line">println isHighPaid(Homer)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>闭包经常被函数式语言和框架当作一种 <strong>异地执行的机制</strong> ，用来传递待执行的变换代码，如map之类的高阶函数。注意闭包是代码块，而不是一个值，各个闭包内部状态都是独立的，尽管局部变量不在代码块内定义，但只要代码块引用了该变量，两者就被绑定在一起，这种联系在代码块实例的全部生命期内一直保持着。从实现的角度说， <strong>代码块实例从它被创建的一刻起，就持有其作用域内一切事物的封闭副本</strong> 。下面的代码展示了闭包的异地执行。闭包所表现出来的函数式思维就是，“让运行时去管理状态”。</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> Closure makeCounter()&#123;</span><br><span class="line">    <span class="keyword">def</span> local_variable = <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="keyword">return</span> local_variable += <span class="number">1</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line">c1 = makeCounter()</span><br><span class="line">c1()</span><br><span class="line">c1()</span><br><span class="line">c1()</span><br><span class="line">c2 = makeCounter()</span><br><span class="line">println <span class="string">"C1 = $&#123;c1()&#125;, C2 = $&#123;c2()&#125;"</span></span><br><span class="line"><span class="comment">// output: C1 = 4, C2 = 1 //</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>柯里化</strong> 指的是从一个多参数函数变成 <strong>一连串单参数函数</strong> 的变换。它描述的是 <strong>变换的过程</strong> ，不涉及变换之后对函数的调用。调用者可以决定对多少个参数实施变换，余下的部分将衍生成一个参数数目较少的新函数。举例来说，函数process(x, y, z)完全柯里化之后变成process(x)(y)(z)的性质，其中process(x)和process(x)(y)都是单参数的函数。如果只对第一个参数柯里化，那么process(x)的返回值将是一个单参数的函数，而这个唯一的参数又接受另一个参数的输入。 <strong>函数柯里化的结果是返回链条中的下一个函数</strong> 。</p>
-</li>
-<li><p><strong>部分施用</strong> 指提前代入一部分参数值，使一个多参数得以省略部分参数，从而转化为一个参数数目较少的函数。 <strong>部分施用是把参数的取值绑定到用户在操作中提供的具体值上</strong> 。 </p>
-</li>
-<li><p><strong>递归</strong> 的核心在于对一个不断变短的列表反复做同一件事，利用递归，将状态的管理责任推给运行时。递归没有成为一种平常的操作，一个主要原因是栈的增长。使用尾调用优化的写法来帮助运行时科夫栈的增长问题。当递归调用是函数执行的最后一个调用时，运行时往往可以在栈里就地更新，而不需要增加新的栈空间。因此 <strong>尽可能多的使用尾递归的写法</strong> 。</p>
+<li><p>运行示例如下，下图是构造出的第一主成分。<img src="http://7xktmz.com1.z0.glb.clouddn.com/pca%E9%99%8D%E7%BB%B4.png" width="400px"><br></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>dataMat = pca.loadDataSet(<span class="string">'testSet.txt'</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>lowDMat, reconMat = pca.pca(dataMat, <span class="number">1</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>shape(lowDMat)</span><br><span class="line">(<span class="number">1000</span>, <span class="number">1</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>fig = plt.figure()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax.scatter(dataMat[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>], dataMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],\</span><br><span class="line">        marker = <span class="string">'^'</span>, s = <span class="number">90</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax.scatter(reconMat[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>], reconMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],\</span><br><span class="line">        marker = <span class="string">'o'</span>, s = <span class="number">50</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>plt.show()</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h1 id="记忆和缓求值"><a href="#记忆和缓求值" class="headerlink" title="记忆和缓求值"></a>记忆和缓求值</h1><ul>
-<li><p>只有对纯函数才能放心地使用函数缓存的结果，这刚好符合函数式特性。对于Groovy，可以先将记忆的函数定义为闭包，再对闭包使用memoize()方法获得一个新函数，这个新函数调用的时候结果就会被缓存起来。在Haskell中好像下面的链接可以实现。我们写出来的缓存决不可能比语言开发者设计的更高效，因为语言设计者可以无视他们给语言设定的规定。 <strong>语言设计者实现出来的机制总是比开发者自己做的效率高</strong> 。<a href="https://wiki.haskell.org/Memoization" target="_blank" rel="external">Haskell-Wiki上的Memoization</a></p>
+<h1 id="利用PCA对半导体制造数据降维"><a href="#利用PCA对半导体制造数据降维" class="headerlink" title="利用PCA对半导体制造数据降维"></a>利用PCA对半导体制造数据降维</h1><ul>
+<li><p><a href="http://archive.ics.uci.edu/ml/machine-learning-databases/secom/" target="_blank" rel="external">数据集</a>来自UCI机器学习数据库，包含590个特征，其中几乎所有样本都存在特征缺失，用NaN表示，通过replaceNanWithMean将缺失的NaN数据用其他样本的相同特征值平均值填充。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">replaceNanWithMean</span><span class="params">()</span>:</span></span><br><span class="line">    datMat = loadDataSet(<span class="string">'secom.data'</span>, <span class="string">' '</span>)</span><br><span class="line">    numFeat = shape(datMat)[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(numFeat):</span><br><span class="line">        meanVal = mean(datMat[nonzero(~isnan(datMat[:,i].A))[<span class="number">0</span>], i])</span><br><span class="line">        datMat[nonzero(isnan(datMat[:,i].A))[<span class="number">0</span>], i] = meanVal</span><br><span class="line">    <span class="keyword">return</span> datMat</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>缓求值的好处：昂贵的运算只有到了绝对必要的时候才执行；可以建立无限大的集合，只要一接到请求就一直送出元素；按缓求值的方式使用map、filter等，可以产生更高效的代码。特别适合于资源生产成本较高的情况。Haskell的惰性求值就是这样的特性，是非严格求值的。在严格求值的语言运行下面代码会报错，而非严格求值的语言会得出4。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> length([<span class="number">2</span>+<span class="number">1</span>, <span class="number">3</span>*<span class="number">2</span>, <span class="number">1</span>/<span class="number">0</span>, <span class="number">5</span>-<span class="number">4</span>])</span><br></pre></td></tr></table></figure>
+<li><p>从特征值可以看出，有超过20%特征值为0，这些特征都是其他特征的副本。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>dataMat = pca.replaceNanWithMean()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>meanVals = mean(dataMat, axis=<span class="number">0</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>meanRemoved = dataMat - meanVals</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>covMat = cov(meanRemoved, rowvar=<span class="number">0</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>eigVals, eigVects = linalg.eig(mat(covMat))</span><br><span class="line">array([  <span class="number">5.34151979e+07</span>,   <span class="number">2.17466719e+07</span>,   <span class="number">8.24837662e+06</span>,</span><br><span class="line">         <span class="number">2.07388086e+06</span>,   <span class="number">1.31540439e+06</span>,   <span class="number">4.67693557e+05</span>,</span><br><span class="line">         <span class="number">2.90863555e+05</span>,   <span class="number">2.83668601e+05</span>,   <span class="number">2.37155830e+05</span>,</span><br><span class="line">         <span class="number">2.08513836e+05</span>,   <span class="number">1.96098849e+05</span>,   <span class="number">1.86856549e+05</span>,</span><br><span class="line">         ......</span><br><span class="line">         <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,</span><br><span class="line">         <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,</span><br><span class="line">         <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下图是前二十个主成分占总方差的百分比，大部分方差都包含在前面几个主成分中，前6个特征覆盖了96.8%的方差。因此可以将590个特征缩减到这6个特征。现实中我们无法精确知道所需要的主成分数目，必须通过实验取不同值来确定。<img src="http://7xktmz.com1.z0.glb.clouddn.com/pca%E6%96%B9%E5%B7%AE%E5%8D%A0%E6%AF%94.png" width="400px"></p>
 </li>
 </ul>
-<h1 id="语言演化"><a href="#语言演化" class="headerlink" title="语言演化"></a>语言演化</h1><ul>
-<li><p>少量的数据结构搭配大量的操作。函数式语言有很多操作，但对应的数据结构很少。面向对象语言鼓励建立专门针对某个类的方法，我们从类的关系中发现重复出现的模式并加以重用。 <strong>函数式语言的重用表现在函数的通用性上，他们鼓励在数据结构上使用各种共通的变换，并通过高阶函数来调整操作以满足具体事项的要求</strong> 。 <em>100个函数操作一种数据结构的组合，要好过10个函数操作10种数据结构的组合。——Alan Perlis</em></p>
-</li>
-<li><p><strong>让语言去迎合问题</strong> ，不要拿问题硬套语言，而是想法揉捏手中的语言来迎合问题。Lisp家族的语言传承了无可比拟的灵活性，对DSL的支持比主流语言要强得多。</p>
-</li>
-<li>函数式偏好没有副作用的纯函数，“异常”违背了这个条件。因此函数式语言通过Either类这种不相交联合体，返回左值表示错误信息，右值表示正常结果。函数式语言关注 <strong>引用的透明性</strong> ，发出调用的例程不必关心他的访问对象真的是一个值，还是一个返回值的函数。</li>
-<li>现代语言大多数是多范式的，支持多种多样的编程范式，如OOP，元编程、函数式、过程式等等。这些范式在语言中相互正交（没有任何影响），不会相互干扰。</li>
-<li>设计模式的变化，模式已被函数式语言吸收成为了语言的一部分，语言特性简化了实现细节。OOP模式和FP模式已经具备了不同的意义。面向对象倾向于封装对象的重用，在不同的结构之间 <strong>耦合</strong> 。而函数式编程则依靠零件之间的 <strong>复合</strong> 来组织抽象，以达到减少不确定因素的目的。</li>
-</ul>
+<h1 id="PCA总结"><a href="#PCA总结" class="headerlink" title="PCA总结"></a>PCA总结</h1><blockquote>
+<p>降维技术使数据更易使用，并且它们往往能够去除数据中的噪声，通常作为预处理步骤，在算法应用前清洗数据。PCA可以从数据中识别主要特征，它通过沿着数据最大方差方向旋转坐标轴实现。如果要处理的数据过多无法放入内存，可以使用在线PCA分析，参考论文“Incremental Eigenanalysis for Classification”。</p>
+</blockquote>
 <hr>
-<p>参考文献： 《函数式编程思维 - 美 Neal Ford》</p>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/13/functional-thinking/">原始出处</a>(<a href="http://forec.github.io/2016/02/13/functional-thinking/">http://forec.github.io/2016/02/13/functional-thinking/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+<p>参考文献： 《机器学习实战 - 美Peter Harrington》</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/25/machinelearning13/">原始出处</a>(<a href="http://forec.github.io/2016/02/25/machinelearning13/">http://forec.github.io/2016/02/25/machinelearning13/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
       
     </div>
@@ -300,7 +292,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/函数式编程/" rel="tag">#函数式编程</a>
+            <a href="/tags/Algorithms/" rel="tag">#Algorithms</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
           
         </div>
       
@@ -309,13 +303,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/02/14/machinelearning7/" rel="prev">机器学习笔记（Chapter 07 - AdaBoost元算法）</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/02/11/machinelearning6/" rel="next">机器学习笔记（Chapter 06 - 支持向量机）</a>
+              <a href="/2016/02/24/machinelearning12/" rel="next">机器学习笔记（Chapter 12 - FP-growth算法）</a>
             
           </div>
         </div>
@@ -340,8 +332,8 @@
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="2016/02/13/functional-thinking/"
-                   data-title="《函数式编程思维》笔记" data-url="http://forec.github.io/2016/02/13/functional-thinking/">
+              <div class="ds-thread" data-thread-key="2016/02/25/machinelearning13/"
+                   data-title="机器学习笔记（Chapter 13 - PCA简化）" data-url="http://forec.github.io/2016/02/25/machinelearning13/">
               </div>
             
           </div>
@@ -455,7 +447,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#思维转变"><span class="nav-number">1.</span> <span class="nav-text">思维转变</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#权责让渡"><span class="nav-number">2.</span> <span class="nav-text">权责让渡</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#记忆和缓求值"><span class="nav-number">3.</span> <span class="nav-text">记忆和缓求值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#语言演化"><span class="nav-number">4.</span> <span class="nav-text">语言演化</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#降维技术"><span class="nav-number">1.</span> <span class="nav-text">降维技术</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA"><span class="nav-number">2.</span> <span class="nav-text">PCA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#利用PCA对半导体制造数据降维"><span class="nav-number">3.</span> <span class="nav-text">利用PCA对半导体制造数据降维</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA总结"><span class="nav-number">4.</span> <span class="nav-text">PCA总结</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
