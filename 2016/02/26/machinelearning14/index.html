@@ -1,0 +1,766 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="Algorithms,机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec's Notes" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="从数据中提取一些关键信息可以使用奇异值分解（Singular Value Decomposition，SVD），可以简化数据，去除噪声，将数据映射到低维空间。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记（Chapter 14 - SVD简化）">
+<meta property="og:url" content="http://forec.github.io/2016/02/26/machinelearning14/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="从数据中提取一些关键信息可以使用奇异值分解（Singular Value Decomposition，SVD），可以简化数据，去除噪声，将数据映射到低维空间。">
+<meta property="og:updated_time" content="2016-02-26T13:41:06.383Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记（Chapter 14 - SVD简化）">
+<meta name="twitter:description" content="从数据中提取一些关键信息可以使用奇异值分解（Singular Value Decomposition，SVD），可以简化数据，去除噪声，将数据映射到低维空间。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 机器学习笔记（Chapter 14 - SVD简化） | Forec's Notes </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec's Notes</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              机器学习笔记（Chapter 14 - SVD简化）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-02-26T21:38:59+08:00" content="2016-02-26">
+            2016-02-26
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/大数据/" itemprop="url" rel="index">
+                  <span itemprop="name">大数据</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/02/26/machinelearning14/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/26/machinelearning14/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>从数据中提取一些关键信息可以使用奇异值分解（Singular Value Decomposition，SVD），可以简化数据，去除噪声，将数据映射到低维空间。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="SVD应用"><a href="#SVD应用" class="headerlink" title="SVD应用"></a>SVD应用</h1><ul>
+<li>奇异值分解的优点是简化数据，去除噪声，提高算法结果，用小得多的数据集表示原始数据集，实际上是取出了噪声。缺点是数据的转换可能难以理解。适用于数值型数据。</li>
+<li>隐性语义索引（Latent Semantic Indexing，LSI）是SVD最早的应用之一。LSI中，一个矩阵是由文档和词语组成的，在该矩阵上应用SVD时，会构建出多个奇异值。这些奇异值代表了文档中的概念或主题，该特点可以用于更高效的文档搜索。在词语拼写错误或者出现同义词时，只基于词语存在与否的搜索方法会遇到问题，如果使用SVD从上千篇相似文档中抽取概念，那么同义词会被映射为同一概念。</li>
+<li>推荐系统。利用SVD从数据中构建一个主题空间，然后再在该空间下计算其相似度。</li>
+</ul>
+<h1 id="矩阵分解"><a href="#矩阵分解" class="headerlink" title="矩阵分解"></a>矩阵分解</h1><ul>
+<li>很多情况下数据中的一小段携带了数据集中的大部分信息。其他信息要么是噪声，要么是毫不相关的信息。矩阵分解可以将原始矩阵表示成新的易于处理的形式，过程类似代数中的因子分解。SVD是最常见的一种矩阵分解技术，SVD将原始数据集Data分解为三个矩阵：<code>U</code>，<code>∑</code>和<code>V^T</code>，这三个矩阵分别是mxm，mxn和nxn。其中<strong>矩阵<code>∑</code>只有对角元素，其他元素均为0，并且<code>∑</code>的对角元素是从大到小排列的，这些对角元素称为奇异值</strong>，它们对应了原始数据Data的奇异值。<strong>这里的奇异值就是矩阵<code>Data*Data^T</code>的特征值的平方根</strong>。</li>
+<li><p>在某个奇异值的数目（r个）之后，其他奇异值都置为0，这意味着数据集只有r个重要特征，其余特征都是噪声或者冗余特征。</p>
+</li>
+<li><p>numpy中的linalg有一个svd方法：<code>U, Sigma, VT = linalg.svd(Data)</code>。注意∑虽然是矩阵，但为了节约空间以array的形式返回。下面的代码(svdRec.py)展示了对样例矩阵求∑的过程。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadExData</span><span class="params">()</span>:</span></span><br><span class="line">        <span class="keyword">return</span> [[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">                [<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">                [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">                [<span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">                [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>],</span><br><span class="line">                [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>],</span><br><span class="line">                [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]]</span><br><span class="line"></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>Data=svdRec.loadExData()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>U, Sigma, VT = linalg.svd(Data)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>Sigma</span><br><span class="line">array([  <span class="number">9.72140007e+00</span>,   <span class="number">5.29397912e+00</span>,   <span class="number">6.84226362e-01</span>,</span><br><span class="line">         <span class="number">1.70188300e-16</span>,   <span class="number">5.01684085e-47</span>])</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从上面返回的<code>∑</code>矩阵可以看出，前三个数值比最后两个值大了很多，因此可以将最后两个值去掉，构成一个3x3的对角矩阵<code>Sig3</code>。若要从<code>U</code>，<code>∑</code>和<code>V^T</code>中构造原始矩阵的近似矩阵，只需要用<code>U</code>的前三列和<code>V^T</code>的前三行。实际操作中，确定要保留的奇异值的个数有两种方法：一是将所有的奇异值map成平方和，之后从前向后叠加，直到累加到总值的90%；二是启发式策略，当矩阵有上万的奇异值时，只保留前3000个，前提是对数据有足够的了解，确保3000个奇异值足够覆盖总平方和的90%。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>Sig3 = eye(<span class="number">3</span>)*Sigma[:<span class="number">3</span>]</span><br><span class="line">array([[ <span class="number">9.72140007</span>,  <span class="number">0.</span>        ,  <span class="number">0.</span>        ],</span><br><span class="line">       [ <span class="number">0.</span>        ,  <span class="number">5.29397912</span>,  <span class="number">0.</span>        ],</span><br><span class="line">       [ <span class="number">0.</span>        ,  <span class="number">0.</span>        ,  <span class="number">0.68422636</span>]])</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>U[:,:<span class="number">3</span>]*mat(Sig3)*VT[:<span class="number">3</span>,:]</span><br><span class="line">matrix([[  <span class="number">1.00000000e+00</span>,   <span class="number">1.00000000e+00</span>,   <span class="number">1.00000000e+00</span>,</span><br><span class="line">           <span class="number">2.26272993e-16</span>,   <span class="number">2.25622472e-16</span>],</span><br><span class="line">        [  <span class="number">2.00000000e+00</span>,   <span class="number">2.00000000e+00</span>,   <span class="number">2.00000000e+00</span>,</span><br><span class="line">           <span class="number">2.48715978e-16</span>,   <span class="number">2.47198095e-16</span>],</span><br><span class="line">        [  <span class="number">1.00000000e+00</span>,   <span class="number">1.00000000e+00</span>,   <span class="number">1.00000000e+00</span>,</span><br><span class="line">          -<span class="number">1.18232247e-15</span>,  -<span class="number">1.18297299e-15</span>],</span><br><span class="line">        [  <span class="number">5.00000000e+00</span>,   <span class="number">5.00000000e+00</span>,   <span class="number">5.00000000e+00</span>,</span><br><span class="line">           <span class="number">2.90999863e-16</span>,   <span class="number">2.87530416e-16</span>],</span><br><span class="line">        [  <span class="number">1.00000000e+00</span>,   <span class="number">1.00000000e+00</span>,  -<span class="number">7.77156117e-16</span>,</span><br><span class="line">           <span class="number">2.00000000e+00</span>,   <span class="number">2.00000000e+00</span>],</span><br><span class="line">        [  <span class="number">3.33066907e-16</span>,   <span class="number">6.10622664e-16</span>,  -<span class="number">4.99600361e-16</span>,</span><br><span class="line">           <span class="number">3.00000000e+00</span>,   <span class="number">3.00000000e+00</span>],</span><br><span class="line">        [  <span class="number">1.04083409e-16</span>,   <span class="number">1.87350135e-16</span>,  -<span class="number">1.80411242e-16</span>,</span><br><span class="line">           <span class="number">1.00000000e+00</span>,   <span class="number">1.00000000e+00</span>]])</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="基于协同过滤的推荐引擎"><a href="#基于协同过滤的推荐引擎" class="headerlink" title="基于协同过滤的推荐引擎"></a>基于协同过滤的推荐引擎</h1><blockquote>
+<p>协同过滤通过将用户和其他用户的数据进行对比来实现推荐。</p>
+</blockquote>
+<h2 id="相似度计算"><a href="#相似度计算" class="headerlink" title="相似度计算"></a>相似度计算</h2><ul>
+<li>利用不同用户对某一件物品的评分来计算相似度。举例如下表。<table><tbody><tr><td></td><td>鳗鱼饭</td><td>日式炸鸡</td><td>寿司饭</td><td>烤牛肉</td><td>手撕猪肉</td></tr><tr><td>Jim</td><td>2</td><td>0</td><td>0</td><td>4</td><td>4</td></tr><tr><td>John</td><td>5</td><td>5</td><td>5</td><td>3</td><td>3</td></tr><tr><td>Sally</td><td>2</td><td>4</td><td>2</td><td>1</td><td>2</td></tr></tbody></table>可以使用多种方法计算相似度。<ul>
+<li>欧氏距离：计算手撕牛肉和烤牛肉的距离为<code>sqrt[(4-4)^2+(3-3)^2+(2-1)^2]=1</code>，手撕牛肉和鳗鱼饭的距离为<code>sqrt[(4-2)^2+(3-5)^2+(2-2)^2=2.83</code>。可以使用“相似度=1/(1+距离)”来将相似度控制在0~1之间。</li>
+<li>皮尔逊相关系数：该方法较欧氏距离的优势在于，它对用户评分的量级不敏感，例如所有评分都是5分和所有评分都是1分在这里是相同的。numpy中皮尔逊相关系数计算由<code>corrcoef()</code>方法完成，通过<code>0.5+0.5*corrcoef()</code>控制相似度在0~1之间。</li>
+<li>余弦相似度：对于两个向量，计算其夹角余弦值来比较相似程度。numpy中提供了<code>linalg.norm()</code>方法用于计算单个向量的2范数（平方和取根）。因为cos在-1~1之间，同样用<code>0.5+0.5*cos</code>来控制相似度在0~1之间。</li>
+</ul>
+</li>
+<li>上面几种相似度计算的代码如下，分别为<code>eulidSim</code>，<code>pearsSim</code>和<code>cosSim</code>。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> linalg <span class="keyword">as</span> la</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">eulidSim</span><span class="params">(inA, inB)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1.0</span>/(<span class="number">1.0</span> + la.norm(inA - inB))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pearsSim</span><span class="params">(inA, inB)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> len(inA) &lt; <span class="number">3</span>: <span class="keyword">return</span> <span class="number">1.0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0.5</span> + <span class="number">0.5</span>*corrcoef(inA, inB, rowvar = <span class="number">0</span>)[<span class="number">0</span>][<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cosSim</span><span class="params">(inA, inB)</span>:</span></span><br><span class="line">    num = float(inA.T * inB)</span><br><span class="line">    denom = la.norm(inA) * la.norm(inB)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0.5</span>+<span class="number">0.5</span>*(num/denom)</span><br><span class="line"></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>myMat = mat(svdRec.loadExData())</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>svdRec.eulidSim(myMat[:,<span class="number">0</span>], myMat[:,<span class="number">4</span>])</span><br><span class="line"><span class="number">0.13367660240019172</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>svdRec.cosSim(myMat[:,<span class="number">0</span>], myMat[:,<span class="number">4</span>])</span><br><span class="line"><span class="number">0.54724555912615336</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>svdRec.pearsSim(myMat[:,<span class="number">0</span>], myMat[:,<span class="number">4</span>])</span><br><span class="line"><span class="number">0.23768619407595826</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="基于用户还是物品"><a href="#基于用户还是物品" class="headerlink" title="基于用户还是物品"></a>基于用户还是物品</h2><ul>
+<li>通过计算两种菜肴之间的距离是基于物品的相似度。另一种计算用户距离的方法是基于用户的相似度。在上面的表格示例中，行与行之间的比较是基于用户的相似度，列与列之间的比较是基于物品的相似度。使用哪一种相似度取决于用户或物品的数目。基于X的相似度计算所需的时间会随着X的增长而增长，通常如果用户数目很多并且会不断增长，我们倾向于使用基于物品的相似度计算。</li>
+</ul>
+<h2 id="推荐引擎评价"><a href="#推荐引擎评价" class="headerlink" title="推荐引擎评价"></a>推荐引擎评价</h2><ul>
+<li>通常用于推荐引擎评价的指标是“最小方均根误差（RMSE）”，它计算均方误差的平均值并开根。若评级在1~5分，而RMSE的结果为1.0，说明预测值和用户给出的真实评价差了一分。</li>
+</ul>
+<h2 id="餐馆菜肴推荐引擎"><a href="#餐馆菜肴推荐引擎" class="headerlink" title="餐馆菜肴推荐引擎"></a>餐馆菜肴推荐引擎</h2><blockquote>
+<p>给定一个用户，系统会为此用户选择N个最好的推荐菜。整个流程需要做到：寻找用户没有评分的菜肴，在这些没有评分的所有菜肴中，对每种菜计算一个可能的评级分数，即预测用户会对该菜肴做出的评分。最后将评分从高到低排序，返回前N个物品。</p>
+</blockquote>
+<ul>
+<li><p>推荐没有品尝过的菜肴：两个函数，<code>standEst()</code>用于在给定计算相似度方法的前提下，计算用户对某种物品的可能评分；<code>recommend()</code>是推荐引擎，调用standEst函数，并返回前N个最好物品。在standEst的执行过程中，假设要计算用户u对其未打分的菜肴i的可能评分，则需要通过其他物品j和物品i建立联系。扫描所有n个物品，如果用户u对某个物品j有过评分，则寻找所有用户中即对i又对j评分过的用户群体users，根据users们的打分，计算出物品i和物品j的相似度。最后将这个相似度乘以用户u对物品j的评分累加到ratSimTotal变量，将相似度累加到simTotal变量。最后返回ratSimTotal/simTotal就是可能评分。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">standEst</span><span class="params">(dataMat, user, simMeas, item)</span>:</span></span><br><span class="line">    n = shape(dataMat)[<span class="number">1</span>]</span><br><span class="line">    simTotal = <span class="number">0.0</span>; ratSimTotal = <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">        userRating = dataMat[user,j]</span><br><span class="line">        <span class="keyword">if</span> userRating == <span class="number">0</span>: <span class="keyword">continue</span></span><br><span class="line">        overLap = nonzero(logical_and(dataMat[:,item].A&gt;<span class="number">0</span>,\</span><br><span class="line">            dataMat[:,j].A&gt;<span class="number">0</span>))[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> len(overLap) == <span class="number">0</span>: similarity = <span class="number">0</span></span><br><span class="line">        <span class="keyword">else</span>: similarity = simMeas(dataMat[overLap, item],\</span><br><span class="line">            dataMat[overLap, j])</span><br><span class="line">        simTotal += similarity</span><br><span class="line">        ratSimTotal += similarity * userRating</span><br><span class="line">    <span class="keyword">if</span> simTotal == <span class="number">0</span>: <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span>: <span class="keyword">return</span> ratSimTotal/simTotal</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">recommend</span><span class="params">(dataMat, user, N=<span class="number">3</span>, simMeas = cosSim, estMethod = standEst)</span>:</span></span><br><span class="line">    unratedItems = nonzero(dataMat[user,:].A==<span class="number">0</span>)[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">if</span> len(unratedItems) == <span class="number">0</span>: <span class="keyword">return</span> <span class="string">'you rated everything'</span></span><br><span class="line">    itemScores = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> unratedItems:</span><br><span class="line">        estimatedScore = estMethod(dataMat, user, simMeas, item)</span><br><span class="line">        itemScores.append((item, estimatedScore))</span><br><span class="line">    <span class="keyword">return</span> sorted(itemScores, key=<span class="keyword">lambda</span> k: k[<span class="number">1</span>], reverse=<span class="keyword">True</span>)[:N]</span><br><span class="line"></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>myMat = mat(svdRec.loadExData())</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>myMat[<span class="number">0</span>,<span class="number">1</span>]=myMat[<span class="number">0</span>,<span class="number">0</span>]=myMat[<span class="number">1</span>,<span class="number">0</span>]=myMat[<span class="number">2</span>,<span class="number">0</span>] = <span class="number">4</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>myMat[<span class="number">3</span>,<span class="number">3</span>] =<span class="number">2</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>myMat</span><br><span class="line">matrix([[<span class="number">4</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">        [<span class="number">4</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">        [<span class="number">4</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">        [<span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">0</span>],</span><br><span class="line">        [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>],</span><br><span class="line">        [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>],</span><br><span class="line">        [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]])</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>svdRec.recommend(myMat,<span class="number">2</span>)</span><br><span class="line">[(<span class="number">4</span>, <span class="number">2.5</span>), (<span class="number">3</span>, <span class="number">1.9703483892927431</span>)]</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>svdRec.recommend(myMat,<span class="number">2</span>,simMeas = svdRec.eulidSim)</span><br><span class="line">[(<span class="number">4</span>, <span class="number">2.5</span>), (<span class="number">3</span>, <span class="number">1.9866572968729499</span>)]</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>svdRec.recommend(myMat,<span class="number">2</span>,simMeas = svdRec.pearsSim)</span><br><span class="line">[(<span class="number">4</span>, <span class="number">2.5</span>), (<span class="number">3</span>, <span class="number">2.0</span>)]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在代码中加入<code>loadExData2()</code>方法，利用svd处理该矩阵，分析当前矩阵可以发现前三个奇异值就已经占据总能量的90%。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>U, Sigma, VT = linalg.svd(mat(svdRec.loadExData2()))</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>Sigma</span><br><span class="line">array([ <span class="number">15.77075346</span>,  <span class="number">11.40670395</span>,  <span class="number">11.03044558</span>,   <span class="number">4.84639758</span>,</span><br><span class="line">         <span class="number">3.09292055</span>,   <span class="number">2.58097379</span>,   <span class="number">1.00413543</span>,   <span class="number">0.72817072</span>,</span><br><span class="line">         <span class="number">0.43800353</span>,   <span class="number">0.22082113</span>,   <span class="number">0.07367823</span>])</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>Sig2 = Sigma**<span class="number">2</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>sum(Sig2)</span><br><span class="line"><span class="number">541.99999999999966</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>sum(Sig2)*<span class="number">0.9</span></span><br><span class="line"><span class="number">487.79999999999973</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>sum(Sig2[:<span class="number">2</span>])</span><br><span class="line"><span class="number">378.8295595113579</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>sum(Sig2[:<span class="number">3</span>])</span><br><span class="line"><span class="number">500.50028912757938</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>因为前三个奇异值已经包含了90%的能量，因此可以将11维数据缩减为3维。添加<code>svdEst</code>方法用于简化数据，这里对原书代码做了一点修改，自动提取前90%能量的奇异值。评估相似度时使用的矩阵是一个nxi的矩阵，这里的i是提取的奇异值个数，n是物品数目。不同用户对物品k的评分已经被压缩到第k行的i个数据中，只要计算两个1xi向量的相似度即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">svdEst</span><span class="params">(dataMat, user, simMeas, item)</span>:</span></span><br><span class="line">    n = shape(dataMat)[<span class="number">1</span>]</span><br><span class="line">    simTotal = <span class="number">0.0</span>; ratSimTotal = <span class="number">0.0</span></span><br><span class="line">    U, Sigma, VT = la.svd(dataMat)</span><br><span class="line">    sumTotal = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> singular <span class="keyword">in</span> Sigma:</span><br><span class="line">        sumTotal += singular**<span class="number">2</span></span><br><span class="line">    singularMax = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(Sigma)):</span><br><span class="line">        singularMax += Sigma[i]**<span class="number">2</span></span><br><span class="line">        <span class="keyword">if</span> singularMax &gt;= sumTotal*<span class="number">0.9</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    SigI = mat(eye(i+<span class="number">1</span>)*Sigma[:i+<span class="number">1</span>])</span><br><span class="line">    xformedItems = dataMat.T * U[:,:i+<span class="number">1</span>] * SigI.I</span><br><span class="line">        <span class="comment"># n x m     m x i    i x i   =&gt;     n x i</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">        userRating = dataMat[user,j]</span><br><span class="line">        <span class="keyword">if</span> userRating == <span class="number">0</span> <span class="keyword">or</span> j == item: <span class="keyword">continue</span></span><br><span class="line">        similarity = simMeas(xformedItems[item,:].T,\</span><br><span class="line">            xformedItems[j,:].T)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'the %d and %d similarity is: %f'</span> % (item, j, similarity)</span><br><span class="line">        simTotal += similarity</span><br><span class="line">        ratSimTotal += similarity * userRating</span><br><span class="line">    <span class="keyword">if</span> simTotal == <span class="number">0</span>: <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span>: <span class="keyword">return</span> ratSimTotal/simTotal</span><br><span class="line"></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>myMat = mat(svdRec.loadExData2())</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>svdRec.recommend(myMat, <span class="number">1</span>, N=<span class="number">3</span>, estMethod = svdRec.svdEst)</span><br><span class="line">the <span class="number">0</span> <span class="keyword">and</span> <span class="number">3</span> similarity <span class="keyword">is</span>: <span class="number">0.485722</span></span><br><span class="line">the <span class="number">0</span> <span class="keyword">and</span> <span class="number">5</span> similarity <span class="keyword">is</span>: <span class="number">0.486944</span></span><br><span class="line">....</span><br><span class="line">[(<span class="number">6</span>, <span class="number">3.3329499901459845</span>), (<span class="number">9</span>, <span class="number">3.3315447178728395</span>), (<span class="number">4</span>, <span class="number">3.3314474877128624</span>)]</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>svdRec.recommend(myMat, <span class="number">1</span>, simMeas = svdRec.pearsSim)</span><br><span class="line">[(<span class="number">6</span>, <span class="number">3.3333333333333335</span>), (<span class="number">9</span>, <span class="number">3.3333333333333335</span>), (<span class="number">0</span>, <span class="number">3.0</span>)]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>SVD在大数据集上会显著降低程序速度，可以仅在程序调入运行时离线加载一次。其中计算出的相似度是物品和物品之间的相似度，不同的用户也可以重复使用，因此可以将计算结果离线。当出现冷启动问题时，可以将推荐看成搜索问题，为物品添加标签，使用基于内容的推荐。</p>
+</li>
+</ul>
+<h1 id="基于SVD的图像压缩"><a href="#基于SVD的图像压缩" class="headerlink" title="基于SVD的图像压缩"></a>基于SVD的图像压缩</h1><ul>
+<li>用一个32*32（1024像素）的矩阵表示一个图像，通过svd对该矩阵降维，实现压缩重构。运行结果太长，但基本还原了原来的矩阵（可以观察出部分像素点不同）。<code>U</code>和<code>V^T</code>都是32x2的矩阵，有两个奇异值，因此总数字数目为64x2+2=130，获得了几乎10倍的压缩比。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">printMat</span><span class="params">(inMat, thresh=<span class="number">0.8</span>)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">32</span>):</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(<span class="number">32</span>):</span><br><span class="line">            <span class="keyword">if</span> float(inMat[i,k]) &gt; thresh:</span><br><span class="line">                <span class="keyword">print</span> <span class="number">1</span>,</span><br><span class="line">            <span class="keyword">else</span>: <span class="keyword">print</span> <span class="number">0</span>,</span><br><span class="line">        <span class="keyword">print</span> <span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">imgCompress</span><span class="params">(numSV=<span class="number">3</span>, thresh=<span class="number">0.8</span>)</span>:</span></span><br><span class="line">    myl = []</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> open(<span class="string">'0_5.txt'</span>).readlines():</span><br><span class="line">        newRow = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">32</span>):</span><br><span class="line">            newRow.append(int(line[i]))</span><br><span class="line">        myl.append(newRow)</span><br><span class="line">    myMat = mat(myl)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"****original matrix******"</span></span><br><span class="line">    printMat(myMat, thresh)</span><br><span class="line">    U,Sigma,VT = la.svd(myMat)</span><br><span class="line">    SigRecon = mat(zeros((numSV, numSV)))</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> range(numSV):<span class="comment">#construct diagonal matrix from vector</span></span><br><span class="line">        SigRecon[k,k] = Sigma[k]</span><br><span class="line">    reconMat = U[:,:numSV]*SigRecon*VT[:numSV,:]</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"****reconstructed matrix using %d singular values******"</span> % numSV</span><br><span class="line">    printMat(reconMat, thresh)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="SVD总结"><a href="#SVD总结" class="headerlink" title="SVD总结"></a>SVD总结</h1><blockquote>
+<p>SVD可以逼近矩阵并从中提取重要特征。通过保留矩阵80%~90%的能量，可以去除噪声，保留重要特征，在稀疏矩阵的压缩上作用显著。SVD的其中一个应用是推荐引擎，协同过滤基于用户喜好或者行为数据来推荐，核心是相似度计算方法，SVD可以将高维用户群体降维成少数奇异值，提高推荐引擎效果。在大规模数据集上，SVD的冗余计算会占用过多时间，可以通过离线方式SVD分解和相似度计算。</p>
+</blockquote>
+<hr>
+<p>参考文献： 《机器学习实战 - 美Peter Harrington》</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/26/machinelearning14/">原始出处</a>(<a href="http://forec.github.io/2016/02/26/machinelearning14/">http://forec.github.io/2016/02/26/machinelearning14/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Algorithms/" rel="tag">#Algorithms</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/25/machinelearning13/" rel="next">机器学习笔记（Chapter 13 - PCA简化）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/02/26/machinelearning14/"
+                   data-title="机器学习笔记（Chapter 14 - SVD简化）" data-url="http://forec.github.io/2016/02/26/machinelearning14/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SVD应用"><span class="nav-number">1.</span> <span class="nav-text">SVD应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#矩阵分解"><span class="nav-number">2.</span> <span class="nav-text">矩阵分解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于协同过滤的推荐引擎"><span class="nav-number">3.</span> <span class="nav-text">基于协同过滤的推荐引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#相似度计算"><span class="nav-number">3.1.</span> <span class="nav-text">相似度计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于用户还是物品"><span class="nav-number">3.2.</span> <span class="nav-text">基于用户还是物品</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#推荐引擎评价"><span class="nav-number">3.3.</span> <span class="nav-text">推荐引擎评价</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#餐馆菜肴推荐引擎"><span class="nav-number">3.4.</span> <span class="nav-text">餐馆菜肴推荐引擎</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于SVD的图像压缩"><span class="nav-number">4.</span> <span class="nav-text">基于SVD的图像压缩</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SVD总结"><span class="nav-number">5.</span> <span class="nav-text">SVD总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
