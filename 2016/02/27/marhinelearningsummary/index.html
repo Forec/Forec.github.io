@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="Algorithms,机器学习," />
+  <meta name="keywords" content="机器学习," />
 
 
 
@@ -39,20 +39,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="在低维下，数据更容易进行处理，其相关特征可能在数据中明确显示出来。PCA是降维技术中最广泛的一种。">
+<meta name="description" content="书中的很多算法解决了此前的一些疑惑，让我一些拙劣的思维方式得到了一些提升，也让许多问题成为可能。从数据中挖掘重要特征是一件很有意义的事，这个过程让我更能理解数学的重要性。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="机器学习笔记（Chapter 13 - PCA简化）">
-<meta property="og:url" content="http://forec.github.io/2016/02/25/machinelearning13/index.html">
+<meta property="og:title" content="《机器学习实战》总结">
+<meta property="og:url" content="http://forec.github.io/2016/02/27/marhinelearningsummary/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="在低维下，数据更容易进行处理，其相关特征可能在数据中明确显示出来。PCA是降维技术中最广泛的一种。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/pca%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE.png">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/pca%E9%99%8D%E7%BB%B42.png">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/pca%E9%99%8D%E7%BB%B4.png">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/pca%E6%96%B9%E5%B7%AE%E5%8D%A0%E6%AF%94.png">
-<meta property="og:updated_time" content="2016-02-25T04:18:10.621Z">
+<meta property="og:description" content="书中的很多算法解决了此前的一些疑惑，让我一些拙劣的思维方式得到了一些提升，也让许多问题成为可能。从数据中挖掘重要特征是一件很有意义的事，这个过程让我更能理解数学的重要性。">
+<meta property="og:updated_time" content="2016-02-27T11:38:09.073Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="机器学习笔记（Chapter 13 - PCA简化）">
-<meta name="twitter:description" content="在低维下，数据更容易进行处理，其相关特征可能在数据中明确显示出来。PCA是降维技术中最广泛的一种。">
+<meta name="twitter:title" content="《机器学习实战》总结">
+<meta name="twitter:description" content="书中的很多算法解决了此前的一些疑惑，让我一些拙劣的思维方式得到了一些提升，也让许多问题成为可能。从数据中挖掘重要特征是一件很有意义的事，这个过程让我更能理解数学的重要性。">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -62,7 +58,7 @@
   };
 </script>
 
-  <title> 机器学习笔记（Chapter 13 - PCA简化） | Forec's Notes </title>
+  <title> 《机器学习实战》总结 | Forec's Notes </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -198,7 +194,7 @@
           
           
             
-              机器学习笔记（Chapter 13 - PCA简化）
+              《机器学习实战》总结
             
           
         </h1>
@@ -207,8 +203,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2016-02-25T12:15:43+08:00" content="2016-02-25">
-            2016-02-25
+          <time itemprop="dateCreated" datetime="2016-02-27T14:49:09+08:00" content="2016-02-27">
+            2016-02-27
           </time>
         </span>
 
@@ -233,8 +229,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/02/25/machinelearning13/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/25/machinelearning13/" itemprop="commentsCount"></span>
+              <a href="/2016/02/27/marhinelearningsummary/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/27/marhinelearningsummary/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -249,41 +245,39 @@
 
       
         <span itemprop="articleBody"><blockquote>
-<p>在低维下，数据更容易进行处理，其相关特征可能在数据中明确显示出来。PCA是降维技术中最广泛的一种。</p>
+<p>书中的很多算法解决了此前的一些疑惑，让我一些拙劣的思维方式得到了一些提升，也让许多问题成为可能。从数据中挖掘重要特征是一件很有意义的事，这个过程让我更能理解数学的重要性。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="降维技术"><a href="#降维技术" class="headerlink" title="降维技术"></a>降维技术</h1><ul>
-<li>数据往往拥有超出显示能力的更多特征，简化数据不止使得数据容易显示，同时降低算法计算开销、去除噪声、使得结果易懂。</li>
-<li>主成分分析（Principal Component Analysis，PCA）将数据从原来的坐标系转移到新的坐标系，新坐标系的选择由数据本身决定，新坐标系的第一个坐标轴是原始数据中方差最大的方向，新坐标系的第二个坐标轴和第一个坐标轴正交、并且具有最大方差。该过程一直重复，次数为原始数据中维度。大部分方差都包含在前面几个新坐标轴中，因此可以忽略剩下的坐标轴。</li>
-<li>因子分析（Factor Analysis）假设观察数据的生成中有一些观察不到的隐变量，即观察数据是由这些隐变量和某些噪声的线性组合，那么隐变量的数据可能比观察数据的数目少，找到隐变量就可以实现数据的降维。</li>
-<li>独立成分分析（Independent Component Analysis，ICA）假设数据从N个数据源生成，类似因子分析，假设这些数据源之间在统计上相互独立，如果数据源数目少于观察数据数目，就实现降维过程。</li>
+<h1 id="概念总结"><a href="#概念总结" class="headerlink" title="概念总结"></a>概念总结</h1><ul>
+<li>分类和回归属于监督学习，分类主要用于预测标称型数据，回归主要用于预测数值型数据。监督学习指算法知道预测什么，对应的无监督学习处理的数据没有类别信息，也不会给定目标值，将数据集合分成由类似的对象组成的多个类的过程称为聚类。</li>
+<li>处理数据之前需要理解数据特征：特征值是离散型变量还是连续性变量，特征值中是否存在缺失的值，何种原因造成缺失值，数据中是否存在异常值，某个特征发生的频率如何等。</li>
+<li>开发过程：收集数据，准备输入数据，分析输入数据，训练算法（无监督学习不需要）。</li>
+<li><a href="http://forec.github.io/2016/02/04/machinelearning1-4/">kNN近邻算法</a>：精度高、对异常值不敏感、无数据输入假定，但计算复杂度高、空间复杂度高，可应用在数值型和标称型。该算法通过计算目标数据到训练数据的距离，根据距离排序，选择排名靠前的几个训练数据类型，投票决定预测类型。</li>
+<li><a href="http://forec.github.io/2016/02/04/machinelearning1-4/">决策树</a>：计算复杂度不高、输出结果容易理解、对中间值缺失不敏感、可处理不相关特征，但可能会产生过度匹配问题，适用于数值型和标称型。该算法每次选择一个特征进行划分，依照该特征划分可以获得最大的信息增益，划分后将该特征移除，一直到所有训练数据均已分类成功或所有特征均已经使用。</li>
+<li><a href="http://forec.github.io/2016/02/04/machinelearning1-4/">朴素贝叶斯</a>：在数据较少的情况下依然有效、可以处理多类别问题，但对于输入数据的准备方式较为敏感，适用于标称型数据。该算法通过对目标数据计算概率，选择使概率最大的分类。算法需要一个先验输入，例如邮件分类系统中，需要对此前收到的邮件进行统计，计算垃圾邮件占比。</li>
+<li><a href="http://forec.github.io/2016/02/09/machinelearning5/">Logistic回归</a>：计算代价不高，易于理解和实现，但容易欠拟合，分类精度可能不高，适用于数值型和标称型。该算法使用海维塞德阶跃函数进行二值分类，训练算法的过程就是在寻找回归系数，分类时用回归系数和输入向量的点乘计算阶跃函数的参数。寻找回归系数的过程可以使用梯度上升法，选择移动量最大的方向来迭代更新系数。</li>
+<li><a href="http://forec.github.io/2016/02/11/machinelearning6/">支持向量机</a>：泛化错误率低、计算开销不大、结果易解释，但对参数调节和核函数的选择敏感，院士分类器不加修改仅适用于处理二类问题。适用于数值型和标称型数据。其中一种实现是通过序列最小优化（SMO）算法，可以通过核函数将SVM拓展到无法线性划分的数据集。SVM的过程主要是寻找最佳分类间隔，这是一个线性平面，其最小间隔最大。核函数可以把低维空间数据映射到无穷维度，因此在当前空间无法线性划分的数据在无穷维度可以线性划分。</li>
+<li><a href="http://forec.github.io/2016/02/14/machinelearning7/">AdaBoost元算法</a>：元算法是对其他算法进行组合的一种方式，其泛化错误率低，易编码、可以应用在大部分分类器上，对离群点敏感。适用于数值型和标称型数据。该算法使用多个弱分类器如单层决策树（某个特征基于阈值分类），每个弱分类器的权值不同，这个权值随着迭代次数增加不断更新。同时，每个样本也具有权重，如果某个样本被错误分类，则下次该样本的权重增加。最终对每个弱分类器的分类结果加权作为最终分类结果。</li>
+<li><a href="http://forec.github.io/2016/02/18/machinelearning8/">回归</a>：回归结果易于理解、计算不复杂，但对非线性的数据拟合不好。适用于数值型和标称型。标准线性回归可以直接用矩阵计算，局部加权线性回归减少欠拟合现象，为数据点附近的其他数据点赋予不同权重。当数据的矩阵非奇异时，可以使用岭回归或者与lasso类似的前向逐步回归来约束回归系数。回归中的偏差指回归结果和真实结果的误差，而方差则指多次回归后不同回归系数之间的差异。</li>
+<li><a href="http://forec.github.io/2016/02/20/machinelearning9/">树回归</a>：可以对复杂和非线性的数据建模，但结果不易理解。适用于数值型和标称型数据。回归树的叶节点包含单个值，而模型树的叶节点包含一个线性方程。剪枝可以降低决策树的复杂度，包含预剪枝和后剪枝。</li>
+<li><a href="http://forec.github.io/2016/02/21/machinelearning10/">K-均值聚类</a>：无监督学习，可以随即初始化k个簇，或者采用二分K-均值聚类算法，从一个簇开始划分。</li>
+<li><a href="http://forec.github.io/2016/02/22/machinelearning11/">Apriori算法</a>:算法基于Apriori原则，如果某个项集不频繁，则其超集必然不频繁。可以从频繁相集中挖掘关联规则，如果某条规则不满足最小可信度要求，那么该规则的所有子集也不满足最小可信度要求。</li>
+<li><a href="http://forec.github.io/2016/02/24/machinelearning12/">FP-growth算法</a>：算法速度快，只需要扫描整个数据集两次，但实现比较困难，在某些数据集上效率可能下降。适用于标称型数据。FP树的构造有些类似字典树，但增加了一个headerTable用于存储每个元素在树中首次出现的位置，并且为每个节点增加了parent域，从而可以从叶节点向上追溯，创建条件树，发现频繁项集。</li>
+<li><a href="http://forec.github.io/2016/02/25/machinelearning13/">PCA</a>：PCA可以降低数据的复杂性，识别最重要的多个特征。但该步骤不一定重要，有可能损失有用信息。适用于数值型数据。另外几种降维技术有FA和ICA。算法通过协方差矩阵来计算主成分，并作为主要坐标轴，并继续计算次成分。当前几个成分覆盖了大部分方差时，可以认为后面的特征都是噪声。</li>
+<li><a href="http://forec.github.io/2016/02/26/machinelearning14/">SVD</a>：SVD是一种矩阵分解技术，将矩阵<code>Data</code>分解成<code>U</code>、<code>∑</code>和<code>V^T</code>三个矩阵，其中∑矩阵为对角矩阵，并且从左到右数据逐渐减小，在r个数据后认为0。可以用这r个数据重构原矩阵的近似矩阵，计算方法为<code>U[:r]*∑[:r]*VT[r:]</code>。</li>
+<li><a href="http://forec.github.io/2016/02/27/machinelearning15/">MapReduce框架</a>：当数据运算需求超过当前资源的运算能力，可以考虑借助MapReduce框架并行计算，利用网络服务提供的租赁资源。大部分情况下并不需要MapReduce。</li>
 </ul>
-<h1 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h1><ul>
-<li>PCA可以降低数据复杂性，识别最重要的多个特征，但有时不一定需要，并且可能损失有用信息。适用于数值型数据。</li>
-<li>对于下图的数据，要找出一条直线尽可能覆盖这些点，第一条坐标轴旋转到最大方差的方向，数据的最大方差给出了数据的最重要的信息。在选择了覆盖数据最大差异性的坐标轴之后，选择第二条坐标轴与第一条正交。<img src="http://7xktmz.com1.z0.glb.clouddn.com/pca%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE.png" width="400px">在下面的示例中，只需要一维信息，另一维信息只是对分类缺乏贡献的噪声数据。可以采用决策树，也可以使用SVM获得更好的分类间隔，但是分类超平面很难解释。PCA降维可以同时获得SVM和决策树的优点。<img src="http://7xktmz.com1.z0.glb.clouddn.com/pca%E9%99%8D%E7%BB%B42.png" width="400px"></li>
-<li><p>PCA过程实现：第一个主成分从数据差异性最大的方向获取，可以通过数据集的<a href="http://pinkyjie.com/2010/08/31/covariance/" target="_blank" rel="external">协方差矩阵 Convariance</a>和<a href="http://www.tongji.edu.cn/~math/xxds/kcja/kcja_b/5-2.htm" target="_blank" rel="external">特征值</a>分析求得。下面pca函数的流程为，首先去除平均值，之后计算协方差矩阵<code>cov</code>，计算协方差矩阵的特征值和特征向量<code>linalg.eig</code>，将特征值从大到小排序，保留对应的最上面的N个特征向量，最后将数据转换到上述N个特征向量构建的新空间中。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">(fileName, delim = <span class="string">'\t'</span>)</span>:</span></span><br><span class="line">    fr = open(fileName)</span><br><span class="line">    stringArr = [line.strip().split(delim) <span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines()]</span><br><span class="line">    datArr = [map(float, line) <span class="keyword">for</span> line <span class="keyword">in</span> stringArr]</span><br><span class="line">    <span class="keyword">return</span> mat(datArr)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pca</span><span class="params">(dataMat, topNfeat = <span class="number">999999</span>)</span>:</span></span><br><span class="line">    meanVals = mean(dataMat, axis = <span class="number">0</span>)</span><br><span class="line">    meanRemoved = dataMat - meanVals</span><br><span class="line">    covMat = cov(meanRemoved, rowvar = <span class="number">0</span>)   <span class="comment"># n*n</span></span><br><span class="line">    eigVals, eigVects = linalg.eig(mat(covMat))</span><br><span class="line">        <span class="comment"># 1*n, n*n</span></span><br><span class="line">    eigValInd = argsort(eigVals)</span><br><span class="line">    eigValInd = eigValInd[:-(topNfeat+<span class="number">1</span>):-<span class="number">1</span>]</span><br><span class="line">    redEigVects = eigVects[:,eigValInd]</span><br><span class="line">    lowDDataMat = meanRemoved * redEigVects</span><br><span class="line">    reconMat = (lowDDataMat * redEigVects.T) + meanVals</span><br><span class="line">    <span class="keyword">return</span> lowDDataMat, reconMat</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>运行示例如下，下图是构造出的第一主成分。<img src="http://7xktmz.com1.z0.glb.clouddn.com/pca%E9%99%8D%E7%BB%B4.png" width="400px"><br></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>dataMat = pca.loadDataSet(<span class="string">'testSet.txt'</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>lowDMat, reconMat = pca.pca(dataMat, <span class="number">1</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>shape(lowDMat)</span><br><span class="line">(<span class="number">1000</span>, <span class="number">1</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>fig = plt.figure()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax.scatter(dataMat[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>], dataMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],\</span><br><span class="line">        marker = <span class="string">'^'</span>, s = <span class="number">90</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax.scatter(reconMat[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>], reconMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],\</span><br><span class="line">        marker = <span class="string">'o'</span>, s = <span class="number">50</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>plt.show()</span><br></pre></td></tr></table></figure>
-</li>
+<h1 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h1><ul>
+<li><a href="http://archive.ics.uci.edu/ml/" target="_blank" rel="external">美国加州大学欧文分校的机器学习数据资源</a></li>
+<li><a href="http://aws.amazon.com/publicdatasets/" target="_blank" rel="external">Amazon公众大数据库</a></li>
+<li><a href="http://www.data.gov" target="_blank" rel="external">Data.gov的政府数据</a></li>
+<li><a href="http://www.data.gov/opendatasites" target="_blank" rel="external">Data.gov的美国国家网站超链接列表</a>，这些网站提供开放性数据</li>
+<li><a href="http://www.infochimps.com/" target="_blank" rel="external">Infochimps的开放数据集</a></li>
+<li><a href="http://metaoptimize.com/qa/questions/" target="_blank" rel="external">机器学习问答论坛</a></li>
 </ul>
-<h1 id="利用PCA对半导体制造数据降维"><a href="#利用PCA对半导体制造数据降维" class="headerlink" title="利用PCA对半导体制造数据降维"></a>利用PCA对半导体制造数据降维</h1><ul>
-<li><p><a href="http://archive.ics.uci.edu/ml/machine-learning-databases/secom/" target="_blank" rel="external">数据集</a>来自UCI机器学习数据库，包含590个特征，其中几乎所有样本都存在特征缺失，用NaN表示，通过replaceNanWithMean将缺失的NaN数据用其他样本的相同特征值平均值填充。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">replaceNanWithMean</span><span class="params">()</span>:</span></span><br><span class="line">    datMat = loadDataSet(<span class="string">'secom.data'</span>, <span class="string">' '</span>)</span><br><span class="line">    numFeat = shape(datMat)[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(numFeat):</span><br><span class="line">        meanVal = mean(datMat[nonzero(~isnan(datMat[:,i].A))[<span class="number">0</span>], i])</span><br><span class="line">        datMat[nonzero(isnan(datMat[:,i].A))[<span class="number">0</span>], i] = meanVal</span><br><span class="line">    <span class="keyword">return</span> datMat</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>从特征值可以看出，有超过20%特征值为0，这些特征都是其他特征的副本。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>dataMat = pca.replaceNanWithMean()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>meanVals = mean(dataMat, axis=<span class="number">0</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>meanRemoved = dataMat - meanVals</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>covMat = cov(meanRemoved, rowvar=<span class="number">0</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>eigVals, eigVects = linalg.eig(mat(covMat))</span><br><span class="line">array([  <span class="number">5.34151979e+07</span>,   <span class="number">2.17466719e+07</span>,   <span class="number">8.24837662e+06</span>,</span><br><span class="line">         <span class="number">2.07388086e+06</span>,   <span class="number">1.31540439e+06</span>,   <span class="number">4.67693557e+05</span>,</span><br><span class="line">         <span class="number">2.90863555e+05</span>,   <span class="number">2.83668601e+05</span>,   <span class="number">2.37155830e+05</span>,</span><br><span class="line">         <span class="number">2.08513836e+05</span>,   <span class="number">1.96098849e+05</span>,   <span class="number">1.86856549e+05</span>,</span><br><span class="line">         ......</span><br><span class="line">         <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,</span><br><span class="line">         <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,</span><br><span class="line">         <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>下图是前二十个主成分占总方差的百分比，大部分方差都包含在前面几个主成分中，前6个特征覆盖了96.8%的方差。因此可以将590个特征缩减到这6个特征。现实中我们无法精确知道所需要的主成分数目，必须通过实验取不同值来确定。<img src="http://7xktmz.com1.z0.glb.clouddn.com/pca%E6%96%B9%E5%B7%AE%E5%8D%A0%E6%AF%94.png" width="400px"></p>
-</li>
-</ul>
-<h1 id="PCA总结"><a href="#PCA总结" class="headerlink" title="PCA总结"></a>PCA总结</h1><blockquote>
-<p>降维技术使数据更易使用，并且它们往往能够去除数据中的噪声，通常作为预处理步骤，在算法应用前清洗数据。PCA可以从数据中识别主要特征，它通过沿着数据最大方差方向旋转坐标轴实现。如果要处理的数据过多无法放入内存，可以使用在线PCA分析，参考论文“Incremental Eigenanalysis for Classification”。</p>
-</blockquote>
 <hr>
 <p>参考文献： 《机器学习实战 - 美Peter Harrington》</p>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/25/machinelearning13/">原始出处</a>(<a href="http://forec.github.io/2016/02/25/machinelearning13/">http://forec.github.io/2016/02/25/machinelearning13/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/27/machinelearningsummary/">原始出处</a>(<a href="http://forec.github.io/2016/02/27/machinelearningsummary/">http://forec.github.io/2016/02/27/machinelearningsummary/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
       
     </div>
@@ -291,8 +285,6 @@
     <footer class="post-footer">
       
         <div class="post-tags">
-          
-            <a href="/tags/Algorithms/" rel="tag">#Algorithms</a>
           
             <a href="/tags/机器学习/" rel="tag">#机器学习</a>
           
@@ -303,13 +295,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/02/26/machinelearning14/" rel="prev">机器学习笔记（Chapter 14 - SVD简化）</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/02/24/machinelearning12/" rel="next">机器学习笔记（Chapter 12 - FP-growth算法）</a>
+              <a href="/2016/02/27/machinelearning15/" rel="next">机器学习笔记（Chapter 15 - MapReduce框架）</a>
             
           </div>
         </div>
@@ -334,8 +324,8 @@
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="2016/02/25/machinelearning13/"
-                   data-title="机器学习笔记（Chapter 13 - PCA简化）" data-url="http://forec.github.io/2016/02/25/machinelearning13/">
+              <div class="ds-thread" data-thread-key="2016/02/27/marhinelearningsummary/"
+                   data-title="《机器学习实战》总结" data-url="http://forec.github.io/2016/02/27/marhinelearningsummary/">
               </div>
             
           </div>
@@ -449,7 +439,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#降维技术"><span class="nav-number">1.</span> <span class="nav-text">降维技术</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA"><span class="nav-number">2.</span> <span class="nav-text">PCA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#利用PCA对半导体制造数据降维"><span class="nav-number">3.</span> <span class="nav-text">利用PCA对半导体制造数据降维</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA总结"><span class="nav-number">4.</span> <span class="nav-text">PCA总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概念总结"><span class="nav-number">1.</span> <span class="nav-text">概念总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#资源"><span class="nav-number">2.</span> <span class="nav-text">资源</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

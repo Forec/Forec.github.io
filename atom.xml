@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-02-27T06:39:39.290Z</updated>
+  <updated>2016-02-27T11:38:09.073Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -14,6 +14,64 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>《机器学习实战》总结</title>
+    <link href="http://forec.github.io/2016/02/27/marhinelearningsummary/"/>
+    <id>http://forec.github.io/2016/02/27/marhinelearningsummary/</id>
+    <published>2016-02-27T06:49:09.000Z</published>
+    <updated>2016-02-27T11:38:09.073Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;书中的很多算法解决了此前的一些疑惑，让我一些拙劣的思维方式得到了一些提升，也让许多问题成为可能。从数据中挖掘重要特征是一件很有意义的事，这个过程让我更能理解数学的重要性。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h1 id=&quot;概念总结&quot;&gt;&lt;a href=&quot;#概念总结&quot; class=&quot;headerlink&quot; title=&quot;概念总结&quot;&gt;&lt;/a&gt;概念总结&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;分类和回归属于监督学习，分类主要用于预测标称型数据，回归主要用于预测数值型数据。监督学习指算法知道预测什么，对应的无监督学习处理的数据没有类别信息，也不会给定目标值，将数据集合分成由类似的对象组成的多个类的过程称为聚类。&lt;/li&gt;
+&lt;li&gt;处理数据之前需要理解数据特征：特征值是离散型变量还是连续性变量，特征值中是否存在缺失的值，何种原因造成缺失值，数据中是否存在异常值，某个特征发生的频率如何等。&lt;/li&gt;
+&lt;li&gt;开发过程：收集数据，准备输入数据，分析输入数据，训练算法（无监督学习不需要）。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/04/machinelearning1-4/&quot;&gt;kNN近邻算法&lt;/a&gt;：精度高、对异常值不敏感、无数据输入假定，但计算复杂度高、空间复杂度高，可应用在数值型和标称型。该算法通过计算目标数据到训练数据的距离，根据距离排序，选择排名靠前的几个训练数据类型，投票决定预测类型。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/04/machinelearning1-4/&quot;&gt;决策树&lt;/a&gt;：计算复杂度不高、输出结果容易理解、对中间值缺失不敏感、可处理不相关特征，但可能会产生过度匹配问题，适用于数值型和标称型。该算法每次选择一个特征进行划分，依照该特征划分可以获得最大的信息增益，划分后将该特征移除，一直到所有训练数据均已分类成功或所有特征均已经使用。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/04/machinelearning1-4/&quot;&gt;朴素贝叶斯&lt;/a&gt;：在数据较少的情况下依然有效、可以处理多类别问题，但对于输入数据的准备方式较为敏感，适用于标称型数据。该算法通过对目标数据计算概率，选择使概率最大的分类。算法需要一个先验输入，例如邮件分类系统中，需要对此前收到的邮件进行统计，计算垃圾邮件占比。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/09/machinelearning5/&quot;&gt;Logistic回归&lt;/a&gt;：计算代价不高，易于理解和实现，但容易欠拟合，分类精度可能不高，适用于数值型和标称型。该算法使用海维塞德阶跃函数进行二值分类，训练算法的过程就是在寻找回归系数，分类时用回归系数和输入向量的点乘计算阶跃函数的参数。寻找回归系数的过程可以使用梯度上升法，选择移动量最大的方向来迭代更新系数。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/11/machinelearning6/&quot;&gt;支持向量机&lt;/a&gt;：泛化错误率低、计算开销不大、结果易解释，但对参数调节和核函数的选择敏感，院士分类器不加修改仅适用于处理二类问题。适用于数值型和标称型数据。其中一种实现是通过序列最小优化（SMO）算法，可以通过核函数将SVM拓展到无法线性划分的数据集。SVM的过程主要是寻找最佳分类间隔，这是一个线性平面，其最小间隔最大。核函数可以把低维空间数据映射到无穷维度，因此在当前空间无法线性划分的数据在无穷维度可以线性划分。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/14/machinelearning7/&quot;&gt;AdaBoost元算法&lt;/a&gt;：元算法是对其他算法进行组合的一种方式，其泛化错误率低，易编码、可以应用在大部分分类器上，对离群点敏感。适用于数值型和标称型数据。该算法使用多个弱分类器如单层决策树（某个特征基于阈值分类），每个弱分类器的权值不同，这个权值随着迭代次数增加不断更新。同时，每个样本也具有权重，如果某个样本被错误分类，则下次该样本的权重增加。最终对每个弱分类器的分类结果加权作为最终分类结果。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/18/machinelearning8/&quot;&gt;回归&lt;/a&gt;：回归结果易于理解、计算不复杂，但对非线性的数据拟合不好。适用于数值型和标称型。标准线性回归可以直接用矩阵计算，局部加权线性回归减少欠拟合现象，为数据点附近的其他数据点赋予不同权重。当数据的矩阵非奇异时，可以使用岭回归或者与lasso类似的前向逐步回归来约束回归系数。回归中的偏差指回归结果和真实结果的误差，而方差则指多次回归后不同回归系数之间的差异。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/20/machinelearning9/&quot;&gt;树回归&lt;/a&gt;：可以对复杂和非线性的数据建模，但结果不易理解。适用于数值型和标称型数据。回归树的叶节点包含单个值，而模型树的叶节点包含一个线性方程。剪枝可以降低决策树的复杂度，包含预剪枝和后剪枝。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/21/machinelearning10/&quot;&gt;K-均值聚类&lt;/a&gt;：无监督学习，可以随即初始化k个簇，或者采用二分K-均值聚类算法，从一个簇开始划分。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/22/machinelearning11/&quot;&gt;Apriori算法&lt;/a&gt;:算法基于Apriori原则，如果某个项集不频繁，则其超集必然不频繁。可以从频繁相集中挖掘关联规则，如果某条规则不满足最小可信度要求，那么该规则的所有子集也不满足最小可信度要求。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/24/machinelearning12/&quot;&gt;FP-growth算法&lt;/a&gt;：算法速度快，只需要扫描整个数据集两次，但实现比较困难，在某些数据集上效率可能下降。适用于标称型数据。FP树的构造有些类似字典树，但增加了一个headerTable用于存储每个元素在树中首次出现的位置，并且为每个节点增加了parent域，从而可以从叶节点向上追溯，创建条件树，发现频繁项集。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/25/machinelearning13/&quot;&gt;PCA&lt;/a&gt;：PCA可以降低数据的复杂性，识别最重要的多个特征。但该步骤不一定重要，有可能损失有用信息。适用于数值型数据。另外几种降维技术有FA和ICA。算法通过协方差矩阵来计算主成分，并作为主要坐标轴，并继续计算次成分。当前几个成分覆盖了大部分方差时，可以认为后面的特征都是噪声。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/26/machinelearning14/&quot;&gt;SVD&lt;/a&gt;：SVD是一种矩阵分解技术，将矩阵&lt;code&gt;Data&lt;/code&gt;分解成&lt;code&gt;U&lt;/code&gt;、&lt;code&gt;∑&lt;/code&gt;和&lt;code&gt;V^T&lt;/code&gt;三个矩阵，其中∑矩阵为对角矩阵，并且从左到右数据逐渐减小，在r个数据后认为0。可以用这r个数据重构原矩阵的近似矩阵，计算方法为&lt;code&gt;U[:r]*∑[:r]*VT[r:]&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forec.github.io/2016/02/27/machinelearning15/&quot;&gt;MapReduce框架&lt;/a&gt;：当数据运算需求超过当前资源的运算能力，可以考虑借助MapReduce框架并行计算，利用网络服务提供的租赁资源。大部分情况下并不需要MapReduce。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;资源&quot;&gt;&lt;a href=&quot;#资源&quot; class=&quot;headerlink&quot; title=&quot;资源&quot;&gt;&lt;/a&gt;资源&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://archive.ics.uci.edu/ml/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;美国加州大学欧文分校的机器学习数据资源&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://aws.amazon.com/publicdatasets/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Amazon公众大数据库&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.data.gov&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Data.gov的政府数据&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.data.gov/opendatasites&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Data.gov的美国国家网站超链接列表&lt;/a&gt;，这些网站提供开放性数据&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.infochimps.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Infochimps的开放数据集&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://metaoptimize.com/qa/questions/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;机器学习问答论坛&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;参考文献： 《机器学习实战 - 美Peter Harrington》&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/02/27/machinelearningsummary/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/02/27/machinelearningsummary/&quot;&gt;http://forec.github.io/2016/02/27/machinelearningsummary/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;书中的很多算法解决了此前的一些疑惑，让我一些拙劣的思维方式得到了一些提升，也让许多问题成为可能。从数据中挖掘重要特征是一件很有意义的事，这个过程让我更能理解数学的重要性。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://forec.github.io/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="机器学习" scheme="http://forec.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
   
   <entry>
     <title>机器学习笔记（Chapter 15 - MapReduce框架）</title>
@@ -839,78 +897,6 @@
       <category term="Algorithms" scheme="http://forec.github.io/tags/Algorithms/"/>
     
       <category term="机器学习" scheme="http://forec.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>《函数式编程思维》笔记</title>
-    <link href="http://forec.github.io/2016/02/13/functional-thinking/"/>
-    <id>http://forec.github.io/2016/02/13/functional-thinking/</id>
-    <published>2016-02-13T01:36:15.000Z</published>
-    <updated>2016-02-14T07:34:24.022Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;思维转变&quot;&gt;&lt;a href=&quot;#思维转变&quot; class=&quot;headerlink&quot; title=&quot;思维转变&quot;&gt;&lt;/a&gt;思维转变&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;命令式编程风格通常 &lt;strong&gt;迫使我们出于性能考虑，把不同的任务交织起来，以便能够用一次循环来完成多个任务&lt;/strong&gt; 。而函数式编程用map、filter这些高阶函数把我们解放出来，让我们 &lt;strong&gt;站在更高的抽象层次上去考虑问题&lt;/strong&gt; ，把问题看得更清楚。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;把控制权让渡给语言（运行时）。“人生苦短，远离malloc”。函数式编程语言让我们用高阶抽象从容取代基本的控制结构，将琐碎的细节（如垃圾处理）交托给运行时。 &lt;em&gt;面向对象编程通过封装不确定因素来使代码能被人理解；函数式编程通过尽量减少不确定因素来使代码能被人理解。——Michael Feathers&lt;/em&gt; 。与其建立种种机制来控制可变的状态，不如尽可能消灭可变的状态这个不确定因素。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;函数式语言提倡 &lt;strong&gt;在有限的几种关键数据结构（list、set、map）上运用针对这些数据结构高度优化过的操作&lt;/strong&gt; ，以此形成基本的运转架构；面向对象程序员喜欢不断的创建新的数据结构和附属的操作，因为OOP范式就是建立新的类和类间的消息。比起一味创建新的类结构体系，把封装的单元降低到函数级别，更有利于达到细颗粒度的、基础层面的重用。&lt;/li&gt;
-&lt;li&gt;换用函数式语言不是关键，转变看待问题的角度才是必不可少的。命令式编程是按照“程序是一系列改变状态的命令”来建模的一种编程风格，鼓励程序员将操作安排在循环内部执行。 &lt;strong&gt;函数式语言希望尽可能减少可变的状态&lt;/strong&gt; ，因此更多发展了通用性的计算设施。&lt;/li&gt;
-&lt;li&gt;高阶函数消除了摩擦。语法上的便利是非常重要的方面， &lt;strong&gt;在语法处处掣肘下塑造出的抽象，很难配合我们的思维过程而不产生所谓的摩擦&lt;/strong&gt; 。迭代需要让位于高阶函数，如果能用高阶函数把希望执行的操作表达出来，语言将会把操作安排的更高效。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;权责让渡&quot;&gt;&lt;a href=&quot;#权责让渡&quot; class=&quot;headerlink&quot; title=&quot;权责让渡&quot;&gt;&lt;/a&gt;权责让渡&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;理解掌握的抽象层次永远要比日常使用的抽象层次更深一层&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;闭包&lt;/strong&gt; （closure）实际上是一种特殊的函数，在暗地里绑定了函数内部引用的所有变量，换句话说，这种函数把它所引用的所有东西都放在一个上下文里包了起来。下面的代码先定义了一个Employee类，其中带有name和salary字段，接着定义带有amount参数的paidMore函数，其返回值是一个以Employee实例为参数的 &lt;strong&gt;代码块&lt;/strong&gt; ，或者叫闭包。数值100000随着&lt;code&gt;isHighPaid = paidMore(100000)&lt;/code&gt;这一步操作永久的和代码块绑定在一起。第二部分代码执行闭包。&lt;/p&gt;
-&lt;figure class=&quot;highlight groovy&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Employee&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; name, salary&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; paidMore(amount) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &amp;#123;Employee e -&amp;gt; e.salary &amp;gt; amount &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;isHighPaid = paidMore(&lt;span class=&quot;number&quot;&gt;100000&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; Smithers = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Employee(&lt;span class=&quot;string&quot;&gt;name:&lt;/span&gt;&lt;span class=&quot;string&quot;&gt;&quot;Fred&quot;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;salary:&lt;/span&gt;&lt;span class=&quot;number&quot;&gt;120000&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; Homer = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; Employee(&lt;span class=&quot;string&quot;&gt;name:&lt;/span&gt;&lt;span class=&quot;string&quot;&gt;&quot;Homer&quot;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;salary:&lt;/span&gt;&lt;span class=&quot;number&quot;&gt;80000&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;println isHighPaid(Smithers)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;println isHighPaid(Homer)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;闭包经常被函数式语言和框架当作一种 &lt;strong&gt;异地执行的机制&lt;/strong&gt; ，用来传递待执行的变换代码，如map之类的高阶函数。注意闭包是代码块，而不是一个值，各个闭包内部状态都是独立的，尽管局部变量不在代码块内定义，但只要代码块引用了该变量，两者就被绑定在一起，这种联系在代码块实例的全部生命期内一直保持着。从实现的角度说， &lt;strong&gt;代码块实例从它被创建的一刻起，就持有其作用域内一切事物的封闭副本&lt;/strong&gt; 。下面的代码展示了闭包的异地执行。闭包所表现出来的函数式思维就是，“让运行时去管理状态”。&lt;/p&gt;
-&lt;figure class=&quot;highlight groovy&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; Closure makeCounter()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; local_variable = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &amp;#123; &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; local_variable += &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;c1 = makeCounter()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;c1()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;c1()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;c1()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;c2 = makeCounter()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;println &lt;span class=&quot;string&quot;&gt;&quot;C1 = $&amp;#123;c1()&amp;#125;, C2 = $&amp;#123;c2()&amp;#125;&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// output: C1 = 4, C2 = 1 //&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;柯里化&lt;/strong&gt; 指的是从一个多参数函数变成 &lt;strong&gt;一连串单参数函数&lt;/strong&gt; 的变换。它描述的是 &lt;strong&gt;变换的过程&lt;/strong&gt; ，不涉及变换之后对函数的调用。调用者可以决定对多少个参数实施变换，余下的部分将衍生成一个参数数目较少的新函数。举例来说，函数process(x, y, z)完全柯里化之后变成process(x)(y)(z)的性质，其中process(x)和process(x)(y)都是单参数的函数。如果只对第一个参数柯里化，那么process(x)的返回值将是一个单参数的函数，而这个唯一的参数又接受另一个参数的输入。 &lt;strong&gt;函数柯里化的结果是返回链条中的下一个函数&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;部分施用&lt;/strong&gt; 指提前代入一部分参数值，使一个多参数得以省略部分参数，从而转化为一个参数数目较少的函数。 &lt;strong&gt;部分施用是把参数的取值绑定到用户在操作中提供的具体值上&lt;/strong&gt; 。 &lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;递归&lt;/strong&gt; 的核心在于对一个不断变短的列表反复做同一件事，利用递归，将状态的管理责任推给运行时。递归没有成为一种平常的操作，一个主要原因是栈的增长。使用尾调用优化的写法来帮助运行时科夫栈的增长问题。当递归调用是函数执行的最后一个调用时，运行时往往可以在栈里就地更新，而不需要增加新的栈空间。因此 &lt;strong&gt;尽可能多的使用尾递归的写法&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;记忆和缓求值&quot;&gt;&lt;a href=&quot;#记忆和缓求值&quot; class=&quot;headerlink&quot; title=&quot;记忆和缓求值&quot;&gt;&lt;/a&gt;记忆和缓求值&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;只有对纯函数才能放心地使用函数缓存的结果，这刚好符合函数式特性。对于Groovy，可以先将记忆的函数定义为闭包，再对闭包使用memoize()方法获得一个新函数，这个新函数调用的时候结果就会被缓存起来。在Haskell中好像下面的链接可以实现。我们写出来的缓存决不可能比语言开发者设计的更高效，因为语言设计者可以无视他们给语言设定的规定。 &lt;strong&gt;语言设计者实现出来的机制总是比开发者自己做的效率高&lt;/strong&gt; 。&lt;a href=&quot;https://wiki.haskell.org/Memoization&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Haskell-Wiki上的Memoization&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;缓求值的好处：昂贵的运算只有到了绝对必要的时候才执行；可以建立无限大的集合，只要一接到请求就一直送出元素；按缓求值的方式使用map、filter等，可以产生更高效的代码。特别适合于资源生产成本较高的情况。Haskell的惰性求值就是这样的特性，是非严格求值的。在严格求值的语言运行下面代码会报错，而非严格求值的语言会得出4。&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;print&lt;/span&gt; length([&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;*&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;/&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;-&lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;])&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;语言演化&quot;&gt;&lt;a href=&quot;#语言演化&quot; class=&quot;headerlink&quot; title=&quot;语言演化&quot;&gt;&lt;/a&gt;语言演化&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;少量的数据结构搭配大量的操作。函数式语言有很多操作，但对应的数据结构很少。面向对象语言鼓励建立专门针对某个类的方法，我们从类的关系中发现重复出现的模式并加以重用。 &lt;strong&gt;函数式语言的重用表现在函数的通用性上，他们鼓励在数据结构上使用各种共通的变换，并通过高阶函数来调整操作以满足具体事项的要求&lt;/strong&gt; 。 &lt;em&gt;100个函数操作一种数据结构的组合，要好过10个函数操作10种数据结构的组合。——Alan Perlis&lt;/em&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;让语言去迎合问题&lt;/strong&gt; ，不要拿问题硬套语言，而是想法揉捏手中的语言来迎合问题。Lisp家族的语言传承了无可比拟的灵活性，对DSL的支持比主流语言要强得多。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;函数式偏好没有副作用的纯函数，“异常”违背了这个条件。因此函数式语言通过Either类这种不相交联合体，返回左值表示错误信息，右值表示正常结果。函数式语言关注 &lt;strong&gt;引用的透明性&lt;/strong&gt; ，发出调用的例程不必关心他的访问对象真的是一个值，还是一个返回值的函数。&lt;/li&gt;
-&lt;li&gt;现代语言大多数是多范式的，支持多种多样的编程范式，如OOP，元编程、函数式、过程式等等。这些范式在语言中相互正交（没有任何影响），不会相互干扰。&lt;/li&gt;
-&lt;li&gt;设计模式的变化，模式已被函数式语言吸收成为了语言的一部分，语言特性简化了实现细节。OOP模式和FP模式已经具备了不同的意义。面向对象倾向于封装对象的重用，在不同的结构之间 &lt;strong&gt;耦合&lt;/strong&gt; 。而函数式编程则依靠零件之间的 &lt;strong&gt;复合&lt;/strong&gt; 来组织抽象，以达到减少不确定因素的目的。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;p&gt;参考文献： 《函数式编程思维 - 美 Neal Ford》&lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/02/13/functional-thinking/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/02/13/functional-thinking/&quot;&gt;http://forec.github.io/2016/02/13/functional-thinking/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="Code" scheme="http://forec.github.io/categories/Code/"/>
-    
-    
-      <category term="函数式编程" scheme="http://forec.github.io/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
