@@ -1,0 +1,751 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="Algorithms,机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec's Notes" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="MapReduce是一个分布式计算框架，可以将单个计算作业分配给多台计算机执行。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记（Chapter 15 - MapReduce框架）">
+<meta property="og:url" content="http://forec.github.io/2016/02/27/machinelearning15/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="MapReduce是一个分布式计算框架，可以将单个计算作业分配给多台计算机执行。">
+<meta property="og:updated_time" content="2016-02-27T06:39:39.290Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记（Chapter 15 - MapReduce框架）">
+<meta name="twitter:description" content="MapReduce是一个分布式计算框架，可以将单个计算作业分配给多台计算机执行。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 机器学习笔记（Chapter 15 - MapReduce框架） | Forec's Notes </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec's Notes</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              机器学习笔记（Chapter 15 - MapReduce框架）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-02-27T14:32:18+08:00" content="2016-02-27">
+            2016-02-27
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/大数据/" itemprop="url" rel="index">
+                  <span itemprop="name">大数据</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/02/27/machinelearning15/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/27/machinelearning15/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>MapReduce是一个分布式计算框架，可以将单个计算作业分配给多台计算机执行。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="MapReduce工作流程"><a href="#MapReduce工作流程" class="headerlink" title="MapReduce工作流程"></a>MapReduce工作流程</h1><ul>
+<li>MapReduce框架的优点是可以短时间内完成大量工作，缺点是算法必须经过重写，需要对系统工程有一定理解。适用于数值型和标称型数据。</li>
+<li>MapReduce工作流程是：单个作业被分成很多小份，输入数据被切片分发到每个节点，各个节点只在本地数据上做运算，对应的运算代码称为mapper，该过程称为map阶段。每个mapper的输出通过某种方式组合（一般还会做排序），排序后的结果再被分成小份分发给各个节点进行下一步处理。第二步处理阶段称为reduce，对应运行代码称为reducer。reducer的输出为程序最终执行结果。</li>
+<li>在任何时候，每个mapper或reducer之间都不进行通信。每个节点值处理自己的事务，且在本地分配的数据集上计算。</li>
+<li>主节点控制MapReduce的作业流程，数据被重复存放在不同的机器上防止某个机器失效。mapper和reducer传输的数据形式为key/value对。</li>
+</ul>
+<h1 id="MapReduce上的机器学习"><a href="#MapReduce上的机器学习" class="headerlink" title="MapReduce上的机器学习"></a>MapReduce上的机器学习</h1><ul>
+<li>简单贝叶斯：直接使用reducer将各个mapper的结果相加</li>
+<li>k-近邻算法：构建树存储数据，利用树形结构缩小搜索范围，该方法在特征数小于10的情况下效果很好。高维数据下（文本、图像、视频）的近邻查找方法是局部敏感哈希算法。</li>
+<li>支持向量机：SMO算法构造的SVM无法在MapReduce框架实现，但Pegasos算法构造的SVM和“最邻近支持向量机”更快并且易于在MapReduce框架下实现。</li>
+<li>奇异值分解：Lanczos算法是一个有效的求近似特征值的算法，可以应用在MapReduce上从而有效找到大数据的奇异值。该算法还可以应用于PCA。</li>
+<li>K-均值聚类：canopy聚类是一个流行的分布式聚类方法，可以先调用canopy聚类法取得最初的k个簇，再运行K-均值聚类算法。</li>
+</ul>
+<h1 id="在Python中使用mrjob自动化MapReduce"><a href="#在Python中使用mrjob自动化MapReduce" class="headerlink" title="在Python中使用mrjob自动化MapReduce"></a>在Python中使用mrjob自动化MapReduce</h1><ul>
+<li><a href="http://packages.python.org/mrjob/" target="_blank" rel="external">mrjob</a>之前是Yelp的内部框架，2010年底开源。可以用于在Amazon网络服务上启动MapReduce<br>作业。可以通过pip安装，也可以clone <a href="https://github.com/Yelp/mrjob" target="_blank" rel="external">GitHub上的源码</a>来安装。在AWS上使用mrjob之前需要设置<code>AWS_ACCESS_KEY_ID</code>和<code>AWS_SECRET_ACCESS_KEY</code>两个环境变量。</li>
+<li>使用mrjob可以在EMR上运行Hadoop流，也可以在单机上测试。单机测试的命令为<code>% python mrMean.py &lt; inputFile.txt &gt; myOut.txt</code>，在EMR上运行同样任务的命令为<code>% python mrMean.py -r emr &lt; inputFile.txt &gt; myOut.txt</code>。所有上传和表单填写由mrjob自动完成。</li>
+<li>添加下面代码到mrMean.py，创建一个新的MRJob继承类，代码中的mapper和reducer都是该类的方法。steps方法定义了执行的步骤，在该方法中需要为mrjob制定mapper和reducer的名称，未指出则默认调用mapper和reducer。将原来代码中的<code>mr</code>方法修改为<code>mrjob.step.MRStep</code>。<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">from mrjob.job import MRJob</span><br><span class="line">import mrjob</span><br><span class="line"></span><br><span class="line">class MRmean(MRJob):</span><br><span class="line">    def __init__(self, *args, **kwargs):</span><br><span class="line">        super(MRmean, self).__init__(*args, **kwargs)</span><br><span class="line">        self.inCount = 0</span><br><span class="line">        self.inSum = 0</span><br><span class="line">        self.inSqSum = 0</span><br><span class="line">    def map(self, key, val):</span><br><span class="line">        if False:</span><br><span class="line">            yield</span><br><span class="line">        inVal = float(val)</span><br><span class="line">        self.inCount += 1</span><br><span class="line">        self.inSum += inVal</span><br><span class="line">        self.inSqSum += inVal*inVal</span><br><span class="line">    def map_final(self):</span><br><span class="line">        mn = self.inSum/self.inCount</span><br><span class="line">        mnSq = self.inSqSum/self.inCount</span><br><span class="line">        yield(1, [self.inCount, mn, mnSq])</span><br><span class="line">    def reduce(self, key, packedValues):</span><br><span class="line">        cumVal = 0.0; cumSumSq = 0.0; cumN = 0.0</span><br><span class="line">        for valArr in packedValues:</span><br><span class="line">            nj = float(valArr[0])</span><br><span class="line">            cumN += nj</span><br><span class="line">            cumVal += nj*float(valArr[1])</span><br><span class="line">            cumSumSq += nj*float(valArr[2])</span><br><span class="line">        mean = cumVal/cumN</span><br><span class="line">        var = (cumSumSq - 2*mean*cumVal + cumN*mean*mean)/cumN</span><br><span class="line">        yield(mean, var)</span><br><span class="line">    def steps(self):</span><br><span class="line">        return ([mrjob.step.MRStep(mapper=self.map, reducer=self.reduce,\</span><br><span class="line">            mapper_final=self.map_final)])</span><br><span class="line"></span><br><span class="line">if __name__ == '__main__':</span><br><span class="line">    MRmean.run()</span><br><span class="line"></span><br><span class="line">$ python mrMean.py --mapper &lt; inputFile.txt</span><br><span class="line">1       [100, 0.5095697, 0.34443931307936]</span><br><span class="line"></span><br><span class="line">$ python mrMean.py &lt; inputFile.txt</span><br><span class="line">reading from STDIN</span><br><span class="line">writing to %\mrMean.Forec.20160227.045814.965000\step-0-mapper_part-00000</span><br><span class="line">Counters from step 1:</span><br><span class="line">  (no counters found)</span><br><span class="line">writing to %\mrMean.Forec.20160227.045814.965000\step-0-mapper-sorted</span><br><span class="line">&gt; sort '%\mrMean.Forec.20160227.045814.965000\step-0-mapper_part-00000'</span><br><span class="line">writing to %\mrMean.Forec.20160227.045814.965000\step-0-reducer_part-00000</span><br><span class="line">Counters from step 1:</span><br><span class="line">  (no counters found)</span><br><span class="line">Moving %\mrMean.Forec.20160227.045814.965000\step-0-reducer_part-00000\</span><br><span class="line"> -&gt; %\mrMean.Forec.20160227.045814.965000\output\part-00000</span><br><span class="line">Streaming final output from %\mrMean.Forec.20160227.045814.965000\output</span><br><span class="line">0.5095697       0.08477803392126998</span><br><span class="line">removing tmp directory %\mrMean.Forec.20160227.045814.965000</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="分布式SVM的Pegasos算法"><a href="#分布式SVM的Pegasos算法" class="headerlink" title="分布式SVM的Pegasos算法"></a>分布式SVM的Pegasos算法</h1><h2 id="Pegasos算法"><a href="#Pegasos算法" class="headerlink" title="Pegasos算法"></a>Pegasos算法</h2><ul>
+<li>SMO算法的一个替代品是Pegasos算法，后者可以很容易写成MapReduce形式。Pegasos是指原始估计梯度求解器（Primal Estimated sub-GrAdient Solver）。该算法使用某种形式的随机梯度下降方法来解决SVM所定义的优化问题，该算法所需的迭代次数取决于用户所期望的精确度而不是数据集的大小。其工作流程是：从训练集中随机挑选一些样本点添加到待处理列表中，之后按序判断每个样本点是否能被分类正确；如果是则忽略，否则将其加入待更新集合。批处理完毕后，权重向量按照这些错分的样本进行更新。伪代码为：<ul>
+<li>将W初始化为0</li>
+<li>对每次批处理</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;随机选择k个样本点（向量）</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;对每个向量</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果该向量被错分</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;更新权重向量W</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;累加对W的更新</li>
+</ul>
+</li>
+<li>代码为Pegasos算法的串行版本，输入值T和k分别设定了迭代次数和待处理列表的大小。在T次迭代过程中，每次需要重新计算eta。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(w, x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> w*x.T</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">batchPegasos</span><span class="params">(dataSet, labels, lam, T, k)</span>:</span></span><br><span class="line">    <span class="keyword">import</span> random</span><br><span class="line">    m, n = shape(dataSet); w = zeros(n)</span><br><span class="line">    dataIndex = range(m)</span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">1</span>, T+<span class="number">1</span>):</span><br><span class="line">        wDelta = mat(zeros(n))</span><br><span class="line">        eta = <span class="number">1.0</span>/(lam*t)</span><br><span class="line">        random.shuffle(dataIndex)</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(k):</span><br><span class="line">            i = dataIndex[j]</span><br><span class="line">            p = predict(w, dataSet[i,:])</span><br><span class="line">            <span class="keyword">if</span> labels[i]*p &lt; <span class="number">1</span>:</span><br><span class="line">                wDelta += labels[i]*dataSet[i,:].A</span><br><span class="line">        w = (<span class="number">1.0</span> - <span class="number">1</span>/t)*w + (eta/k)*wDelta</span><br><span class="line">    <span class="keyword">return</span> w</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="mrjob实现MapReduce版本的SVM"><a href="#mrjob实现MapReduce版本的SVM" class="headerlink" title="mrjob实现MapReduce版本的SVM"></a>mrjob实现MapReduce版本的SVM</h2><ul>
+<li><p>Pegasos算法有大量的内积计算，内积计算可以并行。<code>Cinfigure_options</code>方法建立了一些变量，包括迭代次数T，待处理列表大小k。steps方法告诉mrjob应该做什么，按照什么顺序做。其创建了一个python列表，包含<code>map</code>、<code>map_fin</code>和<code>reduce</code>几个步骤，最后将该列表乘以迭代次数，即在每次迭代中重复调用这个列表。mapper需要能够正确读取reducer输出的数据，对输入和输出格式作如下规定：Mapper输入为<code>&lt;mapperNum, valueList&gt;</code>，无输出；<code>Mapper_final</code>无输入，输出为<code>&lt;l, valueList&gt;</code>；Reducer的输入输出均为<code>&lt;mapperNum, valueList&gt;</code>。传入的值是列表数组，valueList第一个元素是一个字符串，表示列表后面存放的数据类型，每个<code>Mapper_final</code>都将输出同样的key以保证所有的key/value都输出给同一个reducer。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> mrjob.job <span class="keyword">import</span> MRJob</span><br><span class="line"><span class="keyword">import</span> mrjob</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MRsvm</span><span class="params">(MRJob)</span>:</span></span><br><span class="line">    DEFAULT_INPUT_PROTOCOL = <span class="string">'json_value'</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">        super(MRsvm, self).__init__(*args, **kwargs)</span><br><span class="line">        self.data = pickle.load(open(<span class="string">'%\\svmDat27'</span>))</span><br><span class="line">        self.w = <span class="number">0</span></span><br><span class="line">        self.eta = <span class="number">0.69</span></span><br><span class="line">        self.dataList = []</span><br><span class="line">        self.k = self.options.batchsize</span><br><span class="line">        self.numMappers = <span class="number">1</span></span><br><span class="line">        self.t = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">map</span><span class="params">(self, mapperId, inVals)</span>:</span> <span class="comment">#needs exactly 2 arguments</span></span><br><span class="line">        <span class="comment">#input: nodeId, ('w', w-vector) OR nodeId, ('x', int)</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">False</span>: <span class="keyword">yield</span></span><br><span class="line">        <span class="keyword">if</span> inVals[<span class="number">0</span>]==<span class="string">'w'</span>:                  <span class="comment">#accumulate W-vector</span></span><br><span class="line">            self.w = inVals[<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">elif</span> inVals[<span class="number">0</span>]==<span class="string">'x'</span>:</span><br><span class="line">            self.dataList.append(inVals[<span class="number">1</span>])<span class="comment">#accumulate data points to calc</span></span><br><span class="line">        <span class="keyword">elif</span> inVals[<span class="number">0</span>]==<span class="string">'t'</span>: self.t = inVals[<span class="number">1</span>] </span><br><span class="line">        <span class="keyword">else</span>: self.eta=inVals <span class="comment">#this is for debug, eta not used in map</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">map_fin</span><span class="params">(self)</span>:</span></span><br><span class="line">        labels = self.data[:,-<span class="number">1</span>]; X=self.data[:,<span class="number">0</span>:-<span class="number">1</span>]<span class="comment">#reshape data into X and Y</span></span><br><span class="line">        <span class="keyword">if</span> self.w == <span class="number">0</span>: self.w = [<span class="number">0.001</span>]*shape(X)[<span class="number">1</span>] <span class="comment">#init w on first iteration</span></span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> self.dataList:</span><br><span class="line">            p = mat(self.w)*X[index,:].T <span class="comment">#calc p=w*dataSet[key].T </span></span><br><span class="line">            <span class="keyword">if</span> labels[index]*p &lt; <span class="number">1.0</span>:</span><br><span class="line">                <span class="keyword">yield</span> (<span class="number">1</span>, [<span class="string">'u'</span>, index])<span class="comment">#make sure everything has the same key</span></span><br><span class="line">        <span class="keyword">yield</span> (<span class="number">1</span>, [<span class="string">'w'</span>, self.w])       <span class="comment">#so it ends up at the same reducer</span></span><br><span class="line">        <span class="keyword">yield</span> (<span class="number">1</span>, [<span class="string">'t'</span>, self.t])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reduce</span><span class="params">(self, _, packedVals)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> valArr <span class="keyword">in</span> packedVals: <span class="comment">#get values from streamed inputs</span></span><br><span class="line">            <span class="keyword">if</span> valArr[<span class="number">0</span>]==<span class="string">'u'</span>:  self.dataList.append(valArr[<span class="number">1</span>])</span><br><span class="line">            <span class="keyword">elif</span> valArr[<span class="number">0</span>]==<span class="string">'w'</span>: self.w = valArr[<span class="number">1</span>]</span><br><span class="line">            <span class="keyword">elif</span> valArr[<span class="number">0</span>]==<span class="string">'t'</span>:  self.t = valArr[<span class="number">1</span>] </span><br><span class="line">        labels = self.data[:,-<span class="number">1</span>]; X=self.data[:,<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line">        wMat = mat(self.w);   wDelta = mat(zeros(len(self.w)))</span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> self.dataList:</span><br><span class="line">            wDelta += float(labels[index])*X[index,:] <span class="comment">#wDelta += label*dataSet</span></span><br><span class="line">        eta = <span class="number">1.0</span>/(<span class="number">2.0</span>*self.t)       <span class="comment">#calc new: eta</span></span><br><span class="line">        <span class="comment">#calc new: w = (1.0 - 1/t)*w + (eta/k)*wDelta</span></span><br><span class="line">        wMat = (<span class="number">1.0</span> - <span class="number">1.0</span>/self.t)*wMat + (eta/self.k)*wDelta</span><br><span class="line">        <span class="keyword">for</span> mapperNum <span class="keyword">in</span> range(<span class="number">1</span>,self.numMappers+<span class="number">1</span>):</span><br><span class="line">            <span class="keyword">yield</span> (mapperNum, [<span class="string">'w'</span>, wMat.tolist()[<span class="number">0</span>] ]) <span class="comment">#emit w</span></span><br><span class="line">            <span class="keyword">if</span> self.t &lt; self.options.iterations:</span><br><span class="line">                <span class="keyword">yield</span> (mapperNum, [<span class="string">'t'</span>, self.t+<span class="number">1</span>])<span class="comment">#increment T</span></span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> range(self.k/self.numMappers):<span class="comment">#emit random ints for mappers iid</span></span><br><span class="line">                    <span class="keyword">yield</span> (mapperNum, [<span class="string">'x'</span>, random.randint(shape(self.data)[<span class="number">0</span>]) ])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">configure_options</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(MRsvm, self).configure_options()</span><br><span class="line">        self.add_passthrough_option(<span class="string">'--iterations'</span>, dest=<span class="string">'iterations'</span>, default=<span class="number">2</span>,\</span><br><span class="line">            type = <span class="string">'int'</span>, help=<span class="string">'T: number of iterations to run'</span>)</span><br><span class="line">        self.add_passthrough_option(<span class="string">'--batchsize'</span>, dest=<span class="string">'batchsize'</span>, default=<span class="number">100</span>,\</span><br><span class="line">            type=<span class="string">'int'</span>, help=<span class="string">'k: number of data points in a batch'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">steps</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> ([mrjob.step.MRStep(mapper=self.map, mapper_final=self.map_fin, \</span><br><span class="line">            reducer=self.reduce)]*self.options.iterations)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    MRsvm.run()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>大多数情况下并不需要使用MapReduce框架，如果作业花费了太多时间，首先应思考能否用更高效的语言编写，或者是否可以优化。寻找影响处理速度的瓶颈才能根本解决效率底下的问题。</p>
+</li>
+</ul>
+<h1 id="MapReduce总结"><a href="#MapReduce总结" class="headerlink" title="MapReduce总结"></a>MapReduce总结</h1><blockquote>
+<p>当运算需求超出了当前资源的运算能力，可以考虑购买更好的机器，或者租用网络服务并使用MapReduce框架并行执行。很多机器学习算法都可以容易地写成MapReduce作业，而某些需要经过重写。大部分情况下，MapReduce并不需要。</p>
+</blockquote>
+<hr>
+<p>参考文献： 《机器学习实战 - 美Peter Harrington》</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/27/machinelearning15/">原始出处</a>(<a href="http://forec.github.io/2016/02/27/machinelearning15/">http://forec.github.io/2016/02/27/machinelearning15/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Algorithms/" rel="tag">#Algorithms</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/26/machinelearning14/" rel="next">机器学习笔记（Chapter 14 - SVD简化）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/02/27/machinelearning15/"
+                   data-title="机器学习笔记（Chapter 15 - MapReduce框架）" data-url="http://forec.github.io/2016/02/27/machinelearning15/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce工作流程"><span class="nav-number">1.</span> <span class="nav-text">MapReduce工作流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce上的机器学习"><span class="nav-number">2.</span> <span class="nav-text">MapReduce上的机器学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在Python中使用mrjob自动化MapReduce"><span class="nav-number">3.</span> <span class="nav-text">在Python中使用mrjob自动化MapReduce</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式SVM的Pegasos算法"><span class="nav-number">4.</span> <span class="nav-text">分布式SVM的Pegasos算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Pegasos算法"><span class="nav-number">4.1.</span> <span class="nav-text">Pegasos算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mrjob实现MapReduce版本的SVM"><span class="nav-number">4.2.</span> <span class="nav-text">mrjob实现MapReduce版本的SVM</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce总结"><span class="nav-number">5.</span> <span class="nav-text">MapReduce总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
