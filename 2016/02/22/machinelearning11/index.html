@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://forec.github.io/2016/02/22/machinelearning11/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="商店通过会员卡等忠诚度计划，可以获取顾客所购买商品的组合信息，从而更好地安排商品定价、市场促销等。从大规模数据集中寻找物品间的隐含关系被称作关联分析或者关联规则学习。Apriori算法可以解决计算代价极高的物品组合问题，从而在合理的时间范围内找到频繁项集和关联规则。">
-<meta property="og:updated_time" content="2016-02-22T13:33:08.344Z">
+<meta property="og:updated_time" content="2016-03-11T16:05:03.511Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记（Chapter 11 - Apriori算法）">
 <meta name="twitter:description" content="商店通过会员卡等忠诚度计划，可以获取顾客所购买商品的组合信息，从而更好地安排商品定价、市场促销等。从大规模数据集中寻找物品间的隐含关系被称作关联分析或者关联规则学习。Apriori算法可以解决计算代价极高的物品组合问题，从而在合理的时间范围内找到频繁项集和关联规则。">
@@ -275,7 +275,7 @@
 </ul>
 <h1 id="从频繁项集中挖掘关联规则"><a href="#从频繁项集中挖掘关联规则" class="headerlink" title="从频繁项集中挖掘关联规则"></a>从频繁项集中挖掘关联规则</h1><ul>
 <li>关联规则不一定是可逆的，{尿布}→{啤酒}不意味着{啤酒}→{牛奶}。对于一个频繁项，可以将其中包含的元素划分为两部分，左端称为前件，如{尿布}→{啤酒}中的尿布，右端称为后件。对于一个固定的频繁项，前件与后件的元素个数之和固定，但前件后件数目可以调配。为了减少产生的规则数目，可以发现，如果某条规则并不满足最小可信度要求，那么这条规则的所有子集也不满足最小可信度要求。例如，{0，1，2}→{3}的规则不满足可信度，则所有前件是{0，1，2}子集的规则都不满足可信度。</li>
-<li><p>构造方法如下：首先从一个频繁项集开始，创建一个规则列表，其中规则右部只包含一个元素，然后对这些规则测试，接下来合并所有剩余规则来创建一个新的规则列表，此时右部包含两个元素，以此类推，称为分级法。函数generateRules取频繁项集列表L、项集支持度supportData和最小可信阈值minConf作为参数，遍历L中的每一个频繁项集并对每个频繁项集创建只包含单个元素集合的列表H1。注意因为无法从单个元素的项集中构建关联规则，所以从包含两个或者更多元素的项集开始。如果频繁项集的元素数目大于2，则考虑对其做进一步合并，产生其他规则，通过rulesFromConseq完成，否则直接calcConf计算可信值。rulesFromConseq中的<code>if (lne(freqSet)&gt;(m+1))</code>的判断目的在于确定当前的频繁项是否大到可以移除长为m的子集。</p>
+<li><p>构造方法如下：首先从一个频繁项集开始，创建一个规则列表，其中规则右部只包含一个元素，然后对这些规则测试，接下来合并所有剩余规则来创建一个新的规则列表，此时右部包含两个元素，以此类推，称为分级法。函数generateRules取频繁项集列表L、项集支持度supportData和最小可信阈值minConf作为参数，遍历L中的每一个频繁项集并对每个频繁项集创建只包含单个元素集合的列表H1。注意因为无法从单个元素的项集中构建关联规则，所以从包含两个或者更多元素的项集开始。如果频繁项集的元素数目大于2，则考虑对其做进一步合并，产生其他规则，通过rulesFromConseq完成，否则直接calcConf计算可信值。rulesFromConseq中的<code>if (len(freqSet)&gt;(m+1))</code>的判断目的在于确定当前的频繁项是否大到可以移除长为m的子集。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generateRules</span><span class="params">(L, supportData, minConf = <span class="number">0.7</span>)</span>:</span></span><br><span class="line">    bigRuleList = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(L)):</span><br><span class="line">        <span class="keyword">for</span> freqSet <span class="keyword">in</span> L[i]:</span><br><span class="line">            H1 = [frozenset([item]) <span class="keyword">for</span> item <span class="keyword">in</span> freqSet]</span><br><span class="line">            <span class="keyword">if</span> (i &gt; <span class="number">1</span>):</span><br><span class="line">                rulesFromConseq(freqSet, H1, supportData, bigRuleList, minConf)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                calcConf(freqSet, H1, supportData, bigRuleList, minConf)</span><br><span class="line">    <span class="keyword">return</span> bigRuleList</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calcConf</span><span class="params">(freqSet, H, supportData, brl, minConf = <span class="number">0.7</span>)</span>:</span></span><br><span class="line">    prunedH = []</span><br><span class="line">    <span class="keyword">for</span> conseq <span class="keyword">in</span> H:</span><br><span class="line">        conf = supportData[freqSet]/supportData[freqSet-conseq]</span><br><span class="line">        <span class="keyword">if</span> conf &gt;= minConf:</span><br><span class="line">            <span class="keyword">print</span> freqSet-conseq, <span class="string">'--&gt;'</span>, conseq, <span class="string">'conf:'</span>, conf</span><br><span class="line">            brl.append((freqSet-conseq, conseq, conf))</span><br><span class="line">            prunedH.append(conseq)</span><br><span class="line">    <span class="keyword">return</span> prunedH</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rulesFromConseq</span><span class="params">(freqSet, H, supportData, brl, minConf = <span class="number">0.7</span>)</span>:</span></span><br><span class="line">    m = len(H[<span class="number">0</span>])</span><br><span class="line">    <span class="keyword">if</span> (len(freqSet) &gt; (m+<span class="number">1</span>)):</span><br><span class="line">        Hmp1 = aprioriGen(H, m+<span class="number">1</span>)</span><br><span class="line">        Hmp1 = calcConf(freqSet, Hmp1, supportData, brl, minConf)</span><br><span class="line">        <span class="keyword">if</span> (len(Hmp1) &gt; <span class="number">1</span>):</span><br><span class="line">            rulesFromConseq(freqSet, Hmp1, supportData, brl, minConf)</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>执行结果</p>
@@ -391,7 +391,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -405,7 +405,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

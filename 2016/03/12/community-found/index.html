@@ -1,0 +1,813 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="奋斗在Code Farm的在校生" />
+
+
+
+  <meta name="keywords" content="Algorithms,图分割," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Forec's Notes" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="复杂网络是复杂系统的抽象，其中一个重要特征是网络中所呈现出的社区结构。许多网络是异构的，对于构成网络的不同类型节点所组成的子图称为网络中的社区。整理了几个传统的社区发现算法流程和大致原理，记录备忘。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="复杂网络传统社区发现算法概述">
+<meta property="og:url" content="http://forec.github.io/2016/03/12/community-found/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="复杂网络是复杂系统的抽象，其中一个重要特征是网络中所呈现出的社区结构。许多网络是异构的，对于构成网络的不同类型节点所组成的子图称为网络中的社区。整理了几个传统的社区发现算法流程和大致原理，记录备忘。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC2.png">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC3.png">
+<meta property="og:updated_time" content="2016-03-18T16:29:55.208Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="复杂网络传统社区发现算法概述">
+<meta name="twitter:description" content="复杂网络是复杂系统的抽象，其中一个重要特征是网络中所呈现出的社区结构。许多网络是异构的，对于构成网络的不同类型节点所组成的子图称为网络中的社区。整理了几个传统的社区发现算法流程和大致原理，记录备忘。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> 复杂网络传统社区发现算法概述 | Forec's Notes </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Forec's Notes</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              复杂网络传统社区发现算法概述
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-03-12T15:26:08+08:00" content="2016-03-12">
+            2016-03-12
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/大数据/" itemprop="url" rel="index">
+                  <span itemprop="name">大数据</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/03/12/community-found/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/12/community-found/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>复杂网络是复杂系统的抽象，其中一个重要特征是网络中所呈现出的社区结构。许多网络是异构的，对于构成网络的不同类型节点所组成的子图称为网络中的社区。整理了几个传统的社区发现算法流程和大致原理，记录备忘。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="Kerighan-Lin算法"><a href="#Kerighan-Lin算法" class="headerlink" title="Kerighan-Lin算法"></a>Kerighan-Lin算法</h1><ul>
+<li>算法为类似模拟退火式的试探优化法，采用贪婪的策略对网络进行二分社区。其复杂度仅为O(N^2)，适用于小规模的网络，但准确度不高，并且必须事先知道两个社区的规模大小。</li>
+<li>定义增益值<code>P = 两个社区内部边数 - 两个社区之间边数</code>，并寻找使P最大的划分。</li>
+<li>算法流程如下<ul>
+<li>(1) 随机将整个网络中的节点划分为两个社区A和B，其节点数分别为m和n，m和n已知。</li>
+<li>(2) 对于A和B中的每对节点<code>{(i,j), i∈A, j∈B</code>，计算将i和j交换后的<code>ΔP = 交换后的P - 交换前的P</code>。</li>
+<li>(3) 选取使ΔP最大的交换节点对并更新P值。另外，每个节点仅能交换一次。</li>
+<li>(4) 转(2)，直到A或者B二者中某个社区所有节点都已经被交换过一次。</li>
+</ul>
+</li>
+</ul>
+<h1 id="基于Laplace图特征值的社区发现方法"><a href="#基于Laplace图特征值的社区发现方法" class="headerlink" title="基于Laplace图特征值的社区发现方法"></a>基于Laplace图特征值的社区发现方法</h1><ul>
+<li><p>一个无向图G=(V,E)，矩阵D是一个对角矩阵，对角线上的元素Dii是节点i的度，矩阵W是图G的邻接矩阵。拉普拉斯矩阵<code>L = D - W</code>，因此L为对称矩阵。其规定和具有的性质如下：</p>
+<ul>
+<li>对于W，定义图中A、B两个子图间的权重为<code>W(A, B) = ∑wij, i∈A, j∈B</code>。</li>
+<li>与某个节点邻接的所有边的权值和定义为该顶点的度，即<code>di = ∑wij, i from 1 to n</code>。</li>
+<li>L是一个对称半正定矩阵</li>
+<li><code>L·vector(1) = 0·vector(1)</code>，因为<code>L·vector(1) = (D-W)·vector(1) = 0·vector(1)</code>。这里vector代表向量，也就是说L的最小特征值是0，对应的特征向量是vector(1)。</li>
+<li>L有n个非负实特征值0 = λ1 &lt;= λ2 &lt;= λ3 &lt;= … &lt;= λn</li>
+<li>对于任何一个实向量f∈R^n，有<code>2f&#39;Lf = ∑wij(fi - fj)^2, i,j from 1 to N</code>。证明如下：<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">f<span class="operator">'</span>Lf = f<span class="operator">'</span>Df - f<span class="operator">'</span>Wf </span><br><span class="line">     = ∑difi^<span class="number">2</span> - ∑fifjwij(<span class="built_in">i</span>,<span class="built_in">j</span>∈<span class="matrix">[<span class="number">1</span>,n]</span>) </span><br><span class="line">     = (∑difi^<span class="number">2</span> - <span class="number">2</span>∑fifjwij + ∑djfj^<span class="number">2</span> (<span class="built_in">i</span>,<span class="built_in">j</span>∈<span class="matrix">[<span class="number">1</span>,n]</span>))/<span class="number">2</span> </span><br><span class="line">     = (∑wij(fi-fj)^<span class="number">2</span> , <span class="built_in">i</span>,<span class="built_in">j</span>∈<span class="matrix">[<span class="number">1</span>,n]</span>)/<span class="number">2</span>`</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>切割图的目的在于 <strong>使被切掉的各边之和最小</strong> ，因为其代表着子图之间连接的相似度最低。</p>
+</li>
+<li>定义cut目标函数，式子中的~号表示对社区取反：<code>cut(A1, A2, ..., Ak) = (∑W(Ai, ~Ai), i∈[1,k])/2</code>。该目标函数可能会导致不好的分割，例如将某个图分成一个单一点和其余的n-1个点。</li>
+<li>定义RatioCut目标函数：<code>Ratiocut(A1, A2, ..., Ak) = (∑W(Ai, ~Ai)/|Ai|, i∈[1,k])/2</code>。其中|Ai|代表社区i中的节点数目。 <strong>最小化RatioCut等价于最小化f’Lf</strong> ，这里的<code>f = (f1, f2, ..., fn)∈R^n</code>，并且当节点vi∈A时，<code>fi = sqrt(|~A|/|A|)</code>，否则<code>fi = -sqrt(|A|/|~A|)</code>。根据上面提过的拉普拉斯矩阵性质，有<code>2f&#39;Lf = ∑wij(fi - fj)^2, i,j from 1 to N</code>。据此可以根据下面的推导得出，<code>min f&#39;Lf &lt;=&gt; min RatioCut</code>。<img src="http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC.png" width="500px"></li>
+<li>因为向量f是单位向量1，所以有<code>|f|^2 = ∑(fi^2) = n</code>，且<code>f&#39;·1(单位向量）= ∑(fi) = 0</code>。注意f是列向量，所以<code>f&#39;·f</code>是值，而<code>f·f&#39;</code>是一个NxN的矩阵。证明如下：<img src="http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC2.png" width="300px"><img src="http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC3.png" width="300px"></li>
+<li>假定<code>L·f = λ·f</code>，这里L是Laplace矩阵，λ是矩阵L的一个特征值，f是L对应λ的特征向量。同时左乘f’，得到<code>f&#39;·L·f = λn</code>，因为n为定值，因此最小化<code>f&#39;·L·f</code>等价于最小化λ。因此需要寻找最小的特征值λ和对应的特征向量。因为Laplace矩阵最小的特征值为0，因此取第二小的特征值。更进一步，如果求出拉普拉斯矩阵的前K个特征向量，进行k-Means聚类得到k个簇，就从二聚类拓展到了k聚类。</li>
+<li>完整的算法描述如下<ul>
+<li>构造图W，将各数据点相连，边的权重表示数据间的相似度。</li>
+<li>计算L = D - W（D为度矩阵，即W的每一列加到对角线上）</li>
+<li>求L的前k个特征值{λ1, λ2, …, λk}，并且按从小到大顺序排序，求出对应的特征向量vi，每个特征向量是一个Nx1的列向量。</li>
+<li>将这k个特征向量排成Nxk的矩阵，每一行都是k维空间中的一个向量，用k-Means聚类，聚类结果中的每一行的类别就是原来图中的节点所属类别。</li>
+</ul>
+</li>
+</ul>
+<h1 id="GN算法"><a href="#GN算法" class="headerlink" title="GN算法"></a>GN算法</h1><blockquote>
+<p>分裂算法，复杂度为O(mxmxn)，需要事先知道图中社区的数目k。</p>
+<ul>
+<li>1、计算每边的边介数，即网络上所有顶点对间的最短路径经过该边的次数。</li>
+<li>2、移除最大介数边。</li>
+<li>3、重新计算剩下边的介数。</li>
+<li>4、重复步骤2，3，直到剩下的社区个数满足指定社区数目k。</li>
+</ul>
+</blockquote>
+<h1 id="Newman快速算法"><a href="#Newman快速算法" class="headerlink" title="Newman快速算法"></a>Newman快速算法</h1><ul>
+<li>时间复杂度为O(m(m+n))，比GN算法优化较多。是凝聚算法。</li>
+<li>首先将每个节点设为一个单独的社区，选出使模块度Q增值最大的社区合并，如果网络中所有顶点属于同一个社区则停止合并（自底向上的合并方式）。此时已经构造出了一棵凝聚树，这棵树的第k层对应着第k种社区划分方式，最底层对应着每个节点为一个社区。最终通过选取模块度最大的层数作为最佳划分。</li>
+<li>模块度Q的计算如下：假设有n个节点，m条边，每一步合并对应社区数目为r，组成一个rxr的矩阵e，矩阵中eij表示社区i和社区j的结点之间连边的数目在整个网络边数中所占的百分比。</li>
+<li>流程如下：<ul>
+<li>1、初始情况下，有n个社区，m条边，若社区i（节点i）与社区j有连边，则eij=1/(2m)，否则为0。</li>
+<li>2、按照ΔQ最大或者最小的方向合并社区，并且更新合并后的模块度。这里增量<code>ΔQ = eij + eji - 2aiaj = 2(eij - aiaj)</code>，这里的<code>ai = (∑eij)/2m</code>。</li>
+<li>3、合并社区，并且修改矩阵e中的行列数。</li>
+<li>4、重复步骤2、3，合并至树根。</li>
+<li>5、计算模块度最大的社区划分。</li>
+</ul>
+</li>
+</ul>
+<h1 id="派系过滤CPM方法"><a href="#派系过滤CPM方法" class="headerlink" title="派系过滤CPM方法"></a>派系过滤CPM方法</h1><ul>
+<li>用于发现重叠社区，派系（clique）是任意两点都相连的顶点集合（完全子图）。k-派系表示网络中含有k个节点的完全子图。</li>
+<li>社区内部节点之间相互联系密切，容易形成派系，因此社区内部的边有较大可能形成大的完全子图，而社区之间的边却几乎不可能形成较大的完全子图 =&gt; 从派系寻找社区。</li>
+<li>首先寻找网络中的极大完全子图，利用这些完全子图来寻找k-派系的连通子图，不同的k值对应了不同的社区结构。</li>
+<li>建立重叠矩阵：非对角元素代表两个连通派系中共享的节点数目，对角线元素代表派系的规模。将小于k-1的非对角线元素置为0，小于k的对角线元素置为1，得到k-派系连接矩阵。注意这里的k是输入参数，对结果有影响。k越大则生成的社区越大，社区的结构就越稀疏，通常k为4-6，视网络情况而定。</li>
+<li>CPM算法基于完全子图，因此适合完全子图比较多的网络，也就是边稠密网络，其处理稀疏图的效率较低。算法效率完全取决于寻找完全子图的效率，采用<a href="http://forec.github.io/2015/09/19/Graph-Algorithms3/">离线Tarjan算法</a>会有所提高。</li>
+</ul>
+<h1 id="Radicchi算法"><a href="#Radicchi算法" class="headerlink" title="Radicchi算法"></a>Radicchi算法</h1><ul>
+<li>与GN相同，都基于去边，但不根据边介数，而引进边聚集系数，其算法复杂度为O(m^3/n^2)，适用于稀疏图。</li>
+<li>边聚集系数： <strong>一条边的两个端点和这两个端点的共同邻接点之间的另外两边所组成的三角环与可能包含该边的三角环数的比值</strong>，即：<code>Cij = Zij/min(ki-1,kj-1)</code>，这里ki，kj是端点i和j的度，公式中的分母表示该边可能被包含的三角环的最大数，Zij表示网络中包含该边的三角环的实际数目。</li>
+<li>如果网络中的一个三角环中含有一条连接不同社区的边，则该三角环中剩余的两边中还有一条连接同样两社区的可能性较大（因为具有社区结构的网络图中，社区之间的边较为稀少，因此包含一条给定的社区间脸变得三角形不会很多，即连接不同社区边的边聚集系数很小）。 =&gt; 每一步删掉具有最小边聚集系数的边，并重新计算剩余边的边聚集系数（这里只需要重新计算和删除掉的边有关联的边的边聚集系数），循环至网络中不存在任何边。</li>
+<li>算法仅适用于三角环数较多的，如社会网络等。</li>
+</ul>
+<h1 id="基于点聚集的局部算法"><a href="#基于点聚集的局部算法" class="headerlink" title="基于点聚集的局部算法"></a>基于点聚集的局部算法</h1><ul>
+<li>定义连接相关度：<code>ΔC(ε, j) = C1(j) - C2(j)</code>，这里C1(j)指节点j的点聚集系数，C2(j)指去除社区ε内部的所有边以及与其相关联的所有边之后，节点j的点聚集系数。</li>
+<li>定义点聚集系数：一个节点的不同邻接点互为邻接点的概率，公式为<code>C(i) = 2E(i)/(ki(ki-1))</code>，这里ki是节点i的度，E(i)是与节点i邻接的节点之间的实际连边。整个网络ε的点聚集系数定义为<code>C(ε) = ∑C(i)/N</code>。</li>
+<li>上面定义的连接相关度用来衡量某个社区ε对其邻接点的影响力大小。如果社区ε的一个邻接点x和x的邻接点间主要通过ε通信，则ε对x有重要影响，x趋向于成为ε的一员。</li>
+<li>以下是社区归纳点的几个约定<ul>
+<li>如果节点x有一半以上的邻接点再ε中，则x∈ε。</li>
+<li>如果C(ε)=1，这意味着ε和它的邻接点们构成连通分量，则该ε的所有邻接点∈ε。</li>
+<li>如果该ε的一个邻接点j有C(j)=1，则j和j的邻接点都∈ε。</li>
+<li>如果ε的邻接点j有C(j) &gt; C(ε)。并且ΔC(ε,j)是ε的所有邻接点中最大非负值，则j∈ε。</li>
+</ul>
+</li>
+<li>完整流程如下<ul>
+<li>以图中某个节点作为局部社区的初始状态，不断寻找j加入社区并update，直到没有符合条件的点，结束局部社区。</li>
+<li>当所有局部社区形成后，分别计算每个社区的内度和外度，将内度小于外度的社区ε合并到与ε最紧密的社区中，直到所有社区都有内度&gt;外度。</li>
+<li>算法缺点是受到代表社区的初始节点影响比较大。</li>
+</ul>
+</li>
+</ul>
+<h1 id="衡量网络分解：模块度"><a href="#衡量网络分解：模块度" class="headerlink" title="衡量网络分解：模块度"></a>衡量网络分解：模块度</h1><ul>
+<li>设网络分裂为g个社区，定义gxg的矩阵e，其eij表示原网络中连接社区i和社区j中节点的边数在所有边中所占比例。e的迹表示网络中同一社区中节点的边占所有边的比例。<code>ai = ∑eij</code>表示连接社区i的边所占比例。有<code>Q = Tre - ||e||^2</code>，<code>∑(ai^2) = ∑(∑(eij·ejk)) = ||e||^2</code>。</li>
+</ul>
+<hr>
+<blockquote>
+<p>参考博客和资料如下：</p>
+<ul>
+<li><a href="http://blog.csdn.net/v_july_v/article/details/40738211" target="_blank" rel="external">July的博文《从拉普拉斯矩阵说到谱聚类》</a></li>
+<li><a href="http://blog.csdn.net/myan/article/details/1865397" target="_blank" rel="external">孟岩的博文《理解矩阵（一）（二）（三）》</a></li>
+<li><a href="http://engr.case.edu/ray_soumya/mlrg/Luxburg07_tutorial_spectral_clustering.pdf" target="_blank" rel="external">A Tutorial on Spectral Clustering</a></li>
+<li><a href="http://liuzhiqiangruc.iteye.com/blog/2117144" target="_blank" rel="external">谱聚类的算法实现</a></li>
+<li><a href="http://wenku.baidu.com/link?url=0la9WTtNcZNOV7A0zJmJPXx1XRK935PLZAJyKuGhK5h0vzVToyjdK9mW9eMv2tRc3o3-XFp-73aDn4YldFTpzL5cHigU6C6c9n0Kk33Z8wC&amp;qq-pf-to=pcqq.group" target="_blank" rel="external">复杂网络的社区发现算法研究</a></li>
+</ul>
+</blockquote>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/03/12/community-found/">原始出处</a>(<a href="http://forec.github.io/2016/03/12/community-found/">http://forec.github.io/2016/03/12/community-found/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Algorithms/" rel="tag">#Algorithms</a>
+          
+            <a href="/tags/图分割/" rel="tag">#图分割</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/29/bugs-for-using-linux/" rel="next">Linux各发行版配置备忘</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/03/12/community-found/"
+                   data-title="复杂网络传统社区发现算法概述" data-url="http://forec.github.io/2016/03/12/community-found/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Forec</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/forec" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Kerighan-Lin算法"><span class="nav-number">1.</span> <span class="nav-text">Kerighan-Lin算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于Laplace图特征值的社区发现方法"><span class="nav-number">2.</span> <span class="nav-text">基于Laplace图特征值的社区发现方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GN算法"><span class="nav-number">3.</span> <span class="nav-text">GN算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Newman快速算法"><span class="nav-number">4.</span> <span class="nav-text">Newman快速算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#派系过滤CPM方法"><span class="nav-number">5.</span> <span class="nav-text">派系过滤CPM方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Radicchi算法"><span class="nav-number">6.</span> <span class="nav-text">Radicchi算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于点聚集的局部算法"><span class="nav-number">7.</span> <span class="nav-text">基于点聚集的局部算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#衡量网络分解：模块度"><span class="nav-number">8.</span> <span class="nav-text">衡量网络分解：模块度</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forec</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"forec"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+    });
+  </script>
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
