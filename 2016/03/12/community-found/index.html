@@ -48,7 +48,7 @@
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC.png">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC2.png">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC3.png">
-<meta property="og:updated_time" content="2016-03-18T16:29:55.208Z">
+<meta property="og:updated_time" content="2016-03-19T08:41:15.004Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="复杂网络传统社区发现算法概述">
 <meta name="twitter:description" content="复杂网络是复杂系统的抽象，其中一个重要特征是网络中所呈现出的社区结构。许多网络是异构的，对于构成网络的不同类型节点所组成的子图称为网络中的社区。整理了几个传统的社区发现算法流程和大致原理，记录备忘。">
@@ -290,13 +290,13 @@
 </ul>
 <h1 id="GN算法"><a href="#GN算法" class="headerlink" title="GN算法"></a>GN算法</h1><blockquote>
 <p>分裂算法，复杂度为O(mxmxn)，需要事先知道图中社区的数目k。</p>
+</blockquote>
 <ul>
 <li>1、计算每边的边介数，即网络上所有顶点对间的最短路径经过该边的次数。</li>
 <li>2、移除最大介数边。</li>
 <li>3、重新计算剩下边的介数。</li>
 <li>4、重复步骤2，3，直到剩下的社区个数满足指定社区数目k。</li>
 </ul>
-</blockquote>
 <h1 id="Newman快速算法"><a href="#Newman快速算法" class="headerlink" title="Newman快速算法"></a>Newman快速算法</h1><ul>
 <li>时间复杂度为O(m(m+n))，比GN算法优化较多。是凝聚算法。</li>
 <li>首先将每个节点设为一个单独的社区，选出使模块度Q增值最大的社区合并，如果网络中所有顶点属于同一个社区则停止合并（自底向上的合并方式）。此时已经构造出了一棵凝聚树，这棵树的第k层对应着第k种社区划分方式，最底层对应着每个节点为一个社区。最终通过选取模块度最大的层数作为最佳划分。</li>
@@ -347,14 +347,15 @@
 <hr>
 <blockquote>
 <p>参考博客和资料如下：</p>
+</blockquote>
 <ul>
 <li><a href="http://blog.csdn.net/v_july_v/article/details/40738211" target="_blank" rel="external">July的博文《从拉普拉斯矩阵说到谱聚类》</a></li>
 <li><a href="http://blog.csdn.net/myan/article/details/1865397" target="_blank" rel="external">孟岩的博文《理解矩阵（一）（二）（三）》</a></li>
 <li><a href="http://engr.case.edu/ray_soumya/mlrg/Luxburg07_tutorial_spectral_clustering.pdf" target="_blank" rel="external">A Tutorial on Spectral Clustering</a></li>
 <li><a href="http://liuzhiqiangruc.iteye.com/blog/2117144" target="_blank" rel="external">谱聚类的算法实现</a></li>
 <li><a href="http://wenku.baidu.com/link?url=0la9WTtNcZNOV7A0zJmJPXx1XRK935PLZAJyKuGhK5h0vzVToyjdK9mW9eMv2tRc3o3-XFp-73aDn4YldFTpzL5cHigU6C6c9n0Kk33Z8wC&amp;qq-pf-to=pcqq.group" target="_blank" rel="external">复杂网络的社区发现算法研究</a></li>
+<li><a href="http://www.docin.com/p-886876763.html" target="_blank" rel="external">基于点聚集系数和边聚集系数的社区发现算法</a></li>
 </ul>
-</blockquote>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/03/12/community-found/">原始出处</a>(<a href="http://forec.github.io/2016/03/12/community-found/">http://forec.github.io/2016/03/12/community-found/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
       
