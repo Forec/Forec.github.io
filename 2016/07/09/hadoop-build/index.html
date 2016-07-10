@@ -48,7 +48,7 @@
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/overview.png">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/directory.png">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/yarn.png">
-<meta property="og:updated_time" content="2016-07-09T14:41:26.736Z">
+<meta property="og:updated_time" content="2016-07-10T13:04:34.937Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop配置和使用">
 <meta name="twitter:description" content="简单记录在Ubuntu Linux上搭建本地伪分布式的Hadoop MapReduce集群过程及使用方法。">
@@ -314,6 +314,7 @@
 <blockquote>
 <p>需要注意，在伪分布式的hadoop上执行MapReduce任务时，需ssh到localhost，之后在8088端口才能看到作业记录。</p>
 </blockquote>
+<hr>
 <h1 id="完整的hadoop作业运行示例"><a href="#完整的hadoop作业运行示例" class="headerlink" title="完整的hadoop作业运行示例"></a>完整的hadoop作业运行示例</h1><ul>
 <li>安装并配置好hadoop，执行<code>$ sbin/start-yarn.sh</code>和<code>$ sbin/start-dfs.sh</code>。</li>
 <li><p>一段简单的java代码如下，export出的jar包可在hadoop上执行MapReduce作业。使用eclipse或idea时，需要导入SDK、JDK和scala-hadoop-assembly包。</p>
@@ -341,6 +342,8 @@
       
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/10/python-visit-access-database/" rel="prev">Python3操作Access数据库</a>
             
           </div>
 
@@ -412,7 +415,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -426,7 +429,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
