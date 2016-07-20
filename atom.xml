@@ -476,7 +476,7 @@
     <link href="http://forec.github.io/2016/02/29/bugs-for-using-linux/"/>
     <id>http://forec.github.io/2016/02/29/bugs-for-using-linux/</id>
     <published>2016-02-29T11:42:03.000Z</published>
-    <updated>2016-07-04T12:41:48.153Z</updated>
+    <updated>2016-07-20T03:04:15.715Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;不定期整理在使用各类linux发行版时的配置，以及遇到的各类问题的解决方案。&lt;/p&gt;
@@ -547,6 +547,11 @@
 &lt;li&gt;最新版本&lt;code&gt;http://tcpdump.org/release&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;解压后进入目录，&lt;code&gt;./configure&lt;/code&gt;过程可能缺少flex，之后&lt;code&gt;make&lt;/code&gt;过程可能缺少yacc（&lt;code&gt;sudo apt-get install -y byacc&lt;/code&gt;），均需安装。&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;make install&lt;/code&gt;后运行二进制文件会提示缺少链接库，需从&lt;code&gt;/usr/lib/x86_64-linux-gnu&lt;/code&gt;下拷贝&lt;code&gt;libpcap.so.1.x.x&lt;/code&gt;并重命名为&lt;code&gt;libpcap.so.1&lt;/code&gt;保存至&lt;code&gt;/usr/lib&lt;/code&gt;下。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;为Firefox安装Adobe-Flash-Player&quot;&gt;&lt;a href=&quot;#为Firefox安装Adobe-Flash-Player&quot; class=&quot;headerlink&quot; title=&quot;为Firefox安装Adobe Flash Player&quot;&gt;&lt;/a&gt;为Firefox安装Adobe Flash Player&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;从&lt;code&gt;https://get.adobe.com/cn/&lt;/code&gt;获取&lt;code&gt;.tar.gz&lt;/code&gt;格式的安装包。&lt;/li&gt;
+&lt;li&gt;解压&lt;code&gt;install_flash_player_11_linux.x86_64.tar.gz&lt;/code&gt;到某目录下，得到&lt;code&gt;libflashplayer.so&lt;/code&gt;，将该文件复制到Firefox的插件目录下，通常在&lt;code&gt;/usr/lib/mozilla/plugins/&lt;/code&gt;，复制后chmod 777。&lt;/li&gt;
+&lt;li&gt;将解压出来的usr目录下所有内容拷贝到系统usr目录下，&lt;code&gt;cp -r ./usr/* /usr/&lt;/code&gt;。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/02/29/bugs-for-using-linux/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/02/29/bugs-for-using-linux/&quot;&gt;http://forec.github.io/2016/02/29/bugs-for-using-linux/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
