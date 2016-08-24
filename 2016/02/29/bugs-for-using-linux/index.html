@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="OS," />
+  <meta name="keywords" content="Emacs,OS," />
 
 
 
@@ -41,13 +41,13 @@
 
 <meta name="description" content="不定期整理在使用各类linux发行版时的配置，以及遇到的各类问题的解决方案。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux各发行版配置备忘">
+<meta property="og:title" content="Linux各发行版及Emacs配置备忘">
 <meta property="og:url" content="http://forec.github.io/2016/02/29/bugs-for-using-linux/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="不定期整理在使用各类linux发行版时的配置，以及遇到的各类问题的解决方案。">
-<meta property="og:updated_time" content="2016-07-20T03:04:15.715Z">
+<meta property="og:updated_time" content="2016-08-24T15:00:23.011Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux各发行版配置备忘">
+<meta name="twitter:title" content="Linux各发行版及Emacs配置备忘">
 <meta name="twitter:description" content="不定期整理在使用各类linux发行版时的配置，以及遇到的各类问题的解决方案。">
 
 
@@ -58,7 +58,7 @@
   };
 </script>
 
-  <title> Linux各发行版配置备忘 | Forec's Notes </title>
+  <title> Linux各发行版及Emacs配置备忘 | Forec's Notes </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -194,7 +194,7 @@
           
           
             
-              Linux各发行版配置备忘
+              Linux各发行版及Emacs配置备忘
             
           
         </h1>
@@ -319,6 +319,54 @@
 <li>解压<code>install_flash_player_11_linux.x86_64.tar.gz</code>到某目录下，得到<code>libflashplayer.so</code>，将该文件复制到Firefox的插件目录下，通常在<code>/usr/lib/mozilla/plugins/</code>，复制后chmod 777。</li>
 <li>将解压出来的usr目录下所有内容拷贝到系统usr目录下，<code>cp -r ./usr/* /usr/</code>。</li>
 </ul>
+<h2 id="开机挂载非EXT分区-1"><a href="#开机挂载非EXT分区-1" class="headerlink" title="开机挂载非EXT分区"></a>开机挂载非EXT分区</h2><ul>
+<li>Ubuntu 12.10后挂载的分区记录在/dev/下，分区默认挂载点在<code>/media/&lt;username&gt;/&lt;device&gt;</code>。</li>
+<li>在<code>/media/&lt;username&gt;</code>下新建文件夹如Professional，<code>fdisk -l</code>查看所有分区</li>
+<li>如对应分区为/dev/sdb4，挂载到Professional，则<code>mount -t fstype /dev/sdb4 /media/forec/Professional</code>。挂载点可变。<code>-t</code>指定挂载的文件系统类型，常用的有<ul>
+<li>minix Linux最早使用的文件系统。</li>
+<li>ext2 Linux目前的常用文件系统。</li>
+<li>msdos MS-DOS 的 FAT。</li>
+<li>vfat Win85/98 的 VFAT。</li>
+<li>nfs 网络文件系统。</li>
+<li>iso9660 CD-ROM光盘的标准文件系统。</li>
+<li>ntfs Windows NT的文件系统。</li>
+<li>hpfs OS/2文件系统。Windows NT 3.51之前版本的文件系统。</li>
+<li>auto 自动检测文件系统。</li>
+</ul>
+</li>
+<li>可将经常使用的设备写入文件<code>/etc/fastab</code>,以使系统在每次启动时自动加载。mount加载设备的信息记录在<code>/etc/mtab</code>文件中。使用umount命令卸载设备时，记录将被清除。</li>
+<li><code>sudo blkid</code>查看分区UUID，编辑/etc/fstab，在文件末尾加入<code>UUID=********** /media/forec/Professional ntfs defaults 0 1</code>，ntfs随分区格式改变</li>
+</ul>
+<h2 id="安装Google-Chrome"><a href="#安装Google-Chrome" class="headerlink" title="安装Google Chrome"></a>安装Google Chrome</h2><ul>
+<li>可从<a href="https://www.google.com/intl/en/chrome/browser/" target="_blank" rel="external">此处</a>下载Chrome，或使用wget下载，32位地址为<code>https://dl.google.com/linux/direct/google-chrome-stable_current_i386.deb</code>，64位地址为<code>https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb</code>。</li>
+<li>下载完成后解包安装，<code>sudo dpkg -i google-chrome-stable_current_amd64.deb</code>，可能出现缺少依赖项类的error。</li>
+<li><code>sudo apt-get -f install</code>，处理error并安装chrome。</li>
+<li>从终端输入<code>google-chrome link_you_want</code>可从chrome访问网址，或从启动器启动。</li>
+</ul>
+<h1 id="Emacs"><a href="#Emacs" class="headerlink" title="Emacs"></a>Emacs</h1><h2 id="Golang的代码跳转和补全"><a href="#Golang的代码跳转和补全" class="headerlink" title="Golang的代码跳转和补全"></a>Golang的代码跳转和补全</h2><ul>
+<li>在emacs24中安装<a href="https://github.com/dominikh/go-mode.el" target="_blank" rel="external">go-mode</a>，可通过<a href="http://ergoemacs.org/emacs/emacs_package_system.html" target="_blank" rel="external">ELPA</a>或根据链接中的介绍手动安装。</li>
+<li>在emacs24中安装auto-complete插件。</li>
+<li>设置环境变量GOPATH和GOBIN，GOBIN可设为<code>/usr/local/bin</code>。</li>
+<li>安装godef，<code>go get github.com/rogpeppe/godef</code>，<code>sudo go install github.com/rogpeppe/godef</code>，godef也可从<a href="http://code.google.com/p/rog-go/exp/cmd/godef" target="_blank" rel="external">此处</a>获取。代码释义为<code>M-x godef-describe</code>或<code>C-c C-d</code>，代码跳转为<code>M-x godef-jump</code>或<code>C-c C-j</code>，代码返回为<code>M-*</code>。</li>
+<li>安装gocode，<code>go get github.com/nsf/gocode</code>，<code>sudo go install github.com/nsf/gocode</code>。</li>
+<li>修改<code>.emacs</code>，增加<code>load-path</code>：<code>(add-to-list &#39;load-path &quot;~/.emacs.d/path/to/load-path&quot;)</code></li>
+<li>将文件<code>$GOPATH/github.com/nsf/gocode/emacs/go-autocomplete.el</code>拷贝到$load-path目录下</li>
+<li><p>修改<code>.emacs</code></p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="list">(<span class="keyword">require</span> <span class="quoted">'go-autocomplete</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">require</span> <span class="quoted">'auto-complete-config</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">ac-config-default</span>)</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改<code>.emacs</code>，使保存文件时gofmt：<code>(add-hook &#39;before-save-hook #&#39;gofmt-before-save)</code></p>
+</li>
+</ul>
+<h2 id="颜色关键词高亮与背景色"><a href="#颜色关键词高亮与背景色" class="headerlink" title="颜色关键词高亮与背景色"></a>颜色关键词高亮与背景色</h2><ul>
+<li>安装rainbow-mode，可从<a href="http://git.savannah.gnu.org/cgit/emacs/elpa.git/tree/packages/rainbow-mode" target="_blank" rel="external">此处</a>下载，或在melpa stable下载。</li>
+<li>在<code>.emacs</code>中增加hook使默认激活该模式，或启动后M-x rainbow-mode激活。<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="list">(<span class="keyword">add-to-list</span> <span class="variable">'load-path</span> <span class="string">"~/.emacs.d/path-to-rainbow-mode/"</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword"><span class="built_in">require</span></span> <span class="variable">'rainbow-mode</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">add-hook</span> <span class="variable">'prog-mode-hook</span> <span class="variable">'rainbow-mode</span>)</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Markdown-mode"><a href="#Markdown-mode" class="headerlink" title="Markdown-mode"></a>Markdown-mode</h2><ul>
+<li>参考 <a href="http://jblevins.org/projects/markdown-mode/" target="_blank" rel="external">Emacs Markdown Mode</a>。</li>
+<li>设置后缀关联<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="list">(<span class="keyword">autoload</span> <span class="quoted">'markdown-mode</span> <span class="string">"markdown-mode"</span></span><br><span class="line">   <span class="string">"Major mode for editing Markdown files"</span> <span class="literal">t</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">add-to-list</span> <span class="quoted">'auto-mode-alist</span> <span class="quoted">'(<span class="string">"\\.markdown\\'"</span> . markdown-mode)</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">add-to-list</span> <span class="quoted">'auto-mode-alist</span> <span class="quoted">'(<span class="string">"\\.md\\'"</span> . markdown-mode)</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="list">(<span class="keyword">autoload</span> <span class="quoted">'gfm-mode</span> <span class="string">"gfm-mode"</span></span><br><span class="line">   <span class="string">"Major mode for editing GitHub Flavored Markdown files"</span> <span class="literal">t</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">add-to-list</span> <span class="quoted">'auto-mode-alist</span> <span class="quoted">'(<span class="string">"README\\.md\\'"</span> . gfm-mode)</span>)</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 <hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/02/29/bugs-for-using-linux/">原始出处</a>(<a href="http://forec.github.io/2016/02/29/bugs-for-using-linux/">http://forec.github.io/2016/02/29/bugs-for-using-linux/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
@@ -328,6 +376,8 @@
     <footer class="post-footer">
       
         <div class="post-tags">
+          
+            <a href="/tags/Emacs/" rel="tag">#Emacs</a>
           
             <a href="/tags/OS/" rel="tag">#OS</a>
           
@@ -370,7 +420,7 @@
           <div class="comments" id="comments">
             
               <div class="ds-thread" data-thread-key="2016/02/29/bugs-for-using-linux/"
-                   data-title="Linux各发行版配置备忘" data-url="http://forec.github.io/2016/02/29/bugs-for-using-linux/">
+                   data-title="Linux各发行版及Emacs配置备忘" data-url="http://forec.github.io/2016/02/29/bugs-for-using-linux/">
               </div>
             
           </div>
@@ -424,7 +474,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">16</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -484,7 +534,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Fedora"><span class="nav-number">1.</span> <span class="nav-text">Fedora</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mysql5-1以上版本中文编码"><span class="nav-number">1.1.</span> <span class="nav-text">Mysql5.1以上版本中文编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#apache服务器配置"><span class="nav-number">1.2.</span> <span class="nav-text">apache服务器配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开机挂载非EXT分区"><span class="nav-number">1.3.</span> <span class="nav-text">开机挂载非EXT分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sqlite3API编译"><span class="nav-number">1.4.</span> <span class="nav-text">sqlite3API编译</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu"><span class="nav-number">2.</span> <span class="nav-text">Ubuntu</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Topcoder"><span class="nav-number">2.1.</span> <span class="nav-text">安装Topcoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装matlab"><span class="nav-number">2.2.</span> <span class="nav-text">安装matlab</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改环境变量"><span class="nav-number">2.3.</span> <span class="nav-text">修改环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装LaTex"><span class="nav-number">2.4.</span> <span class="nav-text">安装LaTex</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hexo等工程需要更新nodejs"><span class="nav-number">2.5.</span> <span class="nav-text">hexo等工程需要更新nodejs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装libpcap库"><span class="nav-number">2.6.</span> <span class="nav-text">安装libpcap库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为Firefox安装Adobe-Flash-Player"><span class="nav-number">2.7.</span> <span class="nav-text">为Firefox安装Adobe Flash Player</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Fedora"><span class="nav-number">1.</span> <span class="nav-text">Fedora</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mysql5-1以上版本中文编码"><span class="nav-number">1.1.</span> <span class="nav-text">Mysql5.1以上版本中文编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#apache服务器配置"><span class="nav-number">1.2.</span> <span class="nav-text">apache服务器配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开机挂载非EXT分区"><span class="nav-number">1.3.</span> <span class="nav-text">开机挂载非EXT分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sqlite3API编译"><span class="nav-number">1.4.</span> <span class="nav-text">sqlite3API编译</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu"><span class="nav-number">2.</span> <span class="nav-text">Ubuntu</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Topcoder"><span class="nav-number">2.1.</span> <span class="nav-text">安装Topcoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装matlab"><span class="nav-number">2.2.</span> <span class="nav-text">安装matlab</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改环境变量"><span class="nav-number">2.3.</span> <span class="nav-text">修改环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装LaTex"><span class="nav-number">2.4.</span> <span class="nav-text">安装LaTex</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hexo等工程需要更新nodejs"><span class="nav-number">2.5.</span> <span class="nav-text">hexo等工程需要更新nodejs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装libpcap库"><span class="nav-number">2.6.</span> <span class="nav-text">安装libpcap库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为Firefox安装Adobe-Flash-Player"><span class="nav-number">2.7.</span> <span class="nav-text">为Firefox安装Adobe Flash Player</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开机挂载非EXT分区-1"><span class="nav-number">2.8.</span> <span class="nav-text">开机挂载非EXT分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Google-Chrome"><span class="nav-number">2.9.</span> <span class="nav-text">安装Google Chrome</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Emacs"><span class="nav-number">3.</span> <span class="nav-text">Emacs</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Golang的代码跳转和补全"><span class="nav-number">3.1.</span> <span class="nav-text">Golang的代码跳转和补全</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#颜色关键词高亮与背景色"><span class="nav-number">3.2.</span> <span class="nav-text">颜色关键词高亮与背景色</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Markdown-mode"><span class="nav-number">3.3.</span> <span class="nav-text">Markdown-mode</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

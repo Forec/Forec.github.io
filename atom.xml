@@ -472,11 +472,11 @@
   </entry>
   
   <entry>
-    <title>Linux各发行版配置备忘</title>
+    <title>Linux各发行版及Emacs配置备忘</title>
     <link href="http://forec.github.io/2016/02/29/bugs-for-using-linux/"/>
     <id>http://forec.github.io/2016/02/29/bugs-for-using-linux/</id>
     <published>2016-02-29T11:42:03.000Z</published>
-    <updated>2016-07-20T03:04:15.715Z</updated>
+    <updated>2016-08-24T15:00:23.011Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;不定期整理在使用各类linux发行版时的配置，以及遇到的各类问题的解决方案。&lt;/p&gt;
@@ -553,6 +553,54 @@
 &lt;li&gt;解压&lt;code&gt;install_flash_player_11_linux.x86_64.tar.gz&lt;/code&gt;到某目录下，得到&lt;code&gt;libflashplayer.so&lt;/code&gt;，将该文件复制到Firefox的插件目录下，通常在&lt;code&gt;/usr/lib/mozilla/plugins/&lt;/code&gt;，复制后chmod 777。&lt;/li&gt;
 &lt;li&gt;将解压出来的usr目录下所有内容拷贝到系统usr目录下，&lt;code&gt;cp -r ./usr/* /usr/&lt;/code&gt;。&lt;/li&gt;
 &lt;/ul&gt;
+&lt;h2 id=&quot;开机挂载非EXT分区-1&quot;&gt;&lt;a href=&quot;#开机挂载非EXT分区-1&quot; class=&quot;headerlink&quot; title=&quot;开机挂载非EXT分区&quot;&gt;&lt;/a&gt;开机挂载非EXT分区&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Ubuntu 12.10后挂载的分区记录在/dev/下，分区默认挂载点在&lt;code&gt;/media/&amp;lt;username&amp;gt;/&amp;lt;device&amp;gt;&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;在&lt;code&gt;/media/&amp;lt;username&amp;gt;&lt;/code&gt;下新建文件夹如Professional，&lt;code&gt;fdisk -l&lt;/code&gt;查看所有分区&lt;/li&gt;
+&lt;li&gt;如对应分区为/dev/sdb4，挂载到Professional，则&lt;code&gt;mount -t fstype /dev/sdb4 /media/forec/Professional&lt;/code&gt;。挂载点可变。&lt;code&gt;-t&lt;/code&gt;指定挂载的文件系统类型，常用的有&lt;ul&gt;
+&lt;li&gt;minix Linux最早使用的文件系统。&lt;/li&gt;
+&lt;li&gt;ext2 Linux目前的常用文件系统。&lt;/li&gt;
+&lt;li&gt;msdos MS-DOS 的 FAT。&lt;/li&gt;
+&lt;li&gt;vfat Win85/98 的 VFAT。&lt;/li&gt;
+&lt;li&gt;nfs 网络文件系统。&lt;/li&gt;
+&lt;li&gt;iso9660 CD-ROM光盘的标准文件系统。&lt;/li&gt;
+&lt;li&gt;ntfs Windows NT的文件系统。&lt;/li&gt;
+&lt;li&gt;hpfs OS/2文件系统。Windows NT 3.51之前版本的文件系统。&lt;/li&gt;
+&lt;li&gt;auto 自动检测文件系统。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;可将经常使用的设备写入文件&lt;code&gt;/etc/fastab&lt;/code&gt;,以使系统在每次启动时自动加载。mount加载设备的信息记录在&lt;code&gt;/etc/mtab&lt;/code&gt;文件中。使用umount命令卸载设备时，记录将被清除。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo blkid&lt;/code&gt;查看分区UUID，编辑/etc/fstab，在文件末尾加入&lt;code&gt;UUID=********** /media/forec/Professional ntfs defaults 0 1&lt;/code&gt;，ntfs随分区格式改变&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;安装Google-Chrome&quot;&gt;&lt;a href=&quot;#安装Google-Chrome&quot; class=&quot;headerlink&quot; title=&quot;安装Google Chrome&quot;&gt;&lt;/a&gt;安装Google Chrome&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;可从&lt;a href=&quot;https://www.google.com/intl/en/chrome/browser/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;此处&lt;/a&gt;下载Chrome，或使用wget下载，32位地址为&lt;code&gt;https://dl.google.com/linux/direct/google-chrome-stable_current_i386.deb&lt;/code&gt;，64位地址为&lt;code&gt;https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;下载完成后解包安装，&lt;code&gt;sudo dpkg -i google-chrome-stable_current_amd64.deb&lt;/code&gt;，可能出现缺少依赖项类的error。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo apt-get -f install&lt;/code&gt;，处理error并安装chrome。&lt;/li&gt;
+&lt;li&gt;从终端输入&lt;code&gt;google-chrome link_you_want&lt;/code&gt;可从chrome访问网址，或从启动器启动。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;Emacs&quot;&gt;&lt;a href=&quot;#Emacs&quot; class=&quot;headerlink&quot; title=&quot;Emacs&quot;&gt;&lt;/a&gt;Emacs&lt;/h1&gt;&lt;h2 id=&quot;Golang的代码跳转和补全&quot;&gt;&lt;a href=&quot;#Golang的代码跳转和补全&quot; class=&quot;headerlink&quot; title=&quot;Golang的代码跳转和补全&quot;&gt;&lt;/a&gt;Golang的代码跳转和补全&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;在emacs24中安装&lt;a href=&quot;https://github.com/dominikh/go-mode.el&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;go-mode&lt;/a&gt;，可通过&lt;a href=&quot;http://ergoemacs.org/emacs/emacs_package_system.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ELPA&lt;/a&gt;或根据链接中的介绍手动安装。&lt;/li&gt;
+&lt;li&gt;在emacs24中安装auto-complete插件。&lt;/li&gt;
+&lt;li&gt;设置环境变量GOPATH和GOBIN，GOBIN可设为&lt;code&gt;/usr/local/bin&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;安装godef，&lt;code&gt;go get github.com/rogpeppe/godef&lt;/code&gt;，&lt;code&gt;sudo go install github.com/rogpeppe/godef&lt;/code&gt;，godef也可从&lt;a href=&quot;http://code.google.com/p/rog-go/exp/cmd/godef&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;此处&lt;/a&gt;获取。代码释义为&lt;code&gt;M-x godef-describe&lt;/code&gt;或&lt;code&gt;C-c C-d&lt;/code&gt;，代码跳转为&lt;code&gt;M-x godef-jump&lt;/code&gt;或&lt;code&gt;C-c C-j&lt;/code&gt;，代码返回为&lt;code&gt;M-*&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;安装gocode，&lt;code&gt;go get github.com/nsf/gocode&lt;/code&gt;，&lt;code&gt;sudo go install github.com/nsf/gocode&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;修改&lt;code&gt;.emacs&lt;/code&gt;，增加&lt;code&gt;load-path&lt;/code&gt;：&lt;code&gt;(add-to-list &amp;#39;load-path &amp;quot;~/.emacs.d/path/to/load-path&amp;quot;)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;将文件&lt;code&gt;$GOPATH/github.com/nsf/gocode/emacs/go-autocomplete.el&lt;/code&gt;拷贝到$load-path目录下&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;修改&lt;code&gt;.emacs&lt;/code&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight lisp&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;go-autocomplete&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;auto-complete-config&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;ac-config-default&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;修改&lt;code&gt;.emacs&lt;/code&gt;，使保存文件时gofmt：&lt;code&gt;(add-hook &amp;#39;before-save-hook #&amp;#39;gofmt-before-save)&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;颜色关键词高亮与背景色&quot;&gt;&lt;a href=&quot;#颜色关键词高亮与背景色&quot; class=&quot;headerlink&quot; title=&quot;颜色关键词高亮与背景色&quot;&gt;&lt;/a&gt;颜色关键词高亮与背景色&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;安装rainbow-mode，可从&lt;a href=&quot;http://git.savannah.gnu.org/cgit/emacs/elpa.git/tree/packages/rainbow-mode&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;此处&lt;/a&gt;下载，或在melpa stable下载。&lt;/li&gt;
+&lt;li&gt;在&lt;code&gt;.emacs&lt;/code&gt;中增加hook使默认激活该模式，或启动后M-x rainbow-mode激活。&lt;figure class=&quot;highlight scheme&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;&#39;load-path&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;~/.emacs.d/path-to-rainbow-mode/&quot;&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;require&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;&#39;rainbow-mode&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;&#39;prog-mode-hook&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;&#39;rainbow-mode&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;Markdown-mode&quot;&gt;&lt;a href=&quot;#Markdown-mode&quot; class=&quot;headerlink&quot; title=&quot;Markdown-mode&quot;&gt;&lt;/a&gt;Markdown-mode&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;参考 &lt;a href=&quot;http://jblevins.org/projects/markdown-mode/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Emacs Markdown Mode&lt;/a&gt;。&lt;/li&gt;
+&lt;li&gt;设置后缀关联&lt;figure class=&quot;highlight lisp&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;autoload&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;markdown-mode&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;markdown-mode&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   &lt;span class=&quot;string&quot;&gt;&quot;Major mode for editing Markdown files&quot;&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;t&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;auto-mode-alist&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;(&lt;span class=&quot;string&quot;&gt;&quot;\\.markdown\\&#39;&quot;&lt;/span&gt; . markdown-mode)&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;auto-mode-alist&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;(&lt;span class=&quot;string&quot;&gt;&quot;\\.md\\&#39;&quot;&lt;/span&gt; . markdown-mode)&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;autoload&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;gfm-mode&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;gfm-mode&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   &lt;span class=&quot;string&quot;&gt;&quot;Major mode for editing GitHub Flavored Markdown files&quot;&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;t&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;auto-mode-alist&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;(&lt;span class=&quot;string&quot;&gt;&quot;README\\.md\\&#39;&quot;&lt;/span&gt; . gfm-mode)&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;hr&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/02/29/bugs-for-using-linux/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/02/29/bugs-for-using-linux/&quot;&gt;http://forec.github.io/2016/02/29/bugs-for-using-linux/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
@@ -567,6 +615,8 @@
     
       <category term="OS" scheme="http://forec.github.io/categories/OS/"/>
     
+    
+      <category term="Emacs" scheme="http://forec.github.io/tags/Emacs/"/>
     
       <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
     
