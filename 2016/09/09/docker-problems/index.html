@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://forec.github.io/2016/09/09/docker-problems/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理Docker的配置，以及遇到问题的解决方案。">
-<meta property="og:updated_time" content="2016-09-08T16:51:11.053Z">
+<meta property="og:updated_time" content="2016-09-09T08:51:07.075Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker配置策略备忘">
 <meta name="twitter:description" content="整理Docker的配置，以及遇到问题的解决方案。">
@@ -263,12 +263,24 @@
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">registry-mirrors</span>": <span class="value">[<span class="string">"https://docker.mirrors.ustc.edu.cn"</span>]</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
+<h1 id="Windows下更改Docker的虚拟机、镜像位置"><a href="#Windows下更改Docker的虚拟机、镜像位置" class="headerlink" title="Windows下更改Docker的虚拟机、镜像位置"></a>Windows下更改Docker的虚拟机、镜像位置</h1><ul>
+<li>设置环境变量 <code>MACHINE_STORAGE_PATH</code> 为要存储所有 <code>docker</code> 文件的位置。</li>
+<li>如尚未安装 <code>docker</code>，安装即更改默认位置。</li>
+<li>如已安装 <code>docker</code>，在<code>bash</code>窗口中<code>docker-machine ls</code>查看已有的<code>docker</code>虚拟机，<code>docker-machine create --driver=virtualbox newDockerName</code>即可新建一个虚拟机，新建后可<code>docker-machine rm default</code>删除原有的默认虚拟机，并在新位置新建一个名为<code>default</code>的虚拟机。</li>
+<li><code>docker-machine regenerate-certs default</code>重新生成证书。</li>
+<li>重新执行<code>Docker Quick Terminal</code>。</li>
+</ul>
+<h1 id="精简版Ubuntu待安装软件列表"><a href="#精简版Ubuntu待安装软件列表" class="headerlink" title="精简版Ubuntu待安装软件列表"></a>精简版Ubuntu待安装软件列表</h1><ul>
+<li>ping: inetutils-ping</li>
+<li>ifconfig: net-tools</li>
+</ul>
 <hr>
 <p>参考文献： </p>
 <ul>
 <li><a href="https://lug.ustc.edu.cn/wiki/mirrors/help/docker" target="_blank" rel="external">Docker镜像使用帮助</a></li>
 <li><a href="https://lug.ustc.edu.cn/wiki/mirrors/help/ubuntu" target="_blank" rel="external">Ubuntu镜像使用帮助</a></li>
 <li><a href="http://www.linuxdiyf.com/linux/22199.html" target="_blank" rel="external">Docker下Ubuntu Update错误</a></li>
+<li><a href="http://stackoverflow.com/questions/33933107/change-docker-machine-location-windows" target="_blank" rel="external">Windows下修改Docker Images位置</a></li>
 </ul>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/09/09/docker-problems/">原始出处</a>(<a href="http://forec.github.io/2016/09/09/docker-problems/">http://forec.github.io/2016/09/09/docker-problems/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
@@ -432,7 +444,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker更新Ubuntu被墙"><span class="nav-number">1.</span> <span class="nav-text">Docker更新Ubuntu被墙</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设置Docker镜像"><span class="nav-number">2.</span> <span class="nav-text">设置Docker镜像</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker更新Ubuntu被墙"><span class="nav-number">1.</span> <span class="nav-text">Docker更新Ubuntu被墙</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设置Docker镜像"><span class="nav-number">2.</span> <span class="nav-text">设置Docker镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows下更改Docker的虚拟机、镜像位置"><span class="nav-number">3.</span> <span class="nav-text">Windows下更改Docker的虚拟机、镜像位置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#精简版Ubuntu待安装软件列表"><span class="nav-number">4.</span> <span class="nav-text">精简版Ubuntu待安装软件列表</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-09-08T16:51:11.053Z</updated>
+  <updated>2016-09-09T08:51:07.075Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://forec.github.io/2016/09/09/docker-problems/"/>
     <id>http://forec.github.io/2016/09/09/docker-problems/</id>
     <published>2016-09-08T16:33:36.000Z</published>
-    <updated>2016-09-08T16:51:11.053Z</updated>
+    <updated>2016-09-09T08:51:07.075Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理Docker的配置，以及遇到问题的解决方案。&lt;/p&gt;
@@ -41,12 +41,24 @@
 &lt;figure class=&quot;highlight json&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &quot;&lt;span class=&quot;attribute&quot;&gt;registry-mirrors&lt;/span&gt;&quot;: &lt;span class=&quot;value&quot;&gt;[&lt;span class=&quot;string&quot;&gt;&quot;https://docker.mirrors.ustc.edu.cn&quot;&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;h1 id=&quot;Windows下更改Docker的虚拟机、镜像位置&quot;&gt;&lt;a href=&quot;#Windows下更改Docker的虚拟机、镜像位置&quot; class=&quot;headerlink&quot; title=&quot;Windows下更改Docker的虚拟机、镜像位置&quot;&gt;&lt;/a&gt;Windows下更改Docker的虚拟机、镜像位置&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;设置环境变量 &lt;code&gt;MACHINE_STORAGE_PATH&lt;/code&gt; 为要存储所有 &lt;code&gt;docker&lt;/code&gt; 文件的位置。&lt;/li&gt;
+&lt;li&gt;如尚未安装 &lt;code&gt;docker&lt;/code&gt;，安装即更改默认位置。&lt;/li&gt;
+&lt;li&gt;如已安装 &lt;code&gt;docker&lt;/code&gt;，在&lt;code&gt;bash&lt;/code&gt;窗口中&lt;code&gt;docker-machine ls&lt;/code&gt;查看已有的&lt;code&gt;docker&lt;/code&gt;虚拟机，&lt;code&gt;docker-machine create --driver=virtualbox newDockerName&lt;/code&gt;即可新建一个虚拟机，新建后可&lt;code&gt;docker-machine rm default&lt;/code&gt;删除原有的默认虚拟机，并在新位置新建一个名为&lt;code&gt;default&lt;/code&gt;的虚拟机。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;docker-machine regenerate-certs default&lt;/code&gt;重新生成证书。&lt;/li&gt;
+&lt;li&gt;重新执行&lt;code&gt;Docker Quick Terminal&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;精简版Ubuntu待安装软件列表&quot;&gt;&lt;a href=&quot;#精简版Ubuntu待安装软件列表&quot; class=&quot;headerlink&quot; title=&quot;精简版Ubuntu待安装软件列表&quot;&gt;&lt;/a&gt;精简版Ubuntu待安装软件列表&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;ping: inetutils-ping&lt;/li&gt;
+&lt;li&gt;ifconfig: net-tools&lt;/li&gt;
+&lt;/ul&gt;
 &lt;hr&gt;
 &lt;p&gt;参考文献： &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;https://lug.ustc.edu.cn/wiki/mirrors/help/docker&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Docker镜像使用帮助&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://lug.ustc.edu.cn/wiki/mirrors/help/ubuntu&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Ubuntu镜像使用帮助&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://www.linuxdiyf.com/linux/22199.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Docker下Ubuntu Update错误&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/33933107/change-docker-machine-location-windows&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Windows下修改Docker Images位置&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/09/09/docker-problems/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/09/09/docker-problems/&quot;&gt;http://forec.github.io/2016/09/09/docker-problems/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
