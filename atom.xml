@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-09-14T04:47:24.846Z</updated>
+  <updated>2016-09-17T02:42:43.207Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -20,10 +20,10 @@
     <link href="http://forec.github.io/2016/09/14/tips-for-qt/"/>
     <id>http://forec.github.io/2016/09/14/tips-for-qt/</id>
     <published>2016-09-14T02:36:35.000Z</published>
-    <updated>2016-09-14T04:47:24.846Z</updated>
+    <updated>2016-09-17T02:42:43.207Z</updated>
     
     <content type="html">&lt;blockquote&gt;
-&lt;p&gt;两天速成Qt，帮女朋友做界面，记录出现的问题及解决方案。&lt;/p&gt;
+&lt;p&gt;编写 &lt;a href=&quot;https://github.com/Forec/light-applications/tree/master/remote-control&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Remote-Control&lt;/a&gt; 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;h1 id=&quot;MSVC的Release问题&quot;&gt;&lt;a href=&quot;#MSVC的Release问题&quot; class=&quot;headerlink&quot; title=&quot;MSVC的Release问题&quot;&gt;&lt;/a&gt;MSVC的Release问题&lt;/h1&gt;&lt;ul&gt;
@@ -96,7 +96,7 @@
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;p&gt;两天速成Qt，帮女朋友做界面，记录出现的问题及解决方案。&lt;/p&gt;
+&lt;p&gt;编写 &lt;a href=&quot;https://github.com/Forec/light-applications/tree/master/remote-control&quot;&gt;Remote-Control&lt;/a&gt; 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
