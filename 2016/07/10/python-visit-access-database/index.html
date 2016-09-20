@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://forec.github.io/2016/07/10/python-visit-access-database/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="记录在windows 10下配置python3链接access数据库过程和几个简单操作。">
-<meta property="og:updated_time" content="2016-07-10T09:32:16.233Z">
+<meta property="og:updated_time" content="2016-09-20T14:05:27.952Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python3操作Access数据库">
 <meta name="twitter:description" content="记录在windows 10下配置python3链接access数据库过程和几个简单操作。">
@@ -256,7 +256,7 @@
 <li><p>通过以下交互命令同access数据库建立连接</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> win32com.client</span><br><span class="line">conn = win32com.client.gencache.EnsureDispatch(<span class="string">'ADODB.Connection'</span>) </span><br><span class="line">DSN = <span class="string">'PROVIDER = Microsoft.ACE.OLEDB.12.0;DATA SOURCE = /path/to/database;'</span></span><br><span class="line">conn.Open(DSN)</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>访问数据库中名为<code>rs_name</code>的表。</p>
+<li><p>访问数据库中名为<code>rs_name</code>的表</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rs = win32com.client.Dispatch(<span class="string">r'ADODB.Recordset'</span>)</span><br><span class="line">rs_name = <span class="string">'co'</span> </span><br><span class="line">rs.Open(<span class="string">'['</span> + rs_name + <span class="string">']'</span>, conn, <span class="number">1</span>, <span class="number">1</span>)  <span class="comment"># 不允许更新，用于查询</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>注意在上面的代码中，<code>rs.Open()</code>的最后两个参数，分别是游标(CursorType)和数据锁定类型(LockType)。</p>

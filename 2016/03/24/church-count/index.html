@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://forec.github.io/2016/03/24/church-count/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="记录自己在理解sicp习题2.6中Church计数时的思考过程，对术语的定义均来自wiki。谨记函数为一等公民，过程即数据。">
-<meta property="og:updated_time" content="2016-03-24T10:35:44.752Z">
+<meta property="og:updated_time" content="2016-09-20T14:43:33.578Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="对丘奇整数的一点思路整理">
 <meta name="twitter:description" content="记录自己在理解sicp习题2.6中Church计数时的思考过程，对术语的定义均来自wiki。谨记函数为一等公民，过程即数据。">
@@ -248,6 +248,8 @@
 <p>记录自己在理解sicp习题2.6中Church计数时的思考过程，对术语的定义均来自<a href="https://en.wikipedia.org/wiki/λ_calculus" target="_blank" rel="external">wiki</a>。谨记函数为一等公民，过程即数据。</p>
 </blockquote>
 <a id="more"></a>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
 <h1 id="λ演算"><a href="#λ演算" class="headerlink" title="λ演算"></a>λ演算</h1><ul>
 <li>λ演算由阿隆佐·丘奇和他的学生在20世纪30年代引入，对函数式编程语言有巨大的影响。λ演算之通用在于，任何一个可计算函数都能用这种形式来表达和求值。λ演算强调的是变换规则的运用，而非实现它们的具体机器。</li>
 <li>在λ演算中，每个表达式都代表一个函数，该函数接受一个参数并返回一个值，且无论参数还是返回值均为一个单参函数。即λ演算中存在且仅存在一种类型，为单参函数。对于现实中看起来接受两个参数的函数，实质为一个接受单一参数并返回接受另一个“接受单一参数”的函数，即柯里化。</li>
@@ -259,17 +261,17 @@
 </li>
 </ul>
 <h2 id="形式化描述"><a href="#形式化描述" class="headerlink" title="形式化描述"></a>形式化描述</h2><ul>
-<li>λ演算的非形式化描述通过λ表达式匿名定义，如函数f(x)=x+2的表示为<code>λx.x+2</code>（或<code>λy.y+2</code>，参数名无关紧要），f(3)即3+2可表示为<code>(λx.x+2) 3</code>，也可以表示为<code>(λf.f 3)(λx.x+2)，这三者等价。然而并非所有的lambda表达式都可以规约成某种通用的函数，例如考虑</code>(λx.x x)(λx.x x)`，其不具有确定值。</li>
-<li>对λ演算的形式化定义为，从一个标识符的可数无穷集合开始，如{a, b, c, …, x, y, …}，则所有的λ表达式可以通过下述上下文无关文法描述，前两条规则用来生成函数，第三条描述了函数对参数的作用方式。其中函数定义为左结合，且λ操作符绑定到它后面的整个表达式，因此括号在无歧义情况下可以舍弃。<ul>
+<li>λ演算的非形式化描述通过λ表达式匿名定义，如函数\(f(x)=x+2\)的表示为\(\lambda x.x+2\)或\(\lambda y.y+2\)，参数名无关紧要），\(f(3)\)即\(3+2\)可表示为\((\lambda x.x+2) 3\)，也可以表示为\((\lambda f.f 3)(\lambda x.x+2)\)，这三者等价。然而并非所有的lambda表达式都可以规约成某种通用的函数，例如考虑\((\lambda x.x x)(\lambda x.x x)\)，其不具有确定值。</li>
+<li>对λ演算的形式化定义为，从一个标识符的可数无穷集合开始，如\({a, b, c, \ldots, x, y, …}\)，则所有的λ表达式可以通过下述上下文无关文法描述，前两条规则用来生成函数，第三条描述了函数对参数的作用方式。其中函数定义为左结合，且λ操作符绑定到它后面的整个表达式，因此括号在无歧义情况下可以舍弃。<ul>
 <li>&lt;表达式&gt; ::= &lt;标识符&gt;</li>
 <li>&lt;表达式&gt; ::=(λ&lt;标识符&gt; .&lt;表达式&gt;)</li>
 <li>&lt;表达式&gt; ::=(&lt;表达式&gt; &lt;表达式&gt;)</li>
 </ul>
 </li>
-<li>以上λ表达式并未定义函数，例如<code>λx.(x y)</code>中变量y的出现时自由的，其并未被绑定到表达式的任何一个λ上。一个λ表达式的自由变量的集合通过下面规则定义，分别对应上面形式化定义的各点。<ul>
-<li>在表达式V中，V为变量，则该表达式自由变量的集合只有V。</li>
-<li>在表达式<code>λV .E</code>中（V为变量，E是另一个表达式），自由变量的集合为E中自由变量的集合减去变量V。因此E中的V被绑定在λ上。例如<code>λx.x</code>，将第一个x视为变量，第二个x视为表达式，则其自由变量集合为空集。</li>
-<li>在表达式<code>(E E&#39;)</code>中，自由变量的集合石E和E’中自由变量集合的并集。例如<code>λx.x x</code>，可以看作<code>((λx.x)(x))</code>，因此自由变量集合为{x}。</li>
+<li>以上λ表达式并未定义函数，例如\(\lambda x.(x y)\)中变量y的出现时自由的，其并未被绑定到表达式的任何一个λ上。一个λ表达式的自由变量的集合通过下面规则定义，分别对应上面形式化定义的各点。<ul>
+<li>在表达式\(V\)中，V为变量，则该表达式自由变量的集合只有V。</li>
+<li>在表达式\(\lambda V .E\)中（V为变量，E是另一个表达式），自由变量的集合为E中自由变量的集合减去变量V。因此E中的V被绑定在λ上。例如\(\lambda x.x\)，将第一个x视为变量，第二个x视为表达式，则其自由变量集合为空集。</li>
+<li>在表达式\((E E’)\)中，自由变量的集合石E和E’中自由变量集合的并集。例如\(\lambda x.x x\)，可以看作\(((\lambda x.x)(x))\)，因此自由变量集合为\({x}\)。</li>
 </ul>
 </li>
 </ul>

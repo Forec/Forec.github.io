@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-09-17T02:42:43.207Z</updated>
+  <updated>2016-09-20T14:03:40.715Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://forec.github.io/2016/09/14/tips-for-qt/"/>
     <id>http://forec.github.io/2016/09/14/tips-for-qt/</id>
     <published>2016-09-14T02:36:35.000Z</published>
-    <updated>2016-09-17T02:42:43.207Z</updated>
+    <updated>2016-09-20T14:03:40.715Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;编写 &lt;a href=&quot;https://github.com/Forec/light-applications/tree/master/remote-control&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Remote-Control&lt;/a&gt; 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。&lt;/p&gt;
@@ -74,7 +74,7 @@
 &lt;/ul&gt;
 &lt;h1 id=&quot;一些组件的tips&quot;&gt;&lt;a href=&quot;#一些组件的tips&quot; class=&quot;headerlink&quot; title=&quot;一些组件的tips&quot;&gt;&lt;/a&gt;一些组件的tips&lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;&lt;p&gt;添加 &lt;code&gt;QTableWidget&lt;/code&gt; 右键菜单&lt;/p&gt;
-&lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;ui-&amp;gt;tableWidget-&amp;gt;setContextMenuPolicy(Qt::CustomContextMenu);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;popMenu = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; QMenu(ui-&amp;gt;tableWidget);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;action = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; QAction(&lt;span class=&quot;string&quot;&gt;&quot;connect&quot;&lt;/span&gt;,&lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; MainWindow::on_tableWidget_customContextMenuRequested(&lt;span class=&quot;keyword&quot;&gt;const&lt;/span&gt; QPoint &amp;amp;pos)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    popMenu-&amp;gt;clear();    &lt;span class=&quot;comment&quot;&gt;// popMenu for QTableWidget&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    popMenu-&amp;gt;addAction(action);    &lt;span class=&quot;comment&quot;&gt;// action for connect&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    popMenu-&amp;gt;exec(QCursor::pos());&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;ui-&amp;gt;tableWidget-&amp;gt;setContextMenuPolicy(Qt::CustomContextMenu);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;popMenu = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; QMenu(ui-&amp;gt;tableWidget);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;action = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; QAction(&lt;span class=&quot;string&quot;&gt;&quot;connect&quot;&lt;/span&gt;,&lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; MainWindow::on_tableWidget_customContextMenuRequested(&lt;span class=&quot;keyword&quot;&gt;const&lt;/span&gt; QPoint &amp;amp;pos)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    popMenu-&amp;gt;clear();    &lt;span class=&quot;comment&quot;&gt;// popMenu for QTableWidget&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    popMenu-&amp;gt;addAction(action);    &lt;span class=&quot;comment&quot;&gt;// action for connect&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    popMenu-&amp;gt;exec(QCursor::pos());&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p&gt;滚动条位置设置&lt;/p&gt;
 &lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;QTextEdit *edit = ui-&amp;gt;textEdit;        &lt;span class=&quot;comment&quot;&gt;// example for QTextEdit&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;QScrollBar *sb = edit-&amp;gt;verticalScrollBar();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sb-&amp;gt;setValue(sb-&amp;gt;maximumHeight());&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -121,7 +121,7 @@
     <link href="http://forec.github.io/2016/09/09/docker-problems/"/>
     <id>http://forec.github.io/2016/09/09/docker-problems/</id>
     <published>2016-09-08T16:33:36.000Z</published>
-    <updated>2016-09-14T02:39:44.743Z</updated>
+    <updated>2016-09-20T14:04:20.482Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理Docker的配置，以及遇到问题的解决方案。&lt;/p&gt;
@@ -150,8 +150,8 @@
 &lt;li&gt;重新执行&lt;code&gt;Docker Quick Terminal&lt;/code&gt;。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id=&quot;精简版Ubuntu待安装软件列表&quot;&gt;&lt;a href=&quot;#精简版Ubuntu待安装软件列表&quot; class=&quot;headerlink&quot; title=&quot;精简版Ubuntu待安装软件列表&quot;&gt;&lt;/a&gt;精简版Ubuntu待安装软件列表&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;ping: inetutils-ping&lt;/li&gt;
-&lt;li&gt;ifconfig: net-tools&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ping&lt;/strong&gt;: inetutils-ping&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ifconfig&lt;/strong&gt;: net-tools&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;p&gt;参考文献： &lt;/p&gt;
@@ -314,7 +314,7 @@
     <link href="http://forec.github.io/2016/07/10/python-visit-access-database/"/>
     <id>http://forec.github.io/2016/07/10/python-visit-access-database/</id>
     <published>2016-07-10T08:45:29.000Z</published>
-    <updated>2016-07-10T09:32:16.233Z</updated>
+    <updated>2016-09-20T14:05:27.952Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;记录在windows 10下配置python3链接access数据库过程和几个简单操作。&lt;/p&gt;
@@ -328,7 +328,7 @@
 &lt;li&gt;&lt;p&gt;通过以下交互命令同access数据库建立连接&lt;/p&gt;
 &lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; win32com.client&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;conn = win32com.client.gencache.EnsureDispatch(&lt;span class=&quot;string&quot;&gt;&#39;ADODB.Connection&#39;&lt;/span&gt;) &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;DSN = &lt;span class=&quot;string&quot;&gt;&#39;PROVIDER = Microsoft.ACE.OLEDB.12.0;DATA SOURCE = /path/to/database;&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;conn.Open(DSN)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;p&gt;访问数据库中名为&lt;code&gt;rs_name&lt;/code&gt;的表。&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;访问数据库中名为&lt;code&gt;rs_name&lt;/code&gt;的表&lt;/p&gt;
 &lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;rs = win32com.client.Dispatch(&lt;span class=&quot;string&quot;&gt;r&#39;ADODB.Recordset&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;rs_name = &lt;span class=&quot;string&quot;&gt;&#39;co&#39;&lt;/span&gt; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;rs.Open(&lt;span class=&quot;string&quot;&gt;&#39;[&#39;&lt;/span&gt; + rs_name + &lt;span class=&quot;string&quot;&gt;&#39;]&#39;&lt;/span&gt;, conn, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)  &lt;span class=&quot;comment&quot;&gt;# 不允许更新，用于查询&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p&gt;注意在上面的代码中，&lt;code&gt;rs.Open()&lt;/code&gt;的最后两个参数，分别是游标(CursorType)和数据锁定类型(LockType)。&lt;/p&gt;
@@ -490,12 +490,14 @@
     <link href="http://forec.github.io/2016/03/24/church-count/"/>
     <id>http://forec.github.io/2016/03/24/church-count/</id>
     <published>2016-03-24T08:08:22.000Z</published>
-    <updated>2016-03-24T10:35:44.752Z</updated>
+    <updated>2016-09-20T14:43:33.578Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;记录自己在理解sicp习题2.6中Church计数时的思考过程，对术语的定义均来自&lt;a href=&quot;https://en.wikipedia.org/wiki/λ_calculus&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;wiki&lt;/a&gt;。谨记函数为一等公民，过程即数据。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default&quot;&gt;&lt;/script&gt;
+
 &lt;h1 id=&quot;λ演算&quot;&gt;&lt;a href=&quot;#λ演算&quot; class=&quot;headerlink&quot; title=&quot;λ演算&quot;&gt;&lt;/a&gt;λ演算&lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;λ演算由阿隆佐·丘奇和他的学生在20世纪30年代引入，对函数式编程语言有巨大的影响。λ演算之通用在于，任何一个可计算函数都能用这种形式来表达和求值。λ演算强调的是变换规则的运用，而非实现它们的具体机器。&lt;/li&gt;
 &lt;li&gt;在λ演算中，每个表达式都代表一个函数，该函数接受一个参数并返回一个值，且无论参数还是返回值均为一个单参函数。即λ演算中存在且仅存在一种类型，为单参函数。对于现实中看起来接受两个参数的函数，实质为一个接受单一参数并返回接受另一个“接受单一参数”的函数，即柯里化。&lt;/li&gt;
@@ -507,17 +509,17 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&quot;形式化描述&quot;&gt;&lt;a href=&quot;#形式化描述&quot; class=&quot;headerlink&quot; title=&quot;形式化描述&quot;&gt;&lt;/a&gt;形式化描述&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;λ演算的非形式化描述通过λ表达式匿名定义，如函数f(x)=x+2的表示为&lt;code&gt;λx.x+2&lt;/code&gt;（或&lt;code&gt;λy.y+2&lt;/code&gt;，参数名无关紧要），f(3)即3+2可表示为&lt;code&gt;(λx.x+2) 3&lt;/code&gt;，也可以表示为&lt;code&gt;(λf.f 3)(λx.x+2)，这三者等价。然而并非所有的lambda表达式都可以规约成某种通用的函数，例如考虑&lt;/code&gt;(λx.x x)(λx.x x)`，其不具有确定值。&lt;/li&gt;
-&lt;li&gt;对λ演算的形式化定义为，从一个标识符的可数无穷集合开始，如{a, b, c, …, x, y, …}，则所有的λ表达式可以通过下述上下文无关文法描述，前两条规则用来生成函数，第三条描述了函数对参数的作用方式。其中函数定义为左结合，且λ操作符绑定到它后面的整个表达式，因此括号在无歧义情况下可以舍弃。&lt;ul&gt;
+&lt;li&gt;λ演算的非形式化描述通过λ表达式匿名定义，如函数\(f(x)=x+2\)的表示为\(\lambda x.x+2\)或\(\lambda y.y+2\)，参数名无关紧要），\(f(3)\)即\(3+2\)可表示为\((\lambda x.x+2) 3\)，也可以表示为\((\lambda f.f 3)(\lambda x.x+2)\)，这三者等价。然而并非所有的lambda表达式都可以规约成某种通用的函数，例如考虑\((\lambda x.x x)(\lambda x.x x)\)，其不具有确定值。&lt;/li&gt;
+&lt;li&gt;对λ演算的形式化定义为，从一个标识符的可数无穷集合开始，如\({a, b, c, \ldots, x, y, …}\)，则所有的λ表达式可以通过下述上下文无关文法描述，前两条规则用来生成函数，第三条描述了函数对参数的作用方式。其中函数定义为左结合，且λ操作符绑定到它后面的整个表达式，因此括号在无歧义情况下可以舍弃。&lt;ul&gt;
 &lt;li&gt;&amp;lt;表达式&amp;gt; ::= &amp;lt;标识符&amp;gt;&lt;/li&gt;
 &lt;li&gt;&amp;lt;表达式&amp;gt; ::=(λ&amp;lt;标识符&amp;gt; .&amp;lt;表达式&amp;gt;)&lt;/li&gt;
 &lt;li&gt;&amp;lt;表达式&amp;gt; ::=(&amp;lt;表达式&amp;gt; &amp;lt;表达式&amp;gt;)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;以上λ表达式并未定义函数，例如&lt;code&gt;λx.(x y)&lt;/code&gt;中变量y的出现时自由的，其并未被绑定到表达式的任何一个λ上。一个λ表达式的自由变量的集合通过下面规则定义，分别对应上面形式化定义的各点。&lt;ul&gt;
-&lt;li&gt;在表达式V中，V为变量，则该表达式自由变量的集合只有V。&lt;/li&gt;
-&lt;li&gt;在表达式&lt;code&gt;λV .E&lt;/code&gt;中（V为变量，E是另一个表达式），自由变量的集合为E中自由变量的集合减去变量V。因此E中的V被绑定在λ上。例如&lt;code&gt;λx.x&lt;/code&gt;，将第一个x视为变量，第二个x视为表达式，则其自由变量集合为空集。&lt;/li&gt;
-&lt;li&gt;在表达式&lt;code&gt;(E E&amp;#39;)&lt;/code&gt;中，自由变量的集合石E和E’中自由变量集合的并集。例如&lt;code&gt;λx.x x&lt;/code&gt;，可以看作&lt;code&gt;((λx.x)(x))&lt;/code&gt;，因此自由变量集合为{x}。&lt;/li&gt;
+&lt;li&gt;以上λ表达式并未定义函数，例如\(\lambda x.(x y)\)中变量y的出现时自由的，其并未被绑定到表达式的任何一个λ上。一个λ表达式的自由变量的集合通过下面规则定义，分别对应上面形式化定义的各点。&lt;ul&gt;
+&lt;li&gt;在表达式\(V\)中，V为变量，则该表达式自由变量的集合只有V。&lt;/li&gt;
+&lt;li&gt;在表达式\(\lambda V .E\)中（V为变量，E是另一个表达式），自由变量的集合为E中自由变量的集合减去变量V。因此E中的V被绑定在λ上。例如\(\lambda x.x\)，将第一个x视为变量，第二个x视为表达式，则其自由变量集合为空集。&lt;/li&gt;
+&lt;li&gt;在表达式\((E E’)\)中，自由变量的集合石E和E’中自由变量集合的并集。例如\(\lambda x.x x\)，可以看作\(((\lambda x.x)(x))\)，因此自由变量集合为\({x}\)。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
@@ -573,38 +575,39 @@
     <link href="http://forec.github.io/2016/03/12/community-found/"/>
     <id>http://forec.github.io/2016/03/12/community-found/</id>
     <published>2016-03-12T07:26:08.000Z</published>
-    <updated>2016-03-19T08:41:15.004Z</updated>
+    <updated>2016-09-20T15:38:24.325Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;复杂网络是复杂系统的抽象，其中一个重要特征是网络中所呈现出的社区结构。许多网络是异构的，对于构成网络的不同类型节点所组成的子图称为网络中的社区。整理了几个传统的社区发现算法流程和大致原理，记录备忘。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default&quot;&gt;&lt;/script&gt;
+
 &lt;h1 id=&quot;Kerighan-Lin算法&quot;&gt;&lt;a href=&quot;#Kerighan-Lin算法&quot; class=&quot;headerlink&quot; title=&quot;Kerighan-Lin算法&quot;&gt;&lt;/a&gt;Kerighan-Lin算法&lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;算法为类似模拟退火式的试探优化法，采用贪婪的策略对网络进行二分社区。其复杂度仅为O(N^2)，适用于小规模的网络，但准确度不高，并且必须事先知道两个社区的规模大小。&lt;/li&gt;
-&lt;li&gt;定义增益值&lt;code&gt;P = 两个社区内部边数 - 两个社区之间边数&lt;/code&gt;，并寻找使P最大的划分。&lt;/li&gt;
+&lt;li&gt;定义增益值\(P=\mbox{两个社区内部边数}-\mbox{两个社区之间边数}\)，并寻找使P最大的划分。&lt;/li&gt;
 &lt;li&gt;算法流程如下&lt;ul&gt;
 &lt;li&gt;(1) 随机将整个网络中的节点划分为两个社区A和B，其节点数分别为m和n，m和n已知。&lt;/li&gt;
-&lt;li&gt;(2) 对于A和B中的每对节点&lt;code&gt;{(i,j), i∈A, j∈B&lt;/code&gt;，计算将i和j交换后的&lt;code&gt;ΔP = 交换后的P - 交换前的P&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;(3) 选取使ΔP最大的交换节点对并更新P值。另外，每个节点仅能交换一次。&lt;/li&gt;
+&lt;li&gt;(2) 对于A和B中的每对节点\((i, j), i\in A, j\in B\)，计算将i和j交换后的\(\Delta P=\mbox{交换后的P}-\mbox{交换前的P}\)。&lt;/li&gt;
+&lt;li&gt;(3) 选取使\(\Delta P\)最大的交换节点对并更新P值。另外，每个节点仅能交换一次。&lt;/li&gt;
 &lt;li&gt;(4) 转(2)，直到A或者B二者中某个社区所有节点都已经被交换过一次。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id=&quot;基于Laplace图特征值的社区发现方法&quot;&gt;&lt;a href=&quot;#基于Laplace图特征值的社区发现方法&quot; class=&quot;headerlink&quot; title=&quot;基于Laplace图特征值的社区发现方法&quot;&gt;&lt;/a&gt;基于Laplace图特征值的社区发现方法&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;一个无向图G=(V,E)，矩阵D是一个对角矩阵，对角线上的元素Dii是节点i的度，矩阵W是图G的邻接矩阵。拉普拉斯矩阵&lt;code&gt;L = D - W&lt;/code&gt;，因此L为对称矩阵。其规定和具有的性质如下：&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;一个无向图\(G=(V, E)\)，矩阵D是一个对角矩阵，对角线上的元素Dii是节点i的度，矩阵W是图G的邻接矩阵。拉普拉斯矩阵\(L=D-W\)，因此L为对称矩阵。其规定和具有的性质如下：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;对于W，定义图中A、B两个子图间的权重为&lt;code&gt;W(A, B) = ∑wij, i∈A, j∈B&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;与某个节点邻接的所有边的权值和定义为该顶点的度，即&lt;code&gt;di = ∑wij, i from 1 to n&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;L是一个对称半正定矩阵&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;L·vector(1) = 0·vector(1)&lt;/code&gt;，因为&lt;code&gt;L·vector(1) = (D-W)·vector(1) = 0·vector(1)&lt;/code&gt;。这里vector代表向量，也就是说L的最小特征值是0，对应的特征向量是vector(1)。&lt;/li&gt;
-&lt;li&gt;L有n个非负实特征值0 = λ1 &amp;lt;= λ2 &amp;lt;= λ3 &amp;lt;= … &amp;lt;= λn&lt;/li&gt;
-&lt;li&gt;对于任何一个实向量f∈R^n，有&lt;code&gt;2f&amp;#39;Lf = ∑wij(fi - fj)^2, i,j from 1 to N&lt;/code&gt;。证明如下：&lt;figure class=&quot;highlight matlab&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;f&lt;span class=&quot;operator&quot;&gt;&#39;&lt;/span&gt;Lf = f&lt;span class=&quot;operator&quot;&gt;&#39;&lt;/span&gt;Df - f&lt;span class=&quot;operator&quot;&gt;&#39;&lt;/span&gt;Wf &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;     = ∑difi^&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; - ∑fifjwij(&lt;span class=&quot;built_in&quot;&gt;i&lt;/span&gt;,&lt;span class=&quot;built_in&quot;&gt;j&lt;/span&gt;∈&lt;span class=&quot;matrix&quot;&gt;[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,n]&lt;/span&gt;) &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;     = (∑difi^&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; - &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;∑fifjwij + ∑djfj^&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; (&lt;span class=&quot;built_in&quot;&gt;i&lt;/span&gt;,&lt;span class=&quot;built_in&quot;&gt;j&lt;/span&gt;∈&lt;span class=&quot;matrix&quot;&gt;[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,n]&lt;/span&gt;))/&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;     = (∑wij(fi-fj)^&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; , &lt;span class=&quot;built_in&quot;&gt;i&lt;/span&gt;,&lt;span class=&quot;built_in&quot;&gt;j&lt;/span&gt;∈&lt;span class=&quot;matrix&quot;&gt;[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,n]&lt;/span&gt;)/&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;`&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;/li&gt;
+&lt;li&gt;对于W，定义图中A、B两个子图间的权重为\(W(A, B)=\Sigma w_{ij}, i\in A, j\in B\)。&lt;/li&gt;
+&lt;li&gt;与某个节点邻接的所有边的权值和定义为该顶点的度，即\({d&lt;em&gt;i} = \Sigma w&lt;/em&gt;{ij}, i\in \lbrace 1, \ldots, N\rbrace\)。&lt;/li&gt;
+&lt;li&gt;L是一个对称半正定矩阵。&lt;/li&gt;
+&lt;li&gt;\(L \cdot \vec {1}=0 \cdot \vec {1}\)，因为\(L \cdot \vec {1}= (D-W) \cdot \vec {1} = 0 \cdot \vec {1}\)。&lt;/li&gt;
+&lt;li&gt;L有n个非负实特征值\(0 = λ_1 \leq λ_2 \leq λ_3 \leq \ldots \leq λ_n\)。&lt;/li&gt;
+&lt;li&gt;对于任何一个实向量\(f\in R^n\)，有\(2 \cdot f’Lf=\Sigma w_{ij}\cdot (f_i - f_j)^2, i, j \in \lbrace 1, \ldots, N \rbrace\)。证明如下：$$f’Lf=f’Df-f’Wf=\Sigma d_i\cdot {f_i}^{2}-\Sigma {f_i}{f&lt;em&gt;j}{w&lt;/em&gt;{ij}}(i, j\in {1, ldots, n})=\frac{1}{2}\cdot\left(\Sigma {d_i}{f_i}^{2}-2\Sigma {f_i}{f&lt;em&gt;j}w&lt;/em&gt;{ij}+\Sigma {d_j}{f&lt;em&gt;j}^{2}\right) (i, j\in {1, ldots, n})=\frac{1}{2}\cdot\left(\Sigma {w&lt;/em&gt;{ij}}({f_i}-{f_j})^{2}\right) (i, j\in {1, \ldots, n})$$&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p&gt;切割图的目的在于 &lt;strong&gt;使被切掉的各边之和最小&lt;/strong&gt; ，因为其代表着子图之间连接的相似度最低。&lt;/p&gt;
 &lt;/li&gt;
-&lt;li&gt;定义cut目标函数，式子中的~号表示对社区取反：&lt;code&gt;cut(A1, A2, ..., Ak) = (∑W(Ai, ~Ai), i∈[1,k])/2&lt;/code&gt;。该目标函数可能会导致不好的分割，例如将某个图分成一个单一点和其余的n-1个点。&lt;/li&gt;
+&lt;li&gt;定义cut目标函数：\(cut(A1, A2, …, Ak) = \frac{1}{2} \cdot (\Sigma W(A_i, \overline{A_i}), i\in [1,k])\)。该目标函数可能会导致不好的分割，例如将某个图分成一个单一点和其余的n-1个点。&lt;/li&gt;
 &lt;li&gt;定义RatioCut目标函数：&lt;code&gt;Ratiocut(A1, A2, ..., Ak) = (∑W(Ai, ~Ai)/|Ai|, i∈[1,k])/2&lt;/code&gt;。其中|Ai|代表社区i中的节点数目。 &lt;strong&gt;最小化RatioCut等价于最小化f’Lf&lt;/strong&gt; ，这里的&lt;code&gt;f = (f1, f2, ..., fn)∈R^n&lt;/code&gt;，并且当节点vi∈A时，&lt;code&gt;fi = sqrt(|~A|/|A|)&lt;/code&gt;，否则&lt;code&gt;fi = -sqrt(|A|/|~A|)&lt;/code&gt;。根据上面提过的拉普拉斯矩阵性质，有&lt;code&gt;2f&amp;#39;Lf = ∑wij(fi - fj)^2, i,j from 1 to N&lt;/code&gt;。据此可以根据下面的推导得出，&lt;code&gt;min f&amp;#39;Lf &amp;lt;=&amp;gt; min RatioCut&lt;/code&gt;。&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC.png&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
 &lt;li&gt;因为向量f是单位向量1，所以有&lt;code&gt;|f|^2 = ∑(fi^2) = n&lt;/code&gt;，且&lt;code&gt;f&amp;#39;·1(单位向量）= ∑(fi) = 0&lt;/code&gt;。注意f是列向量，所以&lt;code&gt;f&amp;#39;·f&lt;/code&gt;是值，而&lt;code&gt;f·f&amp;#39;&lt;/code&gt;是一个NxN的矩阵。证明如下：&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC2.png&quot; width=&quot;300px&quot;&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC3.png&quot; width=&quot;300px&quot;&gt;&lt;/li&gt;
 &lt;li&gt;假定&lt;code&gt;L·f = λ·f&lt;/code&gt;，这里L是Laplace矩阵，λ是矩阵L的一个特征值，f是L对应λ的特征向量。同时左乘f’，得到&lt;code&gt;f&amp;#39;·L·f = λn&lt;/code&gt;，因为n为定值，因此最小化&lt;code&gt;f&amp;#39;·L·f&lt;/code&gt;等价于最小化λ。因此需要寻找最小的特征值λ和对应的特征向量。因为Laplace矩阵最小的特征值为0，因此取第二小的特征值。更进一步，如果求出拉普拉斯矩阵的前K个特征向量，进行k-Means聚类得到k个簇，就从二聚类拓展到了k聚类。&lt;/li&gt;
@@ -652,14 +655,14 @@
 &lt;li&gt;算法仅适用于三角环数较多的，如社会网络等。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id=&quot;基于点聚集的局部算法&quot;&gt;&lt;a href=&quot;#基于点聚集的局部算法&quot; class=&quot;headerlink&quot; title=&quot;基于点聚集的局部算法&quot;&gt;&lt;/a&gt;基于点聚集的局部算法&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;定义连接相关度：&lt;code&gt;ΔC(ε, j) = C1(j) - C2(j)&lt;/code&gt;，这里C1(j)指节点j的点聚集系数，C2(j)指去除社区ε内部的所有边以及与其相关联的所有边之后，节点j的点聚集系数。&lt;/li&gt;
-&lt;li&gt;定义点聚集系数：一个节点的不同邻接点互为邻接点的概率，公式为&lt;code&gt;C(i) = 2E(i)/(ki(ki-1))&lt;/code&gt;，这里ki是节点i的度，E(i)是与节点i邻接的节点之间的实际连边。整个网络ε的点聚集系数定义为&lt;code&gt;C(ε) = ∑C(i)/N&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;定义连接相关度：\(\lambda C(\varepsilon, j) = C&lt;em&gt;{1}(j) - C&lt;/em&gt;{2}(j)\)，这里\(C&lt;em&gt;{1}(j)\)指节点j的点聚集系数，\(C&lt;/em&gt;{2}(j)\)指去除社区\(\varepsilon\)内部的所有边以及与其相关联的所有边之后，节点j的点聚集系数。&lt;/li&gt;
+&lt;li&gt;定义点聚集系数：一个节点的不同邻接点互为邻接点的概率，公式为\(C(i) = \frac{2E(i)}{k&lt;em&gt;{i}(k&lt;/em&gt;{i}-1)}\)，这里ki是节点i的度，E(i)是与节点i邻接的节点之间的实际连边。整个网络\(varepsilon\)的点聚集系数定义为\(C(ε) = \frac{\Sigma C(i)}{N}\)。&lt;/li&gt;
 &lt;li&gt;上面定义的连接相关度用来衡量某个社区ε对其邻接点的影响力大小。如果社区ε的一个邻接点x和x的邻接点间主要通过ε通信，则ε对x有重要影响，x趋向于成为ε的一员。&lt;/li&gt;
 &lt;li&gt;以下是社区归纳点的几个约定&lt;ul&gt;
-&lt;li&gt;如果节点x有一半以上的邻接点再ε中，则x∈ε。&lt;/li&gt;
-&lt;li&gt;如果C(ε)=1，这意味着ε和它的邻接点们构成连通分量，则该ε的所有邻接点∈ε。&lt;/li&gt;
-&lt;li&gt;如果该ε的一个邻接点j有C(j)=1，则j和j的邻接点都∈ε。&lt;/li&gt;
-&lt;li&gt;如果ε的邻接点j有C(j) &amp;gt; C(ε)。并且ΔC(ε,j)是ε的所有邻接点中最大非负值，则j∈ε。&lt;/li&gt;
+&lt;li&gt;如果节点x有一半以上的邻接点再ε中，则\(x\in \varepsilon\)。&lt;/li&gt;
+&lt;li&gt;如果\(C(\varepsilon)=1\)，这意味着ε和它的邻接点们构成连通分量，则该ε的所有邻接点∈ε。&lt;/li&gt;
+&lt;li&gt;如果该ε的一个邻接点j有C(j)=1，则j和j的邻接点都属于ε。&lt;/li&gt;
+&lt;li&gt;如果ε的邻接点j有C(j) &amp;gt; C(ε)。并且\(\Delte C(\varepsilon,j)\)是ε的所有邻接点中最大非负值，则\(j\in ε\)。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;完整流程如下&lt;ul&gt;
@@ -670,7 +673,7 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id=&quot;衡量网络分解：模块度&quot;&gt;&lt;a href=&quot;#衡量网络分解：模块度&quot; class=&quot;headerlink&quot; title=&quot;衡量网络分解：模块度&quot;&gt;&lt;/a&gt;衡量网络分解：模块度&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;设网络分裂为g个社区，定义gxg的矩阵e，其eij表示原网络中连接社区i和社区j中节点的边数在所有边中所占比例。e的迹表示网络中同一社区中节点的边占所有边的比例。&lt;code&gt;ai = ∑eij&lt;/code&gt;表示连接社区i的边所占比例。有&lt;code&gt;Q = Tre - ||e||^2&lt;/code&gt;，&lt;code&gt;∑(ai^2) = ∑(∑(eij·ejk)) = ||e||^2&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;设网络分裂为g个社区，定义gxg的矩阵e，其eij表示原网络中连接社区i和社区j中节点的边数在所有边中所占比例。e的迹表示网络中同一社区中节点的边占所有边的比例。\(a&lt;em&gt;i = \Sigma e&lt;/em&gt;{ij}\)表示连接社区i的边所占比例。有\(Q = Tre - {|e|}^2\)，\(\Sigma {a&lt;em&gt;i}^{2} = \Sigma \left( \Sigma e&lt;/em&gt;{ij} \cdot e_{jk} \right) = {|e|}^2 \)。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;blockquote&gt;
