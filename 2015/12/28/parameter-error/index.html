@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://forec.github.io/2015/12/28/parameter-error/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="多次遇过的一个错误传参做法。">
-<meta property="og:updated_time" content="2015-12-28T03:00:16.168Z">
+<meta property="og:updated_time" content="2016-10-03T15:45:23.390Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C语言的一种错误传参做法">
 <meta name="twitter:description" content="多次遇过的一个错误传参做法。">
@@ -282,7 +282,7 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> ** <span class="title">func2</span><span class="params">(<span class="keyword">int</span> ** str2)</span></span>&#123;</span><br><span class="line">	......</span><br><span class="line">	<span class="keyword">return</span> str2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="野指针"><a href="#野指针" class="headerlink" title="野指针"></a>野指针</h2><p>对malloc分配的堆空间，free对应的首地址后一定要将指针变量赋为NULL。如<code>p = ( int * )malloc(sizeof(int) * 10)</code>，若free(p)，则一定要 p = NULL，否则p指向的内存空间已经释放，而p指向了垃圾内存，成为野指针。再次调用p会引发不允许的内存访问。</p>
 <hr>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/12/28/parameter-error/">原始出处</a>(<a href="http://forec.github.io/2015/12/28/parameter-error/">http://forec.github.io/2015/12/28/parameter-error/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2015/12/28/parameter-error/">原始出处</a>(<a href="https://forec.github.io/2015/12/28/parameter-error/">https://forec.github.io/2015/12/28/parameter-error/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
       
     </div>
@@ -372,7 +372,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -432,7 +432,7 @@
             <p class="site-author-name">友情链接</p>
             
               <span class="links-of-author-item">
-              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              <a href="https://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
               </span>
             
           

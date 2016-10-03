@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://forec.github.io/2016/07/10/python-visit-access-database/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="记录在windows 10下配置python3链接access数据库过程和几个简单操作。">
-<meta property="og:updated_time" content="2016-09-20T14:05:27.952Z">
+<meta property="og:updated_time" content="2016-10-03T15:33:26.298Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python3操作Access数据库">
 <meta name="twitter:description" content="记录在windows 10下配置python3链接access数据库过程和几个简单操作。">
@@ -271,6 +271,8 @@
 <li>数据锁定类型为4：批量乐观锁定，允许修改多个记录，只有调用UpdateBatch方法后才锁定记录。<br>当不需要改动任何记录时，使用只读的记录集，这样提供者不用做任何检测。</li>
 </ul>
 </li>
+</ul>
+<h2 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h2><ul>
 <li><p>执行SQL语句，以插入表为例</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sql_statement = <span class="string">"Insert INTO [Table_Name] ([Field_1], [Field_2]) VALUES ('data1', 'data2')"</span></span><br><span class="line">conn.Execute(sql_statement)</span><br></pre></td></tr></table></figure>
 </li>
@@ -290,7 +292,7 @@
 <li><a href="http://soft.zdnet.com.cn/software_zone/2008/0520/870686.shtml" target="_blank" rel="external">Python读取mdb文件</a></li>
 <li><a href="http://my.oschina.net/duxuefeng/blog/64137" target="_blank" rel="external">win32com用法_杜雪峰的博客</a></li>
 </ul>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2016/07/10/python-visit-access-database/">原始出处</a>(<a href="http://forec.github.io/2016/07/10/python-visit-access-database/">http://forec.github.io/2016/07/10/python-visit-access-database/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/07/10/python-visit-access-database/">原始出处</a>(<a href="https://forec.github.io/2016/07/10/python-visit-access-database/">https://forec.github.io/2016/07/10/python-visit-access-database/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
       
     </div>
@@ -382,7 +384,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -442,7 +444,7 @@
             <p class="site-author-name">友情链接</p>
             
               <span class="links-of-author-item">
-              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              <a href="https://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
               </span>
             
           
@@ -456,7 +458,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装所需库文件"><span class="nav-number">1.</span> <span class="nav-text">安装所需库文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#读取Access数据库"><span class="nav-number">2.</span> <span class="nav-text">读取Access数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#建立连接"><span class="nav-number">2.1.</span> <span class="nav-text">建立连接</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装所需库文件"><span class="nav-number">1.</span> <span class="nav-text">安装所需库文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#读取Access数据库"><span class="nav-number">2.</span> <span class="nav-text">读取Access数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#建立连接"><span class="nav-number">2.1.</span> <span class="nav-text">建立连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命令执行"><span class="nav-number">2.2.</span> <span class="nav-text">命令执行</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

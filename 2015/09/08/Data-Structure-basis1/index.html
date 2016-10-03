@@ -53,7 +53,7 @@
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/3.jpg">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/4.jpg">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/红黑树旋转操作.jpg">
-<meta property="og:updated_time" content="2016-02-04T13:07:45.815Z">
+<meta property="og:updated_time" content="2016-10-03T15:41:23.608Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基础数据结构（需求和树相关）">
 <meta name="twitter:description" content="这篇文章中的C语言代码均为md编辑器中手打，仅作理解用，未经过编译测试。有错误请留言，将及时更正。">
@@ -257,11 +257,11 @@
 </blockquote>
 <a id="more"></a>
 <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><ul>
-<li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#1">需求</a></li>
-<li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#2">树</a></li>
-<li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#3">二叉查找树</a></li>
-<li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#4">AVL树</a></li>
-<li><a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/#5">红黑树</a></li>
+<li><a href="https://forec.github.io/2015/09/08/Data-Structure-basis1/#1">需求</a></li>
+<li><a href="https://forec.github.io/2015/09/08/Data-Structure-basis1/#2">树</a></li>
+<li><a href="https://forec.github.io/2015/09/08/Data-Structure-basis1/#3">二叉查找树</a></li>
+<li><a href="https://forec.github.io/2015/09/08/Data-Structure-basis1/#4">AVL树</a></li>
+<li><a href="https://forec.github.io/2015/09/08/Data-Structure-basis1/#5">红黑树</a></li>
 </ul>
 <p></p><h1 id="1">需求</h1><p></p>
 <h2 id="基本的数学知识"><a href="#基本的数学知识" class="headerlink" title="基本的数学知识"></a>基本的数学知识</h2><ul>
@@ -276,7 +276,7 @@
 </li>
 <li>数学归纳法和反证法</li>
 <li>递归和算法时空复杂度分析（离散数学上册，考虑最坏结果）<ul>
-<li>一个经典的例子：<a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#6">最大子序列和问题</a>，在本文底部。 </li>
+<li>一个经典的例子：<a href="https://forec.github.io/2015/09/09/Data-Structure-example1/#6">最大子序列和问题</a>，在本文底部。 </li>
 <li>一般估计：根据循环嵌套得到的迭代次数估计复杂度</li>
 <li>常可寻找的优化：递推式取代循环，分治，循环数组，记忆化。</li>
 </ul>
@@ -298,18 +298,18 @@
 </ul>
 </li>
 <li>数组模拟链表，类似图的前向星表示法，采用一组cursor实现（游标）。</li>
-<li>两个实例<a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#7">单向链表的类型声明及其ADT包含的操作</a>和<a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#8">链表实现基数排序</a>在本文底部。</li>
+<li>两个实例<a href="https://forec.github.io/2015/09/09/Data-Structure-example1/#7">单向链表的类型声明及其ADT包含的操作</a>和<a href="https://forec.github.io/2015/09/09/Data-Structure-example1/#8">链表实现基数排序</a>在本文底部。</li>
 </ul>
 <h3 id="栈ADT"><a href="#栈ADT" class="headerlink" title="栈ADT"></a>栈ADT</h3><ul>
 <li>栈（stack）是的插入和删除操作只能在一个位置上进行的表，该位置为表的末端，称为栈顶（top）。<ul>
 <li>主要有push和pop操作，先进后出。</li>
 <li>通过链表或数组实现。链表操作调用的malloc和free函数开销较大。数组实现避免了指针，并且更流行，但需要提前声明大小，浪费资源。</li>
-<li><a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#10">栈ADT链表实现</a>和<a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#11">栈ADT数组实现</a>在本文底部例程中。</li>
+<li><a href="https://forec.github.io/2015/09/09/Data-Structure-example1/#10">栈ADT链表实现</a>和<a href="https://forec.github.io/2015/09/09/Data-Structure-example1/#11">栈ADT数组实现</a>在本文底部例程中。</li>
 </ul>
 </li>
 <li>应用<ul>
 <li>平衡符号</li>
-<li><a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#9">逆波兰表达式</a>，在本文底部有其实现方式的简单介绍。</li>
+<li><a href="https://forec.github.io/2015/09/09/Data-Structure-example1/#9">逆波兰表达式</a>，在本文底部有其实现方式的简单介绍。</li>
 <li>函数调用的存储工作由系统栈完成，尽量避免尾递归。</li>
 </ul>
 </li>
@@ -318,11 +318,11 @@
 <li>基本操作是入队(Enqueue)和出队(Dequeue)，先进先出。</li>
 <li>需要注意队列是否为空的条件。循环队列可以满足一些问题的模型，同时改善数组实现队列的空间利用率。</li>
 <li>应用<ul>
-<li><a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#13">约瑟夫环问题</a>，链表模拟实现代码在本文例程中。</li>
+<li><a href="https://forec.github.io/2015/09/09/Data-Structure-example1/#13">约瑟夫环问题</a>，链表模拟实现代码在本文例程中。</li>
 <li>排队作业问题</li>
 </ul>
 </li>
-<li><a href="http://forec.github.io/2015/09/09/Data-Structure-example1/#12">队列ADT数组模拟代码实现</a></li>
+<li><a href="https://forec.github.io/2015/09/09/Data-Structure-example1/#12">队列ADT数组模拟代码实现</a></li>
 </ul>
 <hr>
 <p></p><h1 id="2">树</h1><p></p>
@@ -481,7 +481,7 @@
 </li>
 </ul>
 <hr>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/">原始出处</a>(<a href="http://forec.github.io/2015/09/08/Data-Structure-basis1/">http://forec.github.io/2015/09/08/Data-Structure-basis1/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2015/09/08/Data-Structure-basis1/">原始出处</a>(<a href="https://forec.github.io/2015/09/08/Data-Structure-basis1/">https://forec.github.io/2015/09/08/Data-Structure-basis1/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
       
     </div>
@@ -571,7 +571,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -631,7 +631,7 @@
             <p class="site-author-name">友情链接</p>
             
               <span class="links-of-author-item">
-              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              <a href="https://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
               </span>
             
           

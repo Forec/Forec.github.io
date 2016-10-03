@@ -47,7 +47,7 @@
 <meta property="og:description" content="求强连通分量的Tarjan算法和Kosaraju算法。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/Tarjan1.png">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/Kosaraju.png">
-<meta property="og:updated_time" content="2016-02-04T13:11:28.978Z">
+<meta property="og:updated_time" content="2016-10-03T15:39:53.431Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="强连通分量">
 <meta name="twitter:description" content="求强连通分量的Tarjan算法和Kosaraju算法。">
@@ -251,20 +251,20 @@
 </blockquote>
 <a id="more"></a>
 <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><ul>
-<li><a href="http://forec.github.io/2015/09/19/Graph-Algorithms3/#1">求强连通分量的Tarjan算法</a></li>
-<li><a href="http://forec.github.io/2015/09/19/Graph-Algorithms3/#2">Kosaraju算法</a></li>
+<li><a href="https://forec.github.io/2015/09/19/Graph-Algorithms3/#1">求强连通分量的Tarjan算法</a></li>
+<li><a href="https://forec.github.io/2015/09/19/Graph-Algorithms3/#2">Kosaraju算法</a></li>
 </ul>
 <p></p><h1 id="1">求强连通分量的Tarjan算法</h1><p></p>
 <blockquote>
-<p>几年前搞NOIP的时候就已经有很多漂亮的blog介绍tarjan算法，其中<a href="https://www.byvoid.com/blog/scc-tarjan/" target="_blank" rel="external">byvoid</a>的那篇非常简洁明了，并且给出了C语言的代码，但是大部分blog都没有对tarjan中的一些技巧给出详细的证明。ccf这两年正在推广的一个软件能力认证，上周第五次测试的题目里就有tarjan的模板题。现在重写一下tarjan，对一些地方给出证明。我个人认为多数blog里对Tarjan过程的图片展示适得其反，因此这里不会通过图片演示算法流程。关于强连通分量等的概念，在前面两篇： <a href="http://forec.github.io/2015/09/12/Graph-Algorithms1/#1">图的概念和术语</a>，<a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/#5">边的分类</a>。</p>
+<p>几年前搞NOIP的时候就已经有很多漂亮的blog介绍tarjan算法，其中<a href="https://www.byvoid.com/blog/scc-tarjan/" target="_blank" rel="external">byvoid</a>的那篇非常简洁明了，并且给出了C语言的代码，但是大部分blog都没有对tarjan中的一些技巧给出详细的证明。ccf这两年正在推广的一个软件能力认证，上周第五次测试的题目里就有tarjan的模板题。现在重写一下tarjan，对一些地方给出证明。我个人认为多数blog里对Tarjan过程的图片展示适得其反，因此这里不会通过图片演示算法流程。关于强连通分量等的概念，在前面两篇： <a href="https://forec.github.io/2015/09/12/Graph-Algorithms1/#1">图的概念和术语</a>，<a href="https://forec.github.io/2015/09/13/Graph-Algorithms2/#5">边的分类</a>。</p>
 </blockquote>
 <h2 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h2><ul>
 <li>Tarjan算法以DFS为基础，Tarjan生成的每棵深度优先树都是一个<strong>强连通子图</strong>，注意是强连通子图而非强连通分量，在byvoid的blog里并没有对这两个概念进行区分，但其所提供的代码可以得到所有的强连通子图，只需要分别计算一下图中顶点数目即可。因为对每个顶点Tarjan一次，并且需要遍历每条边，整个时间复杂度为O（V+E）。</li>
 <li>下面是详细过程：<ol>
 <li>定义一个Stack，在遍历整棵树的时侯储存节点。</li>
-<li>定义DFN[u]为顶点u的时间戳（在<a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/#3">深度优先搜索</a>中使用的数组d[u]和这里的dfn[u]是一个数组，都记录第一次访问顶点u时的时间），定义LOW[u]为<strong>u或u的子树能够向前追溯到的最早的栈中顶点的时间</strong>。如果不明白LOW数组记录的是什么，对照代码和后面的证明就可以理解。</li>
-<li>按照DFS_Visit(u)的方式访问，不同的是每次对u的邻接顶点v访问时（即有一条有向边（u，v）），根据v的状态的不同予以区分。在<a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/#3">深度优先搜索</a>中，我们用白，灰和黑三种颜色表示顶点的不同状态，其中白色表示第一次访问，灰色表示已经访问但可能还有邻接顶点是白色，黑色表示该顶点所有的邻接顶点都是非白色的。在Tarjan中，对u的每个邻接顶点v，如果v是白色的（未访问过），则先对v用Tarjan，直到以v为根的子树访问完成后，返回顶点u，此时需要更新顶点u的LOW值：<code>Low[u] = min( Low[u], Low[v] )</code>，这根据定义（LOW[u]为u或u的子树能够向前追溯到的最早的栈中顶点的时间）就可以看懂：<strong>因为v是第一次被访问，所以v在u的子树中，Low[v]如果小于Low[u]，则说明以v为根的子树可以追溯到更早的栈中顶点，因此u或u的子树能够向前追溯的最早栈中顶点的时间就需要更新</strong>。</li>
-<li>如果3中的v是灰色的，说明顶点v此刻正在栈中。在<a href="http://forec.github.io/2015/09/13/Graph-Algorithms2/#5">边的分类</a>中，我写过反向边的辨别方法，即对于有向边（u，v），如果第一次访问这条边时，v是灰色，则（u，v）是一条反向边。此时需要更新Low[u]的值：<code>Low[u] = min( Low[u], DFN[v] )</code>。由定义知，DFN[v]记录的是第一次访问到顶点v的时间，<strong>因为（u，v）是反向边，因此u是v子树中的一个顶点，又因为v在栈中，因此v是u可以回溯到的某个栈中顶点</strong>，如果顶点v的时间戳早于之前记录的low[u]，就可以更新low[u]的值。</li>
+<li>定义DFN[u]为顶点u的时间戳（在<a href="https://forec.github.io/2015/09/13/Graph-Algorithms2/#3">深度优先搜索</a>中使用的数组d[u]和这里的dfn[u]是一个数组，都记录第一次访问顶点u时的时间），定义LOW[u]为<strong>u或u的子树能够向前追溯到的最早的栈中顶点的时间</strong>。如果不明白LOW数组记录的是什么，对照代码和后面的证明就可以理解。</li>
+<li>按照DFS_Visit(u)的方式访问，不同的是每次对u的邻接顶点v访问时（即有一条有向边（u，v）），根据v的状态的不同予以区分。在<a href="https://forec.github.io/2015/09/13/Graph-Algorithms2/#3">深度优先搜索</a>中，我们用白，灰和黑三种颜色表示顶点的不同状态，其中白色表示第一次访问，灰色表示已经访问但可能还有邻接顶点是白色，黑色表示该顶点所有的邻接顶点都是非白色的。在Tarjan中，对u的每个邻接顶点v，如果v是白色的（未访问过），则先对v用Tarjan，直到以v为根的子树访问完成后，返回顶点u，此时需要更新顶点u的LOW值：<code>Low[u] = min( Low[u], Low[v] )</code>，这根据定义（LOW[u]为u或u的子树能够向前追溯到的最早的栈中顶点的时间）就可以看懂：<strong>因为v是第一次被访问，所以v在u的子树中，Low[v]如果小于Low[u]，则说明以v为根的子树可以追溯到更早的栈中顶点，因此u或u的子树能够向前追溯的最早栈中顶点的时间就需要更新</strong>。</li>
+<li>如果3中的v是灰色的，说明顶点v此刻正在栈中。在<a href="https://forec.github.io/2015/09/13/Graph-Algorithms2/#5">边的分类</a>中，我写过反向边的辨别方法，即对于有向边（u，v），如果第一次访问这条边时，v是灰色，则（u，v）是一条反向边。此时需要更新Low[u]的值：<code>Low[u] = min( Low[u], DFN[v] )</code>。由定义知，DFN[v]记录的是第一次访问到顶点v的时间，<strong>因为（u，v）是反向边，因此u是v子树中的一个顶点，又因为v在栈中，因此v是u可以回溯到的某个栈中顶点</strong>，如果顶点v的时间戳早于之前记录的low[u]，就可以更新low[u]的值。</li>
 <li>如果3中的v是黑色的（正向边或者交叉边），不需要操作，因为<strong>正向边意味着v在此前已经被访问过，并且遍历过所有以与之可到达的顶点为根的子树，其low值无法更改，而交叉边意味着v和u不属于同一个强连通子图</strong>。</li>
 <li>与u相邻的所有顶点遍历过后，判断u是否是一个构成强连通子图的优先搜索树的根：判断条件是<code>if ( low[u] == dfn[u] )</code>。首先根据定义，<strong>dfn[u]一定不会小于low[u]</strong>，因为顶点u至少可以构成一个只含有u一个顶点的优先搜索树，也就是回溯到自身。如果可以回溯到栈中更早的顶点，就会有dfn[u] &gt; low[u]。当dfn[u] = low[u]时，顶点u就是某个强连通子图的根：<strong>当dfn[u]和low[u]相等，意味着u所能够向上寻找的顶点是其自身，而这时从栈顶到u的所有元素都是以u为根的子树的顶点</strong>，所以栈中u以上的顶点都可以通过u直接或间接到达，而栈中u以上的顶点的low值都为u，也就意味着他们都可以直接或间接回溯到顶点u。因此从栈顶到u的所有元素可以弹出，这些元素组成一个强连通子图。</li>
 <li>通过上面过程可以看出，当有环时，整个环上的顶点的low值是统一的（根的low值），即这些相同low值的顶点属于同一个强连通子图。在弹栈的过程中记录每个强连通子图中顶点个数，就可以得到强连通分量。</li>
@@ -310,7 +310,7 @@
 </li>
 </ul>
 <hr>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/09/19/Graph-Algorithms3/">原始出处</a>(<a href="http://forec.github.io/2015/09/19/Graph-Algorithms3/">http://forec.github.io/2015/09/19/Graph-Algorithms3/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2015/09/19/Graph-Algorithms3/">原始出处</a>(<a href="https://forec.github.io/2015/09/19/Graph-Algorithms3/">https://forec.github.io/2015/09/19/Graph-Algorithms3/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
       
     </div>
@@ -400,7 +400,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -460,7 +460,7 @@
             <p class="site-author-name">友情链接</p>
             
               <span class="links-of-author-item">
-              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              <a href="https://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
               </span>
             
           

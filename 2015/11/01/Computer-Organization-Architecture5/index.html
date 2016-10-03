@@ -48,7 +48,7 @@
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/存储器层次结构.png">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/直接映射的高速缓存.png">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/分页存储器演示.png">
-<meta property="og:updated_time" content="2015-11-01T10:32:28.828Z">
+<meta property="og:updated_time" content="2016-10-03T15:46:15.988Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计组与体系结构笔记（五）">
 <meta name="twitter:description" content="存储器类型和层次结构，高速缓存，虚拟存储器，有效组合方法。">
@@ -331,7 +331,7 @@
 <p>奔腾处理器的存储器管理：奔腾为32位虚拟地址和32位物理地址，分页大小为4KB或4MB，采用分页和分段管理机制的不同组合：包括没有分段和分页的存储器，只有分页的存储器，只有分段的存储器以及二者兼有的存储器。其采用两级高速缓存：L1和L2，都使用一个32位大小的存储区块。L1靠近处理器，L2位于处理器和存储器之间。L1被分割为保存指令的高速缓存（I-Cache）和保存数据的高速缓存（D-Cache）。两个L1 Cache都使用一个LRU位处理置换操作。每个L1有一个TLB，D-Cache的TLB有64个入口目录，I-Cache只有32个入口目录。两个TLB都采用4路的组关联映射方式。L2的规模从512KB（早期）增加到1MB（后期型号）。L2 Cache和两个L1 Cache都采用2路组关联映射方式，都采用MESI高速缓存的一致性协议，每一路高速缓存线都使用2位二进制数存储下列MESI状态中的一种：1）M：高速缓存中数据被修改，与主存储器中不同，2）E：独占的，高速缓存数据没有被修改过，与主存储器相同，3）S：共享的，高速缓存的线/块可以呵其他高速缓存的线/块共享，4）I：无效的，所请求的线/块不在高速缓存中。</p>
 </blockquote>
 <hr>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/11/01/Computer-Organization-Architectur5/">原始出处</a>(<a href="http://forec.github.io/2015/11/01/Computer-Organization-Architecture5/">http://forec.github.io/2015/11/01/Computer-Organization-Architecture5/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2015/11/01/Computer-Organization-Architectur5/">原始出处</a>(<a href="https://forec.github.io/2015/11/01/Computer-Organization-Architecture5/">https://forec.github.io/2015/11/01/Computer-Organization-Architecture5/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
       
     </div>
@@ -421,7 +421,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -481,7 +481,7 @@
             <p class="site-author-name">友情链接</p>
             
               <span class="links-of-author-item">
-              <a href="http://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
+              <a href="https://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
               </span>
             
           

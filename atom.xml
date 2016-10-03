@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-09-27T15:18:17.889Z</updated>
+  <updated>2016-10-03T15:54:54.730Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -16,11 +16,66 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Network Mining Based On Co-occurrence</title>
+    <link href="http://forec.github.io/2016/10/03/co-occurrence-structure-capture/"/>
+    <id>http://forec.github.io/2016/10/03/co-occurrence-structure-capture/</id>
+    <published>2016-10-03T14:16:16.000Z</published>
+    <updated>2016-10-03T15:54:54.730Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;Generate network based on co-occurrence was proposed several decades ago, however, it still occupies most of papers talking about network discovering. Here I want to give a simple introduction for network capture by conventional co-occurrence methods. The following contents are slightly related with the basis of my current work, they are out of date but still useful sometimes.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h1 id=&quot;General-Introduction&quot;&gt;&lt;a href=&quot;#General-Introduction&quot; class=&quot;headerlink&quot; title=&quot;General Introduction&quot;&gt;&lt;/a&gt;General Introduction&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;This article is just an introduction for several methods capturing useful structured data from unstructured data sets. It only talks about the basic implementation of co-occurrence in text data. After reading this short article, you will know how to generate a graph as follows from a paragraph of text, a set of Internet data captured from spiders or even a video.&lt;/li&gt;
+&lt;li&gt;An example, the following picture is generated from a part of the script of 《Train to Busan》. I copy the script from Internet, and it’s easy to be analyzed by code. The picture was cut a little part when I published it.&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/train-to-fusan.svg&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;Entity-Identification&quot;&gt;&lt;a href=&quot;#Entity-Identification&quot; class=&quot;headerlink&quot; title=&quot;Entity Identification&quot;&gt;&lt;/a&gt;Entity Identification&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;A network is composed of a set of nodes and a set of edges. We name the set of nodes &lt;code&gt;V&lt;/code&gt;, and edges &lt;code&gt;E&lt;/code&gt;. The first problem we face is where can we get &lt;code&gt;V&lt;/code&gt;. Entity identification needs to be considered here. &lt;/li&gt;
+&lt;li&gt;Some simple methods such as regress( for binary classification ), SVM can be used if you know the characteristics for nodes. However, in most conditions we even can’t describe what the nodes exactly like. In these conditions, deep learning algorithms such as Convolutional Neural Network could be considered. You can give some nodes you already know, then ask your model to learn what the nodes like. That may be a little complex, so we left them behind. Here we just consider the best condition.&lt;/li&gt;
+&lt;li&gt;Here we make a hypothesis, you already have the set of all the nodes. That means, you have the &lt;code&gt;V&lt;/code&gt; and the data set, what you need to do is just generating a network for the &lt;code&gt;V&lt;/code&gt; from the given data set. Sounds simple? However this is indeed the case. In some few cases, for example, generating network from a movie like the example above, very few main entities appear in a movie, so we can get their identifications (here is name) from web or just make them yourself. &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;Relationship-Identification&quot;&gt;&lt;a href=&quot;#Relationship-Identification&quot; class=&quot;headerlink&quot; title=&quot;Relationship Identification&quot;&gt;&lt;/a&gt;Relationship Identification&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;Here we come across the second question, how to get &lt;code&gt;E&lt;/code&gt;? I will only introduce one simple method here, that’s what I metioned  above, the conventional co-occurrence method. I will introduce some more methods after my current job finished. &lt;/li&gt;
+&lt;li&gt;The co-occurrence network, is just like what its name suggests, use the information that two entities occurred together. For example, in my analysis for 《Train to Busan》, I simply build an edge for two nodes if they occur in a same paragraph. If there always been an edge for two nodes, the weight of that edge will be increased. Once the data set is big enough, the main line of the data set will appear. You can choose building directed edges or undirected edges, and choose complete graph or not.&lt;/li&gt;
+&lt;li&gt;The co-occurrence network is only useful for data sets that have obvious centralization, edges with low weight are always redundant. Also, many nodes will have no sense of presence because they are just playing samll roles. The co-occurrence will make every node connect with the center node, that’s unreasonable. Since we just introduce the very simple condition here, I will present two common ways for reducing the redundancy ans fixing the network.&lt;/li&gt;
+&lt;li&gt;The first way is filter. Easy to understand, just filter out those edges with low weight. The threshold can be adjusted manually or learned by specific models.&lt;/li&gt;
+&lt;li&gt;The second way is segmenting your network. This needs clustering first, and find the community centers. Cut these edges connecting with center nodes but has low weights. The effect is hard to be estimated according to what your network structure likes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;Applicable-Scope&quot;&gt;&lt;a href=&quot;#Applicable-Scope&quot; class=&quot;headerlink&quot; title=&quot;Applicable Scope&quot;&gt;&lt;/a&gt;Applicable Scope&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;Many fields can be applied with co-occurrence method. For example, capturing people relationships from videos, recodings, pictures, etc. I will show how to generate a network from a video later. That will cost a long time since many frame needs to be considered, which is a very time-consuming job.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;I hope this article could give you some help. If this article has any error, or you have some problems/suggestions, please &lt;a href=&quot;mailto:forec@bupt.edu.cn&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;e-mail me&lt;/a&gt;. I am glad to learn from each other.&lt;/p&gt;
+&lt;p&gt;Related Data Download Link： &lt;a href=&quot;http://7xktmz.com1.z0.glb.clouddn.com/Train%20to%20Busan.txt&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Script for 《Train to Busan》&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/10/03/co-occurrence-structure-capture/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/10/03/co-occurrence-structure-capture/&quot;&gt;https://forec.github.io/2016/10/03/co-occurrence-structure-capture/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;Generate network based on co-occurrence was proposed several decades ago, however, it still occupies most of papers talking about network discovering. Here I want to give a simple introduction for network capture by conventional co-occurrence methods. The following contents are slightly related with the basis of my current work, they are out of date but still useful sometimes.&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://forec.github.io/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Algorithms" scheme="http://forec.github.io/tags/Algorithms/"/>
+    
+      <category term="图分割" scheme="http://forec.github.io/tags/%E5%9B%BE%E5%88%86%E5%89%B2/"/>
+    
+      <category term="机器学习" scheme="http://forec.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Cantor Expansion With Duplicate Elements</title>
     <link href="http://forec.github.io/2016/09/27/duplicate-cantor/"/>
     <id>http://forec.github.io/2016/09/27/duplicate-cantor/</id>
     <published>2016-09-27T14:34:03.000Z</published>
-    <updated>2016-09-27T15:18:17.889Z</updated>
+    <updated>2016-10-03T15:53:05.076Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;Cantor Expansion is simple, however, for permutations with duplicate elements, some factors are changed.&lt;br&gt;&lt;strong&gt;For why I use English&lt;/strong&gt;: Since I am going to write an English paper, I want to write several articles in English here for practice. Please forgive me for any inconvenience I may have caused to you.&lt;/p&gt;
@@ -28,12 +83,20 @@
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default&quot;&gt;&lt;/script&gt;
 
-&lt;h1 id=&quot;Basic-Cantor-Expansion&quot;&gt;&lt;a href=&quot;#Basic-Cantor-Expansion&quot; class=&quot;headerlink&quot; title=&quot;Basic Cantor Expansion&quot;&gt;&lt;/a&gt;Basic Cantor Expansion&lt;/h1&gt;&lt;h2 id=&quot;Cantor-Expansion&quot;&gt;&lt;a href=&quot;#Cantor-Expansion&quot; class=&quot;headerlink&quot; title=&quot;Cantor Expansion&quot;&gt;&lt;/a&gt;Cantor Expansion&lt;/h2&gt;&lt;p&gt;A permutation without duplicate elements can have a mapping with a sequence [1..n], for example, think about &lt;code&gt;2134&lt;/code&gt;, a permutation of {1, 2, 3, 4}. To calculate the position of &lt;code&gt;2134&lt;/code&gt; in all permutations of {1, 2, 3, 4}, we can follow the steps: &lt;code&gt;Pos = 1 * 3! + 0 * 2! + 0 * 1! = 6&lt;/code&gt;. The explanation is, since there’s only one element &lt;code&gt;1&lt;/code&gt; in elements behind &lt;code&gt;2&lt;/code&gt; and smaller than &lt;code&gt;2&lt;/code&gt;, if we swap &lt;code&gt;1&lt;/code&gt; and &lt;code&gt;2&lt;/code&gt;, there will be &lt;code&gt;3!&lt;/code&gt; permutations smaller than &lt;code&gt;2134&lt;/code&gt;. Similiar to this, no elements smaller than &lt;code&gt;1&lt;/code&gt;, &lt;code&gt;3&lt;/code&gt; and &lt;code&gt;4&lt;/code&gt;. So the related number with &lt;code&gt;2134&lt;/code&gt; is 6. In &lt;code&gt;C++&lt;/code&gt;, we can define a function named &lt;code&gt;perm2num&lt;/code&gt;, generate the position of a given permutation.&lt;br&gt;&lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;/* n is the number of elements, p is the set of elements */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;perm2num&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; n, &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; *p)&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; num = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, add = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i = n - &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;; i &amp;gt;= &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; i--)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; j = i + &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;; j &amp;lt; n; j++)  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; ( p[j] &amp;lt; p[i] ) &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                num += add;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        add *= (n - i);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; num; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h2 id=&quot;Cantor-Inverse&quot;&gt;&lt;a href=&quot;#Cantor-Inverse&quot; class=&quot;headerlink&quot; title=&quot;Cantor Inverse&quot;&gt;&lt;/a&gt;Cantor Inverse&lt;/h2&gt;&lt;p&gt;To generate a permutation from the position it stays in, we can follow a reverse of the upper step. The &lt;code&gt;C++&lt;/code&gt; code is just the reverse operation of &lt;code&gt;perm2num&lt;/code&gt;.&lt;br&gt;&lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;num2perm&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; n, &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; *p, &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; num)&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i = n - &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;; i &amp;gt;= &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; i--)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        p[i] = num % ( n - i );&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        num /= (n - i);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i = n - &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;; i &amp;gt;= &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; i--)  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; j = i - &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;; j &amp;gt;= &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; j--)  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; ( p[j] &amp;lt;= p[i] ) &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                p[i]++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h1 id=&quot;With-Duplicate-Elements&quot;&gt;&lt;a href=&quot;#With-Duplicate-Elements&quot; class=&quot;headerlink&quot; title=&quot;With Duplicate Elements&quot;&gt;&lt;/a&gt;With Duplicate Elements&lt;/h1&gt;&lt;p&gt;To generate the position of a permutation with duplicate elements, two factors influenced. &lt;strong&gt;First&lt;/strong&gt;, when calculate the possible increase for element &lt;code&gt;p[i]&lt;/code&gt;, in basic cantor expansion, we need to find how many elements are smaller than &lt;code&gt;p[i]&lt;/code&gt; and behind &lt;code&gt;p[i]&lt;/code&gt;, and multiply this number with &lt;code&gt;(n - i)!&lt;/code&gt;. Now, we need to divide this by the product of some factorials, which are how many elements are duplicate behind &lt;code&gt;p[i]&lt;/code&gt;. For example, &lt;code&gt;BABA&lt;/code&gt;, to calculate the increase for first B, 2 elements, both are A, are smaller than B. In basic Cantor Expansion, it should be &lt;code&gt;2 * 3!&lt;/code&gt;, now we need to divide it by &lt;code&gt;2! * 1!&lt;/code&gt;. The &lt;code&gt;2!&lt;/code&gt; is from 2 B after swapping, and &lt;code&gt;1!&lt;/code&gt; if from one A after swapping. &lt;strong&gt;Second&lt;/strong&gt;, if one element &lt;code&gt;y&lt;/code&gt; has been used in calculating an increase for element &lt;code&gt;p[i]&lt;/code&gt;, &lt;code&gt;y&lt;/code&gt; should only be counted once. For example, &lt;code&gt;BABA&lt;/code&gt; only adds &lt;code&gt;2 * 3! / 2!&lt;/code&gt; once.&lt;/p&gt;
+&lt;h1 id=&quot;Basic-Cantor-Expansion&quot;&gt;&lt;a href=&quot;#Basic-Cantor-Expansion&quot; class=&quot;headerlink&quot; title=&quot;Basic Cantor Expansion&quot;&gt;&lt;/a&gt;Basic Cantor Expansion&lt;/h1&gt;&lt;h2 id=&quot;Cantor-Expansion&quot;&gt;&lt;a href=&quot;#Cantor-Expansion&quot; class=&quot;headerlink&quot; title=&quot;Cantor Expansion&quot;&gt;&lt;/a&gt;Cantor Expansion&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;A permutation without duplicate elements can have a mapping with a sequence [1..n], for example, think about &lt;code&gt;2134&lt;/code&gt;, a permutation of {1, 2, 3, 4}. To calculate the position of &lt;code&gt;2134&lt;/code&gt; in all permutations of {1, 2, 3, 4}, we can follow the steps: &lt;code&gt;Pos = 1 * 3! + 0 * 2! + 0 * 1! = 6&lt;/code&gt;. The explanation is, since there’s only one element &lt;code&gt;1&lt;/code&gt; in elements behind &lt;code&gt;2&lt;/code&gt; and smaller than &lt;code&gt;2&lt;/code&gt;, if we swap &lt;code&gt;1&lt;/code&gt; and &lt;code&gt;2&lt;/code&gt;, there will be &lt;code&gt;3!&lt;/code&gt; permutations smaller than &lt;code&gt;2134&lt;/code&gt;. Similiar to this, no elements smaller than &lt;code&gt;1&lt;/code&gt;, &lt;code&gt;3&lt;/code&gt; and &lt;code&gt;4&lt;/code&gt;. So the related number with &lt;code&gt;2134&lt;/code&gt; is 6. In &lt;code&gt;C++&lt;/code&gt;, we can define a function named &lt;code&gt;perm2num&lt;/code&gt;, generate the position of a given permutation.&lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;/* n is the number of elements, p is the set of elements */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;perm2num&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; n, &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; *p)&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; num = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, add = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i = n - &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;; i &amp;gt;= &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; i--)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; j = i + &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;; j &amp;lt; n; j++)  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; ( p[j] &amp;lt; p[i] ) &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                num += add;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        add *= (n - i);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; num; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;Cantor-Inverse&quot;&gt;&lt;a href=&quot;#Cantor-Inverse&quot; class=&quot;headerlink&quot; title=&quot;Cantor Inverse&quot;&gt;&lt;/a&gt;Cantor Inverse&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;To generate a permutation from the position it stays in, we can follow a reverse of the upper step. The &lt;code&gt;C++&lt;/code&gt; code is just the reverse operation of &lt;code&gt;perm2num&lt;/code&gt;.  &lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;num2perm&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; n, &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; *p, &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; num)&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i = n - &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;; i &amp;gt;= &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; i--)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        p[i] = num % ( n - i );&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        num /= (n - i);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i = n - &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;; i &amp;gt;= &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; i--)  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; j = i - &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;; j &amp;gt;= &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; j--)  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; ( p[j] &amp;lt;= p[i] ) &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                p[i]++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;With-Duplicate-Elements&quot;&gt;&lt;a href=&quot;#With-Duplicate-Elements&quot; class=&quot;headerlink&quot; title=&quot;With Duplicate Elements&quot;&gt;&lt;/a&gt;With Duplicate Elements&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;To generate the position of a permutation with duplicate elements, two factors influenced. &lt;strong&gt;First&lt;/strong&gt;, when calculate the possible increase for element &lt;code&gt;p[i]&lt;/code&gt;, in basic cantor expansion, we need to find how many elements are smaller than &lt;code&gt;p[i]&lt;/code&gt; and behind &lt;code&gt;p[i]&lt;/code&gt;, and multiply this number with &lt;code&gt;(n - i)!&lt;/code&gt;. Now, we need to divide this by the product of some factorials, which are how many elements are duplicate behind &lt;code&gt;p[i]&lt;/code&gt;. For example, &lt;code&gt;BABA&lt;/code&gt;, to calculate the increase for first B, 2 elements, both are A, are smaller than B. In basic Cantor Expansion, it should be &lt;code&gt;2 * 3!&lt;/code&gt;, now we need to divide it by &lt;code&gt;2! * 1!&lt;/code&gt;. The &lt;code&gt;2!&lt;/code&gt; is from 2 B after swapping, and &lt;code&gt;1!&lt;/code&gt; if from one A after swapping. &lt;strong&gt;Second&lt;/strong&gt;, if one element &lt;code&gt;y&lt;/code&gt; has been used in calculating an increase for element &lt;code&gt;p[i]&lt;/code&gt;, &lt;code&gt;y&lt;/code&gt; should only be counted once. For example, &lt;code&gt;BABA&lt;/code&gt; only adds &lt;code&gt;2 * 3! / 2!&lt;/code&gt; once.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;hr&gt;
 &lt;p&gt;I want to recommand a website &lt;a href=&quot;https://www.codewars.com&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://www.codewars.com&lt;/a&gt; here. My username in that website is Forec, you can find me &lt;a href=&quot;https://www.codewars.com/users/Forec&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;here&lt;/a&gt;. I was inspired by one kata in that website, and that reminds me of cantor expansion. You can find the kata &lt;a href=&quot;https://www.codewars.com/kata/alphabetic-anagrams/haskell&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;here&lt;/a&gt;. I didn’t find any articles talking about duplicate condition. I wish this can help you.&lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/09/27/duplicate-cantor/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/09/27/duplicate-cantor/&quot;&gt;http://forec.github.io/2016/09/27/duplicate-cantor/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/09/27/duplicate-cantor/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/09/27/duplicate-cantor/&quot;&gt;https://forec.github.io/2016/09/27/duplicate-cantor/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
     
     <summary type="html">
@@ -56,7 +119,7 @@
     <link href="http://forec.github.io/2016/09/14/tips-for-qt/"/>
     <id>http://forec.github.io/2016/09/14/tips-for-qt/</id>
     <published>2016-09-14T02:36:35.000Z</published>
-    <updated>2016-09-20T14:03:40.715Z</updated>
+    <updated>2016-10-03T15:34:06.592Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;编写 &lt;a href=&quot;https://github.com/Forec/light-applications/tree/master/remote-control&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Remote-Control&lt;/a&gt; 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。&lt;/p&gt;
@@ -126,7 +189,7 @@
 &lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/21268558/application-failed-to-start-because-it-could-not-find-or-load-the-qt-platform-pl&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Qt Windows部署&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://blog.csdn.net/abeldeng/article/details/24767245&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Qt 多个数据库文件操作&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/09/14/tips-for-qt/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/09/14/tips-for-qt/&quot;&gt;http://forec.github.io/2016/09/14/tips-for-qt/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/09/14/tips-for-qt/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/09/14/tips-for-qt/&quot;&gt;https://forec.github.io/2016/09/14/tips-for-qt/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
     
     <summary type="html">
@@ -157,7 +220,7 @@
     <link href="http://forec.github.io/2016/09/09/docker-problems/"/>
     <id>http://forec.github.io/2016/09/09/docker-problems/</id>
     <published>2016-09-08T16:33:36.000Z</published>
-    <updated>2016-09-20T14:04:20.482Z</updated>
+    <updated>2016-10-03T15:34:00.445Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理Docker的配置，以及遇到问题的解决方案。&lt;/p&gt;
@@ -197,7 +260,7 @@
 &lt;li&gt;&lt;a href=&quot;http://www.linuxdiyf.com/linux/22199.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Docker下Ubuntu Update错误&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/33933107/change-docker-machine-location-windows&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Windows下修改Docker Images位置&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/09/09/docker-problems/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/09/09/docker-problems/&quot;&gt;http://forec.github.io/2016/09/09/docker-problems/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/09/09/docker-problems/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/09/09/docker-problems/&quot;&gt;https://forec.github.io/2016/09/09/docker-problems/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
     
     <summary type="html">
@@ -222,7 +285,7 @@
     <link href="http://forec.github.io/2016/09/08/gochan-accumulate/"/>
     <id>http://forec.github.io/2016/09/08/gochan-accumulate/</id>
     <published>2016-09-08T02:33:31.000Z</published>
-    <updated>2016-09-08T16:51:21.928Z</updated>
+    <updated>2016-10-03T15:34:24.046Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理近期遇到的Golang中通道和协程的技巧。&lt;/p&gt;
@@ -266,7 +329,7 @@
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;https://github.com/Unknwon/the-way-to-go_ZH_CN/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;《The Way To Go》中文译本&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/09/08/gochan-accumulate/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/09/08/gochan-accumulate/&quot;&gt;http://forec.github.io/2016/09/08/gochan-accumulate/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/09/08/gochan-accumulate/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/09/08/gochan-accumulate/&quot;&gt;https://forec.github.io/2016/09/08/gochan-accumulate/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
     
     <summary type="html">
@@ -289,10 +352,10 @@
     <link href="http://forec.github.io/2016/07/11/spark-initial/"/>
     <id>http://forec.github.io/2016/07/11/spark-initial/</id>
     <published>2016-07-11T06:53:38.000Z</published>
-    <updated>2016-07-10T13:01:59.987Z</updated>
+    <updated>2016-10-03T15:35:46.130Z</updated>
     
     <content type="html">&lt;blockquote&gt;
-&lt;p&gt;在&lt;a href=&quot;http://forec.github.io/2016/07/09/hadoop-build/&quot;&gt;Hadoop配置与使用&lt;/a&gt;基础上配置Spark集群计算环境，以及简单Scala程序在集群的运行。&lt;/p&gt;
+&lt;p&gt;在&lt;a href=&quot;https://forec.github.io/2016/07/09/hadoop-build/&quot;&gt;Hadoop配置与使用&lt;/a&gt;基础上配置Spark集群计算环境，以及简单Scala程序在集群的运行。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;h1 id=&quot;在Hadoop通用并行框架上配置Spark&quot;&gt;&lt;a href=&quot;#在Hadoop通用并行框架上配置Spark&quot; class=&quot;headerlink&quot; title=&quot;在Hadoop通用并行框架上配置Spark&quot;&gt;&lt;/a&gt;在Hadoop通用并行框架上配置Spark&lt;/h1&gt;&lt;ul&gt;
@@ -325,13 +388,13 @@
 &lt;li&gt;所有RDD：&lt;br&gt;&lt;a href=&quot;http://spark.apache.org/docs/1.5.1/api/scala/index.html#org.apache.spark.rdd.RDD&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://spark.apache.org/docs/1.5.1/api/scala/index.html#org.apache.spark.rdd.RDD&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/07/11/spark-initial/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/07/11/spark-initial/&quot;&gt;http://forec.github.io/2016/07/11/spark-initial/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/07/11/spark-initial/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/07/11/spark-initial/&quot;&gt;https://forec.github.io/2016/07/11/spark-initial/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
     
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;p&gt;在&lt;a href=&quot;http://forec.github.io/2016/07/09/hadoop-build/&quot;&gt;Hadoop配置与使用&lt;/a&gt;基础上配置Spark集群计算环境，以及简单Scala程序在集群的运行。&lt;/p&gt;
+&lt;p&gt;在&lt;a href=&quot;https://forec.github.io/2016/07/09/hadoop-build/&quot;&gt;Hadoop配置与使用&lt;/a&gt;基础上配置Spark集群计算环境，以及简单Scala程序在集群的运行。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
@@ -350,7 +413,7 @@
     <link href="http://forec.github.io/2016/07/10/python-visit-access-database/"/>
     <id>http://forec.github.io/2016/07/10/python-visit-access-database/</id>
     <published>2016-07-10T08:45:29.000Z</published>
-    <updated>2016-09-20T14:05:27.952Z</updated>
+    <updated>2016-10-03T15:33:26.298Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;记录在windows 10下配置python3链接access数据库过程和几个简单操作。&lt;/p&gt;
@@ -379,6 +442,8 @@
 &lt;li&gt;数据锁定类型为4：批量乐观锁定，允许修改多个记录，只有调用UpdateBatch方法后才锁定记录。&lt;br&gt;当不需要改动任何记录时，使用只读的记录集，这样提供者不用做任何检测。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;命令执行&quot;&gt;&lt;a href=&quot;#命令执行&quot; class=&quot;headerlink&quot; title=&quot;命令执行&quot;&gt;&lt;/a&gt;命令执行&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;p&gt;执行SQL语句，以插入表为例&lt;/p&gt;
 &lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sql_statement = &lt;span class=&quot;string&quot;&gt;&quot;Insert INTO [Table_Name] ([Field_1], [Field_2]) VALUES (&#39;data1&#39;, &#39;data2&#39;)&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;conn.Execute(sql_statement)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;/li&gt;
@@ -398,7 +463,7 @@
 &lt;li&gt;&lt;a href=&quot;http://soft.zdnet.com.cn/software_zone/2008/0520/870686.shtml&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Python读取mdb文件&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://my.oschina.net/duxuefeng/blog/64137&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;win32com用法_杜雪峰的博客&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/07/10/python-visit-access-database/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/07/10/python-visit-access-database/&quot;&gt;http://forec.github.io/2016/07/10/python-visit-access-database/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/07/10/python-visit-access-database/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/07/10/python-visit-access-database/&quot;&gt;https://forec.github.io/2016/07/10/python-visit-access-database/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
     
     <summary type="html">
@@ -423,7 +488,7 @@
     <link href="http://forec.github.io/2016/07/09/hadoop-build/"/>
     <id>http://forec.github.io/2016/07/09/hadoop-build/</id>
     <published>2016-07-09T12:56:27.000Z</published>
-    <updated>2016-07-10T13:04:34.937Z</updated>
+    <updated>2016-10-03T15:35:35.911Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;简单记录在Ubuntu Linux上搭建本地伪分布式的Hadoop MapReduce集群过程及使用方法。&lt;/p&gt;
@@ -503,7 +568,7 @@
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;p&gt;参考文献： &lt;a href=&quot;http://hadoop.apache.org/docs/r2.6.4/hadoop-project-dist/hadoop-common/SingleCluster.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hadoop官方文档&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/07/09/hadoop-build/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/07/09/hadoop-build/&quot;&gt;http://forec.github.io/2016/07/09/hadoop-build/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/07/09/hadoop-build/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/07/09/hadoop-build/&quot;&gt;https://forec.github.io/2016/07/09/hadoop-build/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
     
     <summary type="html">
@@ -526,7 +591,7 @@
     <link href="http://forec.github.io/2016/03/24/church-count/"/>
     <id>http://forec.github.io/2016/03/24/church-count/</id>
     <published>2016-03-24T08:08:22.000Z</published>
-    <updated>2016-09-20T14:43:33.578Z</updated>
+    <updated>2016-10-03T15:33:52.574Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;记录自己在理解sicp习题2.6中Church计数时的思考过程，对术语的定义均来自&lt;a href=&quot;https://en.wikipedia.org/wiki/λ_calculus&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;wiki&lt;/a&gt;。谨记函数为一等公民，过程即数据。&lt;/p&gt;
@@ -586,7 +651,7 @@
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;p&gt;参考文献： 《计算机程序的构造和解释》&lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/03/24/church-count/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/03/24/church-count/&quot;&gt;http://forec.github.io/2016/03/24/church-count/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/03/24/church-count/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/03/24/church-count/&quot;&gt;https://forec.github.io/2016/03/24/church-count/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
     
     <summary type="html">
@@ -611,7 +676,7 @@
     <link href="http://forec.github.io/2016/03/12/community-found/"/>
     <id>http://forec.github.io/2016/03/12/community-found/</id>
     <published>2016-03-12T07:26:08.000Z</published>
-    <updated>2016-09-20T15:39:36.090Z</updated>
+    <updated>2016-10-03T15:33:43.758Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;复杂网络是复杂系统的抽象，其中一个重要特征是网络中所呈现出的社区结构。许多网络是异构的，对于构成网络的不同类型节点所组成的子图称为网络中的社区。整理了几个传统的社区发现算法流程和大致原理，记录备忘。&lt;/p&gt;
@@ -723,7 +788,7 @@
 &lt;li&gt;&lt;a href=&quot;http://wenku.baidu.com/link?url=0la9WTtNcZNOV7A0zJmJPXx1XRK935PLZAJyKuGhK5h0vzVToyjdK9mW9eMv2tRc3o3-XFp-73aDn4YldFTpzL5cHigU6C6c9n0Kk33Z8wC&amp;amp;qq-pf-to=pcqq.group&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;复杂网络的社区发现算法研究&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://www.docin.com/p-886876763.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;基于点聚集系数和边聚集系数的社区发现算法&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/03/12/community-found/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/03/12/community-found/&quot;&gt;http://forec.github.io/2016/03/12/community-found/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/03/12/community-found/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/03/12/community-found/&quot;&gt;https://forec.github.io/2016/03/12/community-found/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
     
     <summary type="html">
@@ -740,159 +805,6 @@
       <category term="Algorithms" scheme="http://forec.github.io/tags/Algorithms/"/>
     
       <category term="图分割" scheme="http://forec.github.io/tags/%E5%9B%BE%E5%88%86%E5%89%B2/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux各发行版及Emacs配置备忘</title>
-    <link href="http://forec.github.io/2016/02/29/bugs-for-using-linux/"/>
-    <id>http://forec.github.io/2016/02/29/bugs-for-using-linux/</id>
-    <published>2016-02-29T11:42:03.000Z</published>
-    <updated>2016-09-14T02:39:53.713Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;不定期整理在使用各类linux发行版和Emacs时的配置，以及遇到的各类问题的解决方案。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;Fedora&quot;&gt;&lt;a href=&quot;#Fedora&quot; class=&quot;headerlink&quot; title=&quot;Fedora&quot;&gt;&lt;/a&gt;Fedora&lt;/h1&gt;&lt;h2 id=&quot;Mysql5-1以上版本中文编码&quot;&gt;&lt;a href=&quot;#Mysql5-1以上版本中文编码&quot; class=&quot;headerlink&quot; title=&quot;Mysql5.1以上版本中文编码&quot;&gt;&lt;/a&gt;Mysql5.1以上版本中文编码&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;在mysql中输入&lt;code&gt;show variables like &amp;#39;character%&amp;#39;;&lt;/code&gt;查看编码配置，此时有某行为Latin1&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;编辑/etc/mysql/my.cnf（或在/etc/my.cnf），为各部分增加或修改为&lt;/p&gt;
-&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;[client]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;default-character-set=utf8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[mysqld]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;character-set-server=utf8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;collation-server=utf8_general_ci&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;init_connect=&lt;span class=&quot;string&quot;&gt;&#39;SET NAMES utf8&#39;&lt;/span&gt;（或SET NAMES &lt;span class=&quot;string&quot;&gt;&#39;utf8&#39;&lt;/span&gt;）&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[mysql]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;default-character-set=utf8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;重启mysql，服务映射为mysqld，&lt;code&gt;sudo service restart mysqld&lt;/code&gt;或&lt;code&gt;sudo /etc/init.d/mysql restart&lt;/code&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;apache服务器配置&quot;&gt;&lt;a href=&quot;#apache服务器配置&quot; class=&quot;headerlink&quot; title=&quot;apache服务器配置&quot;&gt;&lt;/a&gt;apache服务器配置&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;编辑~/work/program/apache-2.4.17/conf/httpd.conf&lt;/li&gt;
-&lt;li&gt;将其中的&lt;code&gt;#Listen 12.34.56.78:80&lt;/code&gt;下面一行的&lt;code&gt;Listen 80&lt;/code&gt;改成监听端口，如8080&lt;/li&gt;
-&lt;li&gt;向下找到User和Group两项，在终端输入groups可以看到当前用户和所属群组，修改为当前用户及群组&lt;/li&gt;
-&lt;li&gt;向下找到ServerName，改为IP地址，如127.0.0.1:8080，通过其访问apache&lt;/li&gt;
-&lt;li&gt;向下设置DocumentRoot，为网站所在目录，访问权限修改为Require all granted（全部允许）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;开机挂载非EXT分区&quot;&gt;&lt;a href=&quot;#开机挂载非EXT分区&quot; class=&quot;headerlink&quot; title=&quot;开机挂载非EXT分区&quot;&gt;&lt;/a&gt;开机挂载非EXT分区&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;fedora的分区配置在/dev/下&lt;/li&gt;
-&lt;li&gt;在/mnt/下新建文件夹如Professional，&lt;code&gt;fdisk -l&lt;/code&gt;查看所有分区&lt;/li&gt;
-&lt;li&gt;如对应分区为/dev/sdb4，则&lt;code&gt;mount /mnt/Professional /dev/sdb4&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;编辑/etc/fstab，在最后加入&lt;code&gt;/dev/sdb4 /mnt/Profession ntfs iocharset=utf8, umast=0 0 0&lt;/code&gt;，ntfs随分区格式改变&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;sqlite3API编译&quot;&gt;&lt;a href=&quot;#sqlite3API编译&quot; class=&quot;headerlink&quot; title=&quot;sqlite3API编译&quot;&gt;&lt;/a&gt;sqlite3API编译&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;gcc sqlite3.c test.c -lpthread -ldl&lt;/code&gt;生成a.out。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;Ubuntu&quot;&gt;&lt;a href=&quot;#Ubuntu&quot; class=&quot;headerlink&quot; title=&quot;Ubuntu&quot;&gt;&lt;/a&gt;Ubuntu&lt;/h1&gt;&lt;h2 id=&quot;安装Topcoder&quot;&gt;&lt;a href=&quot;#安装Topcoder&quot; class=&quot;headerlink&quot; title=&quot;安装Topcoder&quot;&gt;&lt;/a&gt;安装Topcoder&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;配置java环境，&lt;code&gt;apt-get install java&lt;/code&gt;，或者到&lt;a href=&quot;http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Java SE&lt;/a&gt;下载最新的jdk。&lt;/li&gt;
-&lt;li&gt;点此&lt;a href=&quot;https://community.topcoder.com/tc?module=Static&amp;amp;d1=applet&amp;amp;d2=partial-support&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;下载Topcoder的客户端&lt;/a&gt;，下载ContestAppletProd.jnlp。&lt;/li&gt;
-&lt;li&gt;安装javaws，并启动ContestAppletProd.jnlp。&lt;code&gt;sudo apt-get install javaws&lt;/code&gt;，&lt;code&gt;javaws ContestAppletProd.jnlp&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;制作Topcoder桌面启动器：&lt;code&gt;cd /usr/share/applications/&lt;/code&gt;，&lt;code&gt;sudo vi TopCoder.desktop&lt;/code&gt;，选取png图片作为启动器图标，保存在/path/to/TopCoder/TopCoderIcon.png，将以下内容保存，两个地址为绝对地址。&lt;/p&gt;
-&lt;figure class=&quot;highlight protobuf&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;　　　　[Desktop Entry]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;constant&quot;&gt;　　　　Version&lt;/span&gt;=&lt;span class=&quot;number&quot;&gt;1.0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;constant&quot;&gt;　　　　Name&lt;/span&gt;=TopCoder&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;constant&quot;&gt;　　　　Exec&lt;/span&gt;=javaws /path/to/TopCoder/ContestAppletProd.jnlp&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;constant&quot;&gt;　　　　Terminal&lt;/span&gt;=&lt;span class=&quot;literal&quot;&gt;false&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;constant&quot;&gt;　　　　Icon&lt;/span&gt;=/path/to/TopCoder/TopCoderIcon.png&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;constant&quot;&gt;　　　　Type&lt;/span&gt;=Application&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;constant&quot;&gt;　　　　Categories&lt;/span&gt;=Development&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;安装插件，在&lt;a href=&quot;https://community.topcoder.com/tc?module=Static&amp;amp;d1=applet&amp;amp;d2=plugins&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;这里&lt;/a&gt;下载TZTester、CodeProcessor和FileEdit。CodeProcessor对Python不支持。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;登录Arena后，选择”Options”→”Editors”，调出新窗口，点击”Add”，在”name”栏填”FileEdit”，”EntryPoint”栏填”fileedit.EntryPoint”，路径浏览选择”FileEdit.jar”所在位置，OK保存。&lt;/li&gt;
-&lt;li&gt;“options”→”Editors”，调出新窗口，点击”Add”添加全部三个文件，包括 “FileEdit.jar”。此次”name”栏填”CodeProcessor”，”EntryPoint”栏填 “codeprocessor.EntryPoint”，路径栏浏览三个文件的位置。&lt;/li&gt;
-&lt;li&gt;选择”CodeProcessor”作为”Default Editor”，即在前面的两个白色的括号中的第一个打勾。&lt;/li&gt;
-&lt;li&gt;选定”CodeProcessor”（高亮显示），按 “Configure”。在”Editor EntryPoint”栏键入”fileedit.EntryPoint”，在 “Processor Class”栏键入 “tangentz.TZTester”，按 “Verify”，弹出窗口检查是否全部 “found”。点击后面的”configure”，选中”Write the problem description using HTML”，将”File Extension”改为”html”。在”Enter directory read/write problems to:”处填上编写程序文件的绝对路径。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;安装matlab&quot;&gt;&lt;a href=&quot;#安装matlab&quot; class=&quot;headerlink&quot; title=&quot;安装matlab&quot;&gt;&lt;/a&gt;安装matlab&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;sudo mkdir /media/matlab/&lt;/code&gt;，&lt;code&gt;sudo mount -o loop /path/to/matlab.iso /media/matlab&lt;/code&gt;挂载iso镜像。&lt;/li&gt;
-&lt;li&gt;cd到挂载的镜像中，&lt;code&gt;./install&lt;/code&gt;开始图形界面安装。使用/media/matlab/crack/下的序列号。&lt;/li&gt;
-&lt;li&gt;安装完成后复制crack下的libmwservices.so到matlab安装目录下的bin/glnxa64。&lt;code&gt;sudo cp /path/to/libmwservices.so /path/to/matlab-install-place/bin/glnxa64/&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;进入matlab安装目录下的bin文件夹，&lt;code&gt;./activate matlab&lt;/code&gt;对matlab激活，选中crack下的license激活。&lt;/li&gt;
-&lt;li&gt;apt-get安装matlab-support，否则打开matlab闪退。matlab-support会把matlab自动加入环境变量，并生成桌面启动器。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;修改环境变量&quot;&gt;&lt;a href=&quot;#修改环境变量&quot; class=&quot;headerlink&quot; title=&quot;修改环境变量&quot;&gt;&lt;/a&gt;修改环境变量&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;修改系统环境变量&lt;code&gt;sudo vi /etc/environment&lt;/code&gt;，在PATH=末尾添加&lt;code&gt;:/path/to/your/dir&lt;/code&gt;，&lt;code&gt;source /etc/environment&lt;/code&gt;生效。&lt;/li&gt;
-&lt;li&gt;修改当前用户环境变量&lt;code&gt;sudo vi ~/.bashrc&lt;/code&gt;，在末尾添加&lt;code&gt;export PATH=/path/to/your/dir:$PATH&lt;/code&gt;，&lt;code&gt;source ~/.bashrc&lt;/code&gt;生效。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;安装LaTex&quot;&gt;&lt;a href=&quot;#安装LaTex&quot; class=&quot;headerlink&quot; title=&quot;安装LaTex&quot;&gt;&lt;/a&gt;安装LaTex&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;sudo apt-get install texlive-full&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sudo apt-get install texmaker&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;安装中文字体支持&lt;code&gt;sudo apt-get install latex-cjk-all&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;hexo等工程需要更新nodejs&quot;&gt;&lt;a href=&quot;#hexo等工程需要更新nodejs&quot; class=&quot;headerlink&quot; title=&quot;hexo等工程需要更新nodejs&quot;&gt;&lt;/a&gt;hexo等工程需要更新nodejs&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;sudo apt-get install curl&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;curl --silent --location https://deb.nodesource.com/setup_5.x | sudo bash -&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sudo apt-get install nodejs&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;安装libpcap库&quot;&gt;&lt;a href=&quot;#安装libpcap库&quot; class=&quot;headerlink&quot; title=&quot;安装libpcap库&quot;&gt;&lt;/a&gt;安装libpcap库&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;最新版本&lt;code&gt;http://tcpdump.org/release&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;解压后进入目录，&lt;code&gt;./configure&lt;/code&gt;过程可能缺少flex，之后&lt;code&gt;make&lt;/code&gt;过程可能缺少yacc（&lt;code&gt;sudo apt-get install -y byacc&lt;/code&gt;），均需安装。&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;make install&lt;/code&gt;后运行二进制文件会提示缺少链接库，需从&lt;code&gt;/usr/lib/x86_64-linux-gnu&lt;/code&gt;下拷贝&lt;code&gt;libpcap.so.1.x.x&lt;/code&gt;并重命名为&lt;code&gt;libpcap.so.1&lt;/code&gt;保存至&lt;code&gt;/usr/lib&lt;/code&gt;下。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;为Firefox安装Adobe-Flash-Player&quot;&gt;&lt;a href=&quot;#为Firefox安装Adobe-Flash-Player&quot; class=&quot;headerlink&quot; title=&quot;为Firefox安装Adobe Flash Player&quot;&gt;&lt;/a&gt;为Firefox安装Adobe Flash Player&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;从&lt;code&gt;https://get.adobe.com/cn/&lt;/code&gt;获取&lt;code&gt;.tar.gz&lt;/code&gt;格式的安装包。&lt;/li&gt;
-&lt;li&gt;解压&lt;code&gt;install_flash_player_11_linux.x86_64.tar.gz&lt;/code&gt;到某目录下，得到&lt;code&gt;libflashplayer.so&lt;/code&gt;，将该文件复制到Firefox的插件目录下，通常在&lt;code&gt;/usr/lib/mozilla/plugins/&lt;/code&gt;，复制后chmod 777。&lt;/li&gt;
-&lt;li&gt;将解压出来的usr目录下所有内容拷贝到系统usr目录下，&lt;code&gt;cp -r ./usr/* /usr/&lt;/code&gt;。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;开机挂载非EXT分区-1&quot;&gt;&lt;a href=&quot;#开机挂载非EXT分区-1&quot; class=&quot;headerlink&quot; title=&quot;开机挂载非EXT分区&quot;&gt;&lt;/a&gt;开机挂载非EXT分区&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;Ubuntu 12.10后挂载的分区记录在/dev/下，分区默认挂载点在&lt;code&gt;/media/&amp;lt;username&amp;gt;/&amp;lt;device&amp;gt;&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;在&lt;code&gt;/media/&amp;lt;username&amp;gt;&lt;/code&gt;下新建文件夹如Professional，&lt;code&gt;fdisk -l&lt;/code&gt;查看所有分区&lt;/li&gt;
-&lt;li&gt;如对应分区为/dev/sdb4，挂载到Professional，则&lt;code&gt;mount -t fstype /dev/sdb4 /media/forec/Professional&lt;/code&gt;。挂载点可变。&lt;code&gt;-t&lt;/code&gt;指定挂载的文件系统类型，常用的有&lt;ul&gt;
-&lt;li&gt;minix Linux最早使用的文件系统。&lt;/li&gt;
-&lt;li&gt;ext2 Linux目前的常用文件系统。&lt;/li&gt;
-&lt;li&gt;msdos MS-DOS 的 FAT。&lt;/li&gt;
-&lt;li&gt;vfat Win85/98 的 VFAT。&lt;/li&gt;
-&lt;li&gt;nfs 网络文件系统。&lt;/li&gt;
-&lt;li&gt;iso9660 CD-ROM光盘的标准文件系统。&lt;/li&gt;
-&lt;li&gt;ntfs Windows NT的文件系统。&lt;/li&gt;
-&lt;li&gt;hpfs OS/2文件系统。Windows NT 3.51之前版本的文件系统。&lt;/li&gt;
-&lt;li&gt;auto 自动检测文件系统。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;可将经常使用的设备写入文件&lt;code&gt;/etc/fastab&lt;/code&gt;,以使系统在每次启动时自动加载。mount加载设备的信息记录在&lt;code&gt;/etc/mtab&lt;/code&gt;文件中。使用umount命令卸载设备时，记录将被清除。&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sudo blkid&lt;/code&gt;查看分区UUID，编辑/etc/fstab，在文件末尾加入&lt;code&gt;UUID=********** /media/forec/Professional ntfs defaults 0 1&lt;/code&gt;，ntfs随分区格式改变&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;安装Google-Chrome&quot;&gt;&lt;a href=&quot;#安装Google-Chrome&quot; class=&quot;headerlink&quot; title=&quot;安装Google Chrome&quot;&gt;&lt;/a&gt;安装Google Chrome&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;可从&lt;a href=&quot;https://www.google.com/intl/en/chrome/browser/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;此处&lt;/a&gt;下载Chrome，或使用wget下载，32位地址为&lt;code&gt;https://dl.google.com/linux/direct/google-chrome-stable_current_i386.deb&lt;/code&gt;，64位地址为&lt;code&gt;https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;下载完成后解包安装，&lt;code&gt;sudo dpkg -i google-chrome-stable_current_amd64.deb&lt;/code&gt;，可能出现缺少依赖项类的error。&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sudo apt-get -f install&lt;/code&gt;，处理error并安装chrome。&lt;/li&gt;
-&lt;li&gt;从终端输入&lt;code&gt;google-chrome link_you_want&lt;/code&gt;可从chrome访问网址，或从启动器启动。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;Emacs&quot;&gt;&lt;a href=&quot;#Emacs&quot; class=&quot;headerlink&quot; title=&quot;Emacs&quot;&gt;&lt;/a&gt;Emacs&lt;/h1&gt;&lt;h2 id=&quot;Golang的代码跳转和补全&quot;&gt;&lt;a href=&quot;#Golang的代码跳转和补全&quot; class=&quot;headerlink&quot; title=&quot;Golang的代码跳转和补全&quot;&gt;&lt;/a&gt;Golang的代码跳转和补全&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;在emacs24中安装&lt;a href=&quot;https://github.com/dominikh/go-mode.el&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;go-mode&lt;/a&gt;，可通过&lt;a href=&quot;http://ergoemacs.org/emacs/emacs_package_system.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ELPA&lt;/a&gt;或根据链接中的介绍手动安装。&lt;/li&gt;
-&lt;li&gt;在emacs24中安装auto-complete插件。&lt;/li&gt;
-&lt;li&gt;设置环境变量GOPATH和GOBIN，GOBIN可设为&lt;code&gt;/usr/local/bin&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;安装godef，&lt;code&gt;go get github.com/rogpeppe/godef&lt;/code&gt;，&lt;code&gt;sudo go install github.com/rogpeppe/godef&lt;/code&gt;，godef也可从&lt;a href=&quot;http://code.google.com/p/rog-go/exp/cmd/godef&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;此处&lt;/a&gt;获取。代码释义为&lt;code&gt;M-x godef-describe&lt;/code&gt;或&lt;code&gt;C-c C-d&lt;/code&gt;，代码跳转为&lt;code&gt;M-x godef-jump&lt;/code&gt;或&lt;code&gt;C-c C-j&lt;/code&gt;，代码返回为&lt;code&gt;M-*&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;安装gocode，&lt;code&gt;go get github.com/nsf/gocode&lt;/code&gt;，&lt;code&gt;sudo go install github.com/nsf/gocode&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;修改&lt;code&gt;.emacs&lt;/code&gt;，增加&lt;code&gt;load-path&lt;/code&gt;：&lt;code&gt;(add-to-list &amp;#39;load-path &amp;quot;~/.emacs.d/path/to/load-path&amp;quot;)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;将文件&lt;code&gt;$GOPATH/github.com/nsf/gocode/emacs/go-autocomplete.el&lt;/code&gt;拷贝到$load-path目录下&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;修改&lt;code&gt;.emacs&lt;/code&gt;&lt;/p&gt;
-&lt;figure class=&quot;highlight lisp&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;go-autocomplete&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;auto-complete-config&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;ac-config-default&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;修改&lt;code&gt;.emacs&lt;/code&gt;，使保存文件时gofmt：&lt;code&gt;(add-hook &amp;#39;before-save-hook #&amp;#39;gofmt-before-save)&lt;/code&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;颜色关键词高亮与背景色&quot;&gt;&lt;a href=&quot;#颜色关键词高亮与背景色&quot; class=&quot;headerlink&quot; title=&quot;颜色关键词高亮与背景色&quot;&gt;&lt;/a&gt;颜色关键词高亮与背景色&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;安装rainbow-mode，可从&lt;a href=&quot;http://git.savannah.gnu.org/cgit/emacs/elpa.git/tree/packages/rainbow-mode&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;此处&lt;/a&gt;下载，或在melpa stable下载。&lt;/li&gt;
-&lt;li&gt;在&lt;code&gt;.emacs&lt;/code&gt;中增加hook使默认激活该模式，或启动后M-x rainbow-mode激活。&lt;figure class=&quot;highlight scheme&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;&#39;load-path&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;~/.emacs.d/path-to-rainbow-mode/&quot;&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;require&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;&#39;rainbow-mode&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;add-hook&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;&#39;prog-mode-hook&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;&#39;rainbow-mode&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;Markdown-mode&quot;&gt;&lt;a href=&quot;#Markdown-mode&quot; class=&quot;headerlink&quot; title=&quot;Markdown-mode&quot;&gt;&lt;/a&gt;Markdown-mode&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;参考 &lt;a href=&quot;http://jblevins.org/projects/markdown-mode/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Emacs Markdown Mode&lt;/a&gt;。&lt;/li&gt;
-&lt;li&gt;设置后缀关联&lt;figure class=&quot;highlight lisp&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;autoload&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;markdown-mode&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;markdown-mode&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   &lt;span class=&quot;string&quot;&gt;&quot;Major mode for editing Markdown files&quot;&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;t&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;auto-mode-alist&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;(&lt;span class=&quot;string&quot;&gt;&quot;\\.markdown\\&#39;&quot;&lt;/span&gt; . markdown-mode)&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;auto-mode-alist&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;(&lt;span class=&quot;string&quot;&gt;&quot;\\.md\\&#39;&quot;&lt;/span&gt; . markdown-mode)&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;autoload&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;gfm-mode&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;gfm-mode&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   &lt;span class=&quot;string&quot;&gt;&quot;Major mode for editing GitHub Flavored Markdown files&quot;&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;t&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;auto-mode-alist&lt;/span&gt; &lt;span class=&quot;quoted&quot;&gt;&#39;(&lt;span class=&quot;string&quot;&gt;&quot;README\\.md\\&#39;&quot;&lt;/span&gt; . gfm-mode)&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://forec.github.io/2016/02/29/bugs-for-using-linux/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://forec.github.io/2016/02/29/bugs-for-using-linux/&quot;&gt;http://forec.github.io/2016/02/29/bugs-for-using-linux/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;不定期整理在使用各类linux发行版和Emacs时的配置，以及遇到的各类问题的解决方案。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="OS" scheme="http://forec.github.io/categories/OS/"/>
-    
-    
-      <category term="Emacs" scheme="http://forec.github.io/tags/Emacs/"/>
-    
-      <category term="Mistakes" scheme="http://forec.github.io/tags/Mistakes/"/>
-    
-      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
     
   </entry>
   
