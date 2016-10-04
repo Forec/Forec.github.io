@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-10-03T15:54:54.730Z</updated>
+  <updated>2016-10-04T09:53:37.172Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://forec.github.io/2016/10/03/co-occurrence-structure-capture/"/>
     <id>http://forec.github.io/2016/10/03/co-occurrence-structure-capture/</id>
     <published>2016-10-03T14:16:16.000Z</published>
-    <updated>2016-10-03T15:54:54.730Z</updated>
+    <updated>2016-10-04T09:53:37.172Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;Generate network based on co-occurrence was proposed several decades ago, however, it still occupies most of papers talking about network discovering. Here I want to give a simple introduction for network capture by conventional co-occurrence methods. The following contents are slightly related with the basis of my current work, they are out of date but still useful sometimes.&lt;/p&gt;
@@ -28,7 +28,7 @@
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;h1 id=&quot;General-Introduction&quot;&gt;&lt;a href=&quot;#General-Introduction&quot; class=&quot;headerlink&quot; title=&quot;General Introduction&quot;&gt;&lt;/a&gt;General Introduction&lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;This article is just an introduction for several methods capturing useful structured data from unstructured data sets. It only talks about the basic implementation of co-occurrence in text data. After reading this short article, you will know how to generate a graph as follows from a paragraph of text, a set of Internet data captured from spiders or even a video.&lt;/li&gt;
-&lt;li&gt;An example, the following picture is generated from a part of the script of 《Train to Busan》. I copy the script from Internet, and it’s easy to be analyzed by code. The picture was cut a little part when I published it.&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/train-to-fusan.svg&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
+&lt;li&gt;An example, the following picture is generated from a part of the script of 《Train to Busan》. I copied the script from Internet, and it’s easy to be analyzed by code. The picture was cut a little part when I published it.&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/train-to-fusan.svg&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id=&quot;Entity-Identification&quot;&gt;&lt;a href=&quot;#Entity-Identification&quot; class=&quot;headerlink&quot; title=&quot;Entity Identification&quot;&gt;&lt;/a&gt;Entity Identification&lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;A network is composed of a set of nodes and a set of edges. We name the set of nodes &lt;code&gt;V&lt;/code&gt;, and edges &lt;code&gt;E&lt;/code&gt;. The first problem we face is where can we get &lt;code&gt;V&lt;/code&gt;. Entity identification needs to be considered here. &lt;/li&gt;
