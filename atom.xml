@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-10-04T09:53:37.172Z</updated>
+  <updated>2016-10-08T16:04:33.967Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -14,6 +14,70 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Fix in Haskell</title>
+    <link href="http://forec.github.io/2016/10/08/haskell-fixit/"/>
+    <id>http://forec.github.io/2016/10/08/haskell-fixit/</id>
+    <published>2016-10-08T06:48:19.000Z</published>
+    <updated>2016-10-08T16:04:33.967Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;There’re many interesting features in Haskell, here I want to introduce and analyse the &lt;code&gt;Fixed-point combinator&lt;/code&gt;, which spent me several hours understanding but only scratched the surface. &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h1 id=&quot;Definition-Of-Fix&quot;&gt;&lt;a href=&quot;#Definition-Of-Fix&quot; class=&quot;headerlink&quot; title=&quot;Definition Of Fix&quot;&gt;&lt;/a&gt;Definition Of Fix&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;You can find the definition of &lt;code&gt;Fix&lt;/code&gt; function in &lt;a href=&quot;https://en.wikibooks.org/wiki/Haskell/Fix_and_recursion&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;wiki&lt;/a&gt;. The definition is&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;fix&lt;/span&gt; :: (a -&amp;gt; a) -&amp;gt; a&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;fix&lt;/span&gt; f = &lt;span class=&quot;keyword&quot;&gt;let&lt;/span&gt; x = f x &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; x&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;Fix-And-Recursion&quot;&gt;&lt;a href=&quot;#Fix-And-Recursion&quot; class=&quot;headerlink&quot; title=&quot;Fix And Recursion&quot;&gt;&lt;/a&gt;Fix And Recursion&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;It seems a little confused. What does &lt;code&gt;let x = f x in x&lt;/code&gt; mean? For example, &lt;code&gt;GNU&lt;/code&gt; is &lt;code&gt;GNU is not Unix&lt;/code&gt;, so how could you expand &lt;code&gt;GNU&lt;/code&gt;? &lt;code&gt;GNU GNU GNU ... GNU is not Unix&lt;/code&gt;? Another example, &lt;code&gt;let x = (1:) x in x&lt;/code&gt;, what will x like? A list of infinite 1. Still confused? You can try &lt;code&gt;let x = x + 2 in x&lt;/code&gt;, this will cause an exception because of stack overflow. The reason is that the &lt;code&gt;(+2)&lt;/code&gt; operation is expanded constantly. So what is &lt;code&gt;fix&lt;/code&gt; exactly? &lt;code&gt;Fix&lt;/code&gt; can be imported from &lt;code&gt;Control.Monad.Fix&lt;/code&gt;, its definition has been given above.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Now we can learn the power of &lt;code&gt;Fix&lt;/code&gt; from an example. The &lt;code&gt;fact&lt;/code&gt; is used to calculate &lt;code&gt;factorial&lt;/code&gt;, here we calculate 5!. There are two kind of implements, the first is common recursion, like first line below. Instead, we can use &lt;code&gt;Fix&lt;/code&gt; to rewrite it. We pass a lambda function to fix as a parameter, the lambda function receives &lt;code&gt;rec&lt;/code&gt; and &lt;code&gt;n&lt;/code&gt; as parameters, &lt;code&gt;rec&lt;/code&gt; here is abstracted and it was initialized by &lt;code&gt;if n == 0 then 1&lt;/code&gt;, this is indeed initialized for the lambda function, however you can think it as an anonymous &lt;code&gt;rec&lt;/code&gt;.&lt;/p&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;Prelude&lt;/span&gt;&amp;gt; &lt;span class=&quot;keyword&quot;&gt;let&lt;/span&gt; fact n = &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; n * fact (n-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; fact &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;number&quot;&gt;120&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;Prelude&lt;/span&gt;&amp;gt; fix (\&lt;span class=&quot;keyword&quot;&gt;rec&lt;/span&gt; n -&amp;gt; &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; n * &lt;span class=&quot;keyword&quot;&gt;rec&lt;/span&gt; (n-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)) &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;number&quot;&gt;120&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In fact, from the definition of &lt;code&gt;Fix&lt;/code&gt;, we know that &lt;code&gt;fix&lt;/code&gt; means a fixed-point. What we need to do is to write the equation for &lt;code&gt;fix&lt;/code&gt; like below. &lt;code&gt;Fix&lt;/code&gt; is used to find a fixed-point for given function.  &lt;/p&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;f&lt;/span&gt; (fix f) = fix f&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;So why &lt;code&gt;fix (+2)&lt;/code&gt; is getting an exception? There is no &lt;code&gt;x&lt;/code&gt; for &lt;code&gt;x == x + 2&lt;/code&gt;, so &lt;code&gt;fix&lt;/code&gt; cannot find an fixed-point for &lt;code&gt;(+2). That&amp;#39;s why&lt;/code&gt;fix&lt;code&gt;finally came into stack overflow. Now we are going to learn what&lt;/code&gt;fix&lt;code&gt;works in details. We can expand&lt;/code&gt;fix` like below.&lt;/p&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;fix&lt;/span&gt; (&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;+)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; + (fix (&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;+))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; + (&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; + fix (&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;+))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; + (&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; + (&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; + fix (&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;+)))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; + (&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; + (&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; + (&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; + fix (&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;+))))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= ...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;fix&lt;/span&gt; (&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;:)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; : fix (&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;:)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; : (&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; : fix (&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;:))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; : (&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; : (&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; : fix (&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;:)))&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;As you can see, &lt;code&gt;fix (1:)&lt;/code&gt; can work fine since the lazy evaluation of Haskell. If we pass &lt;code&gt;fix (1:)&lt;/code&gt; to &lt;code&gt;show&lt;/code&gt;, &lt;code&gt;GHCI&lt;/code&gt; can still work and output &lt;code&gt;[1, 1, 1, ...&lt;/code&gt;. Return to the &lt;code&gt;fact&lt;/code&gt; example now, how does it work? We write that lambda function passed to &lt;code&gt;fix&lt;/code&gt; as a named function &lt;code&gt;fact&amp;#39;&lt;/code&gt; here, the definition is &lt;code&gt;fact&amp;#39; rec n = if n == 0 then 1 else n * rec (n-1)&lt;/code&gt;. Pass this to &lt;code&gt;fix&lt;/code&gt;, fix will find a fixed-point of &lt;code&gt;fact&amp;#39;&lt;/code&gt;, which is the function &lt;code&gt;f&lt;/code&gt; such that &lt;code&gt;f == fact&amp;#39; f&lt;/code&gt;. So we can write &lt;code&gt;fact&amp;#39;&lt;/code&gt; like below.&lt;/p&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;f&lt;/span&gt; = fact&#39; f&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  = \n -&amp;gt; &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; n * f (n-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Are you familiar with the equation above? The &lt;code&gt;f&lt;/code&gt; substitute &lt;code&gt;rec&lt;/code&gt; in &lt;code&gt;fact&amp;#39;&lt;/code&gt;, and &lt;code&gt;f&lt;/code&gt; also acts as &lt;code&gt;fact&amp;#39; f&lt;/code&gt;, which is just recursion. So expand &lt;code&gt;fix&lt;/code&gt; as we always did. (Codes below are copied from wiki)&lt;/p&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;fix&lt;/span&gt; fact&#39;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= fact&#39; (fix fact&#39;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= (\&lt;span class=&quot;keyword&quot;&gt;rec&lt;/span&gt; n -&amp;gt; &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; n * &lt;span class=&quot;keyword&quot;&gt;rec&lt;/span&gt; (n-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)) (fix fact&#39;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= \n -&amp;gt; &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; n * fix fact&#39; (n-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= \n -&amp;gt; &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; n * fact&#39; (fix fact&#39;) (n-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= \n -&amp;gt; &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; n * (\&lt;span class=&quot;keyword&quot;&gt;rec&lt;/span&gt; n&#39; -&amp;gt; &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n&#39; == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; n&#39; * &lt;span class=&quot;keyword&quot;&gt;rec&lt;/span&gt; (n&#39;-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)) (fix fact&#39;) (n-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= \n -&amp;gt; &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; n * (&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; (n-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) * fix fact&#39; (n-&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= \n -&amp;gt; &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; n * (&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                  &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; (n-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) * (&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; n-&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; (n-&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;) * fix fact&#39; (n-&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;)))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= ...&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;Implementation-Of-Foldr-amp-Reverse&quot;&gt;&lt;a href=&quot;#Implementation-Of-Foldr-amp-Reverse&quot; class=&quot;headerlink&quot; title=&quot;Implementation Of Foldr &amp;amp; Reverse&quot;&gt;&lt;/a&gt;Implementation Of Foldr &amp;amp; Reverse&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;I am going to show some of the applications of &lt;code&gt;fix&lt;/code&gt;. First is &lt;code&gt;reverse&lt;/code&gt;. We can write &lt;code&gt;reverse&amp;#39;&lt;/code&gt; as the parameter of &lt;code&gt;fix&lt;/code&gt;. The type system of &lt;code&gt;reverse&amp;#39;&lt;/code&gt; is &lt;code&gt;([a] -&amp;gt;[a]) -&amp;gt; ([a] -&amp;gt; [a])&lt;/code&gt;. Notice that I use a pair of parentheses out of &lt;code&gt;[a] -&amp;gt; [a]&lt;/code&gt;, that’s because curry. &lt;code&gt;reverse&amp;#39;&lt;/code&gt; is just like &lt;code&gt;fact&amp;#39;&lt;/code&gt;, it receives a function &lt;code&gt;f&lt;/code&gt;, and &lt;code&gt;fix&lt;/code&gt; is going to find a &lt;code&gt;f&lt;/code&gt; which satisfies &lt;code&gt;f = reverse&amp;#39; f&lt;/code&gt;. Now we can easily write &lt;code&gt;reverse&amp;#39;&lt;/code&gt; below.&lt;/p&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;reverse&#39;&lt;/span&gt; :: ([a] -&amp;gt; [a]) -&amp;gt; ([a] -&amp;gt; [a])&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;reverse&#39;&lt;/span&gt; f [] = []&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;reverse&#39;&lt;/span&gt; f (x:xs) = f xs ++ [x]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;reverse&lt;/span&gt; = fix reverse&#39;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;-- expand the definition above&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;(fix reverse&#39;) [&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= (reverse&#39; (fix reverse&#39;)) [&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= (reverse&#39; f) [&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= f [&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;] ++ [&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= (reverse&#39; f) [&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;] ++ [&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;= ...&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Another example I am going to talk is &lt;code&gt;foldr&lt;/code&gt;. I found the kata about &lt;code&gt;fix&lt;/code&gt; in Codewars, you can see it &lt;a href=&quot;https://www.codewars.com/kata/fix-it/haskell&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;here&lt;/a&gt;. I didn’t pass the time limitation, and finally I got clues from conversations. There are several ways to write &lt;code&gt;foldr&lt;/code&gt; by &lt;code&gt;fix&lt;/code&gt;, however, you need to maintain the feature of &lt;code&gt;foldr&lt;/code&gt;, the lazy evaluation. I will show two of them both satisfying the lazy evaluation.&lt;/p&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;foldr&#39;&lt;/span&gt; :: ((a -&amp;gt;b -&amp;gt;b) -&amp;gt;b -&amp;gt;[a] -&amp;gt;b) -&amp;gt;((a -&amp;gt;b -&amp;gt;b) -&amp;gt;b -&amp;gt;[a] -&amp;gt;b)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;foldr&#39;&lt;/span&gt; f g acc [] = acc&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;foldr&#39;&lt;/span&gt; f g acc (x:xs) = f g (g x acc) xs&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;foldr&#39;&lt;/span&gt; :: ((a -&amp;gt;b -&amp;gt;b) -&amp;gt;b -&amp;gt;[a] -&amp;gt;b) -&amp;gt;((a -&amp;gt;b-&amp;gt; b) -&amp;gt;b -&amp;gt;[a] -&amp;gt;b)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;foldr&#39;&lt;/span&gt; f g acc [] = acc&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;foldr&#39;&lt;/span&gt; f g acc (x:xs) = g x (f g acc xs)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;foldr&lt;/span&gt; = fix foldr&#39;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Which is better? In my own opinion, the first is better since it is written in  a format of tail-end recursion. This would not expand the stack space it used. However, the second needs to expand until the end of the list. But, after my experiment testing big integers, both of them met stack overflow at the same size while works as same as each other when they can deal with the parameters. This proved that my thought was wrong. So, why the two formats have same performance? Stay for thought.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;I hope this article could give you some help. If this article has any error, or you have some problems/suggestions, please &lt;a href=&quot;mailto:forec@bupt.edu.cn&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;e-mail me&lt;/a&gt;. I am glad to learn from each other.&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/10/08/haskell-fixit/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/10/08/haskell-fixit/&quot;&gt;https://forec.github.io/2016/10/08/haskell-fixit/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;There’re many interesting features in Haskell, here I want to introduce and analyse the &lt;code&gt;Fixed-point combinator&lt;/code&gt;, which spent me several hours understanding but only scratched the surface. &lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="Language" scheme="http://forec.github.io/categories/Language/"/>
+    
+    
+      <category term="函数式编程" scheme="http://forec.github.io/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>Network Mining Based On Co-occurrence</title>
@@ -668,143 +732,6 @@
       <category term="sicp" scheme="http://forec.github.io/tags/sicp/"/>
     
       <category term="函数式编程" scheme="http://forec.github.io/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>复杂网络传统社区发现算法概述</title>
-    <link href="http://forec.github.io/2016/03/12/community-found/"/>
-    <id>http://forec.github.io/2016/03/12/community-found/</id>
-    <published>2016-03-12T07:26:08.000Z</published>
-    <updated>2016-10-03T15:33:43.758Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;复杂网络是复杂系统的抽象，其中一个重要特征是网络中所呈现出的社区结构。许多网络是异构的，对于构成网络的不同类型节点所组成的子图称为网络中的社区。整理了几个传统的社区发现算法流程和大致原理，记录备忘。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default&quot;&gt;&lt;/script&gt;
-
-&lt;h1 id=&quot;Kerighan-Lin算法&quot;&gt;&lt;a href=&quot;#Kerighan-Lin算法&quot; class=&quot;headerlink&quot; title=&quot;Kerighan-Lin算法&quot;&gt;&lt;/a&gt;Kerighan-Lin算法&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;算法为类似模拟退火式的试探优化法，采用贪婪的策略对网络进行二分社区。其复杂度仅为O(N^2)，适用于小规模的网络，但准确度不高，并且必须事先知道两个社区的规模大小。&lt;/li&gt;
-&lt;li&gt;定义增益值\(P=\mbox{两个社区内部边数}-\mbox{两个社区之间边数}\)，并寻找使P最大的划分。&lt;/li&gt;
-&lt;li&gt;算法流程如下&lt;ul&gt;
-&lt;li&gt;(1) 随机将整个网络中的节点划分为两个社区A和B，其节点数分别为m和n，m和n已知。&lt;/li&gt;
-&lt;li&gt;(2) 对于A和B中的每对节点\((i, j), i\in A, j\in B\)，计算将i和j交换后的\(\Delta P=\mbox{交换后的P}-\mbox{交换前的P}\)。&lt;/li&gt;
-&lt;li&gt;(3) 选取使\(\Delta P\)最大的交换节点对并更新P值。另外，每个节点仅能交换一次。&lt;/li&gt;
-&lt;li&gt;(4) 转(2)，直到A或者B二者中某个社区所有节点都已经被交换过一次。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;基于Laplace图特征值的社区发现方法&quot;&gt;&lt;a href=&quot;#基于Laplace图特征值的社区发现方法&quot; class=&quot;headerlink&quot; title=&quot;基于Laplace图特征值的社区发现方法&quot;&gt;&lt;/a&gt;基于Laplace图特征值的社区发现方法&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;一个无向图\(G=(V, E)\)，矩阵D是一个对角矩阵，对角线上的元素Dii是节点i的度，矩阵W是图G的邻接矩阵。拉普拉斯矩阵\(L=D-W\)，因此L为对称矩阵。其规定和具有的性质如下：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;对于W，定义图中A、B两个子图间的权重为\(W(A, B)=\Sigma w_{ij}, i\in A, j\in B\)。&lt;/li&gt;
-&lt;li&gt;与某个节点邻接的所有边的权值和定义为该顶点的度，即\({d&lt;em&gt;i} = \Sigma w&lt;/em&gt;{ij}, i\in \lbrace 1, \ldots, N\rbrace\)。&lt;/li&gt;
-&lt;li&gt;L是一个对称半正定矩阵。&lt;/li&gt;
-&lt;li&gt;\(L \cdot \vec {1}=0 \cdot \vec {1}\)，因为\(L \cdot \vec {1}= (D-W) \cdot \vec {1} = 0 \cdot \vec {1}\)。&lt;/li&gt;
-&lt;li&gt;L有n个非负实特征值\(0 = λ_1 \leq λ_2 \leq λ_3 \leq \ldots \leq λ_n\)。&lt;/li&gt;
-&lt;li&gt;对于任何一个实向量\(f\in R^n\)，有\(2 \cdot f’Lf=\Sigma w_{ij}\cdot (f_i - f_j)^2, i, j \in \lbrace 1, \ldots, N \rbrace\)。证明如下：$$f’Lf=f’Df-f’Wf=\Sigma d_i\cdot {f_i}^{2}-\Sigma {f_i}{f&lt;em&gt;j}{w&lt;/em&gt;{ij}}(i, j\in {1, ldots, n})=\frac{1}{2}\cdot\left(\Sigma {d_i}{f_i}^{2}-2\Sigma {f_i}{f&lt;em&gt;j}w&lt;/em&gt;{ij}+\Sigma {d_j}{f&lt;em&gt;j}^{2}\right) (i, j\in {1, ldots, n})=\frac{1}{2}\cdot\left(\Sigma {w&lt;/em&gt;{ij}}({f_i}-{f_j})^{2}\right) (i, j\in {1, \ldots, n})$$&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;切割图的目的在于 &lt;strong&gt;使被切掉的各边之和最小&lt;/strong&gt; ，因为其代表着子图之间连接的相似度最低。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;定义cut目标函数：\(cut(A1, A2, …, Ak) = \frac{1}{2} \cdot (\Sigma W(A_i, \overline{A_i}), i\in [1,k])\)。该目标函数可能会导致不好的分割，例如将某个图分成一个单一点和其余的n-1个点。&lt;/li&gt;
-&lt;li&gt;定义RatioCut目标函数：&lt;code&gt;Ratiocut(A1, A2, ..., Ak) = (∑W(Ai, ~Ai)/|Ai|, i∈[1,k])/2&lt;/code&gt;。其中|Ai|代表社区i中的节点数目。 &lt;strong&gt;最小化RatioCut等价于最小化f’Lf&lt;/strong&gt; ，这里的&lt;code&gt;f = (f1, f2, ..., fn)∈R^n&lt;/code&gt;，并且当节点vi∈A时，&lt;code&gt;fi = sqrt(|~A|/|A|)&lt;/code&gt;，否则&lt;code&gt;fi = -sqrt(|A|/|~A|)&lt;/code&gt;。根据上面提过的拉普拉斯矩阵性质，有&lt;code&gt;2f&amp;#39;Lf = ∑wij(fi - fj)^2, i,j from 1 to N&lt;/code&gt;。据此可以根据下面的推导得出，&lt;code&gt;min f&amp;#39;Lf &amp;lt;=&amp;gt; min RatioCut&lt;/code&gt;。&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC.png&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
-&lt;li&gt;因为向量f是单位向量1，所以有&lt;code&gt;|f|^2 = ∑(fi^2) = n&lt;/code&gt;，且&lt;code&gt;f&amp;#39;·1(单位向量）= ∑(fi) = 0&lt;/code&gt;。注意f是列向量，所以&lt;code&gt;f&amp;#39;·f&lt;/code&gt;是值，而&lt;code&gt;f·f&amp;#39;&lt;/code&gt;是一个NxN的矩阵。证明如下：&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC2.png&quot; width=&quot;300px&quot;&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC3.png&quot; width=&quot;300px&quot;&gt;&lt;/li&gt;
-&lt;li&gt;假定&lt;code&gt;L·f = λ·f&lt;/code&gt;，这里L是Laplace矩阵，λ是矩阵L的一个特征值，f是L对应λ的特征向量。同时左乘f’，得到&lt;code&gt;f&amp;#39;·L·f = λn&lt;/code&gt;，因为n为定值，因此最小化&lt;code&gt;f&amp;#39;·L·f&lt;/code&gt;等价于最小化λ。因此需要寻找最小的特征值λ和对应的特征向量。因为Laplace矩阵最小的特征值为0，因此取第二小的特征值。更进一步，如果求出拉普拉斯矩阵的前K个特征向量，进行k-Means聚类得到k个簇，就从二聚类拓展到了k聚类。&lt;/li&gt;
-&lt;li&gt;完整的算法描述如下&lt;ul&gt;
-&lt;li&gt;构造图W，将各数据点相连，边的权重表示数据间的相似度。&lt;/li&gt;
-&lt;li&gt;计算L = D - W（D为度矩阵，即W的每一列加到对角线上）&lt;/li&gt;
-&lt;li&gt;求L的前k个特征值{λ1, λ2, …, λk}，并且按从小到大顺序排序，求出对应的特征向量vi，每个特征向量是一个Nx1的列向量。&lt;/li&gt;
-&lt;li&gt;将这k个特征向量排成Nxk的矩阵，每一行都是k维空间中的一个向量，用k-Means聚类，聚类结果中的每一行的类别就是原来图中的节点所属类别。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;GN算法&quot;&gt;&lt;a href=&quot;#GN算法&quot; class=&quot;headerlink&quot; title=&quot;GN算法&quot;&gt;&lt;/a&gt;GN算法&lt;/h1&gt;&lt;blockquote&gt;
-&lt;p&gt;分裂算法，复杂度为O(mxmxn)，需要事先知道图中社区的数目k。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;1、计算每边的边介数，即网络上所有顶点对间的最短路径经过该边的次数。&lt;/li&gt;
-&lt;li&gt;2、移除最大介数边。&lt;/li&gt;
-&lt;li&gt;3、重新计算剩下边的介数。&lt;/li&gt;
-&lt;li&gt;4、重复步骤2，3，直到剩下的社区个数满足指定社区数目k。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;Newman快速算法&quot;&gt;&lt;a href=&quot;#Newman快速算法&quot; class=&quot;headerlink&quot; title=&quot;Newman快速算法&quot;&gt;&lt;/a&gt;Newman快速算法&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;时间复杂度为O(m(m+n))，比GN算法优化较多。是凝聚算法。&lt;/li&gt;
-&lt;li&gt;首先将每个节点设为一个单独的社区，选出使模块度Q增值最大的社区合并，如果网络中所有顶点属于同一个社区则停止合并（自底向上的合并方式）。此时已经构造出了一棵凝聚树，这棵树的第k层对应着第k种社区划分方式，最底层对应着每个节点为一个社区。最终通过选取模块度最大的层数作为最佳划分。&lt;/li&gt;
-&lt;li&gt;模块度Q的计算如下：假设有n个节点，m条边，每一步合并对应社区数目为r，组成一个rxr的矩阵e，矩阵中eij表示社区i和社区j的结点之间连边的数目在整个网络边数中所占的百分比。&lt;/li&gt;
-&lt;li&gt;流程如下：&lt;ul&gt;
-&lt;li&gt;1、初始情况下，有n个社区，m条边，若社区i（节点i）与社区j有连边，则eij=1/(2m)，否则为0。&lt;/li&gt;
-&lt;li&gt;2、按照ΔQ最大或者最小的方向合并社区，并且更新合并后的模块度。这里增量&lt;code&gt;ΔQ = eij + eji - 2aiaj = 2(eij - aiaj)&lt;/code&gt;，这里的&lt;code&gt;ai = (∑eij)/2m&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;3、合并社区，并且修改矩阵e中的行列数。&lt;/li&gt;
-&lt;li&gt;4、重复步骤2、3，合并至树根。&lt;/li&gt;
-&lt;li&gt;5、计算模块度最大的社区划分。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;派系过滤CPM方法&quot;&gt;&lt;a href=&quot;#派系过滤CPM方法&quot; class=&quot;headerlink&quot; title=&quot;派系过滤CPM方法&quot;&gt;&lt;/a&gt;派系过滤CPM方法&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;用于发现重叠社区，派系（clique）是任意两点都相连的顶点集合（完全子图）。k-派系表示网络中含有k个节点的完全子图。&lt;/li&gt;
-&lt;li&gt;社区内部节点之间相互联系密切，容易形成派系，因此社区内部的边有较大可能形成大的完全子图，而社区之间的边却几乎不可能形成较大的完全子图 =&amp;gt; 从派系寻找社区。&lt;/li&gt;
-&lt;li&gt;首先寻找网络中的极大完全子图，利用这些完全子图来寻找k-派系的连通子图，不同的k值对应了不同的社区结构。&lt;/li&gt;
-&lt;li&gt;建立重叠矩阵：非对角元素代表两个连通派系中共享的节点数目，对角线元素代表派系的规模。将小于k-1的非对角线元素置为0，小于k的对角线元素置为1，得到k-派系连接矩阵。注意这里的k是输入参数，对结果有影响。k越大则生成的社区越大，社区的结构就越稀疏，通常k为4-6，视网络情况而定。&lt;/li&gt;
-&lt;li&gt;CPM算法基于完全子图，因此适合完全子图比较多的网络，也就是边稠密网络，其处理稀疏图的效率较低。算法效率完全取决于寻找完全子图的效率，采用&lt;a href=&quot;http://forec.github.io/2015/09/19/Graph-Algorithms3/&quot;&gt;离线Tarjan算法&lt;/a&gt;会有所提高。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;Radicchi算法&quot;&gt;&lt;a href=&quot;#Radicchi算法&quot; class=&quot;headerlink&quot; title=&quot;Radicchi算法&quot;&gt;&lt;/a&gt;Radicchi算法&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;与GN相同，都基于去边，但不根据边介数，而引进边聚集系数，其算法复杂度为O(m^3/n^2)，适用于稀疏图。&lt;/li&gt;
-&lt;li&gt;边聚集系数： &lt;strong&gt;一条边的两个端点和这两个端点的共同邻接点之间的另外两边所组成的三角环与可能包含该边的三角环数的比值&lt;/strong&gt;，即：&lt;code&gt;Cij = Zij/min(ki-1,kj-1)&lt;/code&gt;，这里ki，kj是端点i和j的度，公式中的分母表示该边可能被包含的三角环的最大数，Zij表示网络中包含该边的三角环的实际数目。&lt;/li&gt;
-&lt;li&gt;如果网络中的一个三角环中含有一条连接不同社区的边，则该三角环中剩余的两边中还有一条连接同样两社区的可能性较大（因为具有社区结构的网络图中，社区之间的边较为稀少，因此包含一条给定的社区间脸变得三角形不会很多，即连接不同社区边的边聚集系数很小）。 =&amp;gt; 每一步删掉具有最小边聚集系数的边，并重新计算剩余边的边聚集系数（这里只需要重新计算和删除掉的边有关联的边的边聚集系数），循环至网络中不存在任何边。&lt;/li&gt;
-&lt;li&gt;算法仅适用于三角环数较多的，如社会网络等。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;基于点聚集的局部算法&quot;&gt;&lt;a href=&quot;#基于点聚集的局部算法&quot; class=&quot;headerlink&quot; title=&quot;基于点聚集的局部算法&quot;&gt;&lt;/a&gt;基于点聚集的局部算法&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;定义连接相关度：\(\lambda C(\varepsilon, j) = C&lt;em&gt;{1}(j) - C&lt;/em&gt;{2}(j)\)，这里\(C&lt;em&gt;{1}(j)\)指节点j的点聚集系数，\(C&lt;/em&gt;{2}(j)\)指去除社区\(\varepsilon\)内部的所有边以及与其相关联的所有边之后，节点j的点聚集系数。&lt;/li&gt;
-&lt;li&gt;定义点聚集系数：一个节点的不同邻接点互为邻接点的概率，公式为\(C(i) = \frac{2E(i)}{k&lt;em&gt;{i}(k&lt;/em&gt;{i}-1)}\)，这里ki是节点i的度，E(i)是与节点i邻接的节点之间的实际连边。整个网络\(varepsilon\)的点聚集系数定义为\(C(ε) = \frac{\Sigma C(i)}{N}\)。&lt;/li&gt;
-&lt;li&gt;上面定义的连接相关度用来衡量某个社区ε对其邻接点的影响力大小。如果社区ε的一个邻接点x和x的邻接点间主要通过ε通信，则ε对x有重要影响，x趋向于成为ε的一员。&lt;/li&gt;
-&lt;li&gt;以下是社区归纳点的几个约定&lt;ul&gt;
-&lt;li&gt;如果节点x有一半以上的邻接点再ε中，则\(x\in \varepsilon\)。&lt;/li&gt;
-&lt;li&gt;如果\(C(\varepsilon)=1\)，这意味着ε和它的邻接点们构成连通分量，则该ε的所有邻接点∈ε。&lt;/li&gt;
-&lt;li&gt;如果该ε的一个邻接点j有C(j)=1，则j和j的邻接点都属于ε。&lt;/li&gt;
-&lt;li&gt;如果ε的邻接点j有C(j) &amp;gt; C(ε)。并且\(\Delte C(\varepsilon,j)\)是ε的所有邻接点中最大非负值，则\(j\in ε\)。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;完整流程如下&lt;ul&gt;
-&lt;li&gt;以图中某个节点作为局部社区的初始状态，不断寻找j加入社区并update，直到没有符合条件的点，结束局部社区。&lt;/li&gt;
-&lt;li&gt;当所有局部社区形成后，分别计算每个社区的内度和外度，将内度小于外度的社区ε合并到与ε最紧密的社区中，直到所有社区都有内度&amp;gt;外度。&lt;/li&gt;
-&lt;li&gt;算法缺点是受到代表社区的初始节点影响比较大。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;衡量网络分解：模块度&quot;&gt;&lt;a href=&quot;#衡量网络分解：模块度&quot; class=&quot;headerlink&quot; title=&quot;衡量网络分解：模块度&quot;&gt;&lt;/a&gt;衡量网络分解：模块度&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;设网络分裂为g个社区，定义gxg的矩阵e，其eij表示原网络中连接社区i和社区j中节点的边数在所有边中所占比例。e的迹表示网络中同一社区中节点的边占所有边的比例。\(a&lt;em&gt;i = \Sigma e&lt;/em&gt;{ij}\)表示连接社区i的边所占比例。有\(Q = Tre - {|e|}^2\)，\(\Sigma {a&lt;em&gt;i}^{2} = \Sigma \left( \Sigma e&lt;/em&gt;{ij} \cdot e_{jk} \right) = {|e|}^2 \)。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;blockquote&gt;
-&lt;p&gt;参考博客和资料如下：&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://blog.csdn.net/v_july_v/article/details/40738211&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;July的博文《从拉普拉斯矩阵说到谱聚类》&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://blog.csdn.net/myan/article/details/1865397&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;孟岩的博文《理解矩阵（一）（二）（三）》&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://engr.case.edu/ray_soumya/mlrg/Luxburg07_tutorial_spectral_clustering.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;A Tutorial on Spectral Clustering&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://liuzhiqiangruc.iteye.com/blog/2117144&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;谱聚类的算法实现&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://wenku.baidu.com/link?url=0la9WTtNcZNOV7A0zJmJPXx1XRK935PLZAJyKuGhK5h0vzVToyjdK9mW9eMv2tRc3o3-XFp-73aDn4YldFTpzL5cHigU6C6c9n0Kk33Z8wC&amp;amp;qq-pf-to=pcqq.group&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;复杂网络的社区发现算法研究&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.docin.com/p-886876763.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;基于点聚集系数和边聚集系数的社区发现算法&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/03/12/community-found/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/03/12/community-found/&quot;&gt;https://forec.github.io/2016/03/12/community-found/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;复杂网络是复杂系统的抽象，其中一个重要特征是网络中所呈现出的社区结构。许多网络是异构的，对于构成网络的不同类型节点所组成的子图称为网络中的社区。整理了几个传统的社区发现算法流程和大致原理，记录备忘。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="大数据" scheme="http://forec.github.io/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-    
-      <category term="Algorithms" scheme="http://forec.github.io/tags/Algorithms/"/>
-    
-      <category term="图分割" scheme="http://forec.github.io/tags/%E5%9B%BE%E5%88%86%E5%89%B2/"/>
     
   </entry>
   
