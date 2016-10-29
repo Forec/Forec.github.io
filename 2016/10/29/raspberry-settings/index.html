@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="Algorithms," />
+  <meta name="keywords" content="Mistakes,OS,Raspberry," />
 
 
 
@@ -39,16 +39,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="差分约束的最短路径算法证明和解释。">
+<meta name="description" content="整理 Raspberry Pi 3 的个人配置。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="差分约束系统">
-<meta property="og:url" content="http://forec.github.io/2015/12/24/Graph-Algorithms6/index.html">
+<meta property="og:title" content="Raspberry Pi 3 配置索引">
+<meta property="og:url" content="http://forec.github.io/2016/10/29/raspberry-settings/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="差分约束的最短路径算法证明和解释。">
-<meta property="og:updated_time" content="2015-12-24T07:12:39.690Z">
+<meta property="og:description" content="整理 Raspberry Pi 3 的个人配置。">
+<meta property="og:updated_time" content="2016-10-29T08:00:56.254Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="差分约束系统">
-<meta name="twitter:description" content="差分约束的最短路径算法证明和解释。">
+<meta name="twitter:title" content="Raspberry Pi 3 配置索引">
+<meta name="twitter:description" content="整理 Raspberry Pi 3 的个人配置。">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -58,7 +58,7 @@
   };
 </script>
 
-  <title> 差分约束系统 | Forec's Notes </title>
+  <title> Raspberry Pi 3 配置索引 | Forec's Notes </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -194,7 +194,7 @@
           
           
             
-              差分约束系统
+              Raspberry Pi 3 配置索引
             
           
         </h1>
@@ -203,8 +203,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-12-24T10:32:37+08:00" content="2015-12-24">
-            2015-12-24
+          <time itemprop="dateCreated" datetime="2016-10-29T14:49:23+08:00" content="2016-10-29">
+            2016-10-29
           </time>
         </span>
 
@@ -213,8 +213,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Code/" itemprop="url" rel="index">
-                  <span itemprop="name">Code</span>
+                <a href="/categories/OS/" itemprop="url" rel="index">
+                  <span itemprop="name">OS</span>
                 </a>
               </span>
 
@@ -229,8 +229,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/12/24/Graph-Algorithms6/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/24/Graph-Algorithms6/" itemprop="commentsCount"></span>
+              <a href="/2016/10/29/raspberry-settings/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/29/raspberry-settings/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -245,22 +245,70 @@
 
       
         <span itemprop="articleBody"><blockquote>
-<p>差分约束的最短路径算法证明和解释。</p>
+<p>整理 Raspberry Pi 3 的个人配置。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="差分约束系统"><a href="#差分约束系统" class="headerlink" title="差分约束系统"></a>差分约束系统</h1><ul>
-<li>差分约束系统用一个m×n的线性规划矩阵表示m个不等式，这m个不等式中共n个变量x1,x2,…,xn，每个不等式满足如下形式：xi - xj &lt;= bk（1 &lt;= i, j &lt;= n, 1 &lt;= k &lt;= m），在矩阵中的表示为，每一行都有一个1和一个-1,其他元素都为0。例如<table><tbody><tr><td>1</td><td>-1</td><td>0</td><td>0</td><td>0</td></tr><tr><td>1</td><td>0</td><td>0</td><td>0</td><td>-1</td></tr><tr><td>0</td><td>1</td><td>0</td><td>0</td><td>-1</td></tr><tr><td>-1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>-1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr><tr><td>0</td><td>0</td><td>-1</td><td>1</td><td>0</td></tr><tr><td>0</td><td>0</td><td>-1</td><td>0</td><td>0</td></tr><tr><td>0</td><td>0</td><td>0</td><td>-1</td><td>1</td></tr></tbody></table>用上面的矩阵乘一个n×1的变量矩阵x = (xi)，使其满足一个m×1的常数矩阵（bk）。等价于找出下面8个不等式的可行解：x1 - x2 &lt;= b1; x1 - x5 &lt;= b2; x2 - x5 &lt;= b3; x3 - x1 &lt;= b4; x4 - x1 &lt;= b5; x4 - x1 &lt;= b6; x5 - x3 &lt;= b7; x5 - x4 &lt;= b8。对于bk = (0, -1, 1, 5, 4, -1, -3, -3)的一个序列，x的一个可行解为(-5, -3, 0, -1, -4)，同样，对于任意x’ = x+d，d为任意常数，x’也是该不等式组的一组解。</li>
+<h1 id="树莓派及配件型号"><a href="#树莓派及配件型号" class="headerlink" title="树莓派及配件型号"></a>树莓派及配件型号</h1><ul>
+<li>树莓派型号：Raspberry Pi 3 Model B , Made in United Kingdom</li>
+<li>摄像头型号：1/4 inch OV5647 ，500W 像素，最高帧速 30，视频支持 1080p，made by OmniVision</li>
 </ul>
-<h1 id="约束图"><a href="#约束图" class="headerlink" title="约束图"></a>约束图</h1><ul>
-<li>观察差分约束系统的不等式，发现其与最短路径松弛操作相似。松弛操作的判断条件是d[v] &lt;= d[u] + w(u, v)，差分约束方程中为xi - xj &lt;= bk，因此xi &lt;=&gt; d[v]，xj &lt;=&gt; d[u]，w(u, v) &lt;=&gt; bk，据此建边vj-&gt;vi，权值为bk，变量x1,x2,…,xn分别对应结点s1,s2,s3,…,sn。</li>
-<li>在上述图中，附加一个源点s0,将其与所有顶点相连，并将s0的所有出边权值均设为0。下面将证明，给定一个差分约束系统Ax&lt;=b，设G=(V,E)为该系统对应的约束图，则如果G不包含负权环，从s0到其它各点的最短路径权值就是一组可行解，否则此系统不存在可行解。证明过程如下：当G不包含负权回路时，对于任意边(vi, vj)，根据三角不等式d[vj] &lt;= d[vi] + w(vi, vj)，设d[vi] = xi， d[vj] = xj，那么xj - xi &lt;= w(vi , vj)，因此满足对应边（vi, vj）的差分约束。而当G中包含负权回路时，假设负权回路为<v1, v2,="" ...="" ,="" vk="">，其中v1 = vk（源点s0没有入边，不可能出现在负权环上），因此整个负权环对应如下的差分约束：x2 - x1 &lt;= w(v1,v2)；x3 - x2 &lt;= w(v2, v3);…;xk - xk-1 &lt;= w(vk-1, vk)，将这k-1个不等式相加，则左边为0,而右边是负数，矛盾。因此不存在解。</v1,></li>
+<h1 id="RASPBIAN-JESSIE"><a href="#RASPBIAN-JESSIE" class="headerlink" title="RASPBIAN-JESSIE"></a>RASPBIAN-JESSIE</h1><h2 id="镜像源修改"><a href="#镜像源修改" class="headerlink" title="镜像源修改"></a>镜像源修改</h2><ul>
+<li>编辑 <code>/etc/apt/sources.list</code> ，注释原有源</li>
+<li><p>添加</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.ustc.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main non-free contrib</span><br><span class="line">deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.ustc.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main non-free contrib</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>sudo apt-get update</code></p>
+</li>
 </ul>
-<h1 id="最大解与最小解"><a href="#最大解与最小解" class="headerlink" title="最大解与最小解"></a>最大解与最小解</h1><ul>
-<li>当差分约束条件给出其中一个解xi，即固定解的一个元素，求解的其他元素所能取到的最大解或最小解。在约束图的创建中，我们将从源点引出的边权值都赋为0,其实隐含着：d[vi] - d[v0] &lt;= 0这样的条件，因此求出的解一定小于等于零，如果我们把s0也看作一个变量x0,那么上面例子中的解就是(0, -5, -3, 0, -1, -4)，也就是预先指定了x0的解为0。这里的x0就是源点s0的偏移量，例如当题中增加条件，要求解的所有元素都小于某个值，此时只要将该值设置为s0的偏移量即可。</li>
-<li>对于这类有一个未知数已经定死的情况，还有一个性质：通过最短路径算法求出的一组解是所有解中的最大值。考虑到Bellman-Ford等单源最短路径算法的初始化都是d[vi] = 正无穷，通过各种约束条件使d[vi]的值不短减小来满足，因此当所有约束条件都满足，无法松弛任意边时，求出的解就是最大解。同样，如果要求所求得的解是所有解中的最小解，只要将问题转化为求解最长路径，松弛条件变为d[v] &gt;= d[u] + w(u, v)，此时的不等式变为xj - xi &gt;= -bk，因此建边vi-&gt;vj，权值为-bk，求其最长路径，即为最小值。</li>
+<h2 id="自启动脚本"><a href="#自启动脚本" class="headerlink" title="自启动脚本"></a>自启动脚本</h2><ul>
+<li>向 <code>/etc/rc.local</code> 中写入 <code>su username -c &quot;command you want&quot;</code>，将 command 指向自启动脚本。</li>
+</ul>
+<h2 id="校园网关登陆"><a href="#校园网关登陆" class="headerlink" title="校园网关登陆"></a>校园网关登陆</h2><ul>
+<li>可从我的 Github 托管仓库下载网关登陆 Python 脚本，在自启动脚本中加入 <code>python login.py username passwd</code>，下载地址：<a href="https://github.com/Forec/scripts-for-bupt/tree/master/login-bupt-gw" target="_blank" rel="external">https://github.com/Forec/scripts-for-bupt/tree/master/login-bupt-gw</a>。</li>
+</ul>
+<h2 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h2><ul>
+<li>执行 <code>crontab -e</code> 设定定时任务。</li>
+</ul>
+<h2 id="dev-video0-未找到"><a href="#dev-video0-未找到" class="headerlink" title="/dev/video0 未找到"></a>/dev/video0 未找到</h2><ul>
+<li>树莓派的 Camare module 在 <code>/boot/</code> 目录下以固件形式加载</li>
+<li>编辑 <code>/etc/modules-load.d/modules.conf</code> ，文件末尾添加 <code>bcm2835-v4l2</code>。</li>
+</ul>
+<h2 id="Motion-配置"><a href="#Motion-配置" class="headerlink" title="Motion 配置"></a>Motion 配置</h2><ul>
+<li>编辑 <code>/etc/motion/motion.conf</code> ，修改以下项：<ul>
+<li><code>daemon</code> : 修改为 on，使 motion 以守护进程方式运行</li>
+<li><code>width</code> : 修改为 1024</li>
+<li><code>height</code> : 修改为 768</li>
+<li><code>framerate</code> ： 修改为 24</li>
+<li><code>ffmpeg_video_codec</code> ： 修改为 mpeg4</li>
+<li><code>control_localhost</code> ： 修改为 off，允许远程修改配置</li>
+<li><code>control_authentication</code> ： 为远程操控配置设置认证信息</li>
+<li><code>webcam_localhost</code> ： 允许远程访问监控流</li>
+</ul>
+</li>
+<li>编辑 <code>/etc/defaults/motion</code>，将 <code>start_motion_daemon</code> 修改为 <code>yes</code>，设置为开机启动</li>
+</ul>
+<h2 id="VNC-分辨率调整"><a href="#VNC-分辨率调整" class="headerlink" title="VNC 分辨率调整"></a>VNC 分辨率调整</h2><ul>
+<li>在自启动脚本中加入 <code>vncserver -geometry widthxheight :1</code>，将分辨率设置为 width × height，通过 <code>address:1</code> 访问。</li>
+<li><code>vncpasswd</code> 修改密码</li>
+</ul>
+<h2 id="mstsc-访问"><a href="#mstsc-访问" class="headerlink" title="mstsc 访问"></a>mstsc 访问</h2><ul>
+<li>安装 xrdp</li>
+</ul>
+<h2 id="SSH-公钥登陆"><a href="#SSH-公钥登陆" class="headerlink" title="SSH 公钥登陆"></a>SSH 公钥登陆</h2><ul>
+<li><code>ssh-copy-id user@host</code> ，将本地公钥上传到树莓派。</li>
+</ul>
+<h1 id="Ubuntu-mate"><a href="#Ubuntu-mate" class="headerlink" title="Ubuntu-mate"></a>Ubuntu-mate</h1><blockquote>
+<p>无屏幕暂时无法尝试</p>
+</blockquote>
+<h2 id="扩展文件系统"><a href="#扩展文件系统" class="headerlink" title="扩展文件系统"></a>扩展文件系统</h2><ul>
+<li>`sudo fdisk /dev/mmcblk0</li>
+<li>按序输入 <code>d Enter 2 Enter n Enter p Enter 2</code></li>
+<li>reboot</li>
+<li><code>sudo resize2fs /dev/mmcblk0p2</code></li>
+<li>reboot</li>
 </ul>
 <hr>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/12/24/Graph-Algorithms6/">原始出处</a>(<a href="http://forec.github.io/2015/12/24/Graph-Algorithms6/">http://forec.github.io/2015/12/24/Graph-Algorithms6/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/10/29/raspberry-settings/">原始出处</a>(<a href="https://forec.github.io/2016/10/29/raspberry-settings/">https://forec.github.io/2016/10/29/raspberry-settings/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
       
     </div>
@@ -269,7 +317,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Algorithms/" rel="tag">#Algorithms</a>
+            <a href="/tags/Mistakes/" rel="tag">#Mistakes</a>
+          
+            <a href="/tags/OS/" rel="tag">#OS</a>
+          
+            <a href="/tags/Raspberry/" rel="tag">#Raspberry</a>
           
         </div>
       
@@ -278,13 +330,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/12/25/Graph-Algorithms7-flow/" rel="prev">最大流（一）</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/12/23/Graph-Algorithms5/" rel="next">最短路径</a>
+              <a href="/2016/10/08/haskell-fixit/" rel="next">Fix in Haskell</a>
             
           </div>
         </div>
@@ -309,8 +359,8 @@
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="2015/12/24/Graph-Algorithms6/"
-                   data-title="差分约束系统" data-url="http://forec.github.io/2015/12/24/Graph-Algorithms6/">
+              <div class="ds-thread" data-thread-key="2016/10/29/raspberry-settings/"
+                   data-title="Raspberry Pi 3 配置索引" data-url="http://forec.github.io/2016/10/29/raspberry-settings/">
               </div>
             
           </div>
@@ -424,7 +474,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#差分约束系统"><span class="nav-number">1.</span> <span class="nav-text">差分约束系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#约束图"><span class="nav-number">2.</span> <span class="nav-text">约束图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最大解与最小解"><span class="nav-number">3.</span> <span class="nav-text">最大解与最小解</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#树莓派及配件型号"><span class="nav-number">1.</span> <span class="nav-text">树莓派及配件型号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RASPBIAN-JESSIE"><span class="nav-number">2.</span> <span class="nav-text">RASPBIAN-JESSIE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像源修改"><span class="nav-number">2.1.</span> <span class="nav-text">镜像源修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自启动脚本"><span class="nav-number">2.2.</span> <span class="nav-text">自启动脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#校园网关登陆"><span class="nav-number">2.3.</span> <span class="nav-text">校园网关登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时任务"><span class="nav-number">2.4.</span> <span class="nav-text">定时任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dev-video0-未找到"><span class="nav-number">2.5.</span> <span class="nav-text">/dev/video0 未找到</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Motion-配置"><span class="nav-number">2.6.</span> <span class="nav-text">Motion 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VNC-分辨率调整"><span class="nav-number">2.7.</span> <span class="nav-text">VNC 分辨率调整</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mstsc-访问"><span class="nav-number">2.8.</span> <span class="nav-text">mstsc 访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH-公钥登陆"><span class="nav-number">2.9.</span> <span class="nav-text">SSH 公钥登陆</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu-mate"><span class="nav-number">3.</span> <span class="nav-text">Ubuntu-mate</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展文件系统"><span class="nav-number">3.1.</span> <span class="nav-text">扩展文件系统</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
