@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="机器学习," />
+  <meta name="keywords" content="CVM,OS," />
 
 
 
@@ -39,16 +39,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="书中的很多算法解决了此前的一些疑惑，让我一些拙劣的思维方式得到了一些提升，也让许多问题成为可能。从数据中挖掘重要特征是一件很有意义的事，这个过程让我更能理解数学的重要性。">
+<meta name="description" content="CVM 上的操作记录。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《机器学习实战》总结">
-<meta property="og:url" content="http://forec.github.io/2016/02/27/marhinelearningsummary/index.html">
+<meta property="og:title" content="CVM 操作记录">
+<meta property="og:url" content="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="书中的很多算法解决了此前的一些疑惑，让我一些拙劣的思维方式得到了一些提升，也让许多问题成为可能。从数据中挖掘重要特征是一件很有意义的事，这个过程让我更能理解数学的重要性。">
-<meta property="og:updated_time" content="2016-10-03T15:36:37.568Z">
+<meta property="og:description" content="CVM 上的操作记录。">
+<meta property="og:updated_time" content="2016-11-02T16:17:35.543Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《机器学习实战》总结">
-<meta name="twitter:description" content="书中的很多算法解决了此前的一些疑惑，让我一些拙劣的思维方式得到了一些提升，也让许多问题成为可能。从数据中挖掘重要特征是一件很有意义的事，这个过程让我更能理解数学的重要性。">
+<meta name="twitter:title" content="CVM 操作记录">
+<meta name="twitter:description" content="CVM 上的操作记录。">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -58,7 +58,7 @@
   };
 </script>
 
-  <title> 《机器学习实战》总结 | Forec's Notes </title>
+  <title> CVM 操作记录 | Forec's Notes </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -194,7 +194,7 @@
           
           
             
-              《机器学习实战》总结
+              CVM 操作记录
             
           
         </h1>
@@ -203,8 +203,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2016-02-27T14:49:09+08:00" content="2016-02-27">
-            2016-02-27
+          <time itemprop="dateCreated" datetime="2016-11-02T23:08:14+08:00" content="2016-11-02">
+            2016-11-02
           </time>
         </span>
 
@@ -213,8 +213,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/大数据/" itemprop="url" rel="index">
-                  <span itemprop="name">大数据</span>
+                <a href="/categories/OS/" itemprop="url" rel="index">
+                  <span itemprop="name">OS</span>
                 </a>
               </span>
 
@@ -229,8 +229,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/02/27/marhinelearningsummary/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/27/marhinelearningsummary/" itemprop="commentsCount"></span>
+              <a href="/2016/11/02/cloud-virtual-machine-config/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/02/cloud-virtual-machine-config/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -245,39 +245,50 @@
 
       
         <span itemprop="articleBody"><blockquote>
-<p>书中的很多算法解决了此前的一些疑惑，让我一些拙劣的思维方式得到了一些提升，也让许多问题成为可能。从数据中挖掘重要特征是一件很有意义的事，这个过程让我更能理解数学的重要性。</p>
+<p>CVM 上的操作记录。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="概念总结"><a href="#概念总结" class="headerlink" title="概念总结"></a>概念总结</h1><ul>
-<li>分类和回归属于监督学习，分类主要用于预测标称型数据，回归主要用于预测数值型数据。监督学习指算法知道预测什么，对应的无监督学习处理的数据没有类别信息，也不会给定目标值，将数据集合分成由类似的对象组成的多个类的过程称为聚类。</li>
-<li>处理数据之前需要理解数据特征：特征值是离散型变量还是连续性变量，特征值中是否存在缺失的值，何种原因造成缺失值，数据中是否存在异常值，某个特征发生的频率如何等。</li>
-<li>开发过程：收集数据，准备输入数据，分析输入数据，训练算法（无监督学习不需要）。</li>
-<li><a href="https://forec.github.io/2016/02/04/machinelearning1-4/">kNN近邻算法</a>：精度高、对异常值不敏感、无数据输入假定，但计算复杂度高、空间复杂度高，可应用在数值型和标称型。该算法通过计算目标数据到训练数据的距离，根据距离排序，选择排名靠前的几个训练数据类型，投票决定预测类型。</li>
-<li><a href="https://forec.github.io/2016/02/04/machinelearning1-4/">决策树</a>：计算复杂度不高、输出结果容易理解、对中间值缺失不敏感、可处理不相关特征，但可能会产生过度匹配问题，适用于数值型和标称型。该算法每次选择一个特征进行划分，依照该特征划分可以获得最大的信息增益，划分后将该特征移除，一直到所有训练数据均已分类成功或所有特征均已经使用。</li>
-<li><a href="https://forec.github.io/2016/02/04/machinelearning1-4/">朴素贝叶斯</a>：在数据较少的情况下依然有效、可以处理多类别问题，但对于输入数据的准备方式较为敏感，适用于标称型数据。该算法通过对目标数据计算概率，选择使概率最大的分类。算法需要一个先验输入，例如邮件分类系统中，需要对此前收到的邮件进行统计，计算垃圾邮件占比。</li>
-<li><a href="https://forec.github.io/2016/02/09/machinelearning5/">Logistic回归</a>：计算代价不高，易于理解和实现，但容易欠拟合，分类精度可能不高，适用于数值型和标称型。该算法使用海维塞德阶跃函数进行二值分类，训练算法的过程就是在寻找回归系数，分类时用回归系数和输入向量的点乘计算阶跃函数的参数。寻找回归系数的过程可以使用梯度上升法，选择移动量最大的方向来迭代更新系数。</li>
-<li><a href="https://forec.github.io/2016/02/11/machinelearning6/">支持向量机</a>：泛化错误率低、计算开销不大、结果易解释，但对参数调节和核函数的选择敏感，院士分类器不加修改仅适用于处理二类问题。适用于数值型和标称型数据。其中一种实现是通过序列最小优化（SMO）算法，可以通过核函数将SVM拓展到无法线性划分的数据集。SVM的过程主要是寻找最佳分类间隔，这是一个线性平面，其最小间隔最大。核函数可以把低维空间数据映射到无穷维度，因此在当前空间无法线性划分的数据在无穷维度可以线性划分。</li>
-<li><a href="https://forec.github.io/2016/02/14/machinelearning7/">AdaBoost元算法</a>：元算法是对其他算法进行组合的一种方式，其泛化错误率低，易编码、可以应用在大部分分类器上，对离群点敏感。适用于数值型和标称型数据。该算法使用多个弱分类器如单层决策树（某个特征基于阈值分类），每个弱分类器的权值不同，这个权值随着迭代次数增加不断更新。同时，每个样本也具有权重，如果某个样本被错误分类，则下次该样本的权重增加。最终对每个弱分类器的分类结果加权作为最终分类结果。</li>
-<li><a href="https://forec.github.io/2016/02/18/machinelearning8/">回归</a>：回归结果易于理解、计算不复杂，但对非线性的数据拟合不好。适用于数值型和标称型。标准线性回归可以直接用矩阵计算，局部加权线性回归减少欠拟合现象，为数据点附近的其他数据点赋予不同权重。当数据的矩阵非奇异时，可以使用岭回归或者与lasso类似的前向逐步回归来约束回归系数。回归中的偏差指回归结果和真实结果的误差，而方差则指多次回归后不同回归系数之间的差异。</li>
-<li><a href="https://forec.github.io/2016/02/20/machinelearning9/">树回归</a>：可以对复杂和非线性的数据建模，但结果不易理解。适用于数值型和标称型数据。回归树的叶节点包含单个值，而模型树的叶节点包含一个线性方程。剪枝可以降低决策树的复杂度，包含预剪枝和后剪枝。</li>
-<li><a href="https://forec.github.io/2016/02/21/machinelearning10/">K-均值聚类</a>：无监督学习，可以随即初始化k个簇，或者采用二分K-均值聚类算法，从一个簇开始划分。</li>
-<li><a href="https://forec.github.io/2016/02/22/machinelearning11/">Apriori算法</a>:算法基于Apriori原则，如果某个项集不频繁，则其超集必然不频繁。可以从频繁相集中挖掘关联规则，如果某条规则不满足最小可信度要求，那么该规则的所有子集也不满足最小可信度要求。</li>
-<li><a href="https://forec.github.io/2016/02/24/machinelearning12/">FP-growth算法</a>：算法速度快，只需要扫描整个数据集两次，但实现比较困难，在某些数据集上效率可能下降。适用于标称型数据。FP树的构造有些类似字典树，但增加了一个headerTable用于存储每个元素在树中首次出现的位置，并且为每个节点增加了parent域，从而可以从叶节点向上追溯，创建条件树，发现频繁项集。</li>
-<li><a href="https://forec.github.io/2016/02/25/machinelearning13/">PCA</a>：PCA可以降低数据的复杂性，识别最重要的多个特征。但该步骤不一定重要，有可能损失有用信息。适用于数值型数据。另外几种降维技术有FA和ICA。算法通过协方差矩阵来计算主成分，并作为主要坐标轴，并继续计算次成分。当前几个成分覆盖了大部分方差时，可以认为后面的特征都是噪声。</li>
-<li><a href="https://forec.github.io/2016/02/26/machinelearning14/">SVD</a>：SVD是一种矩阵分解技术，将矩阵<code>Data</code>分解成<code>U</code>、<code>∑</code>和<code>V^T</code>三个矩阵，其中∑矩阵为对角矩阵，并且从左到右数据逐渐减小，在r个数据后认为0。可以用这r个数据重构原矩阵的近似矩阵，计算方法为<code>U[:r]*∑[:r]*VT[r:]</code>。</li>
-<li><a href="https://forec.github.io/2016/02/27/machinelearning15/">MapReduce框架</a>：当数据运算需求超过当前资源的运算能力，可以考虑借助MapReduce框架并行计算，利用网络服务提供的租赁资源。大部分情况下并不需要MapReduce。</li>
+<h1 id="CentOS-7-2"><a href="#CentOS-7-2" class="headerlink" title="CentOS 7.2"></a>CentOS 7.2</h1><h2 id="ngrok-服务器搭建"><a href="#ngrok-服务器搭建" class="headerlink" title="ngrok 服务器搭建"></a>ngrok 服务器搭建</h2><p>可参考 imike 的<a href="http://www.imike.me/2016/03/23/CentOS%E4%B8%8B%E9%83%A8%E7%BD%B2Ngrok%E6%9C%8D%E5%8A%A1%E5%99%A8/" target="_blank" rel="external">CentOS下部署Ngrok服务器</a>。</p>
+<ul>
+<li><p>安装依赖库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br><span class="line">sudo yum install build-essential golang mercurial git</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取 ngrok 源码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/inconshreveable/ngrok.git ngrok</span><br><span class="line"><span class="built_in">cd</span> ngrok</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成证书并替换代码中默认证书，修改域名为解析到云主机的域名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">NGROK_DOMAIN=<span class="string">"cross.forec.cn"</span></span><br><span class="line">openssl genrsa -out base.key <span class="number">2048</span></span><br><span class="line">openssl req -new -x509 -nodes -key base.key -days <span class="number">10000</span> -subj <span class="string">"/CN=<span class="variable">$NGROK_DOMAIN</span>"</span> -out base.pem</span><br><span class="line">openssl genrsa -out server.key <span class="number">2048</span></span><br><span class="line">openssl req -new -key server.key -subj <span class="string">"/CN=<span class="variable">$NGROK_DOMAIN</span>"</span> -out server.csr</span><br><span class="line">openssl x509 -req -in server.csr -CA base.pem -CAkey base.key -CAcreateserial -days <span class="number">10000</span> -out server.crt</span><br><span class="line">cp base.pem assets/client/tls/ngrokroot.crt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编译：<code>sudo make release-server release-client</code>，便宜结束后 <code>bin</code> 目录下会有 <code>ngrokd</code> 和 <code>ngrok</code> 两个可执行文件，对应服务器和客户端。</p>
+</li>
+<li>不同系统使用的客户端需要重新编译<ul>
+<li>windows: <code>sudo GOOS=windows GOARCH=amd64 CGO_ENABLED=0 make release-client make release-client</code></li>
+<li>arm: <code>sudo GOOS=linux GOARCH=arm CGO_ENABLED=0 make release-client make release-client</code></li>
+<li>mac: <code>sudo GOOS=darwin GOARCH=amd64 make release-client</code></li>
 </ul>
-<h1 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h1><ul>
-<li><a href="http://archive.ics.uci.edu/ml/" target="_blank" rel="external">美国加州大学欧文分校的机器学习数据资源</a></li>
-<li><a href="http://aws.amazon.com/publicdatasets/" target="_blank" rel="external">Amazon公众大数据库</a></li>
-<li><a href="http://www.data.gov" target="_blank" rel="external">Data.gov的政府数据</a></li>
-<li><a href="http://www.data.gov/opendatasites" target="_blank" rel="external">Data.gov的美国国家网站超链接列表</a>，这些网站提供开放性数据</li>
-<li><a href="http://www.infochimps.com/" target="_blank" rel="external">Infochimps的开放数据集</a></li>
-<li><a href="http://metaoptimize.com/qa/questions/" target="_blank" rel="external">机器学习问答论坛</a></li>
+</li>
+<li>设置域名解析，增加记录 <code>A</code>，主机记录为 <code>cross</code>，记录值为云主机公网 IP。</li>
+<li>启动服务器，下面命令指定 http 端口映射到 <code>8081</code>，<code>https</code> 映射到 8082。<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/ngrokd -tlsKey=server<span class="class">.key</span> -tlsCrt=server<span class="class">.crt</span> -domain=<span class="string">"cross.forec.cn"</span> -httpAddr=<span class="string">":8081"</span> -httpsAddr=<span class="string">":8082"</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="域名解析"><a href="#域名解析" class="headerlink" title="域名解析"></a>域名解析</h2><p>将 <a href="http://blog.forec.cn" target="_blank" rel="external">http://blog.forec.cn</a> 解析至 <a href="https://forec.github.io">https://forec.github.io</a>。</p>
+<ul>
+<li>向解析列表添加两条 <code>A</code> 记录，主机记录为 <code>blog</code>，记录值为 Git Pages 的解析服务器 IP ： <code>192.30.252.153</code> 和 <code>192.30.252.154</code>。</li>
+<li>向解析列表添加一条 <code>CNAME</code> 记录，主机记录为 <code>www</code>，记录值为 <code>forec.github.io</code>。</li>
+<li>在 Github 博客仓库中根目录添加一个文件，文件名为 <code>CNAME</code>，文件内容为 <code>blog.forec.cn</code>。</li>
+</ul>
+<h2 id="开启-IPv6"><a href="#开启-IPv6" class="headerlink" title="开启 IPv6"></a>开启 IPv6</h2><ul>
+<li>新建 <code>/etc/modprobe.d/ipv6.conf</code>，添加 <code>options ipv6 disable=0</code>。</li>
+<li>向自启动脚本添加 <code>sysctl -w net.ipv6.conf.all.disable_ipv6=0</code>。</li>
+<li>重启，或直接运行上面的命令，观察 <code>ifconfig</code> 结果。</li>
+</ul>
+<h2 id="使用-tunnelbroker-分配-IPv6-地址"><a href="#使用-tunnelbroker-分配-IPv6-地址" class="headerlink" title="使用 tunnelbroker 分配 IPv6 地址"></a>使用 tunnelbroker 分配 IPv6 地址</h2><ul>
+<li>在 tunnelbroker 注册，并分配一个 tunnel，填入 VPS 外网 IPv4 地址。</li>
+<li>在 tunnel 的 example configuration 选项卡下选择 <code>Linux-route2</code>，将生成的脚本拷贝到自启动脚本中。</li>
+<li>重启，观察 <code>ifconfig</code>，应增加一个 <code>he-ipv6</code> 网卡，并可看到对应 IPv6 地址。</li>
 </ul>
 <hr>
-<p>参考文献： 《机器学习实战 - 美Peter Harrington》</p>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/02/27/machinelearningsummary/">原始出处</a>(<a href="https://forec.github.io/2016/02/27/machinelearningsummary/">https://forec.github.io/2016/02/27/machinelearningsummary/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/11/02/cloud-virtual-machine-config/">原始出处</a>(<a href="https://forec.github.io/2016/11/02/cloud-virtual-machine-config/">https://forec.github.io/2016/11/02/cloud-virtual-machine-config/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
       
     </div>
@@ -286,7 +297,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+            <a href="/tags/CVM/" rel="tag">#CVM</a>
+          
+            <a href="/tags/OS/" rel="tag">#OS</a>
           
         </div>
       
@@ -295,13 +308,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/02/29/bugs-for-using-linux/" rel="prev">Linux各发行版及Emacs配置备忘</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/02/27/machinelearning15/" rel="next">机器学习笔记（Chapter 15 - MapReduce框架）</a>
+              <a href="/2016/10/29/raspberry-settings/" rel="next">Raspberry Pi 3 配置索引</a>
             
           </div>
         </div>
@@ -326,8 +337,8 @@
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="2016/02/27/marhinelearningsummary/"
-                   data-title="《机器学习实战》总结" data-url="http://forec.github.io/2016/02/27/marhinelearningsummary/">
+              <div class="ds-thread" data-thread-key="2016/11/02/cloud-virtual-machine-config/"
+                   data-title="CVM 操作记录" data-url="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/">
               </div>
             
           </div>
@@ -441,7 +452,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概念总结"><span class="nav-number">1.</span> <span class="nav-text">概念总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#资源"><span class="nav-number">2.</span> <span class="nav-text">资源</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CentOS-7-2"><span class="nav-number">1.</span> <span class="nav-text">CentOS 7.2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ngrok-服务器搭建"><span class="nav-number">1.1.</span> <span class="nav-text">ngrok 服务器搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#域名解析"><span class="nav-number">1.2.</span> <span class="nav-text">域名解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开启-IPv6"><span class="nav-number">1.3.</span> <span class="nav-text">开启 IPv6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-tunnelbroker-分配-IPv6-地址"><span class="nav-number">1.4.</span> <span class="nav-text">使用 tunnelbroker 分配 IPv6 地址</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

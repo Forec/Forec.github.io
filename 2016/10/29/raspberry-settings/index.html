@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://forec.github.io/2016/10/29/raspberry-settings/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理 Raspberry Pi 3 的个人配置。">
-<meta property="og:updated_time" content="2016-10-29T08:00:56.254Z">
+<meta property="og:updated_time" content="2016-11-02T16:18:38.703Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Raspberry Pi 3 配置索引">
 <meta name="twitter:description" content="整理 Raspberry Pi 3 的个人配置。">
@@ -251,6 +251,7 @@
 <h1 id="树莓派及配件型号"><a href="#树莓派及配件型号" class="headerlink" title="树莓派及配件型号"></a>树莓派及配件型号</h1><ul>
 <li>树莓派型号：Raspberry Pi 3 Model B , Made in United Kingdom</li>
 <li>摄像头型号：1/4 inch OV5647 ，500W 像素，最高帧速 30，视频支持 1080p，made by OmniVision</li>
+<li>舵机型号：辉盛 SG90</li>
 </ul>
 <h1 id="RASPBIAN-JESSIE"><a href="#RASPBIAN-JESSIE" class="headerlink" title="RASPBIAN-JESSIE"></a>RASPBIAN-JESSIE</h1><h2 id="镜像源修改"><a href="#镜像源修改" class="headerlink" title="镜像源修改"></a>镜像源修改</h2><ul>
 <li>编辑 <code>/etc/apt/sources.list</code> ，注释原有源</li>
@@ -261,7 +262,7 @@
 </li>
 </ul>
 <h2 id="自启动脚本"><a href="#自启动脚本" class="headerlink" title="自启动脚本"></a>自启动脚本</h2><ul>
-<li>向 <code>/etc/rc.local</code> 中写入 <code>su username -c &quot;command you want&quot;</code>，将 command 指向自启动脚本。</li>
+<li>向 <code>/etc/rc.local</code> 中写入 <code>su username -c &quot;/path/to/autostart.sh&quot;</code>，<code>autostart.sh</code> 为你编写的自启动脚本。</li>
 </ul>
 <h2 id="校园网关登陆"><a href="#校园网关登陆" class="headerlink" title="校园网关登陆"></a>校园网关登陆</h2><ul>
 <li>可从我的 Github 托管仓库下载网关登陆 Python 脚本，在自启动脚本中加入 <code>python login.py username passwd</code>，下载地址：<a href="https://github.com/Forec/scripts-for-bupt/tree/master/login-bupt-gw" target="_blank" rel="external">https://github.com/Forec/scripts-for-bupt/tree/master/login-bupt-gw</a>。</li>
@@ -297,6 +298,17 @@
 <h2 id="SSH-公钥登陆"><a href="#SSH-公钥登陆" class="headerlink" title="SSH 公钥登陆"></a>SSH 公钥登陆</h2><ul>
 <li><code>ssh-copy-id user@host</code> ，将本地公钥上传到树莓派。</li>
 </ul>
+<h2 id="内网穿透"><a href="#内网穿透" class="headerlink" title="内网穿透"></a>内网穿透</h2><ul>
+<li>使用 <code>ngrok</code> 将内网端口映射到固定域名。将在云主机编译好的 arm 版本 <code>ngrok</code> 拷贝到树莓派。</li>
+<li><p>新建一个配置文件<code>ngrok.cfg</code>。我为内网穿透服务设置的网址为 <code>cross.forec.cn</code>，云主机上 ngrok 服务器设置的监听端口为 4443，<code>remote_port</code>选项对 tcp 有效，指定映射后的云主机的端口。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">server_addr</span>: cross.forec.<span class="attribute">cn</span>:<span class="number">4443</span></span><br><span class="line"><span class="attribute">trust_host_root_certs</span>: false</span><br><span class="line"><span class="attribute">tunnels</span>:</span><br><span class="line"> <span class="attribute">ssh</span>:</span><br><span class="line">  <span class="attribute">proto</span>:</span><br><span class="line">   <span class="attribute">tcp</span>: <span class="number">22</span></span><br><span class="line">  <span class="attribute">remote_port</span>: ****</span><br><span class="line"> <span class="attribute">vnc</span>:</span><br><span class="line">  <span class="attribute">proto</span>:</span><br><span class="line">   <span class="attribute">tcp</span>: <span class="number">5091</span></span><br><span class="line">  <span class="attribute">remote_port</span>: ****</span><br><span class="line"> <span class="attribute">monitor</span>:</span><br><span class="line">  <span class="attribute">auth</span>: <span class="string">"username:password"</span></span><br><span class="line">  <span class="attribute">proto</span>:</span><br><span class="line">   <span class="attribute">tcp</span>: <span class="number">8081</span></span><br><span class="line">  <span class="attribute">remote_port</span>: ****</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写启动脚本 <code>run.sh</code>。上面的配置文件设置了三个端口映射方案，在启动时 start 三个方案。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /path/to/ngrok --config=<span class="string">"/path/to/ngrok.cfg"</span> start ssh vnc monitor</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将 <code>run.sh</code> 脚本加入 <code>autostart.sh</code>。</p>
+</li>
+</ul>
 <h1 id="Ubuntu-mate"><a href="#Ubuntu-mate" class="headerlink" title="Ubuntu-mate"></a>Ubuntu-mate</h1><blockquote>
 <p>无屏幕暂时无法尝试</p>
 </blockquote>
@@ -329,6 +341,8 @@
       
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/02/cloud-virtual-machine-config/" rel="prev">CVM 操作记录</a>
             
           </div>
 
@@ -400,7 +414,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">51</span>
+              <span class="site-state-item-count">52</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -414,7 +428,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">20</span>
+              <span class="site-state-item-count">21</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -474,7 +488,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#树莓派及配件型号"><span class="nav-number">1.</span> <span class="nav-text">树莓派及配件型号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RASPBIAN-JESSIE"><span class="nav-number">2.</span> <span class="nav-text">RASPBIAN-JESSIE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像源修改"><span class="nav-number">2.1.</span> <span class="nav-text">镜像源修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自启动脚本"><span class="nav-number">2.2.</span> <span class="nav-text">自启动脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#校园网关登陆"><span class="nav-number">2.3.</span> <span class="nav-text">校园网关登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时任务"><span class="nav-number">2.4.</span> <span class="nav-text">定时任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dev-video0-未找到"><span class="nav-number">2.5.</span> <span class="nav-text">/dev/video0 未找到</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Motion-配置"><span class="nav-number">2.6.</span> <span class="nav-text">Motion 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VNC-分辨率调整"><span class="nav-number">2.7.</span> <span class="nav-text">VNC 分辨率调整</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mstsc-访问"><span class="nav-number">2.8.</span> <span class="nav-text">mstsc 访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH-公钥登陆"><span class="nav-number">2.9.</span> <span class="nav-text">SSH 公钥登陆</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu-mate"><span class="nav-number">3.</span> <span class="nav-text">Ubuntu-mate</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展文件系统"><span class="nav-number">3.1.</span> <span class="nav-text">扩展文件系统</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#树莓派及配件型号"><span class="nav-number">1.</span> <span class="nav-text">树莓派及配件型号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RASPBIAN-JESSIE"><span class="nav-number">2.</span> <span class="nav-text">RASPBIAN-JESSIE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像源修改"><span class="nav-number">2.1.</span> <span class="nav-text">镜像源修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自启动脚本"><span class="nav-number">2.2.</span> <span class="nav-text">自启动脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#校园网关登陆"><span class="nav-number">2.3.</span> <span class="nav-text">校园网关登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时任务"><span class="nav-number">2.4.</span> <span class="nav-text">定时任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dev-video0-未找到"><span class="nav-number">2.5.</span> <span class="nav-text">/dev/video0 未找到</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Motion-配置"><span class="nav-number">2.6.</span> <span class="nav-text">Motion 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VNC-分辨率调整"><span class="nav-number">2.7.</span> <span class="nav-text">VNC 分辨率调整</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mstsc-访问"><span class="nav-number">2.8.</span> <span class="nav-text">mstsc 访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH-公钥登陆"><span class="nav-number">2.9.</span> <span class="nav-text">SSH 公钥登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内网穿透"><span class="nav-number">2.10.</span> <span class="nav-text">内网穿透</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu-mate"><span class="nav-number">3.</span> <span class="nav-text">Ubuntu-mate</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展文件系统"><span class="nav-number">3.1.</span> <span class="nav-text">扩展文件系统</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
