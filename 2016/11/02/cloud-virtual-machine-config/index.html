@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="CVM 上的操作记录。">
-<meta property="og:updated_time" content="2016-11-03T13:24:02.045Z">
+<meta property="og:updated_time" content="2016-11-03T13:41:13.279Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CVM 操作记录">
 <meta name="twitter:description" content="CVM 上的操作记录。">
@@ -308,7 +308,11 @@
 <li>安装源： <code>sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm</code></li>
 <li>安装 mysql ：<code>sudo yum install mysql-server</code></li>
 <li>启动 mysqld 服务：<code>systemctl start  mysqld.service</code></li>
-<li>开机启动 mysqld 服务：<code>systemctl enable mysqld.service</code></li>
+<li><p>修改密码：<code>mysqladmin -u USER -p password PASSWORD</code> 或使用 root 账户登入 mysql，执行</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">USE</span> mysql;</span></span><br><span class="line"><span class="operator"><span class="keyword">UPDATE</span> <span class="keyword">user</span> <span class="keyword">SET</span> <span class="keyword">password</span>=<span class="keyword">PASSWORD</span>(<span class="string">'123456'</span>) <span class="keyword">WHERE</span> <span class="keyword">user</span>=<span class="string">'root'</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">FLUSH</span> <span class="keyword">PRIVILEGES</span>;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>开机启动 mysqld 服务：<code>systemctl enable mysqld.service</code></p>
+</li>
 </ul>
 <hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/11/02/cloud-virtual-machine-config/">原始出处</a>(<a href="https://forec.github.io/2016/11/02/cloud-virtual-machine-config/">https://forec.github.io/2016/11/02/cloud-virtual-machine-config/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
