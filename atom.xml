@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-11-03T13:19:27.013Z</updated>
+  <updated>2016-11-03T13:24:02.045Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/"/>
     <id>http://forec.github.io/2016/11/02/cloud-virtual-machine-config/</id>
     <published>2016-11-02T15:08:14.000Z</published>
-    <updated>2016-11-03T13:19:27.013Z</updated>
+    <updated>2016-11-03T13:24:02.045Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;CVM 上的操作记录。&lt;/p&gt;
@@ -85,6 +85,8 @@
 &lt;li&gt;下载 mysql 的 repo 源： &lt;code&gt;wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;安装源： &lt;code&gt;sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;安装 mysql ：&lt;code&gt;sudo yum install mysql-server&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;启动 mysqld 服务：&lt;code&gt;systemctl start  mysqld.service&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;开机启动 mysqld 服务：&lt;code&gt;systemctl enable mysqld.service&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/11/02/cloud-virtual-machine-config/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/11/02/cloud-virtual-machine-config/&quot;&gt;https://forec.github.io/2016/11/02/cloud-virtual-machine-config/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
