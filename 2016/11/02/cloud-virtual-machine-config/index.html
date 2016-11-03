@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="CVM 上的操作记录。">
-<meta property="og:updated_time" content="2016-11-03T08:32:26.415Z">
+<meta property="og:updated_time" content="2016-11-03T13:19:27.013Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CVM 操作记录">
 <meta name="twitter:description" content="CVM 上的操作记录。">
@@ -286,6 +286,28 @@
 <li>在 tunnel 的 example configuration 选项卡下选择 <code>Linux-route2</code>，将生成的脚本拷贝到自启动脚本中。</li>
 <li>重启，观察 <code>ifconfig</code>，应增加一个 <code>he-ipv6</code> 网卡，并可看到对应 IPv6 地址。</li>
 </ul>
+<h2 id="Nginx-配置"><a href="#Nginx-配置" class="headerlink" title="Nginx 配置"></a>Nginx 配置</h2><ul>
+<li>从官网获得 nginx 最新版本链接，wget 到本地</li>
+<li>安装编译依赖包： <code>yum -y install zlib zlib-devel openssl openssl--devel pcre pcre-devel</code></li>
+<li>安装 nginx 依赖包：<code>yum install GeoIP gd libXpm libxslt</code></li>
+<li><p>编译、安装</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf nginx-<span class="number">1.10</span><span class="number">.2</span>.tar.gz</span><br><span class="line">cd nginx-<span class="number">1.10</span>-<span class="number">2</span></span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>/usr/local/nginx/sbin/nginx</code> 运行，在浏览器输入 IP 观察是否显示欢迎页</p>
+</li>
+<li>向 <code>/etc/profile</code> 增加环境变量并 <code>source /etc/profile</code> 更新<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PATH=/usr/local/nginx/sbin:<span class="variable">$PATH</span></span><br><span class="line">export PATH</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="为-Ngrok-做反向代理"><a href="#为-Ngrok-做反向代理" class="headerlink" title="为 Ngrok 做反向代理"></a>为 Ngrok 做反向代理</h2><ul>
+<li>要令 <code>monitor.cross.forec.cn</code> 作为 ngrok 代理，该域名对应的 80 端口转发至本地 9999 端口。在 <code>/usr/local/nginx/conf</code> 增加配置文件 <code>ngrok_monitor.conf</code>。<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">        listen <span class="number">80</span>;</span><br><span class="line">        server_name monitor.cross.forec.cn;</span><br><span class="line">        location / &#123;</span><br><span class="line">                proxy_set_header X-Real-IP <span class="variable">$remote</span>_addr;</span><br><span class="line">                proxy_set_header X-Forwarded-For <span class="variable">$proxy</span>_add_x_forwarded_for;</span><br><span class="line">                proxy_set_header Host <span class="variable">$http</span>_host:<span class="number">8081</span>;</span><br><span class="line">                proxy_set_header X-Nginx-Proxy true;</span><br><span class="line">                proxy_set_header Connection <span class="string">""</span>;</span><br><span class="line">                proxy_pass http://<span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span>:<span class="number">9999</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="安装-MySQL"><a href="#安装-MySQL" class="headerlink" title="安装 MySQL"></a>安装 MySQL</h2><ul>
+<li>腾讯云 CentOS 7.2 的 yum 源不提供 <code>mysql-server</code></li>
+<li>下载 mysql 的 repo 源： <code>wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm</code></li>
+<li>安装源： <code>sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm</code></li>
+<li>安装 mysql ：<code>sudo yum install mysql-server</code></li>
+</ul>
 <hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/11/02/cloud-virtual-machine-config/">原始出处</a>(<a href="https://forec.github.io/2016/11/02/cloud-virtual-machine-config/">https://forec.github.io/2016/11/02/cloud-virtual-machine-config/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
 </span>
@@ -451,7 +473,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CentOS-7-2"><span class="nav-number">1.</span> <span class="nav-text">CentOS 7.2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ngrok-服务器搭建"><span class="nav-number">1.1.</span> <span class="nav-text">ngrok 服务器搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#域名解析"><span class="nav-number">1.2.</span> <span class="nav-text">域名解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开启-IPv6"><span class="nav-number">1.3.</span> <span class="nav-text">开启 IPv6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-tunnelbroker-分配-IPv6-地址"><span class="nav-number">1.4.</span> <span class="nav-text">使用 tunnelbroker 分配 IPv6 地址</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CentOS-7-2"><span class="nav-number">1.</span> <span class="nav-text">CentOS 7.2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ngrok-服务器搭建"><span class="nav-number">1.1.</span> <span class="nav-text">ngrok 服务器搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#域名解析"><span class="nav-number">1.2.</span> <span class="nav-text">域名解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开启-IPv6"><span class="nav-number">1.3.</span> <span class="nav-text">开启 IPv6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-tunnelbroker-分配-IPv6-地址"><span class="nav-number">1.4.</span> <span class="nav-text">使用 tunnelbroker 分配 IPv6 地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx-配置"><span class="nav-number">1.5.</span> <span class="nav-text">Nginx 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为-Ngrok-做反向代理"><span class="nav-number">1.6.</span> <span class="nav-text">为 Ngrok 做反向代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-MySQL"><span class="nav-number">1.7.</span> <span class="nav-text">安装 MySQL</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

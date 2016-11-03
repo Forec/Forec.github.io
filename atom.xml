@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-11-03T08:32:26.415Z</updated>
+  <updated>2016-11-03T13:19:27.013Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/"/>
     <id>http://forec.github.io/2016/11/02/cloud-virtual-machine-config/</id>
     <published>2016-11-02T15:08:14.000Z</published>
-    <updated>2016-11-03T08:32:26.415Z</updated>
+    <updated>2016-11-03T13:19:27.013Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;CVM 上的操作记录。&lt;/p&gt;
@@ -63,6 +63,28 @@
 &lt;li&gt;在 tunnelbroker 注册，并分配一个 tunnel，填入 VPS 外网 IPv4 地址。&lt;/li&gt;
 &lt;li&gt;在 tunnel 的 example configuration 选项卡下选择 &lt;code&gt;Linux-route2&lt;/code&gt;，将生成的脚本拷贝到自启动脚本中。&lt;/li&gt;
 &lt;li&gt;重启，观察 &lt;code&gt;ifconfig&lt;/code&gt;，应增加一个 &lt;code&gt;he-ipv6&lt;/code&gt; 网卡，并可看到对应 IPv6 地址。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;Nginx-配置&quot;&gt;&lt;a href=&quot;#Nginx-配置&quot; class=&quot;headerlink&quot; title=&quot;Nginx 配置&quot;&gt;&lt;/a&gt;Nginx 配置&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;从官网获得 nginx 最新版本链接，wget 到本地&lt;/li&gt;
+&lt;li&gt;安装编译依赖包： &lt;code&gt;yum -y install zlib zlib-devel openssl openssl--devel pcre pcre-devel&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;安装 nginx 依赖包：&lt;code&gt;yum install GeoIP gd libXpm libxslt&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;编译、安装&lt;/p&gt;
+&lt;figure class=&quot;highlight cpp&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;tar -zxvf nginx-&lt;span class=&quot;number&quot;&gt;1.10&lt;/span&gt;&lt;span class=&quot;number&quot;&gt;.2&lt;/span&gt;.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;cd nginx-&lt;span class=&quot;number&quot;&gt;1.10&lt;/span&gt;-&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;./configure&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;make&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;make install&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;/usr/local/nginx/sbin/nginx&lt;/code&gt; 运行，在浏览器输入 IP 观察是否显示欢迎页&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;向 &lt;code&gt;/etc/profile&lt;/code&gt; 增加环境变量并 &lt;code&gt;source /etc/profile&lt;/code&gt; 更新&lt;figure class=&quot;highlight xquery&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;PATH=/usr/local/nginx/sbin:&lt;span class=&quot;variable&quot;&gt;$PATH&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;export PATH&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;为-Ngrok-做反向代理&quot;&gt;&lt;a href=&quot;#为-Ngrok-做反向代理&quot; class=&quot;headerlink&quot; title=&quot;为 Ngrok 做反向代理&quot;&gt;&lt;/a&gt;为 Ngrok 做反向代理&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;要令 &lt;code&gt;monitor.cross.forec.cn&lt;/code&gt; 作为 ngrok 代理，该域名对应的 80 端口转发至本地 9999 端口。在 &lt;code&gt;/usr/local/nginx/conf&lt;/code&gt; 增加配置文件 &lt;code&gt;ngrok_monitor.conf&lt;/code&gt;。&lt;figure class=&quot;highlight xquery&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;server&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        listen &lt;span class=&quot;number&quot;&gt;80&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        server_name monitor.cross.forec.cn;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        location / &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                proxy_set_header X-Real-IP &lt;span class=&quot;variable&quot;&gt;$remote&lt;/span&gt;_addr;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                proxy_set_header X-Forwarded-For &lt;span class=&quot;variable&quot;&gt;$proxy&lt;/span&gt;_add_x_forwarded_for;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                proxy_set_header Host &lt;span class=&quot;variable&quot;&gt;$http&lt;/span&gt;_host:&lt;span class=&quot;number&quot;&gt;8081&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                proxy_set_header X-Nginx-Proxy true;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                proxy_set_header Connection &lt;span class=&quot;string&quot;&gt;&quot;&quot;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                proxy_pass http://&lt;span class=&quot;number&quot;&gt;127.0&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;9999&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;安装-MySQL&quot;&gt;&lt;a href=&quot;#安装-MySQL&quot; class=&quot;headerlink&quot; title=&quot;安装 MySQL&quot;&gt;&lt;/a&gt;安装 MySQL&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;腾讯云 CentOS 7.2 的 yum 源不提供 &lt;code&gt;mysql-server&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;下载 mysql 的 repo 源： &lt;code&gt;wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;安装源： &lt;code&gt;sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;安装 mysql ：&lt;code&gt;sudo yum install mysql-server&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/11/02/cloud-virtual-machine-config/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/11/02/cloud-virtual-machine-config/&quot;&gt;https://forec.github.io/2016/11/02/cloud-virtual-machine-config/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
