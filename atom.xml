@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-11-02T16:17:35.543Z</updated>
+  <updated>2016-11-03T08:32:26.415Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/"/>
     <id>http://forec.github.io/2016/11/02/cloud-virtual-machine-config/</id>
     <published>2016-11-02T15:08:14.000Z</published>
-    <updated>2016-11-02T16:17:35.543Z</updated>
+    <updated>2016-11-03T08:32:26.415Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;CVM 上的操作记录。&lt;/p&gt;
@@ -51,8 +51,7 @@
 &lt;/ul&gt;
 &lt;h2 id=&quot;域名解析&quot;&gt;&lt;a href=&quot;#域名解析&quot; class=&quot;headerlink&quot; title=&quot;域名解析&quot;&gt;&lt;/a&gt;域名解析&lt;/h2&gt;&lt;p&gt;将 &lt;a href=&quot;http://blog.forec.cn&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn&lt;/a&gt; 解析至 &lt;a href=&quot;https://forec.github.io&quot;&gt;https://forec.github.io&lt;/a&gt;。&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;向解析列表添加两条 &lt;code&gt;A&lt;/code&gt; 记录，主机记录为 &lt;code&gt;blog&lt;/code&gt;，记录值为 Git Pages 的解析服务器 IP ： &lt;code&gt;192.30.252.153&lt;/code&gt; 和 &lt;code&gt;192.30.252.154&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;向解析列表添加一条 &lt;code&gt;CNAME&lt;/code&gt; 记录，主机记录为 &lt;code&gt;www&lt;/code&gt;，记录值为 &lt;code&gt;forec.github.io&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;向解析列表添加一条 &lt;code&gt;CNAME&lt;/code&gt; 记录，主机记录为 &lt;code&gt;blog&lt;/code&gt;，记录值为 &lt;code&gt;forec.github.io&lt;/code&gt;。&lt;/li&gt;
 &lt;li&gt;在 Github 博客仓库中根目录添加一个文件，文件名为 &lt;code&gt;CNAME&lt;/code&gt;，文件内容为 &lt;code&gt;blog.forec.cn&lt;/code&gt;。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&quot;开启-IPv6&quot;&gt;&lt;a href=&quot;#开启-IPv6&quot; class=&quot;headerlink&quot; title=&quot;开启 IPv6&quot;&gt;&lt;/a&gt;开启 IPv6&lt;/h2&gt;&lt;ul&gt;
@@ -91,7 +90,7 @@
     <link href="http://forec.github.io/2016/10/29/raspberry-settings/"/>
     <id>http://forec.github.io/2016/10/29/raspberry-settings/</id>
     <published>2016-10-29T06:49:23.000Z</published>
-    <updated>2016-11-02T16:18:38.703Z</updated>
+    <updated>2016-11-03T06:29:49.446Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理 Raspberry Pi 3 的个人配置。&lt;/p&gt;
@@ -158,15 +157,22 @@
 &lt;li&gt;&lt;p&gt;将 &lt;code&gt;run.sh&lt;/code&gt; 脚本加入 &lt;code&gt;autostart.sh&lt;/code&gt;。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;h2 id=&quot;音频播放&quot;&gt;&lt;a href=&quot;#音频播放&quot; class=&quot;headerlink&quot; title=&quot;音频播放&quot;&gt;&lt;/a&gt;音频播放&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;sudo apt-get install alsa-utils&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;可播放 wav 格式，测试：&lt;code&gt;sudo aplay /usr/share/sounds/alsa/Front_Center.wav&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;alsamixer&lt;/code&gt; 调整音量&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo apt-get -y install mpg321&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;mpg321&lt;/code&gt; 可播放 mp3 格式音频&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h1 id=&quot;Ubuntu-mate&quot;&gt;&lt;a href=&quot;#Ubuntu-mate&quot; class=&quot;headerlink&quot; title=&quot;Ubuntu-mate&quot;&gt;&lt;/a&gt;Ubuntu-mate&lt;/h1&gt;&lt;blockquote&gt;
 &lt;p&gt;无屏幕暂时无法尝试&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&quot;扩展文件系统&quot;&gt;&lt;a href=&quot;#扩展文件系统&quot; class=&quot;headerlink&quot; title=&quot;扩展文件系统&quot;&gt;&lt;/a&gt;扩展文件系统&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;`sudo fdisk /dev/mmcblk0&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo fdisk /dev/mmcblk0&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;按序输入 &lt;code&gt;d Enter 2 Enter n Enter p Enter 2&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;reboot&lt;/li&gt;
+&lt;li&gt;重启&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;sudo resize2fs /dev/mmcblk0p2&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;reboot&lt;/li&gt;
+&lt;li&gt;重启&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/10/29/raspberry-settings/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/10/29/raspberry-settings/&quot;&gt;https://forec.github.io/2016/10/29/raspberry-settings/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;

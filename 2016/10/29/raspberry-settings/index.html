@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://forec.github.io/2016/10/29/raspberry-settings/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理 Raspberry Pi 3 的个人配置。">
-<meta property="og:updated_time" content="2016-11-02T16:18:38.703Z">
+<meta property="og:updated_time" content="2016-11-03T06:29:49.446Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Raspberry Pi 3 配置索引">
 <meta name="twitter:description" content="整理 Raspberry Pi 3 的个人配置。">
@@ -309,15 +309,22 @@
 <li><p>将 <code>run.sh</code> 脚本加入 <code>autostart.sh</code>。</p>
 </li>
 </ul>
+<h2 id="音频播放"><a href="#音频播放" class="headerlink" title="音频播放"></a>音频播放</h2><ul>
+<li><code>sudo apt-get install alsa-utils</code></li>
+<li>可播放 wav 格式，测试：<code>sudo aplay /usr/share/sounds/alsa/Front_Center.wav</code></li>
+<li>使用 <code>alsamixer</code> 调整音量</li>
+<li><code>sudo apt-get -y install mpg321</code></li>
+<li>使用 <code>mpg321</code> 可播放 mp3 格式音频</li>
+</ul>
 <h1 id="Ubuntu-mate"><a href="#Ubuntu-mate" class="headerlink" title="Ubuntu-mate"></a>Ubuntu-mate</h1><blockquote>
 <p>无屏幕暂时无法尝试</p>
 </blockquote>
 <h2 id="扩展文件系统"><a href="#扩展文件系统" class="headerlink" title="扩展文件系统"></a>扩展文件系统</h2><ul>
-<li>`sudo fdisk /dev/mmcblk0</li>
+<li><code>sudo fdisk /dev/mmcblk0</code></li>
 <li>按序输入 <code>d Enter 2 Enter n Enter p Enter 2</code></li>
-<li>reboot</li>
+<li>重启</li>
 <li><code>sudo resize2fs /dev/mmcblk0p2</code></li>
-<li>reboot</li>
+<li>重启</li>
 </ul>
 <hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/10/29/raspberry-settings/">原始出处</a>(<a href="https://forec.github.io/2016/10/29/raspberry-settings/">https://forec.github.io/2016/10/29/raspberry-settings/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
@@ -488,7 +495,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#树莓派及配件型号"><span class="nav-number">1.</span> <span class="nav-text">树莓派及配件型号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RASPBIAN-JESSIE"><span class="nav-number">2.</span> <span class="nav-text">RASPBIAN-JESSIE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像源修改"><span class="nav-number">2.1.</span> <span class="nav-text">镜像源修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自启动脚本"><span class="nav-number">2.2.</span> <span class="nav-text">自启动脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#校园网关登陆"><span class="nav-number">2.3.</span> <span class="nav-text">校园网关登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时任务"><span class="nav-number">2.4.</span> <span class="nav-text">定时任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dev-video0-未找到"><span class="nav-number">2.5.</span> <span class="nav-text">/dev/video0 未找到</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Motion-配置"><span class="nav-number">2.6.</span> <span class="nav-text">Motion 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VNC-分辨率调整"><span class="nav-number">2.7.</span> <span class="nav-text">VNC 分辨率调整</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mstsc-访问"><span class="nav-number">2.8.</span> <span class="nav-text">mstsc 访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH-公钥登陆"><span class="nav-number">2.9.</span> <span class="nav-text">SSH 公钥登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内网穿透"><span class="nav-number">2.10.</span> <span class="nav-text">内网穿透</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu-mate"><span class="nav-number">3.</span> <span class="nav-text">Ubuntu-mate</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展文件系统"><span class="nav-number">3.1.</span> <span class="nav-text">扩展文件系统</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#树莓派及配件型号"><span class="nav-number">1.</span> <span class="nav-text">树莓派及配件型号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RASPBIAN-JESSIE"><span class="nav-number">2.</span> <span class="nav-text">RASPBIAN-JESSIE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像源修改"><span class="nav-number">2.1.</span> <span class="nav-text">镜像源修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自启动脚本"><span class="nav-number">2.2.</span> <span class="nav-text">自启动脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#校园网关登陆"><span class="nav-number">2.3.</span> <span class="nav-text">校园网关登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时任务"><span class="nav-number">2.4.</span> <span class="nav-text">定时任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dev-video0-未找到"><span class="nav-number">2.5.</span> <span class="nav-text">/dev/video0 未找到</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Motion-配置"><span class="nav-number">2.6.</span> <span class="nav-text">Motion 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VNC-分辨率调整"><span class="nav-number">2.7.</span> <span class="nav-text">VNC 分辨率调整</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mstsc-访问"><span class="nav-number">2.8.</span> <span class="nav-text">mstsc 访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH-公钥登陆"><span class="nav-number">2.9.</span> <span class="nav-text">SSH 公钥登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内网穿透"><span class="nav-number">2.10.</span> <span class="nav-text">内网穿透</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#音频播放"><span class="nav-number">2.11.</span> <span class="nav-text">音频播放</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu-mate"><span class="nav-number">3.</span> <span class="nav-text">Ubuntu-mate</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展文件系统"><span class="nav-number">3.1.</span> <span class="nav-text">扩展文件系统</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
