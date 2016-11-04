@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>LCA和RSA | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Algorithms" />
+    
+    <meta name="description" content="Tarjan离线求解LCA和RSA加密算法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LCA和RSA">
+<meta property="og:url" content="http://forec.github.io/2015/09/10/Algorithms-Must1/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="Tarjan离线求解LCA和RSA加密算法。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/algorithm-must-2.jpg">
+<meta property="og:updated_time" content="2016-11-04T15:48:02.872Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LCA和RSA">
+<meta name="twitter:description" content="Tarjan离线求解LCA和RSA加密算法。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/vendor/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/vendor/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/vendor/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/vendor/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="https://github.com/Forec">GITHUB</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">官方网站</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Code/">Code</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-Algorithms-Must1" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        LCA和RSA
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2015/09/10/Algorithms-Must1/" class="article-date">
+    <time datetime="2015-09-10T11:35:40.000Z" itemprop="datePublished">2015-09-10</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithms/">Algorithms</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>Tarjan离线求解LCA和RSA加密算法。</p>
+</blockquote>
+<a id="more"></a>
+<p></p><h1 id="1">Tarjan离线求解LCA</h1><p></p>
+<blockquote>
+<p>LCA（Least Common Ancestors），最近公共祖先，即在有根树中寻找到两个结点u，v距离和最短的结点，亦即离根最远的结点。</p>
+</blockquote>
+<ul>
+<li><p>算法基于DFS和并查集，时间复杂度由DFS的V和查询次数M决定，O（V+M）。在下面给出的代码样例中采用链式结构存储树，采用邻接表结构<strong>双向存储</strong>查询端点，也可以通过两个边集数组实现。</p>
+</li>
+<li><p>算法流程：</p>
+<ul>
+<li>初始化：设置par数组（并查集），par[i] = i。离线所有查找请求，存储于无向图邻接表中。 </li>
+<li>从根结点开始tarjan（DFS），对于每次新探求到的顶点u，对照每个查询请求（u，v），判断这条询问请求中的另一个结点v是否被搜索过。如果v尚未被搜索则暂时跳过该条请求（在我的样例中将这条请求留到了（v，u）处理），如果v已经被搜索过，则LCA（u，v）= Find（v），这里的Find是并查集操作。</li>
+<li>搜索并处理u包含的所有子树（每棵子树搜索完成意味着所有子树内的LCA询问都已经被解决）。在v的所有子树被搜索完成后，回溯时合并祖先，将所有自v处搜索出的顶点的par值设为u。</li>
+<li>tarjan所有结点。</li>
+<li>核心部分的伪代码</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">tarjan</span><span class="params">(u)</span></span></span><br><span class="line">     vis[u] &lt;- true</span><br><span class="line">     <span class="keyword">for</span> each (u, v) <span class="keyword">in</span> questions</span><br><span class="line">         <span class="keyword">if</span> vis[v]</span><br><span class="line">             <span class="function"><span class="title">ans</span><span class="params">(u, v)</span></span> &lt;- <span class="function"><span class="title">Find</span><span class="params">(v)</span></span></span><br><span class="line">     <span class="keyword">for</span> each (u, v) <span class="keyword">in</span> tree</span><br><span class="line">         <span class="keyword">if</span> !vis[v]</span><br><span class="line">             <span class="function"><span class="title">tarjan</span><span class="params">(v)</span></span></span><br><span class="line">             par[v] &lt;- u</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>对LCA（u，v）= Find（v）给出证明：因为v在遍历到u（当前结点）前被遍历过，而又由某个结点拓展到u，所以<strong>以最近公共祖先为根并且包含v的子树</strong>已经被搜索过，若有一个从当前结点u到结点v的查询，这时<strong>当前</strong>这棵子树的祖先就是最近公共祖先（注意当前的含义，当对v的搜索不断回溯时，Find（v）的值会在不断变化）。</p>
+</li>
+<li><p>样例</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;memory.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> Node &#123;</span><br><span class="line">	<span class="keyword">int</span> num;</span><br><span class="line">	<span class="keyword">struct</span> Node * left, * right;</span><br><span class="line">&#125;node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> granode&#123;</span><br><span class="line">	<span class="keyword">int</span> v;</span><br><span class="line">	<span class="keyword">int</span> ans;</span><br><span class="line">	<span class="keyword">struct</span> granode *next;</span><br><span class="line">&#125;granode; </span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> V, E, Q;</span><br><span class="line"><span class="keyword">int</span> * vis, * par;</span><br><span class="line">node * tree, * root = <span class="literal">NULL</span>;</span><br><span class="line">granode ** <span class="built_in">list</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Find</span><span class="params">( <span class="keyword">int</span> u )</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> par[u] == u ? u : Find( par[u] );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">( <span class="keyword">int</span> u, <span class="keyword">int</span> v )</span></span>&#123;</span><br><span class="line">	granode * temp = ( granode * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( granode ) );</span><br><span class="line">	temp-&gt;v = v;</span><br><span class="line">	temp-&gt;next = <span class="built_in">list</span>[u];</span><br><span class="line">	<span class="built_in">list</span>[u] = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="built_in">scanf</span>( <span class="string">"%d %d %d"</span>, &amp;V, &amp;E, &amp;Q );</span><br><span class="line">	<span class="keyword">int</span> i, father, child, u, v;</span><br><span class="line">	tree = ( node * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( node ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	par = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	vis = ( <span class="keyword">int</span> * ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="built_in">list</span> = ( granode ** ) <span class="built_in">malloc</span> ( <span class="keyword">sizeof</span>( granode* ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="built_in">memset</span>( vis, <span class="number">0</span>, <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )&#123;</span><br><span class="line">		tree[i].num = i;</span><br><span class="line">		tree[i].left = tree[i].right = <span class="literal">NULL</span>;</span><br><span class="line">		<span class="built_in">list</span>[i] = <span class="literal">NULL</span>;</span><br><span class="line">		par[i] = i;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; E ; i++ )&#123;</span><br><span class="line">		<span class="built_in">scanf</span>( <span class="string">"%d %d"</span>, &amp;father, &amp;child );</span><br><span class="line">		vis[child] = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">if</span> ( tree[father].left == <span class="literal">NULL</span> )</span><br><span class="line">			tree[father].left = tree + child;</span><br><span class="line">		<span class="keyword">else</span> </span><br><span class="line">			tree[father].right = tree + child;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )</span><br><span class="line">		<span class="keyword">if</span> ( !vis[i] )</span><br><span class="line">			root = tree + i;</span><br><span class="line">	<span class="built_in">memset</span>( vis, <span class="number">0</span>, <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( V + <span class="number">1</span> ) );</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= Q ; i++ )&#123;</span><br><span class="line">		<span class="built_in">scanf</span>( <span class="string">"%d %d"</span>, &amp;u, &amp;v );</span><br><span class="line">		insert( u, v );</span><br><span class="line">		insert( v, u );</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">tarjan</span><span class="params">( node * n )</span></span>&#123;</span><br><span class="line">	vis[ n-&gt;num ] = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">int</span> u = n-&gt;num;</span><br><span class="line">	granode * temp = <span class="built_in">list</span>[u];</span><br><span class="line">	<span class="keyword">while</span> ( temp != <span class="literal">NULL</span> )&#123;</span><br><span class="line">		<span class="keyword">if</span> ( vis[ temp-&gt;v ] )</span><br><span class="line">			temp-&gt;ans = Find( temp-&gt;v );</span><br><span class="line">		temp = temp-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> ( n-&gt;left != <span class="literal">NULL</span> )</span><br><span class="line">		<span class="keyword">if</span> ( !vis[ n-&gt;left-&gt;num ] )&#123;</span><br><span class="line">			tarjan( n-&gt;left );</span><br><span class="line">			par[ n-&gt;left-&gt;num ] = u;</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="keyword">if</span> ( n-&gt;right != <span class="literal">NULL</span> )</span><br><span class="line">		<span class="keyword">if</span> ( !vis[ n-&gt;right-&gt;num ] )&#123;</span><br><span class="line">			tarjan( n-&gt;right );</span><br><span class="line">			par[ n-&gt;right-&gt;num ] = u;</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )&#123;</span><br><span class="line">		granode * temp = <span class="built_in">list</span>[i];</span><br><span class="line">		<span class="keyword">while</span> ( temp != <span class="literal">NULL</span> ) &#123;</span><br><span class="line">			<span class="keyword">if</span> ( temp-&gt;ans )</span><br><span class="line">				<span class="built_in">printf</span>( <span class="string">"%d %d %d\n"</span>, i, temp-&gt;v, temp-&gt;ans );</span><br><span class="line">			temp = temp-&gt;next;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	init();</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Root : %d\n"</span>,root-&gt;num );</span><br><span class="line">	tarjan( root );</span><br><span class="line">	print();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>运行结果<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/Tarjan的离线LCA.png" alt="LCA的Tarjan离线算法演示"></li>
+</ul>
+<hr>
+<p></p><h1 id="2">RSA</h1><p></p>
+<blockquote>
+<p>选取两个不同的大素数p、q，并计算N = p×q，选取小素数d，并求出e = ~d，使 d × e ≡ 1 mod (p-1)(q-1)。对于任意明文 A &lt; N有密文B =A^d mod N，解密时A = B^e mod N。因此d和~d形成了非对称密钥关系，使用公钥d加密，私钥e解密，即使第三方获取了密文B、公钥d和模数N，因为目前的RSA大多以大于1024位的大数为基础，因此对N进行素数因子分解近似不可能（不考虑量子算法），因此无法获取p，q，也就无法推算e。</p>
+</blockquote>
+<p></p><h2 id="4">大数运算</h2><p></p>
+<blockquote>
+<p>目前多为32和64bit编译器，对于1024位以上的大数运算通常将其作为数组处理。如果选取十进制，2^1024会产生一个长度300多位的数组，对于四则运算的任何一种操作都需要在两个数百位的数组上进行，效率非常低，并且将其转换成二进制非常麻烦。通常的改进方法是将大数用n进制数组表示，这里的n为2的幂，对32bit系统可以取n = 2 ^ 32（0x100000000），将1024位大数用该进制表示即为32位，每一位的取值是2^32进制的0～0xffffffff。这刚好是32位系统中long的长度。此时对该数组进行的任意运算所需的循环规模不超过32次，并且因为进制是2的次幂，与二进制的转换非常容易。</p>
+</blockquote>
+<ul>
+<li>存储方式：例如0xffffffff ffffffff，转换成十进制是18446744073709551615，格式类似于十进制中的99，十六进制中的0xFF。而0x00000001 00000000 00000000，转换成十进制是18446744073709551615 + 1 = 18446744073709551616，格式类似十进制的100，十六进制的0x0100。在数组中，i从0到n分别按由低位到高位的顺序存储。对于一个数组A表示的大数，其值通过如下方式计算：<code>for i from 0 to n { ans &lt;- ans + A[i] × base ^ i }</code>。显然各个数字间的运算中间结果可能超出32位长度，因此需要64位的数据（long long，__int 64）类型存储（部分32位编译系统不支持64位，可使用2^16进制，并将32位数据类型用来存储中间结果；或者将2^32进制改成4×2^28进制，也就是0x40000000进制，这样两个数字运算最大结果为0x3fffffff × 0x3fffffff，不超过0xffffffffffffff，可以用double类型存储，但不能将中间结果简单的拆分成高位和低位）。</li>
+</ul>
+<blockquote>
+<p>假设存在大数A和B，A.length和B.length表示各自长度，base = 0x100000000，0 &lt;= A[i],B[i] &lt; base。</p>
+</blockquote>
+<ul>
+<li>加法：处理进位情况和长度变化即可  </li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">__int64  temp;</span><br><span class="line"><span class="keyword">int</span> pre = <span class="number">0</span>, len = max( A.length, B.length );</span><br><span class="line"><span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt;= len ; i++ )&#123;</span><br><span class="line">	temp = A[i] + B[i] + pre;</span><br><span class="line">	res[i] = temp % <span class="number">0x100000000</span>;</span><br><span class="line">	pre = temp / <span class="number">0x100000000</span>;</span><br><span class="line">&#125;</span><br><span class="line">res.length = pre == <span class="number">0</span> ? len : len + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>减法：对中间结果是负数的需要借位  </li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> pre = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> len = max( A.length, B.length );</span><br><span class="line"><span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt;= len ; i++ )&#123;</span><br><span class="line">	res[i] = A[i] - B[i] - pre;</span><br><span class="line">	<span class="keyword">if</span> ( res[i] &gt;= <span class="number">0</span> )</span><br><span class="line">		pre = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		res[i] += <span class="number">0x100000000</span>;	<span class="comment">// 借位</span></span><br><span class="line">		pre = <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">res.length = len;</span><br><span class="line"><span class="keyword">while</span> ( res[res.length] == <span class="number">0</span> )</span><br><span class="line">	res.length--;		<span class="comment">//去除大数前端多余的0</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>乘法：竖式运算，假设B.length &lt; A.length，则res[i] = Sum{ A[i-j] × B[j], j from 0 to B.length }。res.length初始可以设置为A.length + B.length - 1，考虑到进位，最后可以根据情况增加一位。   </li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">__int temp;</span><br><span class="line"><span class="keyword">int</span> pre = <span class="number">0</span>;</span><br><span class="line">res.length = A.length + B.length - <span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt;= res.length ; i++ )&#123;</span><br><span class="line">	temp = pre;</span><br><span class="line">	<span class="keyword">for</span> ( j = <span class="number">0</span> ; j &lt;= B.length ; j++ )&#123;</span><br><span class="line">		<span class="keyword">if</span> ( i &gt;= j &amp;&amp; i &lt;= j + A.length )&#123;</span><br><span class="line">			temp += A[i-j] * B[j];		<span class="comment">// 竖乘</span></span><br><span class="line">			res[i] = temp % <span class="number">0x100000000</span>;</span><br><span class="line">			pre = temp / <span class="number">0x100000000</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ( pre )</span><br><span class="line">	res[++res.length] = pre;	<span class="comment">// 最高位进位</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>除法：通过蒙哥马利算法可以通过移位操作代替除法求得模乘运算的结果</li>
+</ul>
+<p></p><h2 id="5">米勒·拉宾算法</h2><p></p>
+<ul>
+<li>算法流程<ul>
+<li>根据RSA中的N计算出一个奇数M，使得N = 1 + M × 2^r 。</li>
+<li>选择一个小于N的随机数C，对于任意的i &lt; r，如果<code>C^( ( M × 2^i ) % N) == N - 1</code>或者<code>C^M % N == 1</code>，则N通过随机数C的测试。</li>
+<li>重复上一步五次，如果全部通过则判定N为素数</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>若N通过一次测试，则N为合数的概率为25%，当N通过t次测试，N为合数的概率为0.25^t。t为5时N为素数的概率已经大于99.9%。实际操作中通常用300个小素数对N进行测试，如果N通过小素数测试再使用米勒·拉宾测试，提高测试速度。</p>
+</blockquote>
+<p></p><h2 id="6">欧几里德方程</h2><p></p>
+<blockquote>
+<p>根据辗转相除法，当gcd(a,b) = 1，有sa + tb = 1。将求解a和b的gcd过程写出，逆向即可求得~b，使得b×~b ≡ 1（mod a）。</p>
+</blockquote>
+<ul>
+<li>辗转相除法的逆运算<br>求解gcd（101,4620），有如下：<br>4620 = 45 × 101 + 75<br>101 = 1 × 75 + 26<br>&nbsp;&nbsp;75 = 2 × 26 + 23<br>&nbsp;&nbsp;26 = 1 × 23 + 3<br>&nbsp;&nbsp;&nbsp;3 = 1 × 2 + 1<br>&nbsp;&nbsp;&nbsp;2 = 2 × 1<br>对上述操作求逆操作，为：<br>1 = 3 - 1 × 2<br>&nbsp;&nbsp;= 3 - 1 ×（23 - 7 × 3）= -1 × 23 + 8 × 3<br>&nbsp;&nbsp;= -1 × 23 + 8 ×（26 - 1 × 23）= 8 × 26 - 9 × 23<br>&nbsp;&nbsp;= 8 × 26 - 9 ×（75 - 2 × 26）= -9 × 75 + 26 × 26<br>&nbsp;&nbsp;= -9 × 75 + 26 ×（101 - 1 × 75）= 26 × 101 - 35 × 75<br>&nbsp;&nbsp;= 26 × 101 - 35 ×（4620 - 45 × 101）= -35 × 4620 + 1601 × 101  </li>
+<li>下列代码传入的参数r最后为求得的~b。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">get</span><span class="params">( <span class="keyword">int</span> a, <span class="keyword">int</span> b, <span class="keyword">int</span> *l, <span class="keyword">int</span> *r)</span></span>&#123;	<span class="comment">/* 逆向欧几里得求 1 = st + qa */</span> </span><br><span class="line">	<span class="keyword">if</span> ( a % b == <span class="number">1</span> )&#123;</span><br><span class="line">		*l = <span class="number">1</span>;</span><br><span class="line">		*r = -a / b;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		get( b, a % b, l, r );</span><br><span class="line">		(*r) = (*r) * ( - a / b ) + *l; 				<span class="comment">/*  r为求得的modular  */</span> </span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>非递归的代码如下( sa + tb = 1 )，返回的t即为~b。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">( <span class="keyword">int</span> a, <span class="keyword">int</span> b )</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> t = <span class="number">0</span>, s = <span class="number">1</span>, temp;</span><br><span class="line">	<span class="keyword">while</span> ( b ! = <span class="number">0</span> )&#123;</span><br><span class="line">		temp = s;</span><br><span class="line">		s = t - s * b / a;</span><br><span class="line">		t = temp;</span><br><span class="line">		temp = b;</span><br><span class="line">		b = a % b;</span><br><span class="line">		a = temp;</span><br><span class="line">		<span class="keyword">if</span> ( t &lt; <span class="number">0</span> )</span><br><span class="line">			t += a;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p></p><h2 id="3">Montgomery幂模算法</h2><p></p>
+<blockquote>
+<p>Montgomery（蒙哥马利）算法的优点在于减少了取模的次数，并且用移位取代除法。举例：进制base = 13，对于32 = 2 × 13 + 7。要求32×13^k mod 7的值，可以对32进行如下操作：32 = 32 + 7 × q，这样不影响取模的结果。当32 + 7 × q是13的整数倍的时候就可以用移位操作除以13，直到求出结果。</p>
+</blockquote>
+<ul>
+<li>伪代码</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func() a^b mod c</span><br><span class="line">	res &lt;- <span class="number">1</span></span><br><span class="line">	<span class="built_in">pow</span> &lt;- b</span><br><span class="line">	<span class="keyword">while</span> a &gt; <span class="number">0</span></span><br><span class="line">		<span class="built_in">pow</span> &lt;- ( <span class="built_in">pow</span> * <span class="built_in">pow</span> ) mod c</span><br><span class="line">		<span class="keyword">if</span> a &amp; <span class="number">1</span> = <span class="number">1</span>		<span class="comment">// 以二进制为例，对于n进制有同样的增值运算</span></span><br><span class="line">			res &lt;- ( res * <span class="built_in">pow</span> ) mod c</span><br><span class="line">		a &gt;&gt; <span class="number">1</span>			<span class="comment">// 对于任意进制同样移位</span></span><br><span class="line">	<span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2015/09/10/Algorithms-Must1/">原始出处</a>(<a href="https://forec.github.io/2015/09/10/Algorithms-Must1/">https://forec.github.io/2015/09/10/Algorithms-Must1/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2015/09/10/Algorithms-Must1/" data-id="civ3s4t5f005to8ewp31kdopa" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2015/09/10/Algorithms-Must1/" data-title="LCA和RSA" data-url="http://forec.github.io/2015/09/10/Algorithms-Must1/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/09/12/Graph-Algorithms1/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            图的概念和存储方式
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2015/09/09/Data-Structure-example1/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">部分问题例程</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/02/cloud-virtual-machine-config/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/vps.jpg)" alt="CVM 操作记录" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/OS/">OS</a></p>
+                            <p class="item-title"><a href="/2016/11/02/cloud-virtual-machine-config/" class="title">CVM 操作记录</a></p>
+                            <p class="item-date"><time datetime="2016-11-02T15:08:14.000Z" itemprop="datePublished">2016-11-02</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/10/29/raspberry-settings/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/raspberry-settings.jpg)" alt="Raspberry Pi 3 配置索引" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/OS/">OS</a></p>
+                            <p class="item-title"><a href="/2016/10/29/raspberry-settings/" class="title">Raspberry Pi 3 配置索引</a></p>
+                            <p class="item-date"><time datetime="2016-10-29T06:49:23.000Z" itemprop="datePublished">2016-10-29</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/10/08/haskell-fixit/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-fixit.jpg)" alt="Fix in Haskell" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
+                            <p class="item-title"><a href="/2016/10/08/haskell-fixit/" class="title">Fix in Haskell</a></p>
+                            <p class="item-date"><time datetime="2016-10-08T06:48:19.000Z" itemprop="datePublished">2016-10-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/10/03/co-occurrence-structure-capture/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cooccurrence-network.jpg)" alt="Network Mining Based On Co-occurrence" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/大数据/">大数据</a></p>
+                            <p class="item-title"><a href="/2016/10/03/co-occurrence-structure-capture/" class="title">Network Mining Based On Co-occurrence</a></p>
+                            <p class="item-date"><time datetime="2016-10-03T14:16:16.000Z" itemprop="datePublished">2016-10-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/27/duplicate-cantor/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cantor-expansion.jpg)" alt="Cantor Expansion With Duplicate Elements" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/09/27/duplicate-cantor/" class="title">Cantor Expansion With Duplicate Elements</a></p>
+                            <p class="item-date"><time datetime="2016-09-27T14:34:03.000Z" itemprop="datePublished">2016-09-27</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/OS/">OS</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 14.29px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 10px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.43px;">Hadoop</a> <a href="/tags/Mistakes/" style="font-size: 15.71px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10px;">sicp</a> <a href="/tags/函数式编程/" style="font-size: 12.86px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.43px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.43px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.57px;">机器学习</a> <a href="/tags/线程/" style="font-size: 11.43px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.14px;">计算机组成与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://fallenwood.github.io">Fallenwood的博客</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2016 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec# enter duoshuo shortname here'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/vendor/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>

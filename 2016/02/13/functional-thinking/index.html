@@ -1,250 +1,166 @@
-<!doctype html>
-<html class="theme-next use-motion theme-next-mist">
+<!DOCTYPE html>
+<html>
 <head>
-  
-
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
-
-
-
-
-<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
-
-
-    <meta name="description" content="奋斗在Code Farm的在校生" />
-
-
-
-  <meta name="keywords" content="函数式编程," />
-
-
-
-  <link rel="alternate" href="/atom.xml" title="Forec's Notes" type="application/atom+xml" />
-
-
-
-  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
-
-
-<meta name="description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
+    <meta charset="utf-8">
+    
+    <title>《函数式编程思维》笔记 | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="函数式编程" />
+    
+    <meta name="description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《函数式编程思维》笔记">
 <meta property="og:url" content="http://forec.github.io/2016/02/13/functional-thinking/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
-<meta property="og:updated_time" content="2016-10-03T15:38:19.403Z">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/functional-thinking.jpg">
+<meta property="og:updated_time" content="2016-11-04T15:39:15.109Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《函数式编程思维》笔记">
 <meta name="twitter:description" content="函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。">
-
-
-<script type="text/javascript" id="hexo.configuration">
-  var CONFIG = {
-    scheme: 'Mist',
-    sidebar: 'post'
-  };
-</script>
-
-  <title> 《函数式编程思维》笔记 | Forec's Notes </title>
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  <!--[if lte IE 8]>
-  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
-    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
-           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
-           style='margin-left:auto;margin-right:auto;display: block;'/>
-    </a>
-  </div>
-<![endif]-->
-  
-
-
-
-  <div class="container one-column page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><h1 class="site-meta">
-  <span class="logo-line-before"><i></i></span>
-  <a href="/" class="brand" rel="start">
-      <span class="logo">
-        <i class="icon-next-logo"></i>
-      </span>
-      <span class="site-title">Forec's Notes</span>
-  </a>
-  <span class="logo-line-after"><i></i></span>
-</h1>
-
-<div class="site-nav-toggle">
-  <button>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-  </button>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu menu-left">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            <i class="menu-item-icon icon-next-home"></i> <br />
-            首页
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories" rel="section">
-            <i class="menu-item-icon icon-next-categories"></i> <br />
-            分类
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about" rel="section">
-            <i class="menu-item-icon icon-next-about"></i> <br />
-            关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives" rel="section">
-            <i class="menu-item-icon icon-next-archives"></i> <br />
-            归档
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags" rel="section">
-            <i class="menu-item-icon icon-next-tags"></i> <br />
-            标签
-          </a>
-        </li>
-      
-
-      
-      
-    </ul>
-  
-
-  
-    <div class="site-search">
-      
-  
-  <form class="site-search-form">
-    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
-  </form>
-
-
-<script type="text/javascript">
-  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
-    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
-    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
-  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
-
-  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
-</script>
-
-
-
-    </div>
-  
-</nav>
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div id="content" class="content"> 
-
-  <div id="posts" class="posts-expand">
     
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
 
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              《函数式编程思维》笔记
-            
-          
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/vendor/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/vendor/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/vendor/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/vendor/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="https://github.com/Forec">GITHUB</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">官方网站</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Code/">Code</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-functional-thinking" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        《函数式编程思维》笔记
         </h1>
-      
+    
 
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-02-13T09:36:15+08:00" content="2016-02-13">
-            2016-02-13
-          </time>
-        </span>
-
+            </header>
         
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Code/" itemprop="url" rel="index">
-                  <span itemprop="name">Code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
         
+            <div class="article-subtitle">
+                <a href="/2016/02/13/functional-thinking/" class="article-date">
+    <time datetime="2016-02-13T01:36:15.000Z" itemprop="datePublished">2016-02-13</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程/">函数式编程</a></li></ul>
 
+            </div>
         
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2016/02/13/functional-thinking/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/13/functional-thinking/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
         
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        <span itemprop="articleBody"><blockquote>
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
 <p>函数式编程中粒度最小的重用单元是函数（一等公民），并具备值不可变性，带给我的感受是通过一系列基本数据结构方法的复用，配合高阶函数，用最基本的方法叠加出复杂的解法。在用Haskell解决问题总能体会到逆向思维，从目标出发，一步步推到初始条件。函数式的模式匹配、柯里化和部分施用都很有特色，在这种思维下思考是一个很享受的过程。下面是阅读《函数式编程思维》时做摘录的整理。</p>
 </blockquote>
 <a id="more"></a>
@@ -261,13 +177,15 @@
 <li><p><strong>理解掌握的抽象层次永远要比日常使用的抽象层次更深一层</strong> 。</p>
 </li>
 <li><p><strong>闭包</strong> （closure）实际上是一种特殊的函数，在暗地里绑定了函数内部引用的所有变量，换句话说，这种函数把它所引用的所有东西都放在一个上下文里包了起来。下面的代码先定义了一个Employee类，其中带有name和salary字段，接着定义带有amount参数的paidMore函数，其返回值是一个以Employee实例为参数的 <strong>代码块</strong> ，或者叫闭包。数值100000随着<code>isHighPaid = paidMore(100000)</code>这一步操作永久的和代码块绑定在一起。第二部分代码执行闭包。</p>
+</li>
+</ul>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee</span>&#123;</span></span><br><span class="line">    <span class="keyword">def</span> name, salary</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">def</span> paidMore(amount) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;Employee e -&gt; e.salary &gt; amount &#125;</span><br><span class="line">&#125;</span><br><span class="line">isHighPaid = paidMore(<span class="number">100000</span>)</span><br><span class="line">  </span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> Smithers = <span class="keyword">new</span> Employee(<span class="string">name:</span><span class="string">"Fred"</span>, <span class="string">salary:</span><span class="number">120000</span>)</span><br><span class="line"><span class="keyword">def</span> Homer = <span class="keyword">new</span> Employee(<span class="string">name:</span><span class="string">"Homer"</span>, <span class="string">salary:</span><span class="number">80000</span>)</span><br><span class="line">println isHighPaid(Smithers)</span><br><span class="line">println isHighPaid(Homer)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>闭包经常被函数式语言和框架当作一种 <strong>异地执行的机制</strong> ，用来传递待执行的变换代码，如map之类的高阶函数。注意闭包是代码块，而不是一个值，各个闭包内部状态都是独立的，尽管局部变量不在代码块内定义，但只要代码块引用了该变量，两者就被绑定在一起，这种联系在代码块实例的全部生命期内一直保持着。从实现的角度说， <strong>代码块实例从它被创建的一刻起，就持有其作用域内一切事物的封闭副本</strong> 。下面的代码展示了闭包的异地执行。闭包所表现出来的函数式思维就是，“让运行时去管理状态”。</p>
+<ul>
+<li>闭包经常被函数式语言和框架当作一种 <strong>异地执行的机制</strong> ，用来传递待执行的变换代码，如map之类的高阶函数。注意闭包是代码块，而不是一个值，各个闭包内部状态都是独立的，尽管局部变量不在代码块内定义，但只要代码块引用了该变量，两者就被绑定在一起，这种联系在代码块实例的全部生命期内一直保持着。从实现的角度说， <strong>代码块实例从它被创建的一刻起，就持有其作用域内一切事物的封闭副本</strong> 。下面的代码展示了闭包的异地执行。闭包所表现出来的函数式思维就是，“让运行时去管理状态”。</li>
+</ul>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> Closure makeCounter()&#123;</span><br><span class="line">    <span class="keyword">def</span> local_variable = <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="keyword">return</span> local_variable += <span class="number">1</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line">c1 = makeCounter()</span><br><span class="line">c1()</span><br><span class="line">c1()</span><br><span class="line">c1()</span><br><span class="line">c2 = makeCounter()</span><br><span class="line">println <span class="string">"C1 = $&#123;c1()&#125;, C2 = $&#123;c2()&#125;"</span></span><br><span class="line"><span class="comment">// output: C1 = 4, C2 = 1 //</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>柯里化</strong> 指的是从一个多参数函数变成 <strong>一连串单参数函数</strong> 的变换。它描述的是 <strong>变换的过程</strong> ，不涉及变换之后对函数的调用。调用者可以决定对多少个参数实施变换，余下的部分将衍生成一个参数数目较少的新函数。举例来说，函数process(x, y, z)完全柯里化之后变成process(x)(y)(z)的性质，其中process(x)和process(x)(y)都是单参数的函数。如果只对第一个参数柯里化，那么process(x)的返回值将是一个单参数的函数，而这个唯一的参数又接受另一个参数的输入。 <strong>函数柯里化的结果是返回链条中的下一个函数</strong> 。</p>
-</li>
+<ul>
+<li><strong>柯里化</strong> 指的是从一个多参数函数变成 <strong>一连串单参数函数</strong> 的变换。它描述的是 <strong>变换的过程</strong> ，不涉及变换之后对函数的调用。调用者可以决定对多少个参数实施变换，余下的部分将衍生成一个参数数目较少的新函数。举例来说，函数process(x, y, z)完全柯里化之后变成process(x)(y)(z)的性质，其中process(x)和process(x)(y)都是单参数的函数。如果只对第一个参数柯里化，那么process(x)的返回值将是一个单参数的函数，而这个唯一的参数又接受另一个参数的输入。 <strong>函数柯里化的结果是返回链条中的下一个函数</strong> 。</li>
 <li><p><strong>部分施用</strong> 指提前代入一部分参数值，使一个多参数得以省略部分参数，从而转化为一个参数数目较少的函数。 <strong>部分施用是把参数的取值绑定到用户在操作中提供的具体值上</strong> 。 </p>
 </li>
 <li><p><strong>递归</strong> 的核心在于对一个不断变短的列表反复做同一件事，利用递归，将状态的管理责任推给运行时。递归没有成为一种平常的操作，一个主要原因是栈的增长。使用尾调用优化的写法来帮助运行时科夫栈的增长问题。当递归调用是函数执行的最后一个调用时，运行时往往可以在栈里就地更新，而不需要增加新的栈空间。因此 <strong>尽可能多的使用尾递归的写法</strong> 。</p>
@@ -277,9 +195,9 @@
 <li><p>只有对纯函数才能放心地使用函数缓存的结果，这刚好符合函数式特性。对于Groovy，可以先将记忆的函数定义为闭包，再对闭包使用memoize()方法获得一个新函数，这个新函数调用的时候结果就会被缓存起来。在Haskell中好像下面的链接可以实现。我们写出来的缓存决不可能比语言开发者设计的更高效，因为语言设计者可以无视他们给语言设定的规定。 <strong>语言设计者实现出来的机制总是比开发者自己做的效率高</strong> 。<a href="https://wiki.haskell.org/Memoization" target="_blank" rel="external">Haskell-Wiki上的Memoization</a></p>
 </li>
 <li><p>缓求值的好处：昂贵的运算只有到了绝对必要的时候才执行；可以建立无限大的集合，只要一接到请求就一直送出元素；按缓求值的方式使用map、filter等，可以产生更高效的代码。特别适合于资源生产成本较高的情况。Haskell的惰性求值就是这样的特性，是非严格求值的。在严格求值的语言运行下面代码会报错，而非严格求值的语言会得出4。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> length([<span class="number">2</span>+<span class="number">1</span>, <span class="number">3</span>*<span class="number">2</span>, <span class="number">1</span>/<span class="number">0</span>, <span class="number">5</span>-<span class="number">4</span>])</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> length([<span class="number">2</span>+<span class="number">1</span>, <span class="number">3</span>*<span class="number">2</span>, <span class="number">1</span>/<span class="number">0</span>, <span class="number">5</span>-<span class="number">4</span>])</span><br></pre></td></tr></table></figure>
 <h1 id="语言演化"><a href="#语言演化" class="headerlink" title="语言演化"></a>语言演化</h1><ul>
 <li><p>少量的数据结构搭配大量的操作。函数式语言有很多操作，但对应的数据结构很少。面向对象语言鼓励建立专门针对某个类的方法，我们从类的关系中发现重复出现的模式并加以重用。 <strong>函数式语言的重用表现在函数的通用性上，他们鼓励在数据结构上使用各种共通的变换，并通过高阶函数来调整操作以满足具体事项的要求</strong> 。 <em>100个函数操作一种数据结构的组合，要好过10个函数操作10种数据结构的组合。——Alan Perlis</em></p>
 </li>
@@ -292,458 +210,401 @@
 <hr>
 <p>参考文献： 《函数式编程思维 - 美 Neal Ford》</p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/02/13/functional-thinking/">原始出处</a>(<a href="https://forec.github.io/2016/02/13/functional-thinking/">https://forec.github.io/2016/02/13/functional-thinking/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
-</span>
-      
-    </div>
 
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/函数式编程/" rel="tag">#函数式编程</a>
-          
         </div>
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-prev post-nav-item">
+        <footer class="article-footer">
             
-              <a href="/2016/02/14/machinelearning7/" rel="prev">机器学习笔记（Chapter 07 - AdaBoost元算法）</a>
-            
-          </div>
 
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/02/11/machinelearning6/" rel="next">机器学习笔记（Chapter 06 - 支持向量机）</a>
-            
-          </div>
-        </div>
-      
 
-      
-      
-    </footer>
-  </article>
 
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
- </div>
-
-        
-
-        
-          <div class="comments" id="comments">
-            
-              <div class="ds-thread" data-thread-key="2016/02/13/functional-thinking/"
-                   data-title="《函数式编程思维》笔记" data-url="http://forec.github.io/2016/02/13/functional-thinking/">
-              </div>
-            
-          </div>
-        
-      </div>
-
-      
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
-          <p class="site-author-name" itemprop="name">Forec</p>
-        </div>
-        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
-        <nav class="site-state motion-element">
-          <div class="site-state-item site-state-posts">
-            <a href="/archives">
-              <span class="site-state-item-count">52</span>
-              <span class="site-state-item-name">日志</span>
-            </a>
-          </div>
-
-          <div class="site-state-item site-state-categories">
-            <a href="/categories">
-              <span class="site-state-item-count">9</span>
-              <span class="site-state-item-name">分类</span>
-              </a>
-          </div>
-
-          <div class="site-state-item site-state-tags">
-            <a href="/tags">
-              <span class="site-state-item-count">21</span>
-              <span class="site-state-item-name">标签</span>
-              </a>
-          </div>
-
-        </nav>
-
-        
-          <div class="feed-link motion-element">
-            <a href="/atom.xml" rel="alternate">
-              <i class="menu-item-icon icon-next-feed"></i>
-              RSS
-            </a>
-          </div>
-        
-
-        <div class="links-of-author motion-element">
-          
-            
-              <span class="links-of-author-item">
-                <a href="https://github.com/forec" target="_blank">github</a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
-              </span>
-            
-          
-        </div>
-
-        
-        
-
-        <div class="links-of-author motion-element">
-          
-            <p class="site-author-name">友情链接</p>
-            
-              <span class="links-of-author-item">
-              <a href="https://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
-              </span>
-            
-          
-        </div>
-
-      </section>
-
-      
-        <section class="post-toc-wrap sidebar-panel-active">
-          <div class="post-toc-indicator-top post-toc-indicator"></div>
-          <div class="post-toc">
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#思维转变"><span class="nav-number">1.</span> <span class="nav-text">思维转变</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#权责让渡"><span class="nav-number">2.</span> <span class="nav-text">权责让渡</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#记忆和缓求值"><span class="nav-number">3.</span> <span class="nav-text">记忆和缓求值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#语言演化"><span class="nav-number">4.</span> <span class="nav-text">语言演化</span></a></li></ol></div>
-            
-          </div>
-          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
-        </section>
-      
-
-    </div>
-  </aside>
-
-
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner"> <div class="copyright" >
-  
-  &copy; &nbsp;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
-  <span class="with-love">
-    <i class="icon-next-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Forec</span>
-</div>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
-
-<span id="busuanzi_container_site_pv">
-    本站总访问量<span id="busuanzi_value_site_pv"></span>次
-</span>
-
-
- </div>
-    </footer>
-
-    <div class="back-to-top"></div>
-  </div>
-
-  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
-
-  
-  
-  
-    
-
-  
-    
-  
-
-  <script type="text/javascript">
-    var duoshuoQuery = {short_name:"forec"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0]
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
-    
-     
-  	<script src="/js/ua-parser.min.js"></script>
-  	<script src="/js/hook-duoshuo.js"></script>
-  
-
-    
-  
-  
-  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
-  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
-
-
-  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
-  
-
-  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
-  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
-
-  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
-
-
-
-  <script type="text/javascript" src="/js/nav-toggle.js"></script>
-
-  
-  
-<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
-
-
-<script type="text/javascript" id="sidebar.toc.highlight">
-  $(document).ready(function () {
-    var tocSelector = '.post-toc';
-    var $tocSelector = $(tocSelector);
-    var activeCurrentSelector = '.active-current';
-
-    $tocSelector
-      .on('activate.bs.scrollspy', function () {
-        var $currentActiveElement = $(tocSelector + ' .active').last();
-
-        removeCurrentActiveClass();
-        $currentActiveElement.addClass('active-current');
-
-        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
-      })
-      .on('clear.bs.scrollspy', function () {
-        removeCurrentActiveClass();
-      });
-
-    function removeCurrentActiveClass () {
-      $(tocSelector + ' ' + activeCurrentSelector)
-        .removeClass(activeCurrentSelector.substring(1));
-    }
-
-    function processTOC () {
-      getTOCMaxHeight();
-      toggleTOCOverflowIndicators();
-    }
-
-    function getTOCMaxHeight () {
-      var height = $('.sidebar').height() -
-                   $tocSelector.position().top -
-                   $('.post-toc-indicator-bottom').height();
-
-      $tocSelector.css('height', height);
-
-      return height;
-    }
-
-    function toggleTOCOverflowIndicators () {
-      tocOverflowIndicator(
-        '.post-toc-indicator-top',
-        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
-      );
-
-      tocOverflowIndicator(
-        '.post-toc-indicator-bottom',
-        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
-      )
-    }
-
-    $(document).on('sidebar.motion.complete', function () {
-      processTOC();
-    });
-
-    $('body').scrollspy({ target: tocSelector });
-    $(window).on('resize', function () {
-      if ( $('.sidebar').hasClass('sidebar-active') ) {
-        processTOC();
-      }
-    });
-
-    onScroll($tocSelector);
-
-    function onScroll (element) {
-      element.on('mousewheel DOMMouseScroll', function (event) {
-          var oe = event.originalEvent;
-          var delta = oe.wheelDelta || -oe.detail;
-
-          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
-          event.preventDefault();
-
-          toggleTOCOverflowIndicators();
-      });
-    }
-
-    function tocOverflowIndicator (indicator, action) {
-      var $indicator = $(indicator);
-      var opacity = action === 'show' ? 0.4 : 0;
-      $indicator.velocity ?
-        $indicator.velocity('stop').velocity({
-          opacity: opacity
-        }, { duration: 100 }) :
-        $indicator.stop().animate({
-          opacity: opacity
-        }, 100);
-    }
-
-  });
-</script>
-
-<script type="text/javascript" id="sidebar.nav">
-  $(document).ready(function () {
-    var html = $('html');
-    var TAB_ANIMATE_DURATION = 200;
-    var hasVelocity = $.isFunction(html.velocity);
-
-    $('.sidebar-nav li').on('click', function () {
-      var item = $(this);
-      var activeTabClassName = 'sidebar-nav-active';
-      var activePanelClassName = 'sidebar-panel-active';
-      if (item.hasClass(activeTabClassName)) {
-        return;
-      }
-
-      var currentTarget = $('.' + activePanelClassName);
-      var target = $('.' + item.data('target'));
-
-      hasVelocity ?
-        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
-          target
-            .velocity('stop')
-            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
-            .addClass(activePanelClassName);
-        }) :
-        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
-          currentTarget.hide();
-          target
-            .stop()
-            .css({'opacity': 0, 'display': 'block'})
-            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
-              currentTarget.removeClass(activePanelClassName);
-              target.addClass(activePanelClassName);
-            });
+    <a data-url="http://forec.github.io/2016/02/13/functional-thinking/" data-id="civ3s4t2q0037o8ewv9ld7ui7" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
         });
-
-      item.siblings().removeClass(activeTabClassName);
-      item.addClass(activeTabClassName);
-    });
-
-    $('.post-toc a').on('click', function (e) {
-      e.preventDefault();
-      var targetSelector = escapeSelector(this.getAttribute('href'));
-      var offset = $(targetSelector).offset().top;
-      hasVelocity ?
-        html.velocity('stop').velocity('scroll', {
-          offset: offset  + 'px',
-          mobileHA: false
-        }) :
-        $('html, body').stop().animate({
-          scrollTop: offset
-        }, 500);
-    });
-
-    // Expand sidebar on post detail page by default, when post has a toc.
-    var $tocContent = $('.post-toc-content');
-    if (isDesktop() && CONFIG.sidebar === 'post') {
-      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
-        displaySidebar();
-      }
-    }
-  });
+    })(jQuery);
 </script>
 
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2016/02/13/functional-thinking/" data-title="《函数式编程思维》笔记" data-url="http://forec.github.io/2016/02/13/functional-thinking/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2016/02/14/machinelearning7/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            机器学习笔记（Chapter 07 - AdaBoost元算法）
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2016/02/11/machinelearning6/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">机器学习笔记（Chapter 06 - 支持向量机）</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/02/cloud-virtual-machine-config/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/vps.jpg)" alt="CVM 操作记录" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/OS/">OS</a></p>
+                            <p class="item-title"><a href="/2016/11/02/cloud-virtual-machine-config/" class="title">CVM 操作记录</a></p>
+                            <p class="item-date"><time datetime="2016-11-02T15:08:14.000Z" itemprop="datePublished">2016-11-02</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/10/29/raspberry-settings/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/raspberry-settings.jpg)" alt="Raspberry Pi 3 配置索引" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/OS/">OS</a></p>
+                            <p class="item-title"><a href="/2016/10/29/raspberry-settings/" class="title">Raspberry Pi 3 配置索引</a></p>
+                            <p class="item-date"><time datetime="2016-10-29T06:49:23.000Z" itemprop="datePublished">2016-10-29</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/10/08/haskell-fixit/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-fixit.jpg)" alt="Fix in Haskell" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
+                            <p class="item-title"><a href="/2016/10/08/haskell-fixit/" class="title">Fix in Haskell</a></p>
+                            <p class="item-date"><time datetime="2016-10-08T06:48:19.000Z" itemprop="datePublished">2016-10-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/10/03/co-occurrence-structure-capture/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cooccurrence-network.jpg)" alt="Network Mining Based On Co-occurrence" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/大数据/">大数据</a></p>
+                            <p class="item-title"><a href="/2016/10/03/co-occurrence-structure-capture/" class="title">Network Mining Based On Co-occurrence</a></p>
+                            <p class="item-date"><time datetime="2016-10-03T14:16:16.000Z" itemprop="datePublished">2016-10-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/27/duplicate-cantor/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cantor-expansion.jpg)" alt="Cantor Expansion With Duplicate Elements" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/09/27/duplicate-cantor/" class="title">Cantor Expansion With Duplicate Elements</a></p>
+                            <p class="item-date"><time datetime="2016-09-27T14:34:03.000Z" itemprop="datePublished">2016-09-27</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/OS/">OS</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
+        </div>
+    </div>
 
 
-  <script type="text/javascript">
-    $(document).ready(function () {
-      if (CONFIG.sidebar === 'always') {
-        displaySidebar();
-      }
-    });
-  </script>
-
-  
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    }
-  });
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 14.29px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 10px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.43px;">Hadoop</a> <a href="/tags/Mistakes/" style="font-size: 15.71px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10px;">sicp</a> <a href="/tags/函数式编程/" style="font-size: 12.86px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.43px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.43px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.57px;">机器学习</a> <a href="/tags/线程/" style="font-size: 11.43px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.14px;">计算机组成与体系结构</a>
+        </div>
+    </div>
 
 
-  
-  
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://fallenwood.github.io">Fallenwood的博客</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
 
-  
-  <script type="text/javascript" src="/js/lazyload.js"></script>
-  <script type="text/javascript">
-    $(function () {
-      $("#posts").find('img').lazyload({
-        placeholder: "/images/loading.gif",
-        effect: "fadeIn"
-      });
-    });
-  </script>
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2016 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec# enter duoshuo shortname here'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/vendor/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
 </body>
 </html>

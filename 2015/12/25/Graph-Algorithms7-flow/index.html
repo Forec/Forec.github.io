@@ -1,251 +1,166 @@
-<!doctype html>
-<html class="theme-next use-motion theme-next-mist">
+<!DOCTYPE html>
+<html>
 <head>
-  
-
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
-
-
-
-
-<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
-
-
-    <meta name="description" content="奋斗在Code Farm的在校生" />
-
-
-
-  <meta name="keywords" content="Algorithms," />
-
-
-
-  <link rel="alternate" href="/atom.xml" title="Forec's Notes" type="application/atom+xml" />
-
-
-
-  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
-
-
-<meta name="description" content="简述最大流问题，给出一种解决最大流的最简单方法，及在二分图匹配中的应用。">
+    <meta charset="utf-8">
+    
+    <title>最大流（一） | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Algorithms" />
+    
+    <meta name="description" content="简述最大流问题，给出一种解决最大流的最简单方法，及在二分图匹配中的应用。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="最大流（一）">
 <meta property="og:url" content="http://forec.github.io/2015/12/25/Graph-Algorithms7-flow/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="简述最大流问题，给出一种解决最大流的最简单方法，及在二分图匹配中的应用。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/%E6%9C%80%E5%A4%A7%E6%B5%81.jpg">
-<meta property="og:updated_time" content="2016-10-03T15:45:39.488Z">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/graph-flow.jpg">
+<meta property="og:updated_time" content="2016-11-04T15:01:52.642Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="最大流（一）">
 <meta name="twitter:description" content="简述最大流问题，给出一种解决最大流的最简单方法，及在二分图匹配中的应用。">
-
-
-<script type="text/javascript" id="hexo.configuration">
-  var CONFIG = {
-    scheme: 'Mist',
-    sidebar: 'post'
-  };
-</script>
-
-  <title> 最大流（一） | Forec's Notes </title>
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  <!--[if lte IE 8]>
-  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
-    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
-           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
-           style='margin-left:auto;margin-right:auto;display: block;'/>
-    </a>
-  </div>
-<![endif]-->
-  
-
-
-
-  <div class="container one-column page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><h1 class="site-meta">
-  <span class="logo-line-before"><i></i></span>
-  <a href="/" class="brand" rel="start">
-      <span class="logo">
-        <i class="icon-next-logo"></i>
-      </span>
-      <span class="site-title">Forec's Notes</span>
-  </a>
-  <span class="logo-line-after"><i></i></span>
-</h1>
-
-<div class="site-nav-toggle">
-  <button>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-  </button>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu menu-left">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            <i class="menu-item-icon icon-next-home"></i> <br />
-            首页
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories" rel="section">
-            <i class="menu-item-icon icon-next-categories"></i> <br />
-            分类
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about" rel="section">
-            <i class="menu-item-icon icon-next-about"></i> <br />
-            关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives" rel="section">
-            <i class="menu-item-icon icon-next-archives"></i> <br />
-            归档
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags" rel="section">
-            <i class="menu-item-icon icon-next-tags"></i> <br />
-            标签
-          </a>
-        </li>
-      
-
-      
-      
-    </ul>
-  
-
-  
-    <div class="site-search">
-      
-  
-  <form class="site-search-form">
-    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
-  </form>
-
-
-<script type="text/javascript">
-  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
-    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
-    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
-  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
-
-  _st('install', 'xnW5noRB_qqRPttFz3nG','2.0.0');
-</script>
-
-
-
-    </div>
-  
-</nav>
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div id="content" class="content"> 
-
-  <div id="posts" class="posts-expand">
     
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
 
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              最大流（一）
-            
-          
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/vendor/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/vendor/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/vendor/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/vendor/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="https://github.com/Forec">GITHUB</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">官方网站</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Code/">Code</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-Graph-Algorithms7-flow" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        最大流（一）
         </h1>
-      
+    
 
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-12-25T08:43:42+08:00" content="2015-12-25">
-            2015-12-25
-          </time>
-        </span>
-
+            </header>
         
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Code/" itemprop="url" rel="index">
-                  <span itemprop="name">Code</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
         
+            <div class="article-subtitle">
+                <a href="/2015/12/25/Graph-Algorithms7-flow/" class="article-date">
+    <time datetime="2015-12-25T00:43:42.000Z" itemprop="datePublished">2015-12-25</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithms/">Algorithms</a></li></ul>
 
+            </div>
         
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/12/25/Graph-Algorithms7-flow/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/25/Graph-Algorithms7-flow/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
         
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        <span itemprop="articleBody"><blockquote>
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
 <p>简述最大流问题，给出一种解决最大流的最简单方法，及在二分图匹配中的应用。</p>
 </blockquote>
 <a id="more"></a>
@@ -262,11 +177,11 @@
 <li>隐含求和记号简化流网络的表达：使用函数f，f的任意自变量都可以是顶点的集合，表示的值为自变量代表的元素所有可能求和情况，例如f(X,Y) = Sum{ f(x,y) ，x in X and y in Y }。因此流守恒可以表示为f(u,V) = 0，流的值|f| = f(s,V) = f(V,t)。对于下面几个恒等式，建议参考基尔霍夫第一第二定律证明。（1）对于所有的X包含于V，f(X, X) = 0，（2）对所有X，Y包含于V，f(X, Y) = -f(Y,X)，（3）对所有X,Y,Z包含于V，其中X and Y = None，有<code>f(X or Y, Z) = f(X, Z)+f(Y, Z)</code>，<code>f(Z, X or Y) = f(Z, X)+f(Z, Y)</code>。</li>
 </ul>
 <h1 id="Ford-Fulkerson方法"><a href="#Ford-Fulkerson方法" class="headerlink" title="Ford-Fulkerson方法"></a>Ford-Fulkerson方法</h1><h2 id="方法解释和定理"><a href="#方法解释和定理" class="headerlink" title="方法解释和定理"></a>方法解释和定理</h2><ul>
-<li><p>最大流问题的Ford-Fulkerson方法包含多种不同运行时间的实现，其依赖于三种流网络中常见的思想：残留网络（residual network），增广路径（augmenting path）和割（cut）。Ford-Fulkerson方法是一种迭代方法，开始时对所有V中的u，v有f(u,v)=0，即初始状态时流的值为0。每次迭代可以通过寻找一条“增广路径”来增加流值。增广路径时从源点s到汇点t的一条路径，沿着该路径可以向现有流量压入更多流值。反复进行该过程，直到所有增广路径都被寻找出。后面将证明算法的正确性。</p>
+<li>最大流问题的Ford-Fulkerson方法包含多种不同运行时间的实现，其依赖于三种流网络中常见的思想：残留网络（residual network），增广路径（augmenting path）和割（cut）。Ford-Fulkerson方法是一种迭代方法，开始时对所有V中的u，v有f(u,v)=0，即初始状态时流的值为0。每次迭代可以通过寻找一条“增广路径”来增加流值。增广路径时从源点s到汇点t的一条路径，沿着该路径可以向现有流量压入更多流值。反复进行该过程，直到所有增广路径都被寻找出。后面将证明算法的正确性。</li>
+</ul>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">FORD-FULKERSON-METHORD</span><span class="params">(G, s, t)</span></span></span><br><span class="line">	initialize flow f to <span class="number">0</span></span><br><span class="line">	while there exists an augmenting path <span class="tag">p</span></span><br><span class="line">		do augment flow f along <span class="tag">p</span></span><br><span class="line">	return f</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>残留网络</strong>：给定一个流网络G和一个流f，该流网络在此流基础上的残留网络Gf由可以容纳更多网络流的边组成。举例来说，有一个流网络G=（V,E），源点s汇点t，设f是G中的一个流，考察V中一对顶点u，v，在不超过容量c(u,v)的条件下，从u到v可以压入额外的网络流量，就是(u,v)的残留容量，即<code>cf(u,v) = c(u,v) - f(u,v)</code>。在残留网络Gf中，每条残留边都能容纳一个严格为正的网络流。定义Ef为残留网络的边集，Ef中的边既可以是E中的边，也可以是它们的反向边。如果E中存在边（u，v）并且f(u,v)<c(u,v)，则cf(u,v) =="" c(u,v)-f(u,v)=""> 0，并且若f(u,v)&gt;0，则f(v,u)<0，此时cf(v,u) =="" c(v,u)="" -="" f(v,u)="">0，因此(u,v)的反向边(v,u)也存在于Ef中。对于一对顶点(u,v)，只有在初始网络中存在连接两个顶点的边，则残留网络中才能出现连接这两点的边，因此|Ef| &lt;= 2|E|。残留网络中的流和初始网络中的流的关系为|f+f’| = |f|+|f’|。</0，此时cf(v,u)></c(u,v)，则cf(u,v)></p>
-</li>
+<ul>
+<li><strong>残留网络</strong>：给定一个流网络G和一个流f，该流网络在此流基础上的残留网络Gf由可以容纳更多网络流的边组成。举例来说，有一个流网络G=（V,E），源点s汇点t，设f是G中的一个流，考察V中一对顶点u，v，在不超过容量c(u,v)的条件下，从u到v可以压入额外的网络流量，就是(u,v)的残留容量，即<code>cf(u,v) = c(u,v) - f(u,v)</code>。在残留网络Gf中，每条残留边都能容纳一个严格为正的网络流。定义Ef为残留网络的边集，Ef中的边既可以是E中的边，也可以是它们的反向边。如果E中存在边（u，v）并且f(u,v)<c(u,v)，则cf(u,v) =="" c(u,v)-f(u,v)=""> 0，并且若f(u,v)&gt;0，则f(v,u)<0，此时cf(v,u) =="" c(v,u)="" -="" f(v,u)="">0，因此(u,v)的反向边(v,u)也存在于Ef中。对于一对顶点(u,v)，只有在初始网络中存在连接两个顶点的边，则残留网络中才能出现连接这两点的边，因此|Ef| &lt;= 2|E|。残留网络中的流和初始网络中的流的关系为|f+f’| = |f|+|f’|。</0，此时cf(v,u)></c(u,v)，则cf(u,v)></li>
 <li><strong>增广路径</strong>：增广路径p是残留网络Gf中从s到t的一条简单路径，增广路径上的每条边(u, v)可以容纳从u到v的某额外正网络流。称能够沿一条增广路径p的每条边传输的网络流的最大量为p的残留容量，cf(p) = min{ cf(u,v), (u,v) in p }。在已有流f的基础上加上fp，则可以得到G的另一个流，且新流的流值更接近最大值，因为|fp|为正，|f| + |fp|&gt;|f|。</li>
 <li><strong>流网络的割</strong>：Ford-Fulkerson方法沿增广路径反复增加流，直到找到最大流。流网络G=(V,E)的割（S，T）将V划分为S和T=V-S两部分，这里的划分类似于最小生成树中的点集划分，但此处针对的是有向图而非无向图。对于一个流f，穿过割（S，T）的净流量被定义为f(S,T)，割(S,T)的容量为c(S, T)，一个网络的最小割是网络中所有割中具有最小容量的割。对于最大流问题介绍中的图片，假如将左侧的s和距离其最近的顶点划分为S，剩下的两个顶点（含t）划分为T，则通过该割的<strong>净流量</strong>为2+3=5，2是图中最顶部顶点向t提供的流，3是s向图中最底部顶点提供的流。该割的<strong>容量</strong>为3+1+6=10。通过割的净流量可能包括顶点间的负网络流，但割的容量完全由非负值组成，即通过割（S，T）的净流由双向的正网络流组成，用从S到T的正网络流减去从T到S的正网络流；而割（S，T）的容量仅由从S到T的边计算而得，从T到S的边在计算c（S，T）时不包含在内。可以证明，<strong>流经任意割的净流都是相同的，且f(S,T) = |f|</strong>。证明如下：根据流守恒性，f(S-s,V) = 0，因此f(S,T) = f(S,V)-f(S,S) = f(S,V) = f(s,V)+f(S-s,V) = f(s,V) = |f|。还可以证明，<strong>对一个流网络G中任意流f来说，其值的上界为G的任意割的容量</strong>，即|f|=f(S, T) = Sum{ f(u, v), u in S, v in T } &lt;= Sum{ c(u, v), u in S, v in T } = c(S，T)。从该式可以直接得出一个结论，<strong>网络的最大流必定不超过此网络最小割的容量</strong>。</li>
 <li><strong>最大流最小割定理</strong>：如果f是具有源点s和汇点t的流网络G=（V，E）中的一个流，则下列条件等价：（1）f是G的一个最大流，（2）残留网络Gf不包含增广路径，（3）对G的某个割（S，T），有|f|=c（S，T）。结合上面提到的网络的最大流不超过此网络最小割的容量，可以得出<strong>网络的最大流等于某一最小割的容量</strong>。证明如下。<ul>
@@ -277,11 +192,11 @@
 </li>
 </ul>
 <h2 id="基本的Ford-Fulkerson算法实现"><a href="#基本的Ford-Fulkerson算法实现" class="headerlink" title="基本的Ford-Fulkerson算法实现"></a>基本的Ford-Fulkerson算法实现</h2><ul>
-<li><p>在Ford-Fulkerson方法的每次迭代中，找出任意增广路径p，并把沿p每条边的流f加上其残留容量cf（p）。下面的实现中，通过更新有边相连的每对顶点间的网络流来计算最大流。如果一对顶点间在任意方向都没有边相连，则隐含假设该对顶点间的f = 0。</p>
+<li>在Ford-Fulkerson方法的每次迭代中，找出任意增广路径p，并把沿p每条边的流f加上其残留容量cf（p）。下面的实现中，通过更新有边相连的每对顶点间的网络流来计算最大流。如果一对顶点间在任意方向都没有边相连，则隐含假设该对顶点间的f = 0。</li>
+</ul>
 <figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FORD-FULKERSON(<span class="keyword">G</span>, s, t)</span><br><span class="line">	<span class="keyword">for</span> each edge(<span class="keyword">u</span>, v) <span class="keyword">in</span> <span class="literal">E</span>(<span class="keyword">G</span>):</span><br><span class="line">		f[<span class="keyword">u</span>][v] &lt;- 0</span><br><span class="line">		f[v][<span class="keyword">u</span>] &lt;- 0</span><br><span class="line">	<span class="keyword">while</span> there exists a path p from s to t <span class="keyword">in</span> the residual network Gf:</span><br><span class="line">		<span class="keyword">cf</span>(p) &lt;- min&#123; <span class="keyword">cf</span>(<span class="keyword">u</span>, v): (<span class="keyword">u</span>, v) is <span class="keyword">in</span> p &#125;</span><br><span class="line">		<span class="keyword">for</span> each edge(<span class="keyword">u</span>, v) <span class="keyword">in</span> p:</span><br><span class="line">			f[<span class="keyword">u</span>][v] &lt;- f[<span class="keyword">u</span>][v] + <span class="keyword">cf</span>(p)</span><br><span class="line">			f[v][<span class="keyword">u</span>] &lt;- -f[<span class="keyword">u</span>][v]</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>上述基本实现方法，运行时间取决于如何确定第四行中的增广路径，如果选择不好，在边权有无理数的情况下算法可能不会终止：流的值随着求和运算不断增加，但始终无法收敛到流的最大值。若采用广度优先搜索来选择增广路径，则算法运行时间为多项式复杂度。通常情况下算法处理的问题中权值都为整数，如果是有理数可以按照一定比例转化为整数。在整数条件下，该种实现Ford-Fulkerson算法的运行时间为O(E|f<em>|)，其中f</em>是算法求出的最大流，原因在于第7行的循环为E次，寻找一条增广路径需要的深度优先搜索为E复杂度，而while最多执行f<em>次，每次至少增加流值1个单位。在f</em>较小时可以取得不错的运行效果，但当流网络中的最大流f*很大，例如我们将上面示例图中除了中间那条权值为1的边之外的其他边，权值都设为1000000，显然最大流为2000000,但增广路径会在权值为1的边上往返出现，因此一共要运行2000000×5次。</p>
-</li>
+<ul>
+<li>上述基本实现方法，运行时间取决于如何确定第四行中的增广路径，如果选择不好，在边权有无理数的情况下算法可能不会终止：流的值随着求和运算不断增加，但始终无法收敛到流的最大值。若采用广度优先搜索来选择增广路径，则算法运行时间为多项式复杂度。通常情况下算法处理的问题中权值都为整数，如果是有理数可以按照一定比例转化为整数。在整数条件下，该种实现Ford-Fulkerson算法的运行时间为O(E|f<em>|)，其中f</em>是算法求出的最大流，原因在于第7行的循环为E次，寻找一条增广路径需要的深度优先搜索为E复杂度，而while最多执行f<em>次，每次至少增加流值1个单位。在f</em>较小时可以取得不错的运行效果，但当流网络中的最大流f*很大，例如我们将上面示例图中除了中间那条权值为1的边之外的其他边，权值都设为1000000，显然最大流为2000000,但增广路径会在权值为1的边上往返出现，因此一共要运行2000000×5次。</li>
 </ul>
 <h2 id="Edmonds-Karp算法"><a href="#Edmonds-Karp算法" class="headerlink" title="Edmonds-Karp算法"></a>Edmonds-Karp算法</h2><ul>
 <li>如果在第四行用BFS实现对增广路径p的计算，即若增广路径时残留网络中从s到t的最短路径（每条边设为单位距离），则能改进Ford-Fulkerson的界，该种实现方法为Edmonds-Karp算法，运行时间为O(VE^2)。令R（u，v）表示每条边为单位长度的图Gf中，从u到v的最短路径长度。下证时间复杂度。</li>
@@ -295,458 +210,401 @@
 </ul>
 <hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2015/12/25/Graph-Algorithms-flow/">原始出处</a>(<a href="https://forec.github.io/2015/12/25/Graph-Algorithms7-flow/">https://forec.github.io/2015/12/25/Graph-Algorithms7-flow/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
-</span>
-      
-    </div>
 
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Algorithms/" rel="tag">#Algorithms</a>
-          
         </div>
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-prev post-nav-item">
+        <footer class="article-footer">
             
-              <a href="/2015/12/28/parameter-error/" rel="prev">C语言的一种错误传参做法</a>
-            
-          </div>
 
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2015/12/24/Graph-Algorithms6/" rel="next">差分约束系统</a>
-            
-          </div>
-        </div>
-      
 
-      
-      
-    </footer>
-  </article>
 
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
- </div>
-
-        
-
-        
-          <div class="comments" id="comments">
-            
-              <div class="ds-thread" data-thread-key="2015/12/25/Graph-Algorithms7-flow/"
-                   data-title="最大流（一）" data-url="http://forec.github.io/2015/12/25/Graph-Algorithms7-flow/">
-              </div>
-            
-          </div>
-        
-      </div>
-
-      
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" src="/uploads/avatar.jpg" alt="Forec" itemprop="image"/>
-          <p class="site-author-name" itemprop="name">Forec</p>
-        </div>
-        <p class="site-description motion-element" itemprop="description">奋斗在Code Farm的在校生</p>
-        <nav class="site-state motion-element">
-          <div class="site-state-item site-state-posts">
-            <a href="/archives">
-              <span class="site-state-item-count">52</span>
-              <span class="site-state-item-name">日志</span>
-            </a>
-          </div>
-
-          <div class="site-state-item site-state-categories">
-            <a href="/categories">
-              <span class="site-state-item-count">9</span>
-              <span class="site-state-item-name">分类</span>
-              </a>
-          </div>
-
-          <div class="site-state-item site-state-tags">
-            <a href="/tags">
-              <span class="site-state-item-count">21</span>
-              <span class="site-state-item-name">标签</span>
-              </a>
-          </div>
-
-        </nav>
-
-        
-          <div class="feed-link motion-element">
-            <a href="/atom.xml" rel="alternate">
-              <i class="menu-item-icon icon-next-feed"></i>
-              RSS
-            </a>
-          </div>
-        
-
-        <div class="links-of-author motion-element">
-          
-            
-              <span class="links-of-author-item">
-                <a href="https://github.com/forec" target="_blank">github</a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://www.codewars.com/users/Forec" target="_blank">codewars</a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="mailto:forec@bupt.edu.cn" target="_blank">email</a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://www.zhihu.com/people/forect" target="_blank">zhihu</a>
-              </span>
-            
-          
-        </div>
-
-        
-        
-
-        <div class="links-of-author motion-element">
-          
-            <p class="site-author-name">友情链接</p>
-            
-              <span class="links-of-author-item">
-              <a href="https://fallenwood.github.io" target="_blank">Fallenwood的博客</a>
-              </span>
-            
-          
-        </div>
-
-      </section>
-
-      
-        <section class="post-toc-wrap sidebar-panel-active">
-          <div class="post-toc-indicator-top post-toc-indicator"></div>
-          <div class="post-toc">
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#流网络"><span class="nav-number">1.</span> <span class="nav-text">流网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ford-Fulkerson方法"><span class="nav-number">2.</span> <span class="nav-text">Ford-Fulkerson方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法解释和定理"><span class="nav-number">2.1.</span> <span class="nav-text">方法解释和定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本的Ford-Fulkerson算法实现"><span class="nav-number">2.2.</span> <span class="nav-text">基本的Ford-Fulkerson算法实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Edmonds-Karp算法"><span class="nav-number">2.3.</span> <span class="nav-text">Edmonds-Karp算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Edmonds-Karp邻接表实现"><span class="nav-number">2.4.</span> <span class="nav-text">Edmonds-Karp邻接表实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#转化为最大流问题的最大无向二分图匹配问题"><span class="nav-number">3.</span> <span class="nav-text">转化为最大流问题的最大无向二分图匹配问题</span></a></li></ol></div>
-            
-          </div>
-          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
-        </section>
-      
-
-    </div>
-  </aside>
-
-
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner"> <div class="copyright" >
-  
-  &copy; &nbsp;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
-  <span class="with-love">
-    <i class="icon-next-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Forec</span>
-</div>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
-
-<span id="busuanzi_container_site_pv">
-    本站总访问量<span id="busuanzi_value_site_pv"></span>次
-</span>
-
-
- </div>
-    </footer>
-
-    <div class="back-to-top"></div>
-  </div>
-
-  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
-
-  
-  
-  
-    
-
-  
-    
-  
-
-  <script type="text/javascript">
-    var duoshuoQuery = {short_name:"forec"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0]
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
-    
-     
-  	<script src="/js/ua-parser.min.js"></script>
-  	<script src="/js/hook-duoshuo.js"></script>
-  
-
-    
-  
-  
-  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
-  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
-
-
-  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
-  
-
-  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
-  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
-
-  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
-
-
-
-  <script type="text/javascript" src="/js/nav-toggle.js"></script>
-
-  
-  
-<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
-
-
-<script type="text/javascript" id="sidebar.toc.highlight">
-  $(document).ready(function () {
-    var tocSelector = '.post-toc';
-    var $tocSelector = $(tocSelector);
-    var activeCurrentSelector = '.active-current';
-
-    $tocSelector
-      .on('activate.bs.scrollspy', function () {
-        var $currentActiveElement = $(tocSelector + ' .active').last();
-
-        removeCurrentActiveClass();
-        $currentActiveElement.addClass('active-current');
-
-        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
-      })
-      .on('clear.bs.scrollspy', function () {
-        removeCurrentActiveClass();
-      });
-
-    function removeCurrentActiveClass () {
-      $(tocSelector + ' ' + activeCurrentSelector)
-        .removeClass(activeCurrentSelector.substring(1));
-    }
-
-    function processTOC () {
-      getTOCMaxHeight();
-      toggleTOCOverflowIndicators();
-    }
-
-    function getTOCMaxHeight () {
-      var height = $('.sidebar').height() -
-                   $tocSelector.position().top -
-                   $('.post-toc-indicator-bottom').height();
-
-      $tocSelector.css('height', height);
-
-      return height;
-    }
-
-    function toggleTOCOverflowIndicators () {
-      tocOverflowIndicator(
-        '.post-toc-indicator-top',
-        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
-      );
-
-      tocOverflowIndicator(
-        '.post-toc-indicator-bottom',
-        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
-      )
-    }
-
-    $(document).on('sidebar.motion.complete', function () {
-      processTOC();
-    });
-
-    $('body').scrollspy({ target: tocSelector });
-    $(window).on('resize', function () {
-      if ( $('.sidebar').hasClass('sidebar-active') ) {
-        processTOC();
-      }
-    });
-
-    onScroll($tocSelector);
-
-    function onScroll (element) {
-      element.on('mousewheel DOMMouseScroll', function (event) {
-          var oe = event.originalEvent;
-          var delta = oe.wheelDelta || -oe.detail;
-
-          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
-          event.preventDefault();
-
-          toggleTOCOverflowIndicators();
-      });
-    }
-
-    function tocOverflowIndicator (indicator, action) {
-      var $indicator = $(indicator);
-      var opacity = action === 'show' ? 0.4 : 0;
-      $indicator.velocity ?
-        $indicator.velocity('stop').velocity({
-          opacity: opacity
-        }, { duration: 100 }) :
-        $indicator.stop().animate({
-          opacity: opacity
-        }, 100);
-    }
-
-  });
-</script>
-
-<script type="text/javascript" id="sidebar.nav">
-  $(document).ready(function () {
-    var html = $('html');
-    var TAB_ANIMATE_DURATION = 200;
-    var hasVelocity = $.isFunction(html.velocity);
-
-    $('.sidebar-nav li').on('click', function () {
-      var item = $(this);
-      var activeTabClassName = 'sidebar-nav-active';
-      var activePanelClassName = 'sidebar-panel-active';
-      if (item.hasClass(activeTabClassName)) {
-        return;
-      }
-
-      var currentTarget = $('.' + activePanelClassName);
-      var target = $('.' + item.data('target'));
-
-      hasVelocity ?
-        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
-          target
-            .velocity('stop')
-            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
-            .addClass(activePanelClassName);
-        }) :
-        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
-          currentTarget.hide();
-          target
-            .stop()
-            .css({'opacity': 0, 'display': 'block'})
-            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
-              currentTarget.removeClass(activePanelClassName);
-              target.addClass(activePanelClassName);
-            });
+    <a data-url="http://forec.github.io/2015/12/25/Graph-Algorithms7-flow/" data-id="civ3s4t3r004fo8ewrlmzmj66" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
         });
-
-      item.siblings().removeClass(activeTabClassName);
-      item.addClass(activeTabClassName);
-    });
-
-    $('.post-toc a').on('click', function (e) {
-      e.preventDefault();
-      var targetSelector = escapeSelector(this.getAttribute('href'));
-      var offset = $(targetSelector).offset().top;
-      hasVelocity ?
-        html.velocity('stop').velocity('scroll', {
-          offset: offset  + 'px',
-          mobileHA: false
-        }) :
-        $('html, body').stop().animate({
-          scrollTop: offset
-        }, 500);
-    });
-
-    // Expand sidebar on post detail page by default, when post has a toc.
-    var $tocContent = $('.post-toc-content');
-    if (isDesktop() && CONFIG.sidebar === 'post') {
-      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
-        displaySidebar();
-      }
-    }
-  });
+    })(jQuery);
 </script>
 
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2015/12/25/Graph-Algorithms7-flow/" data-title="最大流（一）" data-url="http://forec.github.io/2015/12/25/Graph-Algorithms7-flow/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/12/28/parameter-error/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            C语言的一种错误传参做法
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2015/12/24/Graph-Algorithms6/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">差分约束系统</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/02/cloud-virtual-machine-config/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/vps.jpg)" alt="CVM 操作记录" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/OS/">OS</a></p>
+                            <p class="item-title"><a href="/2016/11/02/cloud-virtual-machine-config/" class="title">CVM 操作记录</a></p>
+                            <p class="item-date"><time datetime="2016-11-02T15:08:14.000Z" itemprop="datePublished">2016-11-02</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/10/29/raspberry-settings/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/raspberry-settings.jpg)" alt="Raspberry Pi 3 配置索引" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/OS/">OS</a></p>
+                            <p class="item-title"><a href="/2016/10/29/raspberry-settings/" class="title">Raspberry Pi 3 配置索引</a></p>
+                            <p class="item-date"><time datetime="2016-10-29T06:49:23.000Z" itemprop="datePublished">2016-10-29</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/10/08/haskell-fixit/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-fixit.jpg)" alt="Fix in Haskell" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
+                            <p class="item-title"><a href="/2016/10/08/haskell-fixit/" class="title">Fix in Haskell</a></p>
+                            <p class="item-date"><time datetime="2016-10-08T06:48:19.000Z" itemprop="datePublished">2016-10-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/10/03/co-occurrence-structure-capture/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cooccurrence-network.jpg)" alt="Network Mining Based On Co-occurrence" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/大数据/">大数据</a></p>
+                            <p class="item-title"><a href="/2016/10/03/co-occurrence-structure-capture/" class="title">Network Mining Based On Co-occurrence</a></p>
+                            <p class="item-date"><time datetime="2016-10-03T14:16:16.000Z" itemprop="datePublished">2016-10-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/27/duplicate-cantor/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cantor-expansion.jpg)" alt="Cantor Expansion With Duplicate Elements" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/09/27/duplicate-cantor/" class="title">Cantor Expansion With Duplicate Elements</a></p>
+                            <p class="item-date"><time datetime="2016-09-27T14:34:03.000Z" itemprop="datePublished">2016-09-27</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/OS/">OS</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
+        </div>
+    </div>
 
 
-  <script type="text/javascript">
-    $(document).ready(function () {
-      if (CONFIG.sidebar === 'always') {
-        displaySidebar();
-      }
-    });
-  </script>
-
-  
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    }
-  });
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 14.29px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 10px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.43px;">Hadoop</a> <a href="/tags/Mistakes/" style="font-size: 15.71px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10px;">sicp</a> <a href="/tags/函数式编程/" style="font-size: 12.86px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.43px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.43px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.57px;">机器学习</a> <a href="/tags/线程/" style="font-size: 11.43px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.14px;">计算机组成与体系结构</a>
+        </div>
+    </div>
 
 
-  
-  
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://fallenwood.github.io">Fallenwood的博客</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
 
-  
-  <script type="text/javascript" src="/js/lazyload.js"></script>
-  <script type="text/javascript">
-    $(function () {
-      $("#posts").find('img').lazyload({
-        placeholder: "/images/loading.gif",
-        effect: "fadeIn"
-      });
-    });
-  </script>
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2016 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec# enter duoshuo shortname here'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/vendor/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/vendor/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
 </body>
 </html>
