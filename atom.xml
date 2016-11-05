@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-11-04T13:21:17.323Z</updated>
+  <updated>2016-11-05T09:51:52.790Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/"/>
     <id>http://forec.github.io/2016/11/02/cloud-virtual-machine-config/</id>
     <published>2016-11-02T15:08:14.000Z</published>
-    <updated>2016-11-04T13:21:17.323Z</updated>
+    <updated>2016-11-05T09:51:52.790Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;CVM 上的操作记录。&lt;/p&gt;
@@ -121,7 +121,7 @@
     
     </summary>
     
-      <category term="OS" scheme="http://forec.github.io/categories/OS/"/>
+      <category term="Configuration" scheme="http://forec.github.io/categories/Configuration/"/>
     
     
       <category term="CVM" scheme="http://forec.github.io/tags/CVM/"/>
@@ -135,7 +135,7 @@
     <link href="http://forec.github.io/2016/10/29/raspberry-settings/"/>
     <id>http://forec.github.io/2016/10/29/raspberry-settings/</id>
     <published>2016-10-29T06:49:23.000Z</published>
-    <updated>2016-11-04T12:56:27.827Z</updated>
+    <updated>2016-11-05T09:51:55.055Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理 Raspberry Pi 3 的个人配置。&lt;/p&gt;
@@ -232,7 +232,7 @@
     
     </summary>
     
-      <category term="OS" scheme="http://forec.github.io/categories/OS/"/>
+      <category term="Configuration" scheme="http://forec.github.io/categories/Configuration/"/>
     
     
       <category term="Mistakes" scheme="http://forec.github.io/tags/Mistakes/"/>
@@ -416,7 +416,7 @@
     <link href="http://forec.github.io/2016/09/14/tips-for-qt/"/>
     <id>http://forec.github.io/2016/09/14/tips-for-qt/</id>
     <published>2016-09-14T02:36:35.000Z</published>
-    <updated>2016-11-04T16:33:22.316Z</updated>
+    <updated>2016-11-05T09:51:20.473Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;编写 &lt;a href=&quot;https://github.com/Forec/light-applications/tree/master/remote-control&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Remote-Control&lt;/a&gt; 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。&lt;/p&gt;
@@ -498,7 +498,7 @@
     
     </summary>
     
-      <category term="OS" scheme="http://forec.github.io/categories/OS/"/>
+      <category term="Configuration" scheme="http://forec.github.io/categories/Configuration/"/>
     
     
       <category term="Mistakes" scheme="http://forec.github.io/tags/Mistakes/"/>
@@ -730,7 +730,7 @@
     <link href="http://forec.github.io/2016/07/10/python-visit-access-database/"/>
     <id>http://forec.github.io/2016/07/10/python-visit-access-database/</id>
     <published>2016-07-10T08:45:29.000Z</published>
-    <updated>2016-11-04T16:44:28.867Z</updated>
+    <updated>2016-11-05T11:00:39.384Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;记录在windows 10下配置python3链接access数据库过程和几个简单操作。&lt;/p&gt;
@@ -794,7 +794,7 @@
     
     </summary>
     
-      <category term="Code" scheme="http://forec.github.io/categories/Code/"/>
+      <category term="Configuration" scheme="http://forec.github.io/categories/Configuration/"/>
     
     
       <category term="Access" scheme="http://forec.github.io/tags/Access/"/>
