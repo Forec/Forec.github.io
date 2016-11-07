@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理 Raspberry Pi 3 的个人配置。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/raspberry-settings.jpg">
-<meta property="og:updated_time" content="2016-11-05T09:51:55.055Z">
+<meta property="og:updated_time" content="2016-11-07T15:44:37.223Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Raspberry Pi 3 配置索引">
 <meta name="twitter:description" content="整理 Raspberry Pi 3 的个人配置。">
@@ -194,6 +194,30 @@
 <li>树莓派的 Camare module 在 <code>/boot/</code> 目录下以固件形式加载</li>
 <li>编辑 <code>/etc/modules-load.d/modules.conf</code> ，文件末尾添加 <code>bcm2835-v4l2</code>。</li>
 </ul>
+<h2 id="WiFi-登陆"><a href="#WiFi-登陆" class="headerlink" title="WiFi 登陆"></a>WiFi 登陆</h2><ul>
+<li><code>ifconfig</code>查看是否有 wlan0</li>
+<li><code>sudo nano /etc/network/interfaces</code></li>
+<li>修改文件内容如下：</li>
+</ul>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">auto lo</span><br><span class="line"></span><br><span class="line">iface lo <span class="keyword">inet</span> loopback</span><br><span class="line">iface eth0 <span class="keyword">inet</span> dhcp</span><br><span class="line"></span><br><span class="line">auto wlan0</span><br><span class="line">allow-hotplug wlan0</span><br><span class="line">iface wlan0 <span class="keyword">inet</span> dhcp</span><br><span class="line">wpa-ssid <span class="string">"JoStudio"</span></span><br><span class="line">wpa-psk <span class="string">"password"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>sudo /etc/init.d/networking restart</code> 重启网络</li>
+</ul>
+<h2 id="修改默认账号-pi"><a href="#修改默认账号-pi" class="headerlink" title="修改默认账号 pi"></a>修改默认账号 pi</h2><ul>
+<li><code>sudo raspi-config</code> 启动 VNC</li>
+<li>启用 root 账号</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo passwd root</span><br><span class="line">sudo passwd --unlock root</span><br></pre></td></tr></table></figure>
+<ul>
+<li>重启后以 root 登陆（从 VNC 登陆）</li>
+<li>修改用户名 pi 为 username：<code>usermod -l username pi</code></li>
+<li>修改组名 pi 为 username：<code>groupmod -n username pi</code></li>
+<li>更改 pi 的家目录为 username 家目录：<code>mv /home/pi /home/username</code></li>
+<li>修改 /etc/passwd 中 username 用户的家目录地址：<code>usermod -d /home/username username</code></li>
+<li>编辑 /etc/sudoers，修改末尾的 <code>pi ALL=(ALL) NOPASSWD: ALL</code> 为 <code>username ALL=(ALL) NOPASSWD: ALL</code></li>
+<li>重新锁定 root：<code>passwd -l root</code></li>
+<li>以新用户 ssh 登陆并尝试 sudo</li>
+</ul>
 <h2 id="Motion-配置"><a href="#Motion-配置" class="headerlink" title="Motion 配置"></a>Motion 配置</h2><ul>
 <li>编辑 <code>/etc/motion/motion.conf</code> ，修改以下项：<ul>
 <li><code>daemon</code> : 修改为 on，使 motion 以守护进程方式运行</li>
@@ -237,6 +261,16 @@
 <li><code>sudo apt-get -y install mpg321</code></li>
 <li>使用 <code>mpg321</code> 可播放 mp3 格式音频</li>
 </ul>
+<h2 id="驱动-SG90-舵机"><a href="#驱动-SG90-舵机" class="headerlink" title="驱动 SG90 舵机"></a>驱动 SG90 舵机</h2><ul>
+<li>从 <a href="https://github.com/richardghirst/PiBits" target="_blank" rel="external">此处</a> 下载树莓派 GPIO 管脚驱动 ServoBlaster</li>
+<li><code>cd ServoBlaster/user</code> 并 <code>make servod</code></li>
+<li><code>./servod</code>，成功将展示对应管脚脉冲对应情况</li>
+<li>如 SG90 舵机脉冲输入管脚为 GPIO17，可使用 <code>echo 1=180 &gt; /dev/servoblaster</code> 使其转动</li>
+<li>可使用 2 个 9g 舵机组成二自由度舵机云台，使摄像头横向 180 度，纵向 120 度旋转</li>
+<li>舵机黄色线为信号输入，棕色线接 GND，红色线接 5V</li>
+<li>树莓派 GPIO 管脚如下</li>
+</ul>
+<p><img src="http://7xktmz.com1.z0.glb.clouddn.com/GPIO.png" width="400px"></p>
 <h1 id="Ubuntu-mate"><a href="#Ubuntu-mate" class="headerlink" title="Ubuntu-mate"></a>Ubuntu-mate</h1><blockquote>
 <p>无屏幕暂时无法尝试</p>
 </blockquote>
@@ -256,7 +290,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/10/29/raspberry-settings/" data-id="civ5193ed000x60ewyy9wb594" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/10/29/raspberry-settings/" data-id="civ88o7ps000zkwewprfjl0xt" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

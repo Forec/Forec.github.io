@@ -135,7 +135,7 @@
     <link href="http://forec.github.io/2016/10/29/raspberry-settings/"/>
     <id>http://forec.github.io/2016/10/29/raspberry-settings/</id>
     <published>2016-10-29T06:49:23.000Z</published>
-    <updated>2016-11-05T09:51:55.055Z</updated>
+    <updated>2016-11-07T15:44:37.223Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理 Raspberry Pi 3 的个人配置。&lt;/p&gt;
@@ -166,6 +166,30 @@
 &lt;h2 id=&quot;dev-video0-未找到&quot;&gt;&lt;a href=&quot;#dev-video0-未找到&quot; class=&quot;headerlink&quot; title=&quot;/dev/video0 未找到&quot;&gt;&lt;/a&gt;/dev/video0 未找到&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;树莓派的 Camare module 在 &lt;code&gt;/boot/&lt;/code&gt; 目录下以固件形式加载&lt;/li&gt;
 &lt;li&gt;编辑 &lt;code&gt;/etc/modules-load.d/modules.conf&lt;/code&gt; ，文件末尾添加 &lt;code&gt;bcm2835-v4l2&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;WiFi-登陆&quot;&gt;&lt;a href=&quot;#WiFi-登陆&quot; class=&quot;headerlink&quot; title=&quot;WiFi 登陆&quot;&gt;&lt;/a&gt;WiFi 登陆&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ifconfig&lt;/code&gt;查看是否有 wlan0&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo nano /etc/network/interfaces&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;修改文件内容如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight pf&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;auto lo&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;iface lo &lt;span class=&quot;keyword&quot;&gt;inet&lt;/span&gt; loopback&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;iface eth0 &lt;span class=&quot;keyword&quot;&gt;inet&lt;/span&gt; dhcp&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;auto wlan0&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;allow-hotplug wlan0&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;iface wlan0 &lt;span class=&quot;keyword&quot;&gt;inet&lt;/span&gt; dhcp&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;wpa-ssid &lt;span class=&quot;string&quot;&gt;&quot;JoStudio&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;wpa-psk &lt;span class=&quot;string&quot;&gt;&quot;password&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;sudo /etc/init.d/networking restart&lt;/code&gt; 重启网络&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;修改默认账号-pi&quot;&gt;&lt;a href=&quot;#修改默认账号-pi&quot; class=&quot;headerlink&quot; title=&quot;修改默认账号 pi&quot;&gt;&lt;/a&gt;修改默认账号 pi&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;sudo raspi-config&lt;/code&gt; 启动 VNC&lt;/li&gt;
+&lt;li&gt;启用 root 账号&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo passwd root&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo passwd --unlock root&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;重启后以 root 登陆（从 VNC 登陆）&lt;/li&gt;
+&lt;li&gt;修改用户名 pi 为 username：&lt;code&gt;usermod -l username pi&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;修改组名 pi 为 username：&lt;code&gt;groupmod -n username pi&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;更改 pi 的家目录为 username 家目录：&lt;code&gt;mv /home/pi /home/username&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;修改 /etc/passwd 中 username 用户的家目录地址：&lt;code&gt;usermod -d /home/username username&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;编辑 /etc/sudoers，修改末尾的 &lt;code&gt;pi ALL=(ALL) NOPASSWD: ALL&lt;/code&gt; 为 &lt;code&gt;username ALL=(ALL) NOPASSWD: ALL&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;重新锁定 root：&lt;code&gt;passwd -l root&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;以新用户 ssh 登陆并尝试 sudo&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&quot;Motion-配置&quot;&gt;&lt;a href=&quot;#Motion-配置&quot; class=&quot;headerlink&quot; title=&quot;Motion 配置&quot;&gt;&lt;/a&gt;Motion 配置&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;编辑 &lt;code&gt;/etc/motion/motion.conf&lt;/code&gt; ，修改以下项：&lt;ul&gt;
@@ -210,6 +234,16 @@
 &lt;li&gt;&lt;code&gt;sudo apt-get -y install mpg321&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;使用 &lt;code&gt;mpg321&lt;/code&gt; 可播放 mp3 格式音频&lt;/li&gt;
 &lt;/ul&gt;
+&lt;h2 id=&quot;驱动-SG90-舵机&quot;&gt;&lt;a href=&quot;#驱动-SG90-舵机&quot; class=&quot;headerlink&quot; title=&quot;驱动 SG90 舵机&quot;&gt;&lt;/a&gt;驱动 SG90 舵机&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;从 &lt;a href=&quot;https://github.com/richardghirst/PiBits&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;此处&lt;/a&gt; 下载树莓派 GPIO 管脚驱动 ServoBlaster&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd ServoBlaster/user&lt;/code&gt; 并 &lt;code&gt;make servod&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;./servod&lt;/code&gt;，成功将展示对应管脚脉冲对应情况&lt;/li&gt;
+&lt;li&gt;如 SG90 舵机脉冲输入管脚为 GPIO17，可使用 &lt;code&gt;echo 1=180 &amp;gt; /dev/servoblaster&lt;/code&gt; 使其转动&lt;/li&gt;
+&lt;li&gt;可使用 2 个 9g 舵机组成二自由度舵机云台，使摄像头横向 180 度，纵向 120 度旋转&lt;/li&gt;
+&lt;li&gt;舵机黄色线为信号输入，棕色线接 GND，红色线接 5V&lt;/li&gt;
+&lt;li&gt;树莓派 GPIO 管脚如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/GPIO.png&quot; width=&quot;400px&quot;&gt;&lt;/p&gt;
 &lt;h1 id=&quot;Ubuntu-mate&quot;&gt;&lt;a href=&quot;#Ubuntu-mate&quot; class=&quot;headerlink&quot; title=&quot;Ubuntu-mate&quot;&gt;&lt;/a&gt;Ubuntu-mate&lt;/h1&gt;&lt;blockquote&gt;
 &lt;p&gt;无屏幕暂时无法尝试&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -248,7 +282,7 @@
     <link href="http://forec.github.io/2016/10/08/haskell-fixit/"/>
     <id>http://forec.github.io/2016/10/08/haskell-fixit/</id>
     <published>2016-10-08T06:48:19.000Z</published>
-    <updated>2016-11-04T12:58:01.958Z</updated>
+    <updated>2016-11-05T12:00:38.228Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;There’re many interesting features in Haskell, here I want to introduce and analyse the &lt;code&gt;Fixed-point combinator&lt;/code&gt;, which spent me several hours understanding but only scratched the surface. &lt;/p&gt;
