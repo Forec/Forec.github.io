@@ -351,7 +351,7 @@
     <link href="http://forec.github.io/2016/10/03/co-occurrence-structure-capture/"/>
     <id>http://forec.github.io/2016/10/03/co-occurrence-structure-capture/</id>
     <published>2016-10-03T14:16:16.000Z</published>
-    <updated>2016-11-04T12:55:03.322Z</updated>
+    <updated>2016-11-07T16:34:51.056Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;Generate network based on co-occurrence was proposed several decades ago, however, it still occupies most of papers talking about network discovering. Here I want to give a simple introduction for network capture by conventional co-occurrence methods. The following contents are slightly related with the basis of my current work, they are out of date but still useful sometimes.&lt;/p&gt;
@@ -369,7 +369,7 @@
 &lt;h1 id=&quot;Relationship-Identification&quot;&gt;&lt;a href=&quot;#Relationship-Identification&quot; class=&quot;headerlink&quot; title=&quot;Relationship Identification&quot;&gt;&lt;/a&gt;Relationship Identification&lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;Here we come across the second question, how to get &lt;code&gt;E&lt;/code&gt;? I will only introduce one simple method here, that’s what I metioned  above, the conventional co-occurrence method. I will introduce some more methods after my current job finished. &lt;/li&gt;
 &lt;li&gt;The co-occurrence network, is just like what its name suggests, use the information that two entities occurred together. For example, in my analysis for 《Train to Busan》, I simply build an edge for two nodes if they occur in a same paragraph. If there always been an edge for two nodes, the weight of that edge will be increased. Once the data set is big enough, the main line of the data set will appear. You can choose building directed edges or undirected edges, and choose complete graph or not.&lt;/li&gt;
-&lt;li&gt;The co-occurrence network is only useful for data sets that have obvious centralization, edges with low weight are always redundant. Also, many nodes will have no sense of presence because they are just playing samll roles. The co-occurrence will make every node connect with the center node, that’s unreasonable. Since we just introduce the very simple condition here, I will present two common ways for reducing the redundancy ans fixing the network.&lt;/li&gt;
+&lt;li&gt;The co-occurrence network is only useful for data sets that have obvious centralization, edges with low weight are always redundant. Also, many nodes will have no sense of presence because they are just playing samll roles. The co-occurrence will make every node connect with the center node, that’s unreasonable. Since we just introduce the very simple condition here, I will present two common ways for reducing the redundancy &lt;del&gt;ans&lt;/del&gt; and [thanks for a kind reader, he pointed out the mistake here] fixing the network.&lt;/li&gt;
 &lt;li&gt;The first way is filter. Easy to understand, just filter out those edges with low weight. The threshold can be adjusted manually or learned by specific models.&lt;/li&gt;
 &lt;li&gt;The second way is segmenting your network. This needs clustering first, and find the community centers. Cut these edges connecting with center nodes but has low weights. The effect is hard to be estimated according to what your network structure likes.&lt;/li&gt;
 &lt;/ul&gt;
