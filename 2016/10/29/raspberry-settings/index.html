@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理 Raspberry Pi 3 的个人配置。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/raspberry-settings.jpg">
-<meta property="og:updated_time" content="2016-11-07T15:44:37.223Z">
+<meta property="og:updated_time" content="2016-11-09T05:48:05.844Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Raspberry Pi 3 配置索引">
 <meta name="twitter:description" content="整理 Raspberry Pi 3 的个人配置。">
@@ -171,7 +171,8 @@
 <h1 id="树莓派及配件型号"><a href="#树莓派及配件型号" class="headerlink" title="树莓派及配件型号"></a>树莓派及配件型号</h1><ul>
 <li>树莓派型号：Raspberry Pi 3 Model B , Made in United Kingdom</li>
 <li>摄像头型号：1/4 inch OV5647 ，500W 像素，最高帧速 30，视频支持 1080p，made by OmniVision</li>
-<li>舵机型号：辉盛 SG90</li>
+<li>舵机型号：辉盛 SG90 （2个）</li>
+<li>2自由度舵机云台 （1个）</li>
 </ul>
 <h1 id="RASPBIAN-JESSIE"><a href="#RASPBIAN-JESSIE" class="headerlink" title="RASPBIAN-JESSIE"></a>RASPBIAN-JESSIE</h1><h2 id="镜像源修改"><a href="#镜像源修改" class="headerlink" title="镜像源修改"></a>镜像源修改</h2><ul>
 <li>编辑 <code>/etc/apt/sources.list</code> ，注释原有源</li>
@@ -199,7 +200,7 @@
 <li><code>sudo nano /etc/network/interfaces</code></li>
 <li>修改文件内容如下：</li>
 </ul>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">auto lo</span><br><span class="line"></span><br><span class="line">iface lo <span class="keyword">inet</span> loopback</span><br><span class="line">iface eth0 <span class="keyword">inet</span> dhcp</span><br><span class="line"></span><br><span class="line">auto wlan0</span><br><span class="line">allow-hotplug wlan0</span><br><span class="line">iface wlan0 <span class="keyword">inet</span> dhcp</span><br><span class="line">wpa-ssid <span class="string">"JoStudio"</span></span><br><span class="line">wpa-psk <span class="string">"password"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">auto lo</span><br><span class="line"></span><br><span class="line">iface lo <span class="keyword">inet</span> loopback</span><br><span class="line">iface eth0 <span class="keyword">inet</span> dhcp</span><br><span class="line"></span><br><span class="line">auto wlan0</span><br><span class="line">allow-hotplug wlan0</span><br><span class="line">iface wlan0 <span class="keyword">inet</span> dhcp</span><br><span class="line">wpa-ssid <span class="string">"ssid_name"</span></span><br><span class="line">wpa-psk <span class="string">"password"</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li><code>sudo /etc/init.d/networking restart</code> 重启网络</li>
 </ul>
@@ -224,13 +225,20 @@
 <li><code>width</code> : 修改为 1024</li>
 <li><code>height</code> : 修改为 768</li>
 <li><code>framerate</code> ： 修改为 24</li>
+<li><code>output_normal</code>：修改为 off（在检测到运动时不截图，若想记录则保持 on）</li>
 <li><code>ffmpeg_video_codec</code> ： 修改为 mpeg4</li>
 <li><code>control_localhost</code> ： 修改为 off，允许远程修改配置</li>
 <li><code>control_authentication</code> ： 为远程操控配置设置认证信息</li>
 <li><code>webcam_localhost</code> ： 允许远程访问监控流</li>
+<li><code>webcam_motion</code>：修改为 on，仅在检测到运动时增加帧速</li>
+<li><code>webcam_maxrate</code>：修改为远程监控需要的帧速</li>
 </ul>
 </li>
 <li>编辑 <code>/etc/defaults/motion</code>，将 <code>start_motion_daemon</code> 修改为 <code>yes</code>，设置为开机启动</li>
+<li>创建 <code>/var/run/motion</code> 文件夹</li>
+<li>在家目录下 创建 <code>.motion</code> 文件夹</li>
+<li><code>cp /etc/motion/motion.conf ~/.motion/</code></li>
+<li>修改配置权限为非 root 用户：<code>sudo chown forec:forec ~/.motion/motion.conf</code></li>
 </ul>
 <h2 id="VNC-分辨率调整"><a href="#VNC-分辨率调整" class="headerlink" title="VNC 分辨率调整"></a>VNC 分辨率调整</h2><ul>
 <li>在自启动脚本中加入 <code>vncserver -geometry widthxheight :1</code>，将分辨率设置为 width × height，通过 <code>address:1</code> 访问。</li>
@@ -271,6 +279,9 @@
 <li>树莓派 GPIO 管脚如下</li>
 </ul>
 <p><img src="http://7xktmz.com1.z0.glb.clouddn.com/GPIO.png" width="400px"></p>
+<ul>
+<li>可编写脚本驱动舵机在两个方向上旋转，拍摄视频如下</li>
+</ul>
 <h1 id="Ubuntu-mate"><a href="#Ubuntu-mate" class="headerlink" title="Ubuntu-mate"></a>Ubuntu-mate</h1><blockquote>
 <p>无屏幕暂时无法尝试</p>
 </blockquote>
@@ -290,7 +301,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/10/29/raspberry-settings/" data-id="civ8agqha000zbkewok0xk4q8" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/10/29/raspberry-settings/" data-id="civddd8qw000z28ewcjmo0rpg" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

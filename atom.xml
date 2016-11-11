@@ -135,7 +135,7 @@
     <link href="http://forec.github.io/2016/10/29/raspberry-settings/"/>
     <id>http://forec.github.io/2016/10/29/raspberry-settings/</id>
     <published>2016-10-29T06:49:23.000Z</published>
-    <updated>2016-11-07T15:44:37.223Z</updated>
+    <updated>2016-11-09T05:48:05.844Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理 Raspberry Pi 3 的个人配置。&lt;/p&gt;
@@ -144,7 +144,8 @@
 &lt;h1 id=&quot;树莓派及配件型号&quot;&gt;&lt;a href=&quot;#树莓派及配件型号&quot; class=&quot;headerlink&quot; title=&quot;树莓派及配件型号&quot;&gt;&lt;/a&gt;树莓派及配件型号&lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;树莓派型号：Raspberry Pi 3 Model B , Made in United Kingdom&lt;/li&gt;
 &lt;li&gt;摄像头型号：1/4 inch OV5647 ，500W 像素，最高帧速 30，视频支持 1080p，made by OmniVision&lt;/li&gt;
-&lt;li&gt;舵机型号：辉盛 SG90&lt;/li&gt;
+&lt;li&gt;舵机型号：辉盛 SG90 （2个）&lt;/li&gt;
+&lt;li&gt;2自由度舵机云台 （1个）&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id=&quot;RASPBIAN-JESSIE&quot;&gt;&lt;a href=&quot;#RASPBIAN-JESSIE&quot; class=&quot;headerlink&quot; title=&quot;RASPBIAN-JESSIE&quot;&gt;&lt;/a&gt;RASPBIAN-JESSIE&lt;/h1&gt;&lt;h2 id=&quot;镜像源修改&quot;&gt;&lt;a href=&quot;#镜像源修改&quot; class=&quot;headerlink&quot; title=&quot;镜像源修改&quot;&gt;&lt;/a&gt;镜像源修改&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;编辑 &lt;code&gt;/etc/apt/sources.list&lt;/code&gt; ，注释原有源&lt;/li&gt;
@@ -172,7 +173,7 @@
 &lt;li&gt;&lt;code&gt;sudo nano /etc/network/interfaces&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;修改文件内容如下：&lt;/li&gt;
 &lt;/ul&gt;
-&lt;figure class=&quot;highlight pf&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;auto lo&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;iface lo &lt;span class=&quot;keyword&quot;&gt;inet&lt;/span&gt; loopback&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;iface eth0 &lt;span class=&quot;keyword&quot;&gt;inet&lt;/span&gt; dhcp&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;auto wlan0&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;allow-hotplug wlan0&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;iface wlan0 &lt;span class=&quot;keyword&quot;&gt;inet&lt;/span&gt; dhcp&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;wpa-ssid &lt;span class=&quot;string&quot;&gt;&quot;JoStudio&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;wpa-psk &lt;span class=&quot;string&quot;&gt;&quot;password&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight pf&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;auto lo&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;iface lo &lt;span class=&quot;keyword&quot;&gt;inet&lt;/span&gt; loopback&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;iface eth0 &lt;span class=&quot;keyword&quot;&gt;inet&lt;/span&gt; dhcp&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;auto wlan0&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;allow-hotplug wlan0&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;iface wlan0 &lt;span class=&quot;keyword&quot;&gt;inet&lt;/span&gt; dhcp&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;wpa-ssid &lt;span class=&quot;string&quot;&gt;&quot;ssid_name&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;wpa-psk &lt;span class=&quot;string&quot;&gt;&quot;password&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;sudo /etc/init.d/networking restart&lt;/code&gt; 重启网络&lt;/li&gt;
 &lt;/ul&gt;
@@ -197,13 +198,20 @@
 &lt;li&gt;&lt;code&gt;width&lt;/code&gt; : 修改为 1024&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;height&lt;/code&gt; : 修改为 768&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;framerate&lt;/code&gt; ： 修改为 24&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;output_normal&lt;/code&gt;：修改为 off（在检测到运动时不截图，若想记录则保持 on）&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;ffmpeg_video_codec&lt;/code&gt; ： 修改为 mpeg4&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;control_localhost&lt;/code&gt; ： 修改为 off，允许远程修改配置&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;control_authentication&lt;/code&gt; ： 为远程操控配置设置认证信息&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;webcam_localhost&lt;/code&gt; ： 允许远程访问监控流&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;webcam_motion&lt;/code&gt;：修改为 on，仅在检测到运动时增加帧速&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;webcam_maxrate&lt;/code&gt;：修改为远程监控需要的帧速&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;编辑 &lt;code&gt;/etc/defaults/motion&lt;/code&gt;，将 &lt;code&gt;start_motion_daemon&lt;/code&gt; 修改为 &lt;code&gt;yes&lt;/code&gt;，设置为开机启动&lt;/li&gt;
+&lt;li&gt;创建 &lt;code&gt;/var/run/motion&lt;/code&gt; 文件夹&lt;/li&gt;
+&lt;li&gt;在家目录下 创建 &lt;code&gt;.motion&lt;/code&gt; 文件夹&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cp /etc/motion/motion.conf ~/.motion/&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;修改配置权限为非 root 用户：&lt;code&gt;sudo chown forec:forec ~/.motion/motion.conf&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&quot;VNC-分辨率调整&quot;&gt;&lt;a href=&quot;#VNC-分辨率调整&quot; class=&quot;headerlink&quot; title=&quot;VNC 分辨率调整&quot;&gt;&lt;/a&gt;VNC 分辨率调整&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;在自启动脚本中加入 &lt;code&gt;vncserver -geometry widthxheight :1&lt;/code&gt;，将分辨率设置为 width × height，通过 &lt;code&gt;address:1&lt;/code&gt; 访问。&lt;/li&gt;
@@ -244,6 +252,9 @@
 &lt;li&gt;树莓派 GPIO 管脚如下&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/GPIO.png&quot; width=&quot;400px&quot;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可编写脚本驱动舵机在两个方向上旋转，拍摄视频如下&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h1 id=&quot;Ubuntu-mate&quot;&gt;&lt;a href=&quot;#Ubuntu-mate&quot; class=&quot;headerlink&quot; title=&quot;Ubuntu-mate&quot;&gt;&lt;/a&gt;Ubuntu-mate&lt;/h1&gt;&lt;blockquote&gt;
 &lt;p&gt;无屏幕暂时无法尝试&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -450,10 +461,10 @@
     <link href="http://forec.github.io/2016/09/14/tips-for-qt/"/>
     <id>http://forec.github.io/2016/09/14/tips-for-qt/</id>
     <published>2016-09-14T02:36:35.000Z</published>
-    <updated>2016-11-05T09:51:20.473Z</updated>
+    <updated>2016-11-08T11:17:52.725Z</updated>
     
     <content type="html">&lt;blockquote&gt;
-&lt;p&gt;编写 &lt;a href=&quot;https://github.com/Forec/light-applications/tree/master/remote-control&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Remote-Control&lt;/a&gt; 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。&lt;/p&gt;
+&lt;p&gt;编写 &lt;a href=&quot;https://github.com/Forec/remote-control&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Remote-Control&lt;/a&gt; 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;h1 id=&quot;MSVC的Release问题&quot;&gt;&lt;a href=&quot;#MSVC的Release问题&quot; class=&quot;headerlink&quot; title=&quot;MSVC的Release问题&quot;&gt;&lt;/a&gt;MSVC的Release问题&lt;/h1&gt;&lt;ul&gt;
@@ -527,7 +538,7 @@
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;p&gt;编写 &lt;a href=&quot;https://github.com/Forec/light-applications/tree/master/remote-control&quot;&gt;Remote-Control&lt;/a&gt; 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。&lt;/p&gt;
+&lt;p&gt;编写 &lt;a href=&quot;https://github.com/Forec/remote-control&quot;&gt;Remote-Control&lt;/a&gt; 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
