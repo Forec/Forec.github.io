@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-11-13T04:43:27.426Z</updated>
+  <updated>2016-11-13T16:01:59.183Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -16,19 +16,142 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>简易云存储系统的认证、传输协议设计</title>
+    <title>简易云存储系统传输协议实现和封装</title>
+    <link href="http://forec.github.io/2016/11/14/cloud-storage-system-2/"/>
+    <id>http://forec.github.io/2016/11/14/cloud-storage-system-2/</id>
+    <published>2016-11-13T16:04:34.000Z</published>
+    <updated>2016-11-13T16:01:59.183Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;按照云存储系统设计的文件传输协议，使用 Golang 实现。将实现代码封装，提供外部访问接口。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;TODO&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;此专栏的上一篇文章：[简易云存储系统的认证、传输协议设计] (&lt;a href=&quot;http://blog.forec.cn/2016/11/13/cloud-storage-system-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/13/cloud-storage-system-1/&lt;/a&gt;)&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/11/14/cloud-storage-system-2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/11/14/cloud-storage-system-2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/14/cloud-storage-system-2/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;按照云存储系统设计的文件传输协议，使用 Golang 实现。将实现代码封装，提供外部访问接口。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="Code" scheme="http://forec.github.io/categories/Code/"/>
+    
+    
+      <category term="Golang" scheme="http://forec.github.io/tags/Golang/"/>
+    
+      <category term="云存储" scheme="http://forec.github.io/tags/%E4%BA%91%E5%AD%98%E5%82%A8/"/>
+    
+      <category term="线程" scheme="http://forec.github.io/tags/%E7%BA%BF%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>简易云存储系统认证、传输协议设计</title>
     <link href="http://forec.github.io/2016/11/13/cloud-storage-system-1/"/>
     <id>http://forec.github.io/2016/11/13/cloud-storage-system-1/</id>
     <published>2016-11-13T04:32:01.000Z</published>
-    <updated>2016-11-13T04:43:27.426Z</updated>
+    <updated>2016-11-13T16:02:04.464Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;p&gt;TODO&lt;/p&gt;
-&lt;p&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/12/cloud-storage-system/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;简易云存储系统项目简介&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;保活连接&quot;&gt;&lt;a href=&quot;#保活连接&quot; class=&quot;headerlink&quot; title=&quot;保活连接&quot;&gt;&lt;/a&gt;保活连接&lt;/h1&gt;&lt;p&gt;服务器和客户端之间应当维护几个固定连接，同时随用户发起的文件传输任务，二者间应建立一些短时间的活动连接。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用于命令和文本数据传输的交互连接：此连接用于用户向服务器发送命令和接收服务器返回的文本响应，云存储服务器将会把客户端登录、认证时创建的连接作为该连接，在客户端活动期间，此连接应始终保持活动。&lt;/li&gt;
+&lt;li&gt;客户端用于接收推送消息的连接：单向连接，仅用于客户端接收服务器推送的消息，在客户端活动期间，此连接应始终保持活动。&lt;/li&gt;
+&lt;li&gt;客户端用于上传/下载文件的连接：此连接应在需要时建立，传输任务完成时断开。服务器应当限制每个客户端持有此类连接的数量。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;用户登录认证协议&quot;&gt;&lt;a href=&quot;#用户登录认证协议&quot; class=&quot;headerlink&quot; title=&quot;用户登录认证协议&quot;&gt;&lt;/a&gt;用户登录认证协议&lt;/h1&gt;&lt;h2 id=&quot;认证流程&quot;&gt;&lt;a href=&quot;#认证流程&quot; class=&quot;headerlink&quot; title=&quot;认证流程&quot;&gt;&lt;/a&gt;认证流程&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;根据上一篇文章中的需求，要实现的云存储系统应当能保证客户端和服务器之间传输的文件内容不被拦截，或者即时被中间人拦截也无法获取原始信息。要实现这一点，必须对传输的消息进行加密，而通信双方均需具有对加密消息解密的能力，因此双方均需持有密钥。非对称加密方式中，通信双方只有持有私钥的一方能够解密，因此如果采用非对称加密，服务器和客户端均需持有自己的私钥和对方的公钥。一个可行的方案是：当用户注册/登陆时，客户端随机生成一组密钥，并和服务器交换公钥，双方使用对方的公钥加密要传输的信息。&lt;/li&gt;
+&lt;li&gt;在将要实现的云存储系统中，我没有采用上面的方式，而是采用了 AES CFB 对称加密，因为后者相对更容易实现。如果项目完成后还有空余时间，我将更换认证方式。&lt;strong&gt;下面要介绍的云存储系统登录认证协议存在漏洞&lt;/strong&gt;，传输消息可能被拦截、破解。如果中间人拦截到了通信双方使用的随机密钥，则可根据协议构造特定的攻击数据包，获取或破坏用户空间。&lt;/li&gt;
+&lt;li&gt;客户端和服务器建立连接并认证的过程使用协议如下：&lt;ul&gt;
+&lt;li&gt;客户端向服务器发起 TCP 请求，服务器监听到请求并建立 Socket 连接&lt;/li&gt;
+&lt;li&gt;服务器随机生成固定长度的随机密钥 token 并以明文方式发送给客户端&lt;/li&gt;
+&lt;li&gt;客户端接收 token，并使用 token 加密用户名和密码的 MD5 值，将加密后的数据发送给服务器&lt;/li&gt;
+&lt;li&gt;服务器接收客户端发送的认证信息，使用 token 对消息解密，获取用户名和密码的 MD5 值，将密码与数据库中存储的密码 MD5 值比对，验证通过则向客户端发送使用 token 加密的 token，否则主动断开连接&lt;/li&gt;
+&lt;li&gt;客户端等待服务器返回数据或检测到服务器断开连接。如果客户端接收到的数据解密结果不是 token，则主动断开连接并提示认证失败&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;认证数据协议格式&quot;&gt;&lt;a href=&quot;#认证数据协议格式&quot; class=&quot;headerlink&quot; title=&quot;认证数据协议格式&quot;&gt;&lt;/a&gt;认证数据协议格式&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;假定现在已有函数 &lt;code&gt;RecvBytes()&lt;/code&gt; ，该函数将在后面的文章中介绍，它将返回一组维持边界的消息，即该函数能够从 Socket 缓冲区中恰好读取出一组符合协议格式的数据。下面定义协议格式。&lt;/li&gt;
+&lt;li&gt;服务器生成固定长度随机密钥后，直接向 socket 缓冲区写入该密钥的明文：&lt;code&gt;conn.Write([]byte(token))&lt;/code&gt;。因为接下来服务器需要等待客户端响应，因此客户端不需要考虑消息边界，只需要从缓冲区中读取固定长度的字节即可。&lt;/li&gt;
+&lt;li&gt;客户端从 socket 接收固定长度的 token。&lt;/li&gt;
+&lt;li&gt;客户端将用户名和密码的 MD5 值使用 token 加密，发送给服务器的包结构如下。因为 AES CFB 算法解密需要获知明文长度，因此传输的包中应当包含该信息：第一个 8 字节表示用户名明文和密码 MD5 值的总长度，第二个 8 字节表示使用 token 将用户名和密码 MD5 值加密后得到的密文长度，第三个 8 字节表示用户名明文的长度，最后跟着密文。前面的三个 8 字节均为 int64 类型的数据的大端序表示。下面称此格式为 &lt;strong&gt;格式0&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight livecodeserver&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt; &lt;span class=&quot;comment&quot;&gt;---------------------------------------------------------------------&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;|  &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;bytes&lt;/span&gt;  |  &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;bytes&lt;/span&gt;  |  &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;bytes&lt;/span&gt;  |  encoded username &lt;span class=&quot;operator&quot;&gt;and&lt;/span&gt; password  |&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; &lt;span class=&quot;comment&quot;&gt;---------------------------------------------------------------------&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;服务器接收到客户端发送的认证包，按大端序将包的前 24 个字节分别转化为 3 个 int64 类型，并使用 token 解密后面的密文。如果验证成功，则按照下面 “数据传输协议” 中的 “格式1” 将 token 传输给客户端。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;数据传输协议&quot;&gt;&lt;a href=&quot;#数据传输协议&quot; class=&quot;headerlink&quot; title=&quot;数据传输协议&quot;&gt;&lt;/a&gt;数据传输协议&lt;/h1&gt;&lt;p&gt;当客户端和服务器建立连接并认证成功后，所有的数据传输操作均应当遵从以下协议。&lt;/p&gt;
+&lt;h2 id=&quot;数据协议格式&quot;&gt;&lt;a href=&quot;#数据协议格式&quot; class=&quot;headerlink&quot; title=&quot;数据协议格式&quot;&gt;&lt;/a&gt;数据协议格式&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;应用层数据包格式如下，第一个 8 字节表示明文长度，第二个 8 字节表示密文长度 + 16，后跟密文。两个 8 字节均为大端序表示的 int64 类型。下面称此格式为 &lt;strong&gt;格式1&lt;/strong&gt; 。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight gherkin&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt; ----------------------------------------&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;|&lt;span class=&quot;string&quot;&gt;  8 bytes  &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt;  8 bytes  &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt;  encoded data  &lt;/span&gt;|&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; ----------------------------------------&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h2 id=&quot;非固定活动连接建立过程&quot;&gt;&lt;a href=&quot;#非固定活动连接建立过程&quot; class=&quot;headerlink&quot; title=&quot;非固定活动连接建立过程&quot;&gt;&lt;/a&gt;非固定活动连接建立过程&lt;/h2&gt;&lt;p&gt;当客户端需要执行传输文件操作时，主动向服务器申请连接。连接过程和上面 “认证数据协议格式” 过程类似：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;服务器向客户端发送新的随机密钥 token0&lt;/li&gt;
+&lt;li&gt;客户端不再将用户名和密码的 MD5 值发送给服务器，而是将用户名和之前登录认证时获得的 token1 连接在一起，使用 token0 加密，并发送给服务器（发送此段消息时，使用 格式0 ）&lt;/li&gt;
+&lt;li&gt;服务器接收到数据后首先解析用户名，发现该用户已登录，则将密码部分字段和该用户登录认证时使用的 token1 比对，符合则返回 token0，否则主动断开连接&lt;/li&gt;
+&lt;li&gt;客户端检查 token0 无误后开始发送相应指令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;被动监听推送消息连接过程&quot;&gt;&lt;a href=&quot;#被动监听推送消息连接过程&quot; class=&quot;headerlink&quot; title=&quot;被动监听推送消息连接过程&quot;&gt;&lt;/a&gt;被动监听推送消息连接过程&lt;/h2&gt;&lt;p&gt;此连接和上述 “非固定活动连接建立过程” 类似，区别在于，该连接在整个客户端存活期间均得以保持。为了将此连接和用于传输长数据流的数据区分，服务器将会把用户登录后申请的第一个 “非固定活动连接”（即密码字段填写 token1 的连接）视作客户端用来监听推送消息的连接，而之后的连接均视作用于传输长数据流的连接。&lt;/p&gt;
+&lt;h1 id=&quot;执行指令协议&quot;&gt;&lt;a href=&quot;#执行指令协议&quot; class=&quot;headerlink&quot; title=&quot;执行指令协议&quot;&gt;&lt;/a&gt;执行指令协议&lt;/h1&gt;&lt;p&gt;下面考虑客户端向服务器发送的指令格式，根据指令执行所需要传输的数据流长短，将指令分为端数据流传输指令和长数据流传输指令。其中长数据流传输指令包括文件的上传、下载以及更新。为了简化客户端的实现（正式客户端使用 C++ 编写），指令的传输使用纯文本代替了 JSON 格式。下面用 &lt;code&gt;SEP&lt;/code&gt; 表示指令间各个选项的分隔符。&lt;code&gt;SEP&lt;/code&gt; 是项目中配置文件可以指定的一个字符串。&lt;/p&gt;
+&lt;h2 id=&quot;短数据流传输指令&quot;&gt;&lt;a href=&quot;#短数据流传输指令&quot; class=&quot;headerlink&quot; title=&quot;短数据流传输指令&quot;&gt;&lt;/a&gt;短数据流传输指令&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;创建：在云存储空间中创建一个新的文件（夹），初始大小为 0。如果该文件是文本类型，则用户可在线编辑该文件并保存。对于创建操作，需要指定创建的位置、创建的文件（夹）的名称、要创建的是文件还是文件夹。即：&lt;code&gt;TOUCH &amp;lt;SEP&amp;gt; PATH &amp;lt;SEP&amp;gt; NAME &amp;lt;SEP&amp;gt; ISDIR&lt;/code&gt;，&lt;code&gt;ISDIR&lt;/code&gt;为 0 时创建文件，为 1 时创建文件夹。&lt;code&gt;PATH&lt;/code&gt;为绝对路径，如 &lt;code&gt;/home/forec/work/&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;复制：将某个文件（夹）拷贝到一个新的位置，即：&lt;code&gt;CP &amp;lt;SEP&amp;gt; UID &amp;lt;SEP&amp;gt; NEWPATH&lt;/code&gt;，其中 &lt;code&gt;UID&lt;/code&gt; 为要复制的文件（夹）的 ID，以下 &lt;code&gt;UID&lt;/code&gt; 均指此意，&lt;code&gt;NEWPATH&lt;/code&gt; 为绝对路径。&lt;/li&gt;
+&lt;li&gt;移动：将某个文件（夹）移动到一个新的位置，同时指定新的文件（夹）名，即：&lt;code&gt;MV &amp;lt;SEP&amp;gt; UID &amp;lt;SEP&amp;gt; NEWNAME &amp;lt;SEP&amp;gt; NEWPATH&lt;/code&gt;，其中 &lt;code&gt;NEWPATH&lt;/code&gt;为绝对路径。&lt;/li&gt;
+&lt;li&gt;删除：删除某个文件（夹），若为文件夹，该目录下所有文件（夹）均被删除，即&lt;code&gt;RM &amp;lt;SEP&amp;gt; UID&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;获取文件列表：获取某个目录下的文件（夹）列表，支持按关键词筛选，即：&lt;code&gt;LS &amp;lt;SEP&amp;gt; RECURSSIVE &amp;lt;SEP&amp;gt; PATH &amp;lt;SEP&amp;gt; ARG0 &amp;lt;SEP&amp;gt; ARG1 &amp;lt;SEP&amp;gt; ...&lt;/code&gt;。其中，&lt;code&gt;RECURSSIVE&lt;/code&gt;为 0 表示仅显示该目录下的文件（夹），为 1 表示递归显示，将整个目录内的所有文件（夹）列表返回给客户端；&lt;code&gt;PATH&lt;/code&gt; 为绝对路径，&lt;code&gt;ARGn&lt;/code&gt; 为要筛选的关键词，例如在 &lt;code&gt;SEP&lt;/code&gt; 为 &lt;code&gt;+&lt;/code&gt; ，筛选条件为路径 &lt;code&gt;/home/&lt;/code&gt; 下所有文件（夹）名包括 &lt;code&gt;ed&lt;/code&gt; 和 &lt;code&gt;afd&lt;/code&gt; 的情况下，可使用 &lt;code&gt;LS+1+/home/+ed+afd&lt;/code&gt;。服务器向客户端返回的是一个以 &lt;code&gt;\n&lt;/code&gt; 划分的纯文本流，每行为一个文件记录，记录各项之间以 &lt;code&gt;SEP&lt;/code&gt; 划分。&lt;/li&gt;
+&lt;li&gt;FORK：Fork其它用户的文件（夹），即：&lt;code&gt;FORK &amp;lt;SEP&amp;gt; UID &amp;lt;SEP&amp;gt; PASSWORD &amp;lt;SEP&amp;gt; NEWPATH&lt;/code&gt;，其中 &lt;code&gt;PASSWORD&lt;/code&gt; 是要 Fork 的文件（夹）的提取码，如果不存在提取码则可为任意值，&lt;code&gt;NEWPATH&lt;/code&gt; 为要 Fork 到自己存储空间中的路径， &lt;code&gt;UID&lt;/code&gt; 为要 Fork 的文件（夹）的唯一标识。&lt;/li&gt;
+&lt;li&gt;改变私有/共享：改变某个文件（夹）的私有或共享性质，即：&lt;code&gt;CHMOD &amp;lt;SEP&amp;gt; UID &amp;lt;SEP&amp;gt; PRIVATE&lt;/code&gt;，其中 &lt;code&gt;PRIVATE&lt;/code&gt; 为 0 表示共享，&lt;code&gt;PRIVATE&lt;/code&gt; 为 1 表示私有，若 &lt;code&gt;PRIVATE&lt;/code&gt; 为 1，则系统将随机生成一个 4 位提取码，并将该文件或文件夹下的所有文件提取码设置为该提取码。&lt;/li&gt;
+&lt;li&gt;向其他用户发送消息：即 &lt;code&gt;SEND &amp;lt;SEP&amp;gt; CID &amp;lt;SEP&amp;gt; MESSAGE&lt;/code&gt;，其中 &lt;code&gt;CID&lt;/code&gt; 为对方的唯一标识符，&lt;code&gt;MESSAGE&lt;/code&gt; 为要发送的消息，其中不能包含 &lt;code&gt;SEP&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;以上所有消息均会返回一个状态码，表示成功或错误信息。状态码将在具体实现时讨论。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;长数据流传输指令&quot;&gt;&lt;a href=&quot;#长数据流传输指令&quot; class=&quot;headerlink&quot; title=&quot;长数据流传输指令&quot;&gt;&lt;/a&gt;长数据流传输指令&lt;/h2&gt;&lt;h3 id=&quot;下载文件（夹）&quot;&gt;&lt;a href=&quot;#下载文件（夹）&quot; class=&quot;headerlink&quot; title=&quot;下载文件（夹）&quot;&gt;&lt;/a&gt;下载文件（夹）&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;下载指定 &lt;code&gt;UID&lt;/code&gt; 对应的文件（夹），即：&lt;code&gt;GET &amp;lt;SEP&amp;gt; UID &amp;lt;SEP&amp;gt; PASSWORD&lt;/code&gt;。当 &lt;code&gt;UID&lt;/code&gt; 指向的记录不是用户自己的时，需要使用 &lt;code&gt;PASSWORD&lt;/code&gt; 作为提取码，如果要下载的 &lt;code&gt;UID&lt;/code&gt; 是用户自己的文件（夹），则 &lt;code&gt;PASSWORD&lt;/code&gt; 可以填写任意非空值（这里为了简化服务器对指令的识别，选择了非常幼稚的方法）。每启动一条这样的指令，客户端将主动建立一个新的长数据流传输连接，当客户端创建的长数据流传输连接达到设置的上限时，客户端将阻止创建新的连接，并将新的命令排队，直到此前的长数据流传输连接结束后，才会启动下载线程。&lt;/li&gt;
+&lt;li&gt;服务器与客户端传输线程之间交互的过程：&lt;ul&gt;
+&lt;li&gt;服务器发送要下载的文件数目（包括文件夹的数目）&lt;/li&gt;
+&lt;li&gt;对每个文件：&lt;/li&gt;
+&lt;li&gt;服务器发送该文件文件名&lt;/li&gt;
+&lt;li&gt;服务器发送 &lt;code&gt;ISDIR&lt;/code&gt;，即是文件还是文件夹（0或1），若该文件为文件夹（1），则跳过下面的循环&lt;/li&gt;
+&lt;li&gt;服务器开始传输文件&lt;/li&gt;
+&lt;li&gt;文件传输结束，进入下一个循环&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;上传文件&quot;&gt;&lt;a href=&quot;#上传文件&quot; class=&quot;headerlink&quot; title=&quot;上传文件&quot;&gt;&lt;/a&gt;上传文件&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;上传一个新的文件，即：&lt;code&gt;PUT &amp;lt;SEP&amp;gt; ISDIR &amp;lt;SEP&amp;gt; MD5 &amp;lt;SEP&amp;gt; FILENAME &amp;lt;SEP&amp;gt; PATH&lt;/code&gt;。其中 &lt;code&gt;ISDIR&lt;/code&gt; 表示是文件或文件夹，&lt;code&gt;MD5&lt;/code&gt; 为客户端计算的文件的 MD5 值，若为文件夹则随意填写，&lt;code&gt;FILENAME&lt;/code&gt; 为上传后在云存储中的文件名，&lt;code&gt;PATH&lt;/code&gt; 为上传到云存储中的路径。&lt;/li&gt;
+&lt;li&gt;服务器与客户端传输线程之间交互的过程：&lt;ul&gt;
+&lt;li&gt;服务器接收客户端发送的 GET 指令&lt;/li&gt;
+&lt;li&gt;服务器向客户端发送标识码，若为成功（200），则开始传输；若为不需传送（300），则客户端停止发送文件并认为秒传成功；若为失败（400），则客户端提示错误&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;更新文件&quot;&gt;&lt;a href=&quot;#更新文件&quot; class=&quot;headerlink&quot; title=&quot;更新文件&quot;&gt;&lt;/a&gt;更新文件&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;更新一个已有的文件，即： &lt;code&gt;UPDATE &amp;lt;SEP&amp;gt; UID &amp;lt;SEP&amp;gt; MD5&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;服务器与客户端传输线程之间交互过程：&lt;ul&gt;
+&lt;li&gt;服务器接收客户端发送的 UPDATE 指令&lt;/li&gt;
+&lt;li&gt;若云存储中存在新的 MD5 值，则向客户端发送不需传送（300），客户端停止发送并认为秒传成功&lt;/li&gt;
+&lt;li&gt;若云存储中不存在新的 MD5 值，则向客户端发送开始传送（200），传送结束后，修改原 UID 指向的文件块&lt;/li&gt;
+&lt;li&gt;若发现 UPDATE 指令不合法，则返回错误码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;指令的简化&quot;&gt;&lt;a href=&quot;#指令的简化&quot; class=&quot;headerlink&quot; title=&quot;指令的简化&quot;&gt;&lt;/a&gt;指令的简化&lt;/h2&gt;&lt;p&gt;为了简化客户端设计，服务器应当尽量对客户端发送的指令容错。例如：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;文件下载时，客户端仅需发送 UID，服务器根据 UID 指向的记录，为客户端安排下载策略&lt;/li&gt;
+&lt;li&gt;文件创建/移动/复制时，若目标路径不存在，服务器应向数据库中添加缺失的路径&lt;/li&gt;
+&lt;/ul&gt;
 &lt;hr&gt;
+&lt;p&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/12/cloud-storage-system/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;简易云存储系统项目简介&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/14/cloud-storage-system-2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;简易云存储系统传输协议的实现和封装&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/11/13/cloud-storage-system-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/11/13/cloud-storage-system-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/13/cloud-storage-system-1/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
     
@@ -56,10 +179,10 @@
     <link href="http://forec.github.io/2016/11/12/cloud-storage-system/"/>
     <id>http://forec.github.io/2016/11/12/cloud-storage-system/</id>
     <published>2016-11-12T15:50:33.000Z</published>
-    <updated>2016-11-13T04:39:19.321Z</updated>
+    <updated>2016-11-13T16:00:22.577Z</updated>
     
     <content type="html">&lt;blockquote&gt;
-&lt;p&gt;此项目为我 2016 年其中一项课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在&lt;a href=&quot;/columns/index.html&quot;&gt;专栏&lt;/a&gt;《云存储系统从入门到放弃》中。&lt;/p&gt;
+&lt;p&gt;此项目为我 2016 年的某个课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在&lt;a href=&quot;/columns/index.html&quot;&gt;专栏&lt;/a&gt;《云存储系统从入门到放弃》中。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;h1 id=&quot;写在前面&quot;&gt;&lt;a href=&quot;#写在前面&quot; class=&quot;headerlink&quot; title=&quot;写在前面&quot;&gt;&lt;/a&gt;写在前面&lt;/h1&gt;&lt;ul&gt;
@@ -150,7 +273,7 @@
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;p&gt;此项目为我 2016 年其中一项课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在&lt;a href=&quot;/columns/index.html&quot;&gt;专栏&lt;/a&gt;《云存储系统从入门到放弃》中。&lt;/p&gt;
+&lt;p&gt;此项目为我 2016 年的某个课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在&lt;a href=&quot;/columns/index.html&quot;&gt;专栏&lt;/a&gt;《云存储系统从入门到放弃》中。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
@@ -771,92 +894,6 @@
       <category term="Docker" scheme="http://forec.github.io/tags/Docker/"/>
     
       <category term="Mistakes" scheme="http://forec.github.io/tags/Mistakes/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Golang的通道技巧</title>
-    <link href="http://forec.github.io/2016/09/08/gochan-accumulate/"/>
-    <id>http://forec.github.io/2016/09/08/gochan-accumulate/</id>
-    <published>2016-09-08T02:33:31.000Z</published>
-    <updated>2016-11-04T13:23:11.381Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;整理近期遇到的Golang中通道和协程的技巧。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;计时器及系统负荷均衡&quot;&gt;&lt;a href=&quot;#计时器及系统负荷均衡&quot; class=&quot;headerlink&quot; title=&quot;计时器及系统负荷均衡&quot;&gt;&lt;/a&gt;计时器及系统负荷均衡&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;time&lt;/code&gt; 包中的 &lt;code&gt;time.Ticker&lt;/code&gt; 结构体，该对象以指定的时间间隔重复向结构体中的通道C发送时间值，通道C对用户只读，该对象可通过工厂函数 &lt;code&gt;time.NewTicker(dur int64)&lt;/code&gt; 创建， dur是指定的时间间隔，单位为纳秒（ns）。在使协程周期性执行任务（打印状态日志，输出等）时使用。调用 &lt;code&gt;Stop()&lt;/code&gt; 使计时器停止，与 &lt;code&gt;select&lt;/code&gt; 结合如下：&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight go&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;ticker := time.NewTicker(updateInterval)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;defer&lt;/span&gt; ticker.Stop()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;select&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; u:= &amp;lt;-ch1:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    ...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; v:= &amp;lt;-ch2:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    ...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &amp;lt;-ticker.C:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    logState(status) &lt;span class=&quot;comment&quot;&gt;// call some logging function logState&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;default&lt;/span&gt;: &lt;span class=&quot;comment&quot;&gt;// no value ready to be received&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    ...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;time.Tick()&lt;/code&gt; 函数声明为 &lt;code&gt;Tick(d Duration) &amp;lt;-chan Time&lt;/code&gt;，该函数返回的通道不需要关闭，它以 &lt;code&gt;d&lt;/code&gt; 为周期给返回的通道发送时间，&lt;code&gt;d&lt;/code&gt; 是纳秒数。可以通过此函数限制处理频率，如果应对的请求不平稳，可以增加一个带缓冲的可读写通道，从 &lt;code&gt;chRate&lt;/code&gt; 中读取处理时钟，在请求暴增时可以快速处理与缓冲数相等的请求，之后处理速度会下降到和 &lt;code&gt;chRate&lt;/code&gt; 一样的速率。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight go&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;time&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;rate_per_sec := &lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; dur Duration = &lt;span class=&quot;number&quot;&gt;1e9&lt;/span&gt; / rate_per_sec&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;chRate := time.Tick(dur) &lt;span class=&quot;comment&quot;&gt;// a tick every 1/10th of a second&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; req := &lt;span class=&quot;keyword&quot;&gt;range&lt;/span&gt; requests &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;lt;- chRate &lt;span class=&quot;comment&quot;&gt;// rate limit our Service.Method RPC calls&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;go&lt;/span&gt; client.Call(&lt;span class=&quot;string&quot;&gt;&quot;Service.Method&quot;&lt;/span&gt;, req, ...)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;定时器（Timer）定时器和计时器（Ticker）结构体类似（构造函数为 &lt;code&gt;NewTimer(d Duration)&lt;/code&gt;），但它只发送一次时间，在 &lt;code&gt;Dration d&lt;/code&gt; 之后。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;time.After(d)&lt;/code&gt; 函数声明为 &lt;code&gt;func After(d Duration) &amp;lt;-chan Time&lt;/code&gt;，在 &lt;code&gt;Duration d&lt;/code&gt; 之后，当前时间被发到返回的通道；因此它和 &lt;code&gt;NewTimer(d).C&lt;/code&gt; 等价；它类似 &lt;code&gt;Tick()&lt;/code&gt;，但 &lt;code&gt;After()&lt;/code&gt; 只发送一次时间。可以使用此函数应对简单的超时模式，以下为三种形式。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;要执行某个任务（如从通道 &lt;code&gt;ch&lt;/code&gt; 中读取数据），但最多等待1秒。先创建一个信号通道，之后启动一个 &lt;code&gt;lambda&lt;/code&gt; 协程，协程在给通道发送数据前休眠：&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight go&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;timeout := &lt;span class=&quot;built_in&quot;&gt;make&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;typename&quot;&gt;bool&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt;() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        time.Sleep(&lt;span class=&quot;number&quot;&gt;1e9&lt;/span&gt;) &lt;span class=&quot;comment&quot;&gt;// one second&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        timeout &amp;lt;- &lt;span class=&quot;constant&quot;&gt;true&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;select&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &amp;lt;-ch:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// a read from ch has occured&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &amp;lt;-timeout:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// the read from ch has timed out&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;break&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;用 &lt;code&gt;time.After()&lt;/code&gt; 函数替换 &lt;code&gt;timeout-channel&lt;/code&gt;。可以在 &lt;code&gt;select&lt;/code&gt; 中使用来让发送信号超时或停止协程的执行。以下代码，在 &lt;code&gt;timeoutNs&lt;/code&gt; 纳秒后执行 &lt;code&gt;select&lt;/code&gt; 的 &lt;code&gt;timeout&lt;/code&gt; 分支后，包含&lt;code&gt;client.Call&lt;/code&gt; 的&lt;code&gt;lambda&lt;/code&gt; 协程也随之结束，不会给通道 &lt;code&gt;ch&lt;/code&gt; 返回值。缓冲大小设置为 &lt;code&gt;1&lt;/code&gt; 是必要的，可以避免协程死锁以及确保超时的通道可以被垃圾回收。需要注意如果 &lt;code&gt;select&lt;/code&gt; 中的某些非定时器选项的通道读写密集，则可能无法结束这些进程。这种情况如果将 &lt;code&gt;select&lt;/code&gt; 放到一个 &lt;code&gt;for&lt;/code&gt; 循环中，也无法精确地在定时器通道写入时就结束，因为 &lt;code&gt;select&lt;/code&gt; 对可以执行的多个 &lt;code&gt;case&lt;/code&gt; 采取伪随机算法选择，可能结束进程的时间要比定时器发出信号略晚一些。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight go&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;ch := &lt;span class=&quot;built_in&quot;&gt;make&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt; error, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt;() &amp;#123; ch &amp;lt;- client.Call(&lt;span class=&quot;string&quot;&gt;&quot;Service.Method&quot;&lt;/span&gt;, args, &amp;amp;reply) &amp;#125; ()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;select&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &amp;lt;-time.After(timeoutNs):&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// call timed out&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;break&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; resp := &amp;lt;-ch&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// use resp and reply&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;假设程序从多个复制的数据库同时读取，只需要接收首先到达的答案，&lt;code&gt;Query&lt;/code&gt; 函数获取数据库的连接切片，并行请求每一个数据库并返回收到的第一个响应。结果通道 &lt;code&gt;ch&lt;/code&gt; 必须是带缓冲的，以保证第一个发送进来的数据有地方可以存放，确保放入的首个数据总会成功：&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight go&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; Query(conns []conn, query &lt;span class=&quot;typename&quot;&gt;string&lt;/span&gt;) Result &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    ch := &lt;span class=&quot;built_in&quot;&gt;make&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt; Result, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; _, conn := &lt;span class=&quot;keyword&quot;&gt;range&lt;/span&gt; conns &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt;(c Conn) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;select&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; ch &amp;lt;- c.DoQuery(query):&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;default&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;(conn)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &amp;lt;- ch&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h1 id=&quot;缓冲通道实现信号量模式&quot;&gt;&lt;a href=&quot;#缓冲通道实现信号量模式&quot; class=&quot;headerlink&quot; title=&quot;缓冲通道实现信号量模式&quot;&gt;&lt;/a&gt;缓冲通道实现信号量模式&lt;/h1&gt;&lt;p&gt;*使用缓冲通道模拟信号量，需满足&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;带缓冲通道的容量和要同步的资源容量相同&lt;/li&gt;
-&lt;li&gt;通道的长度（当前存放的元素个数）与当前资源被使用的数量相同&lt;/li&gt;
-&lt;li&gt;容量减去通道的长度就是未处理的资源个数（标准信号量的整数值）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ul&gt;
-&lt;li&gt;创建一个可缓冲通道表示单一信号量。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight go&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;type&lt;/span&gt; Empty &lt;span class=&quot;keyword&quot;&gt;interface&lt;/span&gt; &amp;#123;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;type&lt;/span&gt; semaphore &lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt; Empty&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;将可用资源的数量N来初始化信号量 &lt;code&gt;semaphore：sem = make(semaphore, N)&lt;/code&gt;，提供方法从信号量通道中读取、写入。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight go&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// acquire n resources&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; (s semaphore) P(n &lt;span class=&quot;typename&quot;&gt;int&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    e := &lt;span class=&quot;built_in&quot;&gt;new&lt;/span&gt;(Empty)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; i := &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; i &amp;lt; n; i++ &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        s &amp;lt;- e&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// release n resouces&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; (s semaphore) V(n &lt;span class=&quot;typename&quot;&gt;int&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; i:= &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; i &amp;lt; n; i++&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;lt;- s&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;一个互斥的例子：&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight swift&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;/* mutexes */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;func&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;params&quot;&gt;(s semaphore)&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Lock&lt;/span&gt;() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    s.&lt;span class=&quot;type&quot;&gt;P&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;func&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;params&quot;&gt;(s semaphore)&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Unlock&lt;/span&gt;()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    s.&lt;span class=&quot;type&quot;&gt;V&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;/* signal-wait */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;func&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;params&quot;&gt;(s semaphore)&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Wait&lt;/span&gt;(n int) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    s.&lt;span class=&quot;type&quot;&gt;P&lt;/span&gt;(n)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;func&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;params&quot;&gt;(s semaphore)&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Signal&lt;/span&gt;() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    s.&lt;span class=&quot;type&quot;&gt;V&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h1 id=&quot;管道过滤&quot;&gt;&lt;a href=&quot;#管道过滤&quot; class=&quot;headerlink&quot; title=&quot;管道过滤&quot;&gt;&lt;/a&gt;管道过滤&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;从通道接收的数据并发送给输出通道，可过滤符合条件的数据。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight go&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sendChan := &lt;span class=&quot;built_in&quot;&gt;make&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;typename&quot;&gt;int&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;reciveChan := &lt;span class=&quot;built_in&quot;&gt;make&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;typename&quot;&gt;string&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;go&lt;/span&gt; filter(sendChan, receiveChan)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; filter(in &amp;lt;-&lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;typename&quot;&gt;int&lt;/span&gt;, out &lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt;&amp;lt;- &lt;span class=&quot;typename&quot;&gt;string&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; inValue := &lt;span class=&quot;keyword&quot;&gt;range&lt;/span&gt; in &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        result := ... &lt;span class=&quot;comment&quot;&gt;/// processing inValue&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    out &amp;lt;- result&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h1 id=&quot;协程的恢复&quot;&gt;&lt;a href=&quot;#协程的恢复&quot; class=&quot;headerlink&quot; title=&quot;协程的恢复&quot;&gt;&lt;/a&gt;协程的恢复&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;以下代码停掉了服务器内部一个失败的协程而不影响其他协程的工作。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight go&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; server(workChan &amp;lt;-&lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt; *Work) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; work := &lt;span class=&quot;keyword&quot;&gt;range&lt;/span&gt; workChan &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;go&lt;/span&gt; safelyDo(work)   &lt;span class=&quot;comment&quot;&gt;// start the goroutine for that work&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; safelyDo(work *Work) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; err := &lt;span class=&quot;built_in&quot;&gt;recover&lt;/span&gt;(); err != &lt;span class=&quot;constant&quot;&gt;nil&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            log.Printf(&lt;span class=&quot;string&quot;&gt;&quot;Work failed with %s in %v&quot;&lt;/span&gt;, err, work)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    do(work)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;hr&gt;
-&lt;p&gt;参考文献： &lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/Unknwon/the-way-to-go_ZH_CN/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;《The Way To Go》中文译本&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/09/08/gochan-accumulate/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/09/08/gochan-accumulate/&quot;&gt;https://forec.github.io/2016/09/08/gochan-accumulate/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;整理近期遇到的Golang中通道和协程的技巧。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="Language" scheme="http://forec.github.io/categories/Language/"/>
-    
-    
-      <category term="Golang" scheme="http://forec.github.io/tags/Golang/"/>
     
   </entry>
   
