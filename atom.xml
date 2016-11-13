@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-11-05T09:51:52.790Z</updated>
+  <updated>2016-11-13T04:43:27.426Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -14,6 +14,157 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>简易云存储系统的认证、传输协议设计</title>
+    <link href="http://forec.github.io/2016/11/13/cloud-storage-system-1/"/>
+    <id>http://forec.github.io/2016/11/13/cloud-storage-system-1/</id>
+    <published>2016-11-13T04:32:01.000Z</published>
+    <updated>2016-11-13T04:43:27.426Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;TODO&lt;/p&gt;
+&lt;p&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/12/cloud-storage-system/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;简易云存储系统项目简介&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/11/13/cloud-storage-system-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/11/13/cloud-storage-system-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/13/cloud-storage-system-1/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="Code" scheme="http://forec.github.io/categories/Code/"/>
+    
+    
+      <category term="Golang" scheme="http://forec.github.io/tags/Golang/"/>
+    
+      <category term="云存储" scheme="http://forec.github.io/tags/%E4%BA%91%E5%AD%98%E5%82%A8/"/>
+    
+      <category term="线程" scheme="http://forec.github.io/tags/%E7%BA%BF%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>简易云存储系统项目简介</title>
+    <link href="http://forec.github.io/2016/11/12/cloud-storage-system/"/>
+    <id>http://forec.github.io/2016/11/12/cloud-storage-system/</id>
+    <published>2016-11-12T15:50:33.000Z</published>
+    <updated>2016-11-13T04:39:19.321Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;此项目为我 2016 年其中一项课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在&lt;a href=&quot;/columns/index.html&quot;&gt;专栏&lt;/a&gt;《云存储系统从入门到放弃》中。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h1 id=&quot;写在前面&quot;&gt;&lt;a href=&quot;#写在前面&quot; class=&quot;headerlink&quot; title=&quot;写在前面&quot;&gt;&lt;/a&gt;写在前面&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;此项目为我 2016 年的某项课程设计，项目题目为自拟，目标是实现一个简易的，与百度云功能类似的云存储系统。项目在 GitHub 托管仓库的网址是：&lt;a href=&quot;https://github.com/Forec/cloud-storage&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/Forec/cloud-storage&lt;/a&gt;。&lt;/li&gt;
+&lt;li&gt;此项目为要实现的云存储系统的服务器，同时附带了一个用于测试的客户端（无GUI）。云存储系统正式的客户端目前正在由 &lt;a href=&quot;https://github.com/non1996&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;non1996&lt;/a&gt; 编写。在我写下这篇文章时，服务器已经实现了文件传输以外的多数逻辑功能，以及文件的并发下载。&lt;/li&gt;
+&lt;li&gt;作为本科阶段的一项小型课程设计，且时间紧迫，&lt;strong&gt;我很遗憾此项目中很多实现非常 naive，许多地方为了简化实现，我采用了一些闭门造车的、很愚笨的、且与主流实现方案相悖的方式&lt;/strong&gt;。在将基本功能实现后，如果还有空余时间，我会尽量修正这些糟粕，简化代码。&lt;/li&gt;
+&lt;li&gt;这个项目的 BETA 版本预计完成时间在 11 月底，12 月上旬将完成客户端的图形界面，12 月中旬将完成 Web 版本。如果还有空余时间，可能会考虑实现一个 Android 客户端。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;项目介绍&quot;&gt;&lt;a href=&quot;#项目介绍&quot; class=&quot;headerlink&quot; title=&quot;项目介绍&quot;&gt;&lt;/a&gt;项目介绍&lt;/h1&gt;&lt;h2 id=&quot;面向用户功能&quot;&gt;&lt;a href=&quot;#面向用户功能&quot; class=&quot;headerlink&quot; title=&quot;面向用户功能&quot;&gt;&lt;/a&gt;面向用户功能&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;文件存储：用户可将文件上传至云服务器&lt;/li&gt;
+&lt;li&gt;文件下载：用户可从云服务器下载文件&lt;/li&gt;
+&lt;li&gt;文件传输状态保存（视项目进度快慢考虑）：支持用户下载/上传文件过程中暂停&lt;/li&gt;
+&lt;li&gt;文件共享：用户间可分享资源，通过共享链接和提取码获取其他用户的私有分享文件&lt;/li&gt;
+&lt;li&gt;文件秒传：云存储空间存在相同文件时直接 Fork&lt;/li&gt;
+&lt;li&gt;Fork：用户可 Fork 其他用户分享的文件至自己的存储空间&lt;/li&gt;
+&lt;li&gt;文件操作：用户可对自己上传的文件/Fork的文件进行管理，包括最基本的拷贝、移动、删除&lt;/li&gt;
+&lt;li&gt;目录操作：用户可对自己存储空间中的文件目录进行管理，包括最基本的拷贝、移动、删除、新建&lt;/li&gt;
+&lt;li&gt;在线编辑：用户可在客户端/Web端即时新建并编辑一个文本文件，并随时更新至云服务器&lt;/li&gt;
+&lt;li&gt;图片在线浏览：用户可在线浏览云服务器上的图片&lt;/li&gt;
+&lt;li&gt;视频在线播放：用户可在客户端播放云服务器上的视频文件&lt;/li&gt;
+&lt;li&gt;基本用户交流：用户间可以发送消息，可进行时延不高的延时通讯&lt;/li&gt;
+&lt;li&gt;URL导入数据（视项目进度快慢考虑）：用户可从 URL 导入文件至云存储，即实现类似迅雷离线下载功能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;系统功能&quot;&gt;&lt;a href=&quot;#系统功能&quot; class=&quot;headerlink&quot; title=&quot;系统功能&quot;&gt;&lt;/a&gt;系统功能&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;文件分块、重用：将文件分块存储，不同文件的相同块仅存储一次，节省物理存储空间。在要实现的云存储系统中，为了降低复杂度，文件将不分块存储，仅仅实现相同文件的重用&lt;/li&gt;
+&lt;li&gt;文件压缩存储、传输：用户上传、下载的文件应采用某种压缩算法以节省带宽&lt;/li&gt;
+&lt;li&gt;文件并发下载：用户下载多个文件时，在允许线程内应支持并发下载&lt;/li&gt;
+&lt;li&gt;文件传输状态保存（视项目进度快慢考虑）：用户下载/上传文件过程中触发终端操作时，传输进度的保存&lt;/li&gt;
+&lt;li&gt;用户目录管理：系统应当对每个用户分别维护文件目录结构&lt;/li&gt;
+&lt;li&gt;用户权限管理：用户文件只能被用户自己或其他持有文件提取码的用户查看、下载、Fork，用户文件只能由用户自身管理（移动、删除、设置私有/分享）&lt;/li&gt;
+&lt;li&gt;用户消息推送：管理员可以向用户推送消息&lt;/li&gt;
+&lt;li&gt;用户消息传递：系统应提供渠道使用户间的消息在短时延内交互，如用户间分享文件提取码&lt;/li&gt;
+&lt;li&gt;用户认证管理：同一时刻允许且仅允许一个用户客户端在线，后登录的客户端应当使先登录的客户端下线。数据库中应存储用户密码的不可逆加密值，用户登录及文件传输过程应使用随机密钥加密（保险的方式是对随机密钥采用非对称加密，但为了简化实现难度，要实现的云存储系统将使用对称加密算法，因此安全性有很大隐患，在后面的文章中将分析对我实现的云存储系统进行中间人攻击的可行性）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;原理分析&quot;&gt;&lt;a href=&quot;#原理分析&quot; class=&quot;headerlink&quot; title=&quot;原理分析&quot;&gt;&lt;/a&gt;原理分析&lt;/h1&gt;&lt;h2 id=&quot;存储逻辑&quot;&gt;&lt;a href=&quot;#存储逻辑&quot; class=&quot;headerlink&quot; title=&quot;存储逻辑&quot;&gt;&lt;/a&gt;存储逻辑&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;要实现重复文件的非冗余存储，需要对每个上传的文件块（在要实现的云存储系统中，因为去除了文件分块操作，因此下面所有“文件块”实际上是文件）计算该文件块的 MD5 值，与数据库中已存在的 MD5 值对比，相同则直接 Fork 并取消用户的上传操作（文件秒传）。&lt;/li&gt;
+&lt;li&gt;相同的文件块仅存储一次，每个文件块应当维护一个“&lt;strong&gt;引用值&lt;/strong&gt;”。“引用”的定义为：当多个用户在各自的存储空间中分别保存同一个文件一次或多次，则实际上这些文件均指向同一个文件块 B，而在物理存储中，文件块 B 仅存储一次。我们称这些用户各自存储空间中的文件记录&lt;strong&gt;引用&lt;/strong&gt;了 B，称这些用户在各自存储空间中指向 B 的文件记录为 &lt;strong&gt;B 的引用&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;根据引用的定义，只要存在某个用户在自己的云存储空间中保存了文件块 B 的引用，该文件块就不能删除。当某个用户对文件块 B 的引用做复制、Fork操作时，文件块 B 的引用值应当随操作数增加；当某个用户删除文件块 B 的某个引用时，文件块 B 的引用值应随删除次数减少。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;存储逻辑对用户不可见&lt;/strong&gt;，即用户可以修改自己用户空间中的引用（引用实际就是用户所看见的文件），如重命名、移动、复制等，但修改的对象仅仅是用户空间中的引用，而非真实的文件块。只有用户对引用的内容做修改时（例如此引用指向一个文本文件，用户修改了文本文件的内容并试图保存），系统才应当创建新的文件块以记录修改。&lt;strong&gt;在下面的介绍中，“引用”和“文件”等价，均为数据库中指向文件块的一条记录，而“文件块”才代表真正物理存储中的文件。&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;用户目录维护&lt;/strong&gt;：为了简化用户存储空间的目录维护，我将每个目录均视作一类&lt;strong&gt;特殊的引用&lt;/strong&gt;，关于这一点的原因、实现和分析将在后面的文章中讨论。举个例子，用户云存储空间中有一个文件 &lt;code&gt;/home/forec/run.sh&lt;/code&gt; ，则在数据库的引用表中，有四条记录属于该用户，分别是 &lt;code&gt;/&lt;/code&gt;，&lt;code&gt;/home/&lt;/code&gt;，&lt;code&gt;/home/forec/&lt;/code&gt; 和 &lt;code&gt;run.sh&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;数据库结构&quot;&gt;&lt;a href=&quot;#数据库结构&quot; class=&quot;headerlink&quot; title=&quot;数据库结构&quot;&gt;&lt;/a&gt;数据库结构&lt;/h2&gt;&lt;p&gt;根据存储逻辑和之前的功能介绍，我们需要五个表分别记录：文件块、文件块的引用、用户、用户消息、用户操作记录。&lt;/p&gt;
+&lt;h3 id=&quot;文件块表&quot;&gt;&lt;a href=&quot;#文件块表&quot; class=&quot;headerlink&quot; title=&quot;文件块表&quot;&gt;&lt;/a&gt;文件块表&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;文件块的 ID：此列应为该表的主键，自增，&lt;code&gt;INTEGER PRIMARY KEY AUTOINCREMENT&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;文件块的 MD5值，&lt;code&gt;VARCHAR(32)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;文件块的大小，单位为字节：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;文件块的引用数：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;文件块的创建时间：&lt;code&gt;DATE&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;文件块引用表&quot;&gt;&lt;a href=&quot;#文件块引用表&quot; class=&quot;headerlink&quot; title=&quot;文件块引用表&quot;&gt;&lt;/a&gt;文件块引用表&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;文件块引用的 ID：此列应为该表的主键，自增，&lt;code&gt;INTEGER PRIMARY KEY AUTOINCREMENT&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;文件块引用的所属用户 ID：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;引用的文件块的 ID：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;引用在用户目录下的绝对路径：用户根目录为 &lt;code&gt;/&lt;/code&gt;，此列类似 &lt;code&gt;/home/work/cloud/&lt;/code&gt;，&lt;code&gt;VARCHAR(256)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;引用的外链：当用户试图共享此引用时，其他用户可以通过外链访问此引用（Web端，客户端应当可以解析此外链并在客户端中打开）。如果该引用为私有，其他用户需要输入提取码才可查看，&lt;code&gt;VARCHAR(128)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;引用创建的时间：&lt;code&gt;DATE&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;引用的分享数：当一个用户分享该引用时，如果其它用户 Fork 了该引用，则该引用的分享数应增加。与 GitHub 上的 Fork 操作不同的是，如果用户 B Fork 了用户 A 的某个引用，用户 C 又从用户 B Fork 了这个引用，则 A 的引用分享数增加 1（B 的 Fork 操作），用户 B 的引用分享数增加 1（C 的 Fork 操作），&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;引用的下载数：当一个用户从此引用下载对应的文件块时，此引用下载数增加，&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;引用的文件名：此项为用户所看到的文件名，可能有多个不同名的引用指向同一个文件块，&lt;code&gt;VARCHAR(128)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;引用的私有性：此引用是否对其它用户可见，默认为私有，即仅用户个人可见，&lt;code&gt;BOOLEAN&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;引用的提取码：在用户设置引用为私有的情况下，可以生成外链，持有该外链提取码的其它用户可以查看该引用，&lt;code&gt;VARCHAR(4)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;引用是否为目录：此引用是一个目录（文件夹）还是一个文件，&lt;code&gt;BOOLEAN&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;用户列表&quot;&gt;&lt;a href=&quot;#用户列表&quot; class=&quot;headerlink&quot; title=&quot;用户列表&quot;&gt;&lt;/a&gt;用户列表&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;用户的 ID：此列应为该表的主键，自增，&lt;code&gt;INTEGER PRIMARY KEY AUTOINCREMENT&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;用户名：此列应唯一，&lt;code&gt;VARCHAR(64)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;用户密码加密后的值：&lt;code&gt;VARCHAR(128)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;用户创建时间：&lt;code&gt;DATE&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;用户消息列表&quot;&gt;&lt;a href=&quot;#用户消息列表&quot; class=&quot;headerlink&quot; title=&quot;用户消息列表&quot;&gt;&lt;/a&gt;用户消息列表&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;消息的 ID：此列应为该表的主键，自增，&lt;code&gt;INTEGER PRIMARY KEY AUTOINCREMENT&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;接收消息的用户的 ID：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;发送消息的用户的 ID：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;消息内容：&lt;code&gt;VARCHAR(512)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;消息发送时间：&lt;code&gt;DATE&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;用户操作记录列表&quot;&gt;&lt;a href=&quot;#用户操作记录列表&quot; class=&quot;headerlink&quot; title=&quot;用户操作记录列表&quot;&gt;&lt;/a&gt;用户操作记录列表&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;操作记录的 ID：此列应为该表的主键，自增，&lt;code&gt;INTEGER PRIMARY KEY AUTOINCREMENT&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;用户的 ID：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;操作内容：&lt;code&gt;VARCHAR(128)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;操作时间：&lt;code&gt;DATE&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/13/cloud-storage-system-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;简易云存储系统的认证、传输协议设计&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/11/12/cloud-storage-system/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/11/12/cloud-storage-system/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/12/cloud-storage-system/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;此项目为我 2016 年其中一项课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在&lt;a href=&quot;/columns/index.html&quot;&gt;专栏&lt;/a&gt;《云存储系统从入门到放弃》中。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="Code" scheme="http://forec.github.io/categories/Code/"/>
+    
+    
+      <category term="Golang" scheme="http://forec.github.io/tags/Golang/"/>
+    
+      <category term="云存储" scheme="http://forec.github.io/tags/%E4%BA%91%E5%AD%98%E5%82%A8/"/>
+    
+      <category term="线程" scheme="http://forec.github.io/tags/%E7%BA%BF%E7%A8%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>CVM 操作记录</title>
@@ -135,7 +286,7 @@
     <link href="http://forec.github.io/2016/10/29/raspberry-settings/"/>
     <id>http://forec.github.io/2016/10/29/raspberry-settings/</id>
     <published>2016-10-29T06:49:23.000Z</published>
-    <updated>2016-11-09T05:48:05.844Z</updated>
+    <updated>2016-11-12T04:49:34.600Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理 Raspberry Pi 3 的个人配置。&lt;/p&gt;
@@ -253,7 +404,7 @@
 &lt;/ul&gt;
 &lt;p&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/GPIO.png&quot; width=&quot;400px&quot;&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;可编写脚本驱动舵机在两个方向上旋转，拍摄视频如下&lt;/li&gt;
+&lt;li&gt;可编写脚本驱动舵机在两个方向上旋转，拍摄视频可在我的官方网站查看：&lt;a href=&quot;http://forec.cn/2016/11/12/drive-servo-by-raspberry-pi/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://forec.cn/2016/11/12/drive-servo-by-raspberry-pi/&lt;/a&gt;。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id=&quot;Ubuntu-mate&quot;&gt;&lt;a href=&quot;#Ubuntu-mate&quot; class=&quot;headerlink&quot; title=&quot;Ubuntu-mate&quot;&gt;&lt;/a&gt;Ubuntu-mate&lt;/h1&gt;&lt;blockquote&gt;
 &lt;p&gt;无屏幕暂时无法尝试&lt;/p&gt;
@@ -706,145 +857,6 @@
     
     
       <category term="Golang" scheme="http://forec.github.io/tags/Golang/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Spark集群计算环境配置和使用</title>
-    <link href="http://forec.github.io/2016/07/11/spark-initial/"/>
-    <id>http://forec.github.io/2016/07/11/spark-initial/</id>
-    <published>2016-07-11T06:53:38.000Z</published>
-    <updated>2016-11-04T16:45:17.272Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;在&lt;a href=&quot;https://forec.github.io/2016/07/09/hadoop-build/&quot;&gt;Hadoop配置与使用&lt;/a&gt;基础上配置Spark集群计算环境，以及简单Scala程序在集群的运行。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;在Hadoop通用并行框架上配置Spark&quot;&gt;&lt;a href=&quot;#在Hadoop通用并行框架上配置Spark&quot; class=&quot;headerlink&quot; title=&quot;在Hadoop通用并行框架上配置Spark&quot;&gt;&lt;/a&gt;在Hadoop通用并行框架上配置Spark&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;从&lt;a href=&quot;http://spark.apache.org/downloads.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Apache Spark&lt;/a&gt;下载合适的版本，以&lt;code&gt;Pre-build for Hadoop 2.6&lt;/code&gt;为例，将压缩包解压到某目录，该压缩包目录作为环境变量&lt;code&gt;SPARK_HOME&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;向环境变量添加&lt;code&gt;%SPARK_HOME%/bin&lt;/code&gt;并source生效。&lt;/li&gt;
-&lt;li&gt;将&lt;code&gt;%HADOOP_HOME%\etc\hadoop&lt;/code&gt;作为&lt;code&gt;HADOOP_CONF_DIR&lt;/code&gt;添加到环境变量。&lt;/li&gt;
-&lt;li&gt;按Hadoop集群的运行方式启动Hadoop  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight dos&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;bin/hdfs namenode -&lt;span class=&quot;built_in&quot;&gt;format&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;bin/hdfs dfs -&lt;span class=&quot;built_in&quot;&gt;mkdir&lt;/span&gt; /user/&amp;lt;username&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sbin/&lt;span class=&quot;built_in&quot;&gt;start&lt;/span&gt;-dfs.sh&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sbin/&lt;span class=&quot;built_in&quot;&gt;start&lt;/span&gt;-yarn.sh&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;hr&gt;
-&lt;h1 id=&quot;在Hadoop集群上执行Spark作业&quot;&gt;&lt;a href=&quot;#在Hadoop集群上执行Spark作业&quot; class=&quot;headerlink&quot; title=&quot;在Hadoop集群上执行Spark作业&quot;&gt;&lt;/a&gt;在Hadoop集群上执行Spark作业&lt;/h1&gt;&lt;h2 id=&quot;一个Scala的MapReduce样本&quot;&gt;&lt;a href=&quot;#一个Scala的MapReduce样本&quot; class=&quot;headerlink&quot; title=&quot;一个Scala的MapReduce样本&quot;&gt;&lt;/a&gt;一个Scala的MapReduce样本&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;此样例为多维属性向量的均值计算&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight scala&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; org.apache.spark.&amp;#123;&lt;span class=&quot;type&quot;&gt;SparkConf&lt;/span&gt;, &lt;span class=&quot;type&quot;&gt;SparkContext&lt;/span&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; org.apache.spark.rdd.&lt;span class=&quot;type&quot;&gt;RDD&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Statistic&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;main&lt;/span&gt;(&lt;/span&gt;args: &lt;span class=&quot;type&quot;&gt;Array&lt;/span&gt;[&lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;]) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;val&lt;/span&gt; conf = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;SparkConf&lt;/span&gt;().setAppName(&lt;span class=&quot;string&quot;&gt;&quot;example&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;val&lt;/span&gt; spark = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;SparkContext&lt;/span&gt;(conf)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;val&lt;/span&gt; set = spark.textFile(args(&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)).flatMap &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      line =&amp;gt; line.split(&lt;span class=&quot;string&quot;&gt;&quot; &quot;&lt;/span&gt;).map &amp;#123; opt =&amp;gt; (opt.split(&lt;span class=&quot;string&quot;&gt;&quot;:&quot;&lt;/span&gt;)(&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;).toInt, opt.split(&lt;span class=&quot;string&quot;&gt;&quot;:&quot;&lt;/span&gt;)(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;).toFloat) &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;.reduceByKey(_+_)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;val&lt;/span&gt; count = set.count()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    set.collect.map &amp;#123; &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; (key, value) =&amp;gt; value/count&amp;#125;.foreach&amp;#123;println&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    spark.stop()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;样例代码中，set为(Int, Float)的&lt;code&gt;&amp;lt;key, value&amp;gt;&lt;/code&gt;对的RDD，通过&lt;code&gt;reduceByKey&lt;/code&gt;将相同属性求和，在最后collect回收所有分布式集群上的结果汇总到本地。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;执行作业&quot;&gt;&lt;a href=&quot;#执行作业&quot; class=&quot;headerlink&quot; title=&quot;执行作业&quot;&gt;&lt;/a&gt;执行作业&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;将要执行的代码export为jar包，一下文件名为&lt;code&gt;example.jar&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;ssh到localhost（此处使用伪分布式Hadoop集群）。&lt;/li&gt;
-&lt;li&gt;执行如下命令，其中&lt;code&gt;path_to_example_jar&lt;/code&gt;为jar包所在的位置，MainClass为jar包中要执行的object，args为传入MainClass的参数列表，空格隔开，可变长。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;spark-submit --class MainClass --master yarn-cluster path_to_example_jar args...&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;执行作业后可在Hadoop监视器的logs中看到输出。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;Scala的部分Spark-API&quot;&gt;&lt;a href=&quot;#Scala的部分Spark-API&quot; class=&quot;headerlink&quot; title=&quot;Scala的部分Spark API&quot;&gt;&lt;/a&gt;Scala的部分Spark API&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;API文档根目录：&lt;br&gt;&lt;a href=&quot;http://spark.apache.org/docs/1.5.1/api/scala/index.html#package&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://spark.apache.org/docs/1.5.1/api/scala/index.html#package&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;key, value&amp;gt;&lt;/code&gt;类型的RDD：&lt;br&gt;&lt;a href=&quot;http://spark.apache.org/docs/1.5.1/api/scala/index.html#org.apache.spark.rdd.PairRDDFunctions&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://spark.apache.org/docs/1.5.1/api/scala/index.html#org.apache.spark.rdd.PairRDDFunctions&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;所有RDD：&lt;br&gt;&lt;a href=&quot;http://spark.apache.org/docs/1.5.1/api/scala/index.html#org.apache.spark.rdd.RDD&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://spark.apache.org/docs/1.5.1/api/scala/index.html#org.apache.spark.rdd.RDD&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/07/11/spark-initial/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/07/11/spark-initial/&quot;&gt;https://forec.github.io/2016/07/11/spark-initial/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;在&lt;a href=&quot;https://forec.github.io/2016/07/09/hadoop-build/&quot;&gt;Hadoop配置与使用&lt;/a&gt;基础上配置Spark集群计算环境，以及简单Scala程序在集群的运行。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="Configuration" scheme="http://forec.github.io/categories/Configuration/"/>
-    
-    
-      <category term="Hadoop" scheme="http://forec.github.io/tags/Hadoop/"/>
-    
-      <category term="Spark" scheme="http://forec.github.io/tags/Spark/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python3操作Access数据库</title>
-    <link href="http://forec.github.io/2016/07/10/python-visit-access-database/"/>
-    <id>http://forec.github.io/2016/07/10/python-visit-access-database/</id>
-    <published>2016-07-10T08:45:29.000Z</published>
-    <updated>2016-11-05T11:00:39.384Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;记录在windows 10下配置python3链接access数据库过程和几个简单操作。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;安装所需库文件&quot;&gt;&lt;a href=&quot;#安装所需库文件&quot; class=&quot;headerlink&quot; title=&quot;安装所需库文件&quot;&gt;&lt;/a&gt;安装所需库文件&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;从&lt;a href=&quot;https://sourceforge.net/projects/pywin32/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://sourceforge.net/projects/pywin32/&lt;/a&gt;下载最新的对应本地python3版本的pywin32库并安装。&lt;/li&gt;
-&lt;li&gt;从&lt;a href=&quot;https://www.microsoft.com/zh-cn/download/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://www.microsoft.com/zh-cn/download/&lt;/a&gt;下载Access数据库驱动AccessDatabaseEngine_X64.exe。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;读取Access数据库&quot;&gt;&lt;a href=&quot;#读取Access数据库&quot; class=&quot;headerlink&quot; title=&quot;读取Access数据库&quot;&gt;&lt;/a&gt;读取Access数据库&lt;/h1&gt;&lt;h2 id=&quot;建立连接&quot;&gt;&lt;a href=&quot;#建立连接&quot; class=&quot;headerlink&quot; title=&quot;建立连接&quot;&gt;&lt;/a&gt;建立连接&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;通过以下交互命令同access数据库建立连接&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; win32com.client&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;conn = win32com.client.gencache.EnsureDispatch(&lt;span class=&quot;string&quot;&gt;&#39;ADODB.Connection&#39;&lt;/span&gt;) &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;DSN = &lt;span class=&quot;string&quot;&gt;&#39;PROVIDER = Microsoft.ACE.OLEDB.12.0;DATA SOURCE = /path/to/database;&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;conn.Open(DSN)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;访问数据库中名为&lt;code&gt;rs_name&lt;/code&gt;的表&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;rs = win32com.client.Dispatch(&lt;span class=&quot;string&quot;&gt;r&#39;ADODB.Recordset&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;rs_name = &lt;span class=&quot;string&quot;&gt;&#39;co&#39;&lt;/span&gt; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;rs.Open(&lt;span class=&quot;string&quot;&gt;&#39;[&#39;&lt;/span&gt; + rs_name + &lt;span class=&quot;string&quot;&gt;&#39;]&#39;&lt;/span&gt;, conn, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)  &lt;span class=&quot;comment&quot;&gt;# 不允许更新，用于查询&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;注意在上面的代码中，&lt;code&gt;rs.Open()&lt;/code&gt;的最后两个参数，分别是游标(CursorType)和数据锁定类型(LockType)。&lt;ul&gt;
-&lt;li&gt;游标为0：为仅向前游标，只读，只能向前浏览记录，不支持分页、Recordset、BookMark&lt;/li&gt;
-&lt;li&gt;游标为1：为键集游标，只读，其他用户对数据库做的修改将反映到记录集中，但其他用户增加或删除记录不会反映到记录集中。支持分页、Recordset、BookMark &lt;/li&gt;
-&lt;li&gt;游标为2：为动态游标，可读写，功能最强，但耗资源最多。用户对记录做的修改，增加或删除记录都将反映到记录集中。支持全功能浏览。&lt;/li&gt;
-&lt;li&gt;游标为3：为静态游标，可读写，只是数据的一个快照，用户对记录做的修改，增加或删除记录都不会反映到记录集中。支持向前或向后移动。&lt;/li&gt;
-&lt;li&gt;数据锁定类型为1：默认锁定，只读，不能做任何修改&lt;/li&gt;
-&lt;li&gt;数据锁定类型为2：悲观锁定，当编辑时立刻锁定记录&lt;/li&gt;
-&lt;li&gt;数据锁定类型为3：乐观锁定，直到使用update方法提交更新记录后才锁定记录&lt;/li&gt;
-&lt;li&gt;数据锁定类型为4：批量乐观锁定，允许修改多个记录，只有调用UpdateBatch方法后才锁定记录。&lt;br&gt;当不需要改动任何记录时，使用只读的记录集，这样提供者不用做任何检测。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;命令执行&quot;&gt;&lt;a href=&quot;#命令执行&quot; class=&quot;headerlink&quot; title=&quot;命令执行&quot;&gt;&lt;/a&gt;命令执行&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;执行SQL语句，以插入表为例&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sql_statement = &lt;span class=&quot;string&quot;&gt;&quot;Insert INTO [Table_Name] ([Field_1], [Field_2]) VALUES (&#39;data1&#39;, &#39;data2&#39;)&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;conn.Execute(sql_statement)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;遍历数据库记录，&lt;code&gt;rs.MoveFirst()&lt;/code&gt; 访问数据库的第一行记录，&lt;code&gt;rs.MoveNext()&lt;/code&gt; 转移到下一行。注意如果第一个记录为空，则 &lt;code&gt;rs.MoveFirst()&lt;/code&gt; 会产生一个错误，如果此前将rs的 &lt;code&gt;Cursorlocation&lt;/code&gt; 设置为3，则此问题可解决。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;rs.MoveFirst()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;True&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; rs.EOF:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;break&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        rs.MoveNext()&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;查看数据，在下面的例子中，打开的表格中，第一列的名称为ID，第一行数据的ID为001，第二行数据的ID为002。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;prompt&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;rs.MoveFirst()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;prompt&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;print(rs.Fields.Item(&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;).Name)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&#39;ID&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;prompt&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;print(rs.Fields.Item(&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;).Value)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&#39;001&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;prompt&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;rs.MoveNext()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;prompt&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;print(rs.Fields.Item(&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;).Value)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&#39;002&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;表的列数可通过 &lt;code&gt;rs.Fields.Count&lt;/code&gt; 获取。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;p&gt;参考博客：   &lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.2cto.com/kf/201204/129384.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Python连接Access数据库&lt;/a&gt;  &lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://soft.zdnet.com.cn/software_zone/2008/0520/870686.shtml&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Python读取mdb文件&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://my.oschina.net/duxuefeng/blog/64137&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;win32com用法_杜雪峰的博客&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/07/10/python-visit-access-database/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/07/10/python-visit-access-database/&quot;&gt;https://forec.github.io/2016/07/10/python-visit-access-database/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;记录在windows 10下配置python3链接access数据库过程和几个简单操作。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="Configuration" scheme="http://forec.github.io/categories/Configuration/"/>
-    
-    
-      <category term="Access" scheme="http://forec.github.io/tags/Access/"/>
-    
-      <category term="Python" scheme="http://forec.github.io/tags/Python/"/>
     
   </entry>
   
