@@ -11,11 +11,11 @@
     <meta name="description" content="此项目为我 2016 年的某个课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在专栏《云存储系统从入门到放弃》中。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="简易云存储系统项目简介">
-<meta property="og:url" content="http://forec.github.io/2016/11/12/cloud-storage-system/index.html">
+<meta property="og:url" content="http://forec.github.io/2016/11/12/cloud-storage-system-0/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="此项目为我 2016 年的某个课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在专栏《云存储系统从入门到放弃》中。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-0.jpg">
-<meta property="og:updated_time" content="2016-11-13T16:00:22.577Z">
+<meta property="og:updated_time" content="2016-11-14T05:19:57.375Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简易云存储系统项目简介">
 <meta name="twitter:description" content="此项目为我 2016 年的某个课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在专栏《云存储系统从入门到放弃》中。">
@@ -139,7 +139,7 @@
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-cloud-storage-system" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-cloud-storage-system-0" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
@@ -154,7 +154,7 @@
         
         
             <div class="article-subtitle">
-                <a href="/2016/11/12/cloud-storage-system/" class="article-date">
+                <a href="/2016/11/12/cloud-storage-system-0/" class="article-date">
     <time datetime="2016-11-12T15:50:33.000Z" itemprop="datePublished">2016-11-12</time>
 </a>
                 
@@ -171,8 +171,8 @@
 <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><ul>
 <li>此项目为我 2016 年的某项课程设计，项目题目为自拟，目标是实现一个简易的，与百度云功能类似的云存储系统。项目在 GitHub 托管仓库的网址是：<a href="https://github.com/Forec/cloud-storage" target="_blank" rel="external">https://github.com/Forec/cloud-storage</a>。</li>
 <li>此项目为要实现的云存储系统的服务器，同时附带了一个用于测试的客户端（无GUI）。云存储系统正式的客户端目前正在由 <a href="https://github.com/non1996" target="_blank" rel="external">non1996</a> 编写。在我写下这篇文章时，服务器已经实现了文件传输以外的多数逻辑功能，以及文件的并发下载。</li>
-<li>作为本科阶段的一项小型课程设计，且时间紧迫，<strong>我很遗憾此项目中很多实现非常 naive，许多地方为了简化实现，我采用了一些闭门造车的、很愚笨的、且与主流实现方案相悖的方式</strong>。在将基本功能实现后，如果还有空余时间，我会尽量修正这些糟粕，简化代码。</li>
-<li>这个项目的 BETA 版本预计完成时间在 11 月底，12 月上旬将完成客户端的图形界面，12 月中旬将完成 Web 版本。如果还有空余时间，可能会考虑实现一个 Android 客户端。</li>
+<li>在接下来的文章中，代码的具体实现均使用 <code>Golang</code> 表达，我将假设读者掌握 <code>Golang</code> 的基本语法（或者 C/C++ 的基本语法），并且了解 <code>channel</code>、<code>goroutine</code> 的概念。</li>
+<li>作为本科阶段的一项小型课程设计，且时间紧迫，<strong>我很遗憾此项目中很多实现非常 naive，许多地方为了简化实现，我采用了一些闭门造车的、很愚笨的、且与主流实现方案相悖的方式</strong>。在将基本功能实现后，如果还有空余时间，我会尽量修正这些糟粕，简化代码。这个项目的 BETA 版本预计完成时间在 11 月底，12 月上旬将完成客户端的图形界面，12 月中旬将完成 Web 版本。如果还有空余时间，可能会考虑实现一个 Android 客户端。</li>
 </ul>
 <h1 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h1><h2 id="面向用户功能"><a href="#面向用户功能" class="headerlink" title="面向用户功能"></a>面向用户功能</h2><ul>
 <li>文件存储：用户可将文件上传至云服务器</li>
@@ -250,7 +250,7 @@
 </ul>
 <p>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/13/cloud-storage-system-1/" target="_blank" rel="external">简易云存储系统的认证、传输协议设计</a></p>
 <hr>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/12/cloud-storage-system/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/12/cloud-storage-system/" target="_blank" rel="external">http://blog.forec.cn/2016/11/12/cloud-storage-system/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/12/cloud-storage-system-0/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/12/cloud-storage-system-0/" target="_blank" rel="external">http://blog.forec.cn/2016/11/12/cloud-storage-system-0/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -258,7 +258,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/12/cloud-storage-system/" data-id="civgtvfxg003xmoewztl5o37w" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/12/cloud-storage-system-0/" data-id="civhmhdfx004dmwewg8rxdry8" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -325,7 +325,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2016/11/12/cloud-storage-system/" data-title="简易云存储系统项目简介" data-url="http://forec.github.io/2016/11/12/cloud-storage-system/"></div>
+    <div class="ds-thread" data-thread-key="2016/11/12/cloud-storage-system-0/" data-title="简易云存储系统项目简介" data-url="http://forec.github.io/2016/11/12/cloud-storage-system-0/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -461,6 +461,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2016/11/15/cloud-storage-system-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-3.jpg)" alt="简易云存储系统认证协议实现和封装" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/15/cloud-storage-system-3/" class="title">简易云存储系统认证协议实现和封装</a></p>
+                            <p class="item-date"><time datetime="2016-11-15T05:09:47.000Z" itemprop="datePublished">2016-11-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/11/14/cloud-storage-system-2/" class="thumbnail">
     
     
@@ -501,7 +521,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2016/11/12/cloud-storage-system/" class="thumbnail">
+                            <a href="/2016/11/12/cloud-storage-system-0/" class="thumbnail">
     
     
         <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-0.jpg)" alt="简易云存储系统项目简介" class="thumbnail-image"></span>
@@ -513,7 +533,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/11/12/cloud-storage-system/" class="title">简易云存储系统项目简介</a></p>
+                            <p class="item-title"><a href="/2016/11/12/cloud-storage-system-0/" class="title">简易云存储系统项目简介</a></p>
                             <p class="item-date"><time datetime="2016-11-12T15:50:33.000Z" itemprop="datePublished">2016-11-12</time></p>
                         </div>
                     </li>
@@ -538,26 +558,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/10/29/raspberry-settings/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/raspberry-settings.jpg)" alt="Raspberry Pi 3 配置索引" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Configuration/">Configuration</a></p>
-                            <p class="item-title"><a href="/2016/10/29/raspberry-settings/" class="title">Raspberry Pi 3 配置索引</a></p>
-                            <p class="item-date"><time datetime="2016-10-29T06:49:23.000Z" itemprop="datePublished">2016-10-29</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -567,7 +567,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
         </div>
     </div>
 
@@ -577,7 +577,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 14.29px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 14.29px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.43px;">Hadoop</a> <a href="/tags/Mistakes/" style="font-size: 15.71px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10px;">sicp</a> <a href="/tags/云存储/" style="font-size: 12.86px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 12.86px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.43px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.43px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.57px;">机器学习</a> <a href="/tags/线程/" style="font-size: 15.71px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.14px;">计算机组成与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 14.29px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.43px;">Hadoop</a> <a href="/tags/Mistakes/" style="font-size: 15.71px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10px;">sicp</a> <a href="/tags/云存储/" style="font-size: 14.29px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 12.86px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.43px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.43px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.57px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.14px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.14px;">计算机组成与体系结构</a>
         </div>
     </div>
 

@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Python3操作Access数据库 | Forec&#39;s Notes</title>
+    <title>简易云存储系统认证协议实现和封装 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="Access,Python" />
+        <meta name="keywords" content="Golang,云存储,线程" />
     
-    <meta name="description" content="记录在windows 10下配置python3链接access数据库过程和几个简单操作。">
+    <meta name="description" content="使用 Golang 实现此前设计的云存储系统认证协议，将实现代码封装，提供外部访问接口。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python3操作Access数据库">
-<meta property="og:url" content="http://forec.github.io/2016/07/10/python-visit-access-database/index.html">
+<meta property="og:title" content="简易云存储系统认证协议实现和封装">
+<meta property="og:url" content="http://forec.github.io/2016/11/15/cloud-storage-system-3/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="记录在windows 10下配置python3链接access数据库过程和几个简单操作。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/python-access-database.jpg">
-<meta property="og:updated_time" content="2016-11-05T11:00:39.384Z">
+<meta property="og:description" content="使用 Golang 实现此前设计的云存储系统认证协议，将实现代码封装，提供外部访问接口。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-3.jpg">
+<meta property="og:updated_time" content="2016-11-14T05:17:53.328Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python3操作Access数据库">
-<meta name="twitter:description" content="记录在windows 10下配置python3链接access数据库过程和几个简单操作。">
+<meta name="twitter:title" content="简易云存储系统认证协议实现和封装">
+<meta name="twitter:description" content="使用 Golang 实现此前设计的云存储系统认证协议，将实现代码封装，提供外部访问接口。">
     
 
     
@@ -135,18 +135,18 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Configuration/">Configuration</a>
+    <a class="page-title-link" href="/categories/Code/">Code</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-python-visit-access-database" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-cloud-storage-system-3" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        Python3操作Access数据库
+        简易云存储系统认证协议实现和封装
         </h1>
     
 
@@ -154,68 +154,24 @@
         
         
             <div class="article-subtitle">
-                <a href="/2016/07/10/python-visit-access-database/" class="article-date">
-    <time datetime="2016-07-10T08:45:29.000Z" itemprop="datePublished">2016-07-10</time>
+                <a href="/2016/11/15/cloud-storage-system-3/" class="article-date">
+    <time datetime="2016-11-15T05:09:47.000Z" itemprop="datePublished">2016-11-15</time>
 </a>
                 
-    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Access/">Access</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/">Golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/云存储/">云存储</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程/">线程</a></li></ul>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>记录在windows 10下配置python3链接access数据库过程和几个简单操作。</p>
+<p>使用 Golang 实现<a href="http://blog.forec.cn/2016/11/13/cloud-storage-system-1/" target="_blank" rel="external">此前</a>设计的云存储系统认证协议，将实现代码封装，提供外部访问接口。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="安装所需库文件"><a href="#安装所需库文件" class="headerlink" title="安装所需库文件"></a>安装所需库文件</h1><ul>
-<li>从<a href="https://sourceforge.net/projects/pywin32/" target="_blank" rel="external">https://sourceforge.net/projects/pywin32/</a>下载最新的对应本地python3版本的pywin32库并安装。</li>
-<li>从<a href="https://www.microsoft.com/zh-cn/download/" target="_blank" rel="external">https://www.microsoft.com/zh-cn/download/</a>下载Access数据库驱动AccessDatabaseEngine_X64.exe。</li>
-</ul>
-<h1 id="读取Access数据库"><a href="#读取Access数据库" class="headerlink" title="读取Access数据库"></a>读取Access数据库</h1><h2 id="建立连接"><a href="#建立连接" class="headerlink" title="建立连接"></a>建立连接</h2><ul>
-<li>通过以下交互命令同access数据库建立连接</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> win32com.client</span><br><span class="line">conn = win32com.client.gencache.EnsureDispatch(<span class="string">'ADODB.Connection'</span>) </span><br><span class="line">DSN = <span class="string">'PROVIDER = Microsoft.ACE.OLEDB.12.0;DATA SOURCE = /path/to/database;'</span></span><br><span class="line">conn.Open(DSN)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>访问数据库中名为<code>rs_name</code>的表</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rs = win32com.client.Dispatch(<span class="string">r'ADODB.Recordset'</span>)</span><br><span class="line">rs_name = <span class="string">'co'</span> </span><br><span class="line">rs.Open(<span class="string">'['</span> + rs_name + <span class="string">']'</span>, conn, <span class="number">1</span>, <span class="number">1</span>)  <span class="comment"># 不允许更新，用于查询</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>注意在上面的代码中，<code>rs.Open()</code>的最后两个参数，分别是游标(CursorType)和数据锁定类型(LockType)。<ul>
-<li>游标为0：为仅向前游标，只读，只能向前浏览记录，不支持分页、Recordset、BookMark</li>
-<li>游标为1：为键集游标，只读，其他用户对数据库做的修改将反映到记录集中，但其他用户增加或删除记录不会反映到记录集中。支持分页、Recordset、BookMark </li>
-<li>游标为2：为动态游标，可读写，功能最强，但耗资源最多。用户对记录做的修改，增加或删除记录都将反映到记录集中。支持全功能浏览。</li>
-<li>游标为3：为静态游标，可读写，只是数据的一个快照，用户对记录做的修改，增加或删除记录都不会反映到记录集中。支持向前或向后移动。</li>
-<li>数据锁定类型为1：默认锁定，只读，不能做任何修改</li>
-<li>数据锁定类型为2：悲观锁定，当编辑时立刻锁定记录</li>
-<li>数据锁定类型为3：乐观锁定，直到使用update方法提交更新记录后才锁定记录</li>
-<li>数据锁定类型为4：批量乐观锁定，允许修改多个记录，只有调用UpdateBatch方法后才锁定记录。<br>当不需要改动任何记录时，使用只读的记录集，这样提供者不用做任何检测。</li>
-</ul>
-</li>
-</ul>
-<h2 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h2><ul>
-<li>执行SQL语句，以插入表为例</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sql_statement = <span class="string">"Insert INTO [Table_Name] ([Field_1], [Field_2]) VALUES ('data1', 'data2')"</span></span><br><span class="line">conn.Execute(sql_statement)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>遍历数据库记录，<code>rs.MoveFirst()</code> 访问数据库的第一行记录，<code>rs.MoveNext()</code> 转移到下一行。注意如果第一个记录为空，则 <code>rs.MoveFirst()</code> 会产生一个错误，如果此前将rs的 <code>Cursorlocation</code> 设置为3，则此问题可解决。</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rs.MoveFirst()</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    <span class="keyword">if</span> rs.EOF:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        rs.MoveNext()</span><br></pre></td></tr></table></figure>
-<ul>
-<li>查看数据，在下面的例子中，打开的表格中，第一列的名称为ID，第一行数据的ID为001，第二行数据的ID为002。</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>rs.MoveFirst()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>print(rs.Fields.Item(<span class="number">0</span>).Name)</span><br><span class="line"><span class="string">'ID'</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>print(rs.Fields.Item(<span class="number">0</span>).Value)</span><br><span class="line"><span class="string">'001'</span></span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>rs.MoveNext()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>print(rs.Fields.Item(<span class="number">0</span>).Value)</span><br><span class="line"><span class="string">'002'</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>表的列数可通过 <code>rs.Fields.Count</code> 获取。</li>
-</ul>
+<p>TODO</p>
 <hr>
-<p>参考博客：   </p>
-<ul>
-<li><a href="http://www.2cto.com/kf/201204/129384.html" target="_blank" rel="external">Python连接Access数据库</a>  </li>
-<li><a href="http://soft.zdnet.com.cn/software_zone/2008/0520/870686.shtml" target="_blank" rel="external">Python读取mdb文件</a></li>
-<li><a href="http://my.oschina.net/duxuefeng/blog/64137" target="_blank" rel="external">win32com用法_杜雪峰的博客</a></li>
-</ul>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/07/10/python-visit-access-database/">原始出处</a>(<a href="https://forec.github.io/2016/07/10/python-visit-access-database/">https://forec.github.io/2016/07/10/python-visit-access-database/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
+<p>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/14/cloud-storage-system-2/" target="_blank" rel="external">简易云存储系统传输协议实现和封装</a></p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/15/cloud-storage-system-3/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/15/cloud-storage-system-3/" target="_blank" rel="external">http://blog.forec.cn/2016/11/15/cloud-storage-system-3/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -223,7 +179,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/07/10/python-visit-access-database/" data-id="civhmhddu0015mwewkmnqxfya" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/15/cloud-storage-system-3/" data-id="civhmhdfo003xmwewndgyneh0" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -290,7 +246,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2016/07/10/python-visit-access-database/" data-title="Python3操作Access数据库" data-url="http://forec.github.io/2016/07/10/python-visit-access-database/"></div>
+    <div class="ds-thread" data-thread-key="2016/11/15/cloud-storage-system-3/" data-title="简易云存储系统认证协议实现和封装" data-url="http://forec.github.io/2016/11/15/cloud-storage-system-3/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -394,20 +350,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2016/07/11/spark-initial/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            Spark集群计算环境配置和使用
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2016/07/09/hadoop-build/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2016/11/14/cloud-storage-system-2/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">Hadoop配置和使用</p>
+        <p class="article-nav-title">简易云存储系统传输协议实现和封装</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     

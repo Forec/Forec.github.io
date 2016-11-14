@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-1.jpg">
-<meta property="og:updated_time" content="2016-11-13T16:02:04.464Z">
+<meta property="og:updated_time" content="2016-11-14T05:19:40.466Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简易云存储系统认证、传输协议设计">
 <meta name="twitter:description" content="分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。">
@@ -187,7 +187,7 @@
 </li>
 </ul>
 <h2 id="认证数据协议格式"><a href="#认证数据协议格式" class="headerlink" title="认证数据协议格式"></a>认证数据协议格式</h2><ul>
-<li>假定现在已有函数 <code>RecvBytes()</code> ，该函数将在后面的文章中介绍，它将返回一组维持边界的消息，即该函数能够从 Socket 缓冲区中恰好读取出一组符合协议格式的数据。下面定义协议格式。</li>
+<li>假定现在已有函数 <code>RecvBytes()</code> ，该函数将在后面的<a href="http://blog.forec.cn/2016/11/14/cloud-storage-system-2/" target="_blank" rel="external">《传输协议的实现和封装》</a>中介绍，它将返回一组维持边界的消息，即该函数能够从 Socket 缓冲区中恰好读取出一组符合协议格式的数据。下面定义协议格式。</li>
 <li>服务器生成固定长度随机密钥后，直接向 socket 缓冲区写入该密钥的明文：<code>conn.Write([]byte(token))</code>。因为接下来服务器需要等待客户端响应，因此客户端不需要考虑消息边界，只需要从缓冲区中读取固定长度的字节即可。</li>
 <li>客户端从 socket 接收固定长度的 token。</li>
 <li>客户端将用户名和密码的 MD5 值使用 token 加密，发送给服务器的包结构如下。因为 AES CFB 算法解密需要获知明文长度，因此传输的包中应当包含该信息：第一个 8 字节表示用户名明文和密码 MD5 值的总长度，第二个 8 字节表示使用 token 将用户名和密码 MD5 值加密后得到的密文长度，第三个 8 字节表示用户名明文的长度，最后跟着密文。前面的三个 8 字节均为 int64 类型的数据的大端序表示。下面称此格式为 <strong>格式0</strong>。</li>
@@ -257,7 +257,7 @@
 <li>文件创建/移动/复制时，若目标路径不存在，服务器应向数据库中添加缺失的路径</li>
 </ul>
 <hr>
-<p>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/12/cloud-storage-system/" target="_blank" rel="external">简易云存储系统项目简介</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/14/cloud-storage-system-2/" target="_blank" rel="external">简易云存储系统传输协议的实现和封装</a></p>
+<p>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/12/cloud-storage-system-0/" target="_blank" rel="external">简易云存储系统项目简介</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/14/cloud-storage-system-2/" target="_blank" rel="external">简易云存储系统传输协议实现和封装</a></p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/13/cloud-storage-system-1/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/13/cloud-storage-system-1/" target="_blank" rel="external">http://blog.forec.cn/2016/11/13/cloud-storage-system-1/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
@@ -266,7 +266,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/13/cloud-storage-system-1/" data-id="civgtvfxm0048moewdyhry5hj" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/13/cloud-storage-system-1/" data-id="civhmhdfu0048mwewghrhincw" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -448,7 +448,7 @@
     </a>
     
     
-        <a href="/2016/11/12/cloud-storage-system/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2016/11/12/cloud-storage-system-0/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
         <p class="article-nav-title">简易云存储系统项目简介</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
@@ -465,6 +465,26 @@
         <h3 class="widget-title">最新文章</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/15/cloud-storage-system-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-3.jpg)" alt="简易云存储系统认证协议实现和封装" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/15/cloud-storage-system-3/" class="title">简易云存储系统认证协议实现和封装</a></p>
+                            <p class="item-date"><time datetime="2016-11-15T05:09:47.000Z" itemprop="datePublished">2016-11-15</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -509,7 +529,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2016/11/12/cloud-storage-system/" class="thumbnail">
+                            <a href="/2016/11/12/cloud-storage-system-0/" class="thumbnail">
     
     
         <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-0.jpg)" alt="简易云存储系统项目简介" class="thumbnail-image"></span>
@@ -521,7 +541,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/11/12/cloud-storage-system/" class="title">简易云存储系统项目简介</a></p>
+                            <p class="item-title"><a href="/2016/11/12/cloud-storage-system-0/" class="title">简易云存储系统项目简介</a></p>
                             <p class="item-date"><time datetime="2016-11-12T15:50:33.000Z" itemprop="datePublished">2016-11-12</time></p>
                         </div>
                     </li>
@@ -546,26 +566,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/10/29/raspberry-settings/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/raspberry-settings.jpg)" alt="Raspberry Pi 3 配置索引" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Configuration/">Configuration</a></p>
-                            <p class="item-title"><a href="/2016/10/29/raspberry-settings/" class="title">Raspberry Pi 3 配置索引</a></p>
-                            <p class="item-date"><time datetime="2016-10-29T06:49:23.000Z" itemprop="datePublished">2016-10-29</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -575,7 +575,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
         </div>
     </div>
 
@@ -585,7 +585,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 14.29px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 14.29px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.43px;">Hadoop</a> <a href="/tags/Mistakes/" style="font-size: 15.71px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10px;">sicp</a> <a href="/tags/云存储/" style="font-size: 12.86px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 12.86px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.43px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.43px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.57px;">机器学习</a> <a href="/tags/线程/" style="font-size: 15.71px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.14px;">计算机组成与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 14.29px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.43px;">Hadoop</a> <a href="/tags/Mistakes/" style="font-size: 15.71px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 15.71px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10px;">sicp</a> <a href="/tags/云存储/" style="font-size: 14.29px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 12.86px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.43px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.43px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.57px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.14px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 17.14px;">计算机组成与体系结构</a>
         </div>
     </div>
 
