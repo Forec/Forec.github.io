@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>简易云存储系统传输、认证单元测试 | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Golang,云存储,线程" />
+    
+    <meta name="description" content="编写传输和认证模块的单元测试。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简易云存储系统传输、认证单元测试">
+<meta property="og:url" content="http://forec.github.io/2016/11/16/cloud-storage-system-4/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="编写传输和认证模块的单元测试。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-4.png">
+<meta property="og:updated_time" content="2016-11-15T03:26:08.985Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简易云存储系统传输、认证单元测试">
+<meta name="twitter:description" content="编写传输和认证模块的单元测试。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Code/">Code</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-cloud-storage-system-4" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        简易云存储系统传输、认证单元测试
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2016/11/16/cloud-storage-system-4/" class="article-date">
+    <time datetime="2016-11-16T03:12:35.000Z" itemprop="datePublished">2016-11-16</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/">Golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/云存储/">云存储</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程/">线程</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>编写传输和认证模块的单元测试。</p>
+</blockquote>
+<a id="more"></a>
+<p>TODO</p>
+<hr>
+<p>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/14/cloud-storage-system-3/" target="_blank" rel="external">简易云存储系统认证基础模块实现</a>   </p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/16/cloud-storage-system-4/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/16/cloud-storage-system-4/" target="_blank" rel="external">http://blog.forec.cn/2016/11/16/cloud-storage-system-4/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2016/11/16/cloud-storage-system-4/" data-id="civixgxc7003x44ew0n0676fo" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2016/11/16/cloud-storage-system-4/" data-title="简易云存储系统传输、认证单元测试" data-url="http://forec.github.io/2016/11/16/cloud-storage-system-4/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2016/11/15/cloud-storage-system-3/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">简易云存储系统认证基础模块实现</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/16/cloud-storage-system-4/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-4.png)" alt="简易云存储系统传输、认证单元测试" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/16/cloud-storage-system-4/" class="title">简易云存储系统传输、认证单元测试</a></p>
+                            <p class="item-date"><time datetime="2016-11-16T03:12:35.000Z" itemprop="datePublished">2016-11-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/15/cloud-storage-system-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-3.jpg)" alt="简易云存储系统认证基础模块实现" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/15/cloud-storage-system-3/" class="title">简易云存储系统认证基础模块实现</a></p>
+                            <p class="item-date"><time datetime="2016-11-15T05:09:47.000Z" itemprop="datePublished">2016-11-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/14/cloud-storage-system-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-2.jpg)" alt="简易云存储系统传输协议实现和封装" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/14/cloud-storage-system-2/" class="title">简易云存储系统传输协议实现和封装</a></p>
+                            <p class="item-date"><time datetime="2016-11-13T16:04:34.000Z" itemprop="datePublished">2016-11-14</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/13/cloud-storage-system-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-1.jpg)" alt="简易云存储系统认证、传输协议设计" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/13/cloud-storage-system-1/" class="title">简易云存储系统认证、传输协议设计</a></p>
+                            <p class="item-date"><time datetime="2016-11-13T04:32:01.000Z" itemprop="datePublished">2016-11-13</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/12/cloud-storage-system-0/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-0.jpg)" alt="简易云存储系统项目简介" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/12/cloud-storage-system-0/" class="title">简易云存储系统项目简介</a></p>
+                            <p class="item-date"><time datetime="2016-11-12T15:50:33.000Z" itemprop="datePublished">2016-11-12</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">22</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 13.75px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.25px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.25px;">Hadoop</a> <a href="/tags/Mistakes/" style="font-size: 15px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 15px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 12.5px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.25px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.25px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.75px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.5px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 16.25px;">计算机组成与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2016 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec# enter duoshuo shortname here'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>
