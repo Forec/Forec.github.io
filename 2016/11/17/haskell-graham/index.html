@@ -3,18 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>归档: 2015/8 | Forec&#39;s Notes</title>
+    <title>Haskell 的葛立恒扫描法 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="description" content="奋斗在Code Farm的在校生">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Forec's Notes">
-<meta property="og:url" content="http://forec.github.io/archives/2015/08/index.html">
+        <meta name="keywords" content="Algorithms,Haskell,函数式编程" />
+    
+    <meta name="description" content="使用 Haskell 实现凸包葛立恒扫描法。最近在重温 Haskell，准备学习 Haskell 的并行编程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Haskell 的葛立恒扫描法">
+<meta property="og:url" content="http://forec.github.io/2016/11/17/haskell-graham/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="奋斗在Code Farm的在校生">
+<meta property="og:description" content="使用 Haskell 实现凸包葛立恒扫描法。最近在重温 Haskell，准备学习 Haskell 的并行编程。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/haskell-graham.png">
+<meta property="og:updated_time" content="2016-11-16T16:16:11.781Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Forec's Notes">
-<meta name="twitter:description" content="奋斗在Code Farm的在校生">
+<meta name="twitter:title" content="Haskell 的葛立恒扫描法">
+<meta name="twitter:description" content="使用 Haskell 实现凸包葛立恒扫描法。最近在重温 Haskell，准备学习 Haskell 的并行编程。">
     
 
     
@@ -131,222 +135,165 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-archive"></i>归档: 2015/8
+    <a class="page-title-link" href="/categories/Code/">Code</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            
+                            <article id="post-haskell-graham" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        Haskell 的葛立恒扫描法
+        </h1>
+    
 
-    
-    
+            </header>
         
         
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2015" class="archive-year"><i class="icon fa fa-calendar-o"></i>2015</a>
+            <div class="article-subtitle">
+                <a href="/2016/11/17/haskell-graham/" class="article-date">
+    <time datetime="2016-11-17T15:50:20.000Z" itemprop="datePublished">2016-11-17</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithms/">Algorithms</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Haskell/">Haskell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程/">函数式编程</a></li></ul>
+
             </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
         
-        <a href="/2015/08/18/多线程编程备忘/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/multi-thread.jpg)" alt="多线程编程备忘" class="thumbnail-image"></span>
-    
-    
         
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2015/08/18/多线程编程备忘/">0</span>
-    
-</span>
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>使用 Haskell 实现凸包葛立恒扫描法。最近在重温 Haskell，准备学习 Haskell 的并行编程。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h1><ul>
+<li><a href="https://en.wikipedia.org/wiki/Convex_hull" target="_blank" rel="external">凸包（Wiki: Convex hull）</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Graham_scan" target="_blank" rel="external">葛立恒扫描法（Wiki: Graham scan）</a></li>
+</ul>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><ul>
+<li>计算折线 <code>&lt;p1, p2, p3&gt;</code> 方向时，使用有向面积判断：<code>(px b-px a)*(py c-py a)-(py b-py a)*(px c-px a)</code>，若该面积大于 0 则为左转，等于 0 则为直线，否则右转。</li>
+<li>将顶点列表按与初始顶点 P0 的夹角排序时，可能遇到 Px 刚好与 P0 垂直，因此斜率无法计算。但可直接计算折线方向，根据方向判断出栈/入栈。</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="typedef"><span class="keyword">data</span> <span class="type">Direction</span> = <span class="type">TurnLeft</span> | <span class="type">TurnRight</span> | <span class="type">Straight</span> <span class="keyword">deriving</span> <span class="container">(<span class="type">Show</span>, <span class="type">Eq</span>)</span></span></span><br><span class="line"><span class="typedef"><span class="keyword">data</span> <span class="type">Point</span> = <span class="type">Point</span><span class="container">&#123;</span><br><span class="line">    <span class="title">px</span> :: <span class="type">Int</span>,</span><br><span class="line">    <span class="title">py</span> :: <span class="type">Int</span></span><br><span class="line">    &#125;</span> <span class="keyword">deriving</span> <span class="container">(<span class="type">Show</span>)</span></span></span><br><span class="line"></span><br><span class="line"><span class="title">calcTurn</span> :: <span class="type">Point</span> -&gt; <span class="type">Point</span> -&gt; <span class="type">Point</span> -&gt; <span class="type">Direction</span></span><br><span class="line"><span class="title">calcTurn</span> a b c = </span><br><span class="line">    <span class="keyword">if</span> area == <span class="number">0</span> <span class="keyword">then</span> <span class="type">Straight</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> area &gt; <span class="number">0</span> <span class="keyword">then</span> <span class="type">TurnLeft</span></span><br><span class="line">         <span class="keyword">else</span> <span class="type">TurnRight</span></span><br><span class="line">    <span class="keyword">where</span></span><br><span class="line">        area = (px b-px a)*(py c-py a)-(py b-py a)*(px c-px a)</span><br><span class="line"></span><br><span class="line"><span class="title">p1</span> = <span class="type">Point</span> <span class="number">1</span> <span class="number">1</span></span><br><span class="line"><span class="title">p2</span> = <span class="type">Point</span> <span class="number">3</span> <span class="number">1</span></span><br><span class="line"><span class="title">p3</span> = <span class="type">Point</span> <span class="number">4</span> <span class="number">3</span></span><br><span class="line"><span class="title">p4</span> = <span class="type">Point</span> <span class="number">3</span> <span class="number">4</span></span><br><span class="line"><span class="title">p5</span> = <span class="type">Point</span> (-<span class="number">1</span>) <span class="number">3</span></span><br><span class="line"><span class="title">p6</span> = <span class="type">Point</span> <span class="number">2</span> <span class="number">2</span></span><br><span class="line"><span class="title">p7</span> = <span class="type">Point</span> <span class="number">2</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="title">points</span> = [p1, p2, p3, p4, p5, p6, p7]</span><br><span class="line"></span><br><span class="line"><span class="title">graham</span> :: [<span class="type">Point</span>] -&gt; [<span class="type">Point</span>]</span><br><span class="line"><span class="title">graham</span> graph = foldl makeStack [head . tail $ pList, p0] (tail . tail $ pList)</span><br><span class="line">    <span class="keyword">where</span></span><br><span class="line">        p0 = head . sortBy yco $ graph</span><br><span class="line">        yco p1 p2 = <span class="keyword">if</span> y1 == y2 <span class="keyword">then</span></span><br><span class="line">                        <span class="keyword">if</span> x1 &lt; x2 <span class="keyword">then</span> <span class="type">LT</span></span><br><span class="line">                        <span class="keyword">else</span> <span class="type">GT</span></span><br><span class="line">                    <span class="keyword">else</span> </span><br><span class="line">                        <span class="keyword">if</span> y1 &lt; y2 <span class="keyword">then</span> <span class="type">LT</span></span><br><span class="line">                        <span class="keyword">else</span> <span class="type">GT</span></span><br><span class="line">            <span class="keyword">where</span></span><br><span class="line">                x1 = px p1</span><br><span class="line">                x2 = px p2</span><br><span class="line">                y1 = py p1</span><br><span class="line">                y2 = py p2</span><br><span class="line">        pList = sortBy angle $ graph</span><br><span class="line">            <span class="keyword">where</span></span><br><span class="line">                angle p1 p2 = <span class="keyword">if</span> dir == <span class="type">TurnLeft</span> || dir == <span class="type">Straight</span> <span class="keyword">then</span> <span class="type">LT</span> <span class="keyword">else</span> <span class="type">GT</span></span><br><span class="line">                    <span class="keyword">where</span> dir = calcTurn p0 p1 p2</span><br><span class="line">        makeStack [pa] pn = pn : [pa]</span><br><span class="line">        makeStack acc@(pa:pb:ps) pn@(<span class="type">Point</span> x y) = <span class="keyword">if</span> dir == <span class="type">TurnLeft</span> || dir == <span class="type">Straight</span></span><br><span class="line">                                                  <span class="keyword">then</span> pn:acc</span><br><span class="line">                                                  <span class="keyword">else</span> makeStack (tail acc) pn</span><br><span class="line">                                                  <span class="keyword">where</span></span><br><span class="line">                                                        dir = calcTurn pb pa pn</span><br></pre></td></tr></table></figure>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/17/haskell-graham/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/17/haskell-graham/" target="_blank" rel="external">http://blog.forec.cn/2016/11/17/haskell-graham/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/Code/">Code</a>
-            </p>
-            <p class="date"><time datetime="2015-08-18T01:16:02.000Z" itemprop="datePublished">2015-08-18</time></p>
         </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2015/08/18/多线程编程备忘/">多线程编程备忘</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
+        <footer class="article-footer">
             
-操作系统中的进程和线程，C/C++，Java，Python中多线程的备忘
 
-        </p>
+
+
+    <a data-url="http://forec.github.io/2016/11/17/haskell-graham/" data-id="civl4ktyr002wu0ewho77se0e" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
     </div>
 </article>
-    
 
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2015/08/14/ANSI-Unicode备忘/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/unicode-ansi.jpg)" alt="Angry 的编码问题" class="thumbnail-image"></span>
-    
+    <section id="comments">
     
         
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2015/08/14/ANSI-Unicode备忘/">0</span>
-    
-</span>
+    <div class="ds-thread" data-thread-key="2016/11/17/haskell-graham/" data-title="Haskell 的葛立恒扫描法" data-url="http://forec.github.io/2016/11/17/haskell-graham/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
 
     
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/Code/">Code</a>
-            </p>
-            <p class="date"><time datetime="2015-08-14T14:08:40.000Z" itemprop="datePublished">2015-08-14</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2015/08/14/ANSI-Unicode备忘/">Angry 的编码问题</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-Unicode和ANSI编码的区别，URL中编码问题，C/C++/Java/Python对两种编码格式的转换
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2015/08/08/Win10-Fedora22/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/win10-fedora.png)" alt="Win10+Fedora22" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2015/08/08/Win10-Fedora22/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/Configuration/">Configuration</a>
-            </p>
-            <p class="date"><time datetime="2015-08-08T07:29:50.000Z" itemprop="datePublished">2015-08-08</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2015/08/08/Win10-Fedora22/">Win10+Fedora22</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            摘要
-双硬盘安装Win10+Fedora22双系统
-硬盘mbr-&gt;gpt
-Fedora22安装后部分问题解决
-
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2015/08/04/Show/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hello-world-mes.jpg)" alt="第一日" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2015/08/04/Show/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            
-            </p>
-            <p class="date"><time datetime="2015-08-04T10:35:09.000Z" itemprop="datePublished">2015-08-04</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2015/08/04/Show/">第一日</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-Github和Gitcafe同时push的_config.yml，测试hexo效果
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-
-    </div></section>
-
-
+    </section>
 
                         </div>
                     </section>
@@ -406,6 +353,19 @@ Github和Gitcafe同时push的_config.yml，测试hexo效果
             
         </ul>
     </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2016/11/16/cloud-storage-system-4/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">简易云存储系统传输、认证单元测试</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
