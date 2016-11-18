@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="使用 Haskell 实现凸包葛立恒扫描法。最近在重温 Haskell，准备学习 Haskell 的并行编程。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/haskell-graham.png">
-<meta property="og:updated_time" content="2016-11-16T16:16:11.781Z">
+<meta property="og:updated_time" content="2016-11-17T06:11:46.790Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Haskell 的葛立恒扫描法">
 <meta name="twitter:description" content="使用 Haskell 实现凸包葛立恒扫描法。最近在重温 Haskell，准备学习 Haskell 的并行编程。">
@@ -173,7 +173,7 @@
 <li><a href="https://en.wikipedia.org/wiki/Graham_scan" target="_blank" rel="external">葛立恒扫描法（Wiki: Graham scan）</a></li>
 </ul>
 <h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><ul>
-<li>计算折线 <code>&lt;p1, p2, p3&gt;</code> 方向时，使用有向面积判断：<code>(px b-px a)*(py c-py a)-(py b-py a)*(px c-px a)</code>，若该面积大于 0 则为左转，等于 0 则为直线，否则右转。</li>
+<li>计算折线 <code>&lt;a, b, c&gt;</code> 方向时，使用有向面积判断：<code>(px b-px a)*(py c-py a)-(py b-py a)*(px c-px a)</code>，若该面积大于 0 则为左转，等于 0 则为直线，否则右转。</li>
 <li>将顶点列表按与初始顶点 P0 的夹角排序时，可能遇到 Px 刚好与 P0 垂直，因此斜率无法计算。但可直接计算折线方向，根据方向判断出栈/入栈。</li>
 </ul>
 <figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="typedef"><span class="keyword">data</span> <span class="type">Direction</span> = <span class="type">TurnLeft</span> | <span class="type">TurnRight</span> | <span class="type">Straight</span> <span class="keyword">deriving</span> <span class="container">(<span class="type">Show</span>, <span class="type">Eq</span>)</span></span></span><br><span class="line"><span class="typedef"><span class="keyword">data</span> <span class="type">Point</span> = <span class="type">Point</span><span class="container">&#123;</span><br><span class="line">    <span class="title">px</span> :: <span class="type">Int</span>,</span><br><span class="line">    <span class="title">py</span> :: <span class="type">Int</span></span><br><span class="line">    &#125;</span> <span class="keyword">deriving</span> <span class="container">(<span class="type">Show</span>)</span></span></span><br><span class="line"></span><br><span class="line"><span class="title">calcTurn</span> :: <span class="type">Point</span> -&gt; <span class="type">Point</span> -&gt; <span class="type">Point</span> -&gt; <span class="type">Direction</span></span><br><span class="line"><span class="title">calcTurn</span> a b c = </span><br><span class="line">    <span class="keyword">if</span> area == <span class="number">0</span> <span class="keyword">then</span> <span class="type">Straight</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> area &gt; <span class="number">0</span> <span class="keyword">then</span> <span class="type">TurnLeft</span></span><br><span class="line">         <span class="keyword">else</span> <span class="type">TurnRight</span></span><br><span class="line">    <span class="keyword">where</span></span><br><span class="line">        area = (px b-px a)*(py c-py a)-(py b-py a)*(px c-px a)</span><br><span class="line"></span><br><span class="line"><span class="title">p1</span> = <span class="type">Point</span> <span class="number">1</span> <span class="number">1</span></span><br><span class="line"><span class="title">p2</span> = <span class="type">Point</span> <span class="number">3</span> <span class="number">1</span></span><br><span class="line"><span class="title">p3</span> = <span class="type">Point</span> <span class="number">4</span> <span class="number">3</span></span><br><span class="line"><span class="title">p4</span> = <span class="type">Point</span> <span class="number">3</span> <span class="number">4</span></span><br><span class="line"><span class="title">p5</span> = <span class="type">Point</span> (-<span class="number">1</span>) <span class="number">3</span></span><br><span class="line"><span class="title">p6</span> = <span class="type">Point</span> <span class="number">2</span> <span class="number">2</span></span><br><span class="line"><span class="title">p7</span> = <span class="type">Point</span> <span class="number">2</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="title">points</span> = [p1, p2, p3, p4, p5, p6, p7]</span><br><span class="line"></span><br><span class="line"><span class="title">graham</span> :: [<span class="type">Point</span>] -&gt; [<span class="type">Point</span>]</span><br><span class="line"><span class="title">graham</span> graph = foldl makeStack [head . tail $ pList, p0] (tail . tail $ pList)</span><br><span class="line">    <span class="keyword">where</span></span><br><span class="line">        p0 = head . sortBy yco $ graph</span><br><span class="line">        yco p1 p2 = <span class="keyword">if</span> y1 == y2 <span class="keyword">then</span></span><br><span class="line">                        <span class="keyword">if</span> x1 &lt; x2 <span class="keyword">then</span> <span class="type">LT</span></span><br><span class="line">                        <span class="keyword">else</span> <span class="type">GT</span></span><br><span class="line">                    <span class="keyword">else</span> </span><br><span class="line">                        <span class="keyword">if</span> y1 &lt; y2 <span class="keyword">then</span> <span class="type">LT</span></span><br><span class="line">                        <span class="keyword">else</span> <span class="type">GT</span></span><br><span class="line">            <span class="keyword">where</span></span><br><span class="line">                x1 = px p1</span><br><span class="line">                x2 = px p2</span><br><span class="line">                y1 = py p1</span><br><span class="line">                y2 = py p2</span><br><span class="line">        pList = sortBy angle $ graph</span><br><span class="line">            <span class="keyword">where</span></span><br><span class="line">                angle p1 p2 = <span class="keyword">if</span> dir == <span class="type">TurnLeft</span> || dir == <span class="type">Straight</span> <span class="keyword">then</span> <span class="type">LT</span> <span class="keyword">else</span> <span class="type">GT</span></span><br><span class="line">                    <span class="keyword">where</span> dir = calcTurn p0 p1 p2</span><br><span class="line">        makeStack [pa] pn = pn : [pa]</span><br><span class="line">        makeStack acc@(pa:pb:ps) pn@(<span class="type">Point</span> x y) = <span class="keyword">if</span> dir == <span class="type">TurnLeft</span> || dir == <span class="type">Straight</span></span><br><span class="line">                                                  <span class="keyword">then</span> pn:acc</span><br><span class="line">                                                  <span class="keyword">else</span> makeStack (tail acc) pn</span><br><span class="line">                                                  <span class="keyword">where</span></span><br><span class="line">                                                        dir = calcTurn pb pa pn</span><br></pre></td></tr></table></figure>
@@ -186,7 +186,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/17/haskell-graham/" data-id="civl4ktyr002wu0ewho77se0e" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/17/haskell-graham/" data-id="civnr1rn3002wl0ewn50hxsal" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -357,6 +357,16 @@
         
 <nav id="article-nav">
     
+        <a href="/2016/11/18/haskell-fold/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            Haskell 的 fold 系列
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
     
         <a href="/2016/11/16/cloud-storage-system-4/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
@@ -375,6 +385,26 @@
         <h3 class="widget-title">最新文章</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/18/haskell-fold/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-fold.jpg)" alt="Haskell 的 fold 系列" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
+                            <p class="item-title"><a href="/2016/11/18/haskell-fold/" class="title">Haskell 的 fold 系列</a></p>
+                            <p class="item-date"><time datetime="2016-11-18T07:10:11.000Z" itemprop="datePublished">2016-11-18</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -456,26 +486,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/13/cloud-storage-system-1/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-1.jpg)" alt="简易云存储系统认证、传输协议设计" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/11/13/cloud-storage-system-1/" class="title">简易云存储系统认证、传输协议设计</a></p>
-                            <p class="item-date"><time datetime="2016-11-13T04:32:01.000Z" itemprop="datePublished">2016-11-13</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -485,7 +495,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
         </div>
     </div>
 
@@ -495,7 +505,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.86px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.43px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 10px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 14.29px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 14.29px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10px;">sicp</a> <a href="/tags/云存储/" style="font-size: 14.29px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 12.86px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.43px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.43px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.57px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.14px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 15.71px;">计算机组成与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 13.75px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.25px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.25px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 12.5px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 15px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 15px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.25px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 15px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.25px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.25px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.75px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.5px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 16.25px;">计算机组成与体系结构</a>
         </div>
     </div>
 
