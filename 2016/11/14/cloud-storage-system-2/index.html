@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="使用 Golang 实现上一篇文章设计的云存储系统文件传输协议。将实现代码封装，提供外部访问接口。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-2.jpg">
-<meta property="og:updated_time" content="2016-11-18T13:25:02.485Z">
+<meta property="og:updated_time" content="2016-11-19T14:36:05.787Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简易云存储系统传输协议实现和封装">
 <meta name="twitter:description" content="使用 Golang 实现上一篇文章设计的云存储系统文件传输协议。将实现代码封装，提供外部访问接口。">
@@ -188,7 +188,7 @@
 <li>析构函数：当 transmitter 寿命终止时，应当调用析构函数 <code>Destroy()</code> 销毁内部的数据并断开 socket 连接。</li>
 <li>数据传输接口：transmitter 应当提供一些易使用的公有方法，这些方法可以让用户方便的发送/接收字节流，或者从特定的 Reader 发送字节流，并接收字节流至特定的 Writer。我们在<a href="http://blog.forec.cn/2016/11/13/cloud-storage-system-1/" target="_blank" rel="external">《认证、传输协议设计》</a>中假设过已存在一个 <code>RecvBytes()</code> 函数，该函数能够从 socket 缓冲区读取一组消息。除了要实现该函数，还应当实现对称的 <code>SendBytes(message []byte)</code> 函数，用于向 socket 发送一组消息。同样，应当设计函数 <code>SendFromReader(reader)</code> 和 <code>RecvToWriter(writer)</code> ，它们提供了数据源/目的地是 reader/writer 的操作。</li>
 </ul>
-<h2 id="具体定义接口"><a href="#具体定义接口" class="headerlink" title="具体定义接口"></a>具体定义接口</h2><p>新建代码文件 <code>transmit.go</code>，将私有类 transmitter 的公有接口定义为 Transmitable，其 Golang 代码表示如下。其中，<code>SendFromReader</code> 和 <code>RecvToWriter</code> 选择的 Reader/Writer 是 <code>bufio</code> 包中的读写器，因为在传输长数据流中将使用 <code>bufio.Reader</code> 和 <code>bufio.Writer</code> 去读/写文件。<code>SendFromReader</code> 的第二个参数是要发送的长度，如果这个参数大于 <code>Reader</code> 所能读取的长度，则读取到 <code>Reader</code> 末尾结束，否则读取到参数长度即结束。<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// transmit.go</span></span><br><span class="line"><span class="keyword">type</span> Transmitable <span class="keyword">interface</span> &#123;</span><br><span class="line">	SendFromReader(*bufio.Reader, <span class="typename">int64</span>) <span class="typename">bool</span></span><br><span class="line">	SendBytes([]<span class="typename">byte</span>) <span class="typename">bool</span></span><br><span class="line">	RecvToWriter(*bufio.Writer) <span class="typename">bool</span></span><br><span class="line">	RecvBytes() ([]<span class="typename">byte</span>, error)</span><br><span class="line">	Destroy()</span><br><span class="line">	SetBuflen(<span class="typename">int64</span>) <span class="typename">bool</span></span><br><span class="line">	GetConn() net.Conn</span><br><span class="line">	GetBuf() []<span class="typename">byte</span></span><br><span class="line">	GetBuflen() <span class="typename">int64</span></span><br><span class="line">	GetBlock() cipher.Block</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="具体定义接口"><a href="#具体定义接口" class="headerlink" title="具体定义接口"></a>具体定义接口</h2><p>在工程目录下新建文件夹 <code>transmit</code> ，在该目录下新建代码文件 <code>transmit.go</code>，将私有类 transmitter 的公有接口定义为 Transmitable，其 Golang 代码表示如下。其中，<code>SendFromReader</code> 和 <code>RecvToWriter</code> 选择的 Reader/Writer 是 <code>bufio</code> 包中的读写器，因为在传输长数据流中将使用 <code>bufio.Reader</code> 和 <code>bufio.Writer</code> 去读/写文件。<code>SendFromReader</code> 的第二个参数是要发送的长度，如果这个参数大于 <code>Reader</code> 所能读取的长度，则读取到 <code>Reader</code> 末尾结束，否则读取到参数长度即结束。<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// transmit.go</span></span><br><span class="line"><span class="keyword">type</span> Transmitable <span class="keyword">interface</span> &#123;</span><br><span class="line">	SendFromReader(*bufio.Reader, <span class="typename">int64</span>) <span class="typename">bool</span></span><br><span class="line">	SendBytes([]<span class="typename">byte</span>) <span class="typename">bool</span></span><br><span class="line">	RecvToWriter(*bufio.Writer) <span class="typename">bool</span></span><br><span class="line">	RecvBytes() ([]<span class="typename">byte</span>, error)</span><br><span class="line">	Destroy()</span><br><span class="line">	SetBuflen(<span class="typename">int64</span>) <span class="typename">bool</span></span><br><span class="line">	GetConn() net.Conn</span><br><span class="line">	GetBuf() []<span class="typename">byte</span></span><br><span class="line">	GetBuflen() <span class="typename">int64</span></span><br><span class="line">	GetBlock() cipher.Block</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h1 id="实现-transmitter"><a href="#实现-transmitter" class="headerlink" title="实现 transmitter"></a>实现 transmitter</h1><h2 id="SendBytes-和-RecvBytes"><a href="#SendBytes-和-RecvBytes" class="headerlink" title="SendBytes() 和 RecvBytes()"></a>SendBytes() 和 RecvBytes()</h2><ul>
 <li><code>SendBytes([]byte) bool</code> 的发送过程如下：首先发送一个 8 字节、大端序的明文表明即将发送的总长度，之后按照<a href="http://blog.forec.cn/2016/11/13/cloud-storage-system-1/" target="_blank" rel="external">《认证、传输协议设计》</a>设计的数据协议格式 <strong>格式1</strong> 发送消息，因为每个消息内包含的数据长度受缓冲区限制，因此可能需要传送多个消息才能发送所有数据。代码如下，其中第 6 行发送待发送数据明文的总长度，用到的 <code>auth.Int64Bytes(int64) []byte</code> 可以将一个 <code>int64</code> 数据转化为 8 字节、大端序的字节数组，与之对称的 <code>BytesToInt64([]byte) int64</code> 可以将参数的前 8 个字节转化为一个 int64 类型，这两个函数将在后面要实现的 <code>authenticate</code> 包中介绍，现在假设已经拥有这两个函数。</li>
 </ul>
@@ -226,7 +226,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/14/cloud-storage-system-2/" data-id="civntj2rd004qfoewc9dabj7i" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/14/cloud-storage-system-2/" data-id="civpdjksl004vxwewjq5fosrq" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -429,6 +429,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2016/11/19/cloud-storage-system-5/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-5.png)" alt="简易云存储系统数据用户设计" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/19/cloud-storage-system-5/" class="title">简易云存储系统数据用户设计</a></p>
+                            <p class="item-date"><time datetime="2016-11-19T15:20:42.000Z" itemprop="datePublished">2016-11-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/11/18/haskell-fold/" class="thumbnail">
     
     
@@ -506,26 +526,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/14/cloud-storage-system-2/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-2.jpg)" alt="简易云存储系统传输协议实现和封装" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/11/14/cloud-storage-system-2/" class="title">简易云存储系统传输协议实现和封装</a></p>
-                            <p class="item-date"><time datetime="2016-11-13T16:04:34.000Z" itemprop="datePublished">2016-11-14</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -535,7 +535,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
         </div>
     </div>
 
@@ -545,7 +545,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.86px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 15.71px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.43px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 12.86px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 14.29px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 14.29px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.43px;">sicp</a> <a href="/tags/云存储/" style="font-size: 14.29px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.29px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.43px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.43px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.57px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.14px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 15.71px;">计算机组成与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.5px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.25px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.25px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 12.5px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.75px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 13.75px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.25px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 13.75px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.25px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.25px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.75px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.5px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 15px;">计算机组成与体系结构</a>
         </div>
     </div>
 

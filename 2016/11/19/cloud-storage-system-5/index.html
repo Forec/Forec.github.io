@@ -3,18 +3,25 @@
 <head>
     <meta charset="utf-8">
     
-    <title>归档: 2016/2 | Forec&#39;s Notes</title>
+    <title>简易云存储系统数据用户设计 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="description" content="奋斗在Code Farm的在校生">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Forec's Notes">
-<meta property="og:url" content="http://forec.github.io/archives/2016/02/index.html">
+        <meta name="keywords" content="Golang,云存储,线程" />
+    
+    <meta name="description" content="专栏目录：云存储系统从入门到放弃此专栏的上一篇文章：简易云存储系统传输、认证单元测试此专栏的下一篇文章：TODO
+原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章原始出处(http://blog.forec.cn/2016/11/19/cloud-storage-system-5/) 、作者信息（Forec）和本声明。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简易云存储系统数据用户设计">
+<meta property="og:url" content="http://forec.github.io/2016/11/19/cloud-storage-system-5/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="奋斗在Code Farm的在校生">
+<meta property="og:description" content="专栏目录：云存储系统从入门到放弃此专栏的上一篇文章：简易云存储系统传输、认证单元测试此专栏的下一篇文章：TODO
+原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章原始出处(http://blog.forec.cn/2016/11/19/cloud-storage-system-5/) 、作者信息（Forec）和本声明。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-5.png">
+<meta property="og:updated_time" content="2016-11-19T15:21:53.586Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Forec's Notes">
-<meta name="twitter:description" content="奋斗在Code Farm的在校生">
+<meta name="twitter:title" content="简易云存储系统数据用户设计">
+<meta name="twitter:description" content="专栏目录：云存储系统从入门到放弃此专栏的上一篇文章：简易云存储系统传输、认证单元测试此专栏的下一篇文章：TODO
+原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章原始出处(http://blog.forec.cn/2016/11/19/cloud-storage-system-5/) 、作者信息（Forec）和本声明。">
     
 
     
@@ -131,421 +138,153 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-archive"></i>归档: 2016/2
+    <a class="page-title-link" href="/categories/Code/">Code</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            
+                            <article id="post-cloud-storage-system-5" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        简易云存储系统数据用户设计
+        </h1>
+    
 
-    
-    
+            </header>
         
         
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2016" class="archive-year"><i class="icon fa fa-calendar-o"></i>2016</a>
+            <div class="article-subtitle">
+                <a href="/2016/11/19/cloud-storage-system-5/" class="article-date">
+    <time datetime="2016-11-19T15:20:42.000Z" itemprop="datePublished">2016-11-19</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/">Golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/云存储/">云存储</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程/">线程</a></li></ul>
+
             </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
         
-        <a href="/2016/02/29/bugs-for-using-linux/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/bug-linux.jpg)" alt="Linux各发行版及Emacs配置备忘" class="thumbnail-image"></span>
-    
-    
         
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/02/29/bugs-for-using-linux/">0</span>
-    
-</span>
+        <div class="article-entry" itemprop="articleBody">
+            <hr>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">云存储系统从入门到放弃</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/16/cloud-storage-system-4/" target="_blank" rel="external">简易云存储系统传输、认证单元测试</a><br>此专栏的下一篇文章：TODO</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/19/cloud-storage-system-5/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/19/cloud-storage-system-5/" target="_blank" rel="external">http://blog.forec.cn/2016/11/19/cloud-storage-system-5/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/Configuration/">Configuration</a>
-            </p>
-            <p class="date"><time datetime="2016-02-29T11:42:03.000Z" itemprop="datePublished">2016-02-29</time></p>
         </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/02/29/bugs-for-using-linux/">Linux各发行版及Emacs配置备忘</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
+        <footer class="article-footer">
             
-不定期整理在使用各类linux发行版和Emacs时的配置，以及遇到的各类问题的解决方案。
 
-        </p>
+
+
+    <a data-url="http://forec.github.io/2016/11/19/cloud-storage-system-5/" data-id="civpdjksb004fxwewy1fu9epa" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
     </div>
 </article>
-    
 
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/02/27/marhinelearningsummary/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/machine-learning-summary.jpg)" alt="《机器学习实战》总结" class="thumbnail-image"></span>
-    
+    <section id="comments">
     
         
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/02/27/marhinelearningsummary/">0</span>
-    
-</span>
+    <div class="ds-thread" data-thread-key="2016/11/19/cloud-storage-system-5/" data-title="简易云存储系统数据用户设计" data-url="http://forec.github.io/2016/11/19/cloud-storage-system-5/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
 
     
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/大数据/">大数据</a>
-            </p>
-            <p class="date"><time datetime="2016-02-27T06:49:09.000Z" itemprop="datePublished">2016-02-27</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/02/27/marhinelearningsummary/">《机器学习实战》总结</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-书中的很多算法解决了此前的一些疑惑，让我一些拙劣的思维方式得到了一些提升，也让许多问题成为可能。从数据中挖掘重要特征是一件很有意义的事，这个过程让我更能理解数学的重要性。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/02/27/machinelearning15/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/machine-learning-12.png)" alt="机器学习笔记（Chapter 15 - MapReduce框架）" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/02/27/machinelearning15/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/大数据/">大数据</a>
-            </p>
-            <p class="date"><time datetime="2016-02-27T06:32:18.000Z" itemprop="datePublished">2016-02-27</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/02/27/machinelearning15/">机器学习笔记（Chapter 15 - MapReduce框架）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-MapReduce是一个分布式计算框架，可以将单个计算作业分配给多台计算机执行。
-
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/02/26/machinelearning14/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/machine-learning-11.png)" alt="机器学习笔记（Chapter 14 - SVD简化）" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/02/26/machinelearning14/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/大数据/">大数据</a>
-            </p>
-            <p class="date"><time datetime="2016-02-26T13:38:59.000Z" itemprop="datePublished">2016-02-26</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/02/26/machinelearning14/">机器学习笔记（Chapter 14 - SVD简化）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-从数据中提取一些关键信息可以使用奇异值分解（Singular Value Decomposition，SVD），可以简化数据，去除噪声，将数据映射到低维空间。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/02/25/machinelearning13/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/machine-learning-10.png)" alt="机器学习笔记（Chapter 13 - PCA简化）" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/02/25/machinelearning13/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/大数据/">大数据</a>
-            </p>
-            <p class="date"><time datetime="2016-02-25T04:15:43.000Z" itemprop="datePublished">2016-02-25</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/02/25/machinelearning13/">机器学习笔记（Chapter 13 - PCA简化）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-在低维下，数据更容易进行处理，其相关特征可能在数据中明确显示出来。PCA是降维技术中最广泛的一种。
-
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/02/24/machinelearning12/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/machine-learning-9.png)" alt="机器学习笔记（Chapter 12 - FP-growth算法）" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/02/24/machinelearning12/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/大数据/">大数据</a>
-            </p>
-            <p class="date"><time datetime="2016-02-24T12:19:23.000Z" itemprop="datePublished">2016-02-24</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/02/24/machinelearning12/">机器学习笔记（Chapter 12 - FP-growth算法）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-FP-growth算法基于Apriori构建，先将数据集存储在FP树内，再发现频繁项集，速度通常快于Apriori两个数量级以上。FP-growth只需要对数据库扫描两次，而Apriori需要对每个潜在的频繁项集扫描一次数据集。Apriori算法拓展性更好，可以用于并行计算。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/02/22/machinelearning11/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/machine-learning-8.png)" alt="机器学习笔记（Chapter 11 - Apriori算法）" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/02/22/machinelearning11/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/大数据/">大数据</a>
-            </p>
-            <p class="date"><time datetime="2016-02-22T13:17:17.000Z" itemprop="datePublished">2016-02-22</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/02/22/machinelearning11/">机器学习笔记（Chapter 11 - Apriori算法）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-商店通过会员卡等忠诚度计划，可以获取顾客所购买商品的组合信息，从而更好地安排商品定价、市场促销等。从大规模数据集中寻找物品间的隐含关系被称作关联分析或者关联规则学习。Apriori算法可以解决计算代价极高的物品组合问题，从而在合理的时间范围内找到频繁项集和关联规则。
-
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/02/21/machinelearning10/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/machine-learning-7.png)" alt="机器学习笔记（Chapter 10 - K-均值聚类算法）" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/02/21/machinelearning10/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/大数据/">大数据</a>
-            </p>
-            <p class="date"><time datetime="2016-02-21T13:07:41.000Z" itemprop="datePublished">2016-02-21</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/02/21/machinelearning10/">机器学习笔记（Chapter 10 - K-均值聚类算法）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-聚类是一种无监督学习，将相似的对象归到同一个簇中，类似全自动分类，即类别体系也是自动构建的。聚类方法几乎可以应用于所有对性，簇内的对象越相似，聚类效果越好。K-均值聚类算法可以发现k个不同的簇，且每个簇的中心采用簇中所含值的均值构成。聚类与分类的区别在于，分类的目标事先已知，而聚类未知。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-
-    </div></section>
-
-
-    <nav id="page-nav">
-        <span class="pages">第 1 页，共 2 页</span>
-        <span class="page-number current">1</span><a class="page-number" href="/archives/2016/02/page/2/">2</a><a class="extend next" rel="next" href="/archives/2016/02/page/2/">&raquo;</a>
-    </nav>
-
+    </section>
 
                         </div>
                     </section>
@@ -605,6 +344,19 @@ FP-growth算法基于Apriori构建，先将数据集存储在FP树内，再发�
             
         </ul>
     </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2016/11/18/haskell-fold/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">Haskell 的 fold 系列</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
