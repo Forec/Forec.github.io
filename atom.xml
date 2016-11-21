@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-11-20T15:54:31.521Z</updated>
+  <updated>2016-11-21T16:26:00.289Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -14,6 +14,157 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Haskell 中的非纯粹行为</title>
+    <link href="http://forec.github.io/2016/11/21/haskell-io-actions/"/>
+    <id>http://forec.github.io/2016/11/21/haskell-io-actions/</id>
+    <published>2016-11-21T01:03:07.000Z</published>
+    <updated>2016-11-21T16:26:00.289Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;整理 Haskell 中的 I/O 行为和性质，包括惰性 I/O、异常、临时文件、缓冲等。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h1 id=&quot;基本-I-O-行为&quot;&gt;&lt;a href=&quot;#基本-I-O-行为&quot; class=&quot;headerlink&quot; title=&quot;基本 I/O 行为&quot;&gt;&lt;/a&gt;基本 I/O 行为&lt;/h1&gt;&lt;h2 id=&quot;标准输入-输出&quot;&gt;&lt;a href=&quot;#标准输入-输出&quot; class=&quot;headerlink&quot; title=&quot;标准输入/输出&quot;&gt;&lt;/a&gt;标准输入/输出&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Prelude&lt;/code&gt; 定义了一些标准输入、输出及其函数：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;print&lt;/code&gt;：将任何可打印的值输出到标准输出设备&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;putStr&lt;/code&gt;：向标准输出输出字符串&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;putStrLn&lt;/code&gt;：向标准输出输出字符串并添加换行&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;getLine&lt;/code&gt;：从标准输入中读取一行&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;interact&lt;/code&gt;：其类型签名为 &lt;code&gt;interact :: (String -&amp;gt; String) -&amp;gt; IO()&lt;/code&gt;，该函数接受一个签名为 &lt;code&gt;String -&amp;gt; String&lt;/code&gt; 的函数，对标准输入中的每个字符串做转换并输出。默认情况下 GHCI 采用 LineBuffering 模式，也就是每输入一行或输入足够长的情况下才产生一次回显&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;标准输入/输出实际是 &lt;code&gt;System.IO&lt;/code&gt; 预定义的一些句柄，以上的&lt;code&gt;getLine&lt;/code&gt;、&lt;code&gt;putStr&lt;/code&gt;等函数实际是由其句柄函数封装得来的：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;stdin&lt;/code&gt; ：&lt;code&gt;getLine = hGetLine stdin&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;stdout&lt;/code&gt;：&lt;code&gt;putStrLn = hPutStrLn stdout&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;stderr&lt;/code&gt;：&lt;code&gt;print = hPrint stdout&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;句柄和简化的文本文件读写&quot;&gt;&lt;a href=&quot;#句柄和简化的文本文件读写&quot; class=&quot;headerlink&quot; title=&quot;句柄和简化的文本文件读写&quot;&gt;&lt;/a&gt;句柄和简化的文本文件读写&lt;/h2&gt;&lt;p&gt;&lt;code&gt;System.IO&lt;/code&gt; 包中包含了多数 I/O 相关操作，其中大多数操作已被 &lt;code&gt;Prelude&lt;/code&gt; 导入。&lt;code&gt;Handle&lt;/code&gt; 类型是文件句柄，Haskell 从句柄读写数据。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;openFile :: FilePath -&amp;gt; IOMode -&amp;gt; IO Handle&lt;/code&gt;：以文本方式打开一个文件并返回 IO Monad 包裹的句柄，其中 &lt;code&gt;IOMode&lt;/code&gt; 包括：  &lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ReadMode&lt;/code&gt;：只读&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;WriteMode&lt;/code&gt;：只写&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ReadWriteMode&lt;/code&gt;：读写&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;AppendMode&lt;/code&gt;：追加&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;openBinaryFile :: FilePath -&amp;gt; IOMode -&amp;gt; IO Handle&lt;/code&gt;：以二进制方式打开一个文件并返回 IO Monad 包裹的句柄，其中 &lt;code&gt;IOMode&lt;/code&gt; 与 &lt;code&gt;openFile&lt;/code&gt; 中相同&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hIsEOF :: Handle -&amp;gt; IO Bool&lt;/code&gt;：是否已读取到句柄末尾&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hGetLine :: Handle -&amp;gt; IO String&lt;/code&gt;：从句柄中读取一行，此函数应只在文本文件的句柄中使用&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hPutStrLn :: Handle -&amp;gt; String -&amp;gt; IO ()&lt;/code&gt;：向句柄中写入字符串并添加换行&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hPutStr :: Handle -&amp;gt; String -&amp;gt; IO ()&lt;/code&gt;：向句柄中写入字符串&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hPrint :: Show a =&amp;gt; Handle -&amp;gt; a -&amp;gt; IO ()&lt;/code&gt;：向句柄中写入可打印值（以上四个函数实际是标准输入/输出函数的内部实现）。注意此函数和 &lt;code&gt;putStr&lt;/code&gt; 不同，此函数可打印任何实现了 &lt;code&gt;Show&lt;/code&gt; 的实例的值，例如 &lt;code&gt;hPrint stdout &amp;quot;haskell&amp;quot;&lt;/code&gt;，则标准输出为 &lt;code&gt;&amp;quot;haskell&amp;quot;&lt;/code&gt;，而 &lt;code&gt;hPutStr stdout &amp;quot;haskell&amp;quot;&lt;/code&gt; 在标准输出产生的是 &lt;code&gt;haskell&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hClose :: Handle -&amp;gt; IO ()&lt;/code&gt;：关闭句柄&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hTell :: Handle -&amp;gt; IO Integer&lt;/code&gt;：返回此句柄目前对应文件位置&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hSeek :: Handle -&amp;gt; SeekMode -&amp;gt; Integer -&amp;gt; IO ()&lt;/code&gt;：按 &lt;code&gt;SeekMode&lt;/code&gt; 模式设置句柄位置，其中 &lt;code&gt;SeekMode&lt;/code&gt; 包括：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;AbsoluteSeek&lt;/code&gt;：绝对定位，按照给定的 &lt;code&gt;Integer&lt;/code&gt; 参数设置句柄位置&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;RelativeSeek&lt;/code&gt;：相对定位，相对当前句柄位置按给定参数修正&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;SeekFromEnd&lt;/code&gt;：从文件尾部定位，与 &lt;code&gt;AbsoluteSeek&lt;/code&gt; 方向相反&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hIsSeekable :: Handle -&amp;gt; IO Bool&lt;/code&gt;：返回该句柄是否可以定位&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hGetPosn :: Handle -&amp;gt; IO HandlePosn&lt;/code&gt;：返回该句柄位置&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hGetChar :: Handle -&amp;gt; IO Char&lt;/code&gt;：从句柄读取一个字符&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hGetContents :: Handle -&amp;gt; IO String&lt;/code&gt;：读取句柄全部内容&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hGetEcho :: Handle -&amp;gt; IO Bool&lt;/code&gt;：获取一个链接到终端的句柄的回显状态&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;openFile&lt;/code&gt;、&lt;code&gt;writeFile&lt;/code&gt; 可处理文本文件，通常可简化为以下三种操作，其中 &lt;code&gt;FilePath&lt;/code&gt; 是 &lt;code&gt;String&lt;/code&gt; 的别名：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;readFile :: FilePath -&amp;gt; IO String&lt;/code&gt;：接受一个 &lt;code&gt;FilePath&lt;/code&gt; 作为文件名，打开该文件（如果存在的话）并以字符串返回文件内容&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;writeFile :: FilePath -&amp;gt; String -&amp;gt; IO()&lt;/code&gt;：接受一个 &lt;code&gt;FilePath&lt;/code&gt; 作为文件名，向该文件写入字符串（如果文件不存在则创建，否则覆盖原文件）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;appendFile :: FilePath -&amp;gt; String -&amp;gt; IO ()&lt;/code&gt;：接受一个 &lt;code&gt;FilePath&lt;/code&gt; 作为文件名，并想该文件附加字符串（无论文件是否存在都会写入）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;序列化和语法糖&quot;&gt;&lt;a href=&quot;#序列化和语法糖&quot; class=&quot;headerlink&quot; title=&quot;序列化和语法糖&quot;&gt;&lt;/a&gt;序列化和语法糖&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;do&lt;/code&gt; 语法糖将执行非纯粹行为的代码包裹起来，其中：&lt;ul&gt;
+&lt;li&gt;整个代码块返回的值是代码块最后一行语句返回的值&lt;/li&gt;
+&lt;li&gt;在代码块中使用 &lt;code&gt;&amp;lt;-&lt;/code&gt; 从 I/O 行为中获取值&lt;/li&gt;
+&lt;li&gt;在代码块中使用 &lt;code&gt;let&lt;/code&gt; 从纯粹代码中获取值，注意不是 &lt;code&gt;let..in&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;do&lt;/code&gt; 代码块返回的值与 &lt;code&gt;return&lt;/code&gt; 函数无关，&lt;code&gt;return&lt;/code&gt; 仅仅是将纯粹的值使用 Monad 包裹，与命令式语言中的 &lt;code&gt;return&lt;/code&gt; 没有任何联系。在 I/O 操作中，&lt;code&gt;return&lt;/code&gt; 的作用就是将纯粹值包裹到 IO Monad 中。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;你可以假设，&lt;code&gt;do&lt;/code&gt; 代码块中的每个语句（除了 &lt;code&gt;let&lt;/code&gt;），都会产生一个待执行的 I/O 操作。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mapM&lt;/code&gt; 和 &lt;code&gt;mapM_&lt;/code&gt; 提供了在列表上应用 Monad 的方式，其中 &lt;code&gt;mapM&lt;/code&gt; 返回应用后的列表，而 &lt;code&gt;mapM_&lt;/code&gt; 丢弃结果。&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;mapM :: (Monad m) =&amp;gt; (a -&amp;gt; m b) -&amp;gt; [a] -&amp;gt; m [b]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mapM_ :: (Monad m) =&amp;gt; (a -&amp;gt; m b) -&amp;gt; [a] -&amp;gt; m ()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;以下两个函数将 Monad 操作连接起来，当 Monad 为 IO Monad 时即为 do 的内部实现&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;(&amp;gt;&amp;gt;) :: (Monad m) =&amp;gt; m a -&amp;gt; m b -&amp;gt; m b&lt;/code&gt;：该函数连接两个 Monad 操作，首先执行第一个，之后执行第二个，返回是第二个 Monad 操作返回的值&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(&amp;gt;&amp;gt;=) :: (Monad m) =&amp;gt; m a -&amp;gt; (a -&amp;gt; m b) -&amp;gt; m b&lt;/code&gt;：该函数执行第一个 Monad 操作，将其返回的结果传给第二个参数，第二个参数接受第一个 Monad 操作的结果，并返回另一个 Monad。例如 &lt;code&gt;getLine &amp;gt;&amp;gt;= putStrLn&lt;/code&gt; 作用就是从键盘读取一行，再输出到屏幕。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;文件操作和临时文件&quot;&gt;&lt;a href=&quot;#文件操作和临时文件&quot; class=&quot;headerlink&quot; title=&quot;文件操作和临时文件&quot;&gt;&lt;/a&gt;文件操作和临时文件&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;涉及非内容的文件操作相关函数包含在 &lt;code&gt;System.Directory&lt;/code&gt; 中，常见如：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;removeFile :: FilePath -&amp;gt; IO()&lt;/code&gt;：删除参数名指向的文件&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;renameFile :: FilePath -&amp;gt; FilePath -&amp;gt; IO()&lt;/code&gt;：重命名文件，可等同于 &lt;code&gt;mv&lt;/code&gt; 操作，但若第二个参数（重命名后的文件名）对应文件已存在，则该文件被要移动的文件覆盖。使用该操作应小心。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;renameDirectory :: FilePath -&amp;gt; FilePath -&amp;gt; IO()&lt;/code&gt;：重命名文件夹&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;getTemporaryDirectory :: IO FilePath&lt;/code&gt;：获取当前机器的临时文件目录。有些机器并不存在默认的缓存目录，此时调用此函数将导致异常。因此此函数应当被 &lt;code&gt;catchIOError&lt;/code&gt; 包裹。例如，&lt;code&gt;catchIOError (getTemporaryDirectory) (\_-&amp;gt;return &amp;quot;.&amp;quot;)&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;临时文件主要使用 &lt;code&gt;openTempFile :: FilePath -&amp;gt; String -&amp;gt; IO(FilePath, Handle)&lt;/code&gt; 创建，对于二进制临时文件则使用 &lt;code&gt;openBinaryTempFile&lt;/code&gt;。该函数第一个参数为要创建临时文件的目录，第二个参数为临时文件的前缀，例如 &lt;code&gt;tempfile&lt;/code&gt;，则 Haskell 生成的临时文件会有类似 &lt;code&gt;tempfileXXXXXX&lt;/code&gt; 的文件名，后面的 &lt;code&gt;XXXXXX&lt;/code&gt; 为随机生成的序列。该函数会返回 IO Monad 包裹的路径和句柄。&lt;/li&gt;
+&lt;li&gt;在临时文件试用结束后，通常会通过 &lt;code&gt;hClose&lt;/code&gt; 关闭临时文件句柄，之后 &lt;code&gt;removeFile&lt;/code&gt; 删除临时文件。此部分处理工作应由 &lt;code&gt;finally&lt;/code&gt; 包含以保证执行。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;I-O-异常捕获处理&quot;&gt;&lt;a href=&quot;#I-O-异常捕获处理&quot; class=&quot;headerlink&quot; title=&quot;I/O 异常捕获处理&quot;&gt;&lt;/a&gt;I/O 异常捕获处理&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;I/O 操作的异常捕获通过 &lt;code&gt;catchIOError&lt;/code&gt; 执行，该函数包含在 &lt;code&gt;System.IO.Error&lt;/code&gt; 中，签名为 &lt;code&gt;catchIOError:: IO a-&amp;gt; (IOError -&amp;gt; IO a) -&amp;gt; IO a&lt;/code&gt;。该函数接收两个 IO Monad 作为参数，如果第一个函数执行时产生异常，则执行第二个函数。&lt;/li&gt;
+&lt;li&gt;一个更通用的异常捕获函数是 &lt;code&gt;catch&lt;/code&gt;，包含在 &lt;code&gt;Control.Exception&lt;/code&gt; 中，可捕获任意类型 IO 异常。如果你使用 &lt;code&gt;catch&lt;/code&gt; 则必须指定异常的类型，否则编译器会汇报模糊的定义错误。该函数类型签名为 &lt;code&gt;catch:: Exception e =&amp;gt; IO a -&amp;gt; (e -&amp;gt; IO a) -&amp;gt; IO a&lt;/code&gt;，第二个参数是一个函数，这个函数接收异常并执行第二个 Monad （即 &lt;code&gt;catchIOError&lt;/code&gt; 中捕获到异常后执行的 IO Monad）。这个函数必须指定错误 e 的类型，如果要涵盖所有错误，可以使用 &lt;code&gt;e :: SomeException&lt;/code&gt; 来泛解析。&lt;/li&gt;
+&lt;li&gt;我们使用 &lt;code&gt;finally&lt;/code&gt; 来确保一个 IO 操作的执行，其类型签名为 &lt;code&gt;finally:: IO a-&amp;gt; IO b -&amp;gt; IO a&lt;/code&gt;，无论第一个 IO Monad 成功还是失败，第二个 IO Monad 都将执行，且整个代码块返回值为第一个 IO 行为的返回值。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;缓冲模式和命令行参数&quot;&gt;&lt;a href=&quot;#缓冲模式和命令行参数&quot; class=&quot;headerlink&quot; title=&quot;缓冲模式和命令行参数&quot;&gt;&lt;/a&gt;缓冲模式和命令行参数&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;I/O 行为有如下几种缓冲模式：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;NoBuffering&lt;/code&gt;：不使用缓冲，按字符逐个读取/写入&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;LineBuffering&lt;/code&gt;：使用行缓冲，当一个换行符被输出或整个缓冲区已经足够长时，输出缓冲才被写入。在交互式终端中，一旦输入一个回车，则缓冲区将立刻被写入/读取。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;BlockBuffering&lt;/code&gt;：块缓冲，在可能的情况下按固定大小的块读取/写入，在读写大数据的情况下性能更好，但它将阻塞输入（无法获得回显）直到块足够大。它的值构造器接受一个 &lt;code&gt;Maybe&lt;/code&gt; 类型作为参数，如果是 Nothing 则使用预定义的缓冲区大小，否则如果输入是 &lt;code&gt;Just 1024&lt;/code&gt;，则使用 1024 字节缓冲区。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;hGetBuffering Handle&lt;/code&gt; 可以获得参数句柄的缓冲模式。&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;hSetBuffering Handle BufferMode&lt;/code&gt; 可以设置句柄的缓冲模式，例如 &lt;code&gt;hSetBuffering stdin (BlockBuffering Nothing)&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;命令行参数的读取可使用 &lt;code&gt;System.Environment&lt;/code&gt; 中定义的函数：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;getArgs&lt;/code&gt; 返回 &lt;code&gt;IO [String]&lt;/code&gt;，包含了命令行参数的列表，和 C 语言中的 &lt;code&gt;argv&lt;/code&gt; 类似，这个列表的第一个元素是程序名，之后为其它参数。&lt;/li&gt;
+&lt;li&gt;程序名称可通过 &lt;code&gt;getProgName :: IO String&lt;/code&gt; 获得。&lt;/li&gt;
+&lt;li&gt;指定的环境变量可通过 &lt;code&gt;getEnv :: String -&amp;gt; IO String&lt;/code&gt; 获得，返回 &lt;code&gt;String&lt;/code&gt; 参数键对应的值。&lt;/li&gt;
+&lt;li&gt;全部的环境变量可通过 &lt;code&gt;getEnvironment&lt;/code&gt; 获得，其返回值签名为 &lt;code&gt;[(String, String)]&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;在 POSIX 类系统中，可使用 &lt;code&gt;putEnv&lt;/code&gt; 或 &lt;code&gt;setEnv&lt;/code&gt;（包含在 &lt;code&gt;System.Posix.Env&lt;/code&gt; 模块中） 设置环境变量。但该操作不跨平台，在 Windows 中不存在设置环境变量的方法。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;System.Console.GetOpt&lt;/code&gt; 模块包含了更多处理命令行参数的函数。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;惰性-I-O&quot;&gt;&lt;a href=&quot;#惰性-I-O&quot; class=&quot;headerlink&quot; title=&quot;惰性 I/O&quot;&gt;&lt;/a&gt;惰性 I/O&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;在 Haskell 中，I/O 操作同样保持惰性。例如，&lt;code&gt;hGetContents&lt;/code&gt; 会从一个文件中获取全部内容，返回 &lt;code&gt;IO String&lt;/code&gt;。这里返回的 &lt;code&gt;String&lt;/code&gt; 就将被惰性求值。无论是读取一个 500 GB 的大文件还是一个 2 KB 的小文件，&lt;code&gt;hGetContents&lt;/code&gt; 均不会将文件读入内存。只有当真正使用到其返回的 &lt;code&gt;String&lt;/code&gt; 时，这个读取动作才开始执行。&lt;/li&gt;
+&lt;li&gt;我们通常认为，只有 &lt;strong&gt;输出了对 I/O 返回值计算后的结果&lt;/strong&gt; 才算使用到了其返回值。&lt;/li&gt;
+&lt;li&gt;当 &lt;code&gt;hGetContents&lt;/code&gt; 返回的 &lt;code&gt;String&lt;/code&gt; 在代码中不再被引用时，Haskell 的垃圾回收器将自动释放该部分内存。&lt;/li&gt;
+&lt;li&gt;惰性 I/O 的体现可以通过下面的代码看出：&lt;code&gt;hPutStr&lt;/code&gt;并不是将整个 &lt;code&gt;inpStr&lt;/code&gt; 读入内存，&lt;code&gt;inpStr&lt;/code&gt; 仅当它写数据时才有效。当传输大文本文件时，你可以通过 &lt;code&gt;readFile&lt;/code&gt; 和 &lt;code&gt;writeFile&lt;/code&gt; 建立一个类似管道，内存使用不会很高，并且会很稳定。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;-- This example is modified&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;-- Its sources from 《Real World Haskell》&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;main&lt;/span&gt; = &lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;       inh &amp;lt;- openFile &lt;span class=&quot;string&quot;&gt;&quot;input.txt&quot;&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;ReadMode&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;       outh &amp;lt;- openFile &lt;span class=&quot;string&quot;&gt;&quot;output.txt&quot;&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;WriteMode&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;       inpStr &amp;lt;- hGetContents inh&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;       hPutStr outh inpStr&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;       hClose inh&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;       hClose outh&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;注意：你不能在使用 I/O 动作返回的结果之前就关闭句柄，例如上面的例子，如果 &lt;code&gt;hPutStr outh inpStr&lt;/code&gt; 和 &lt;code&gt;hClose inh&lt;/code&gt; 交换顺序，则程序崩溃。因为 Haskell 的惰性求值，在 &lt;code&gt;hPutStr&lt;/code&gt; 执行前，&lt;code&gt;inpStr&lt;/code&gt; 并未真正读入内存。&lt;/li&gt;
+&lt;li&gt;惰性 I/O 可能导致副作用：I/O 操作返回的 &lt;code&gt;String&lt;/code&gt; 将被纯粹的代码使用，但纯粹的代码并不知道这部分 &lt;code&gt;String&lt;/code&gt; 是 I/O 行为的结果，因此当纯粹代码使用它的时候，可能会导致实际数据的读写。因此当需要和用户输入交互、或者输入数据随时间变化时，&lt;code&gt;hGetContents&lt;/code&gt; 可能并不合适。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/11/21/haskell-io-actions/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/11/21/haskell-io-actions/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/21/haskell-io-actions/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;整理 Haskell 中的 I/O 行为和性质，包括惰性 I/O、异常、临时文件、缓冲等。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="Language" scheme="http://forec.github.io/categories/Language/"/>
+    
+    
+      <category term="Haskell" scheme="http://forec.github.io/tags/Haskell/"/>
+    
+      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
+    
+      <category term="函数式编程" scheme="http://forec.github.io/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>基于 LibNET 的 SYN Flood 攻击</title>
@@ -747,121 +898,6 @@
       <category term="云存储" scheme="http://forec.github.io/tags/%E4%BA%91%E5%AD%98%E5%82%A8/"/>
     
       <category term="线程" scheme="http://forec.github.io/tags/%E7%BA%BF%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CVM 操作记录</title>
-    <link href="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/"/>
-    <id>http://forec.github.io/2016/11/02/cloud-virtual-machine-config/</id>
-    <published>2016-11-02T15:08:14.000Z</published>
-    <updated>2016-11-05T09:51:52.790Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;CVM 上的操作记录。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;CentOS-7-2&quot;&gt;&lt;a href=&quot;#CentOS-7-2&quot; class=&quot;headerlink&quot; title=&quot;CentOS 7.2&quot;&gt;&lt;/a&gt;CentOS 7.2&lt;/h1&gt;&lt;h2 id=&quot;ngrok-服务器搭建&quot;&gt;&lt;a href=&quot;#ngrok-服务器搭建&quot; class=&quot;headerlink&quot; title=&quot;ngrok 服务器搭建&quot;&gt;&lt;/a&gt;ngrok 服务器搭建&lt;/h2&gt;&lt;p&gt;可参考 imike 的&lt;a href=&quot;http://www.imike.me/2016/03/23/CentOS%E4%B8%8B%E9%83%A8%E7%BD%B2Ngrok%E6%9C%8D%E5%8A%A1%E5%99%A8/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;CentOS下部署Ngrok服务器&lt;/a&gt;。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;安装依赖库  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo yum update&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo yum install build-essential golang mercurial git&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;获取 ngrok 源码  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;git &lt;span class=&quot;built_in&quot;&gt;clone&lt;/span&gt; https://github.com/inconshreveable/ngrok.git ngrok&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;cd&lt;/span&gt; ngrok&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;生成证书并替换代码中默认证书，修改域名为解析到云主机的域名。  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;NGROK_DOMAIN=&lt;span class=&quot;string&quot;&gt;&quot;cross.forec.cn&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;openssl genrsa -out base.key &lt;span class=&quot;number&quot;&gt;2048&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;openssl req -new -x509 -nodes -key base.key -days &lt;span class=&quot;number&quot;&gt;10000&lt;/span&gt; -subj &lt;span class=&quot;string&quot;&gt;&quot;/CN=&lt;span class=&quot;variable&quot;&gt;$NGROK_DOMAIN&lt;/span&gt;&quot;&lt;/span&gt; -out base.pem&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;openssl genrsa -out server.key &lt;span class=&quot;number&quot;&gt;2048&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;openssl req -new -key server.key -subj &lt;span class=&quot;string&quot;&gt;&quot;/CN=&lt;span class=&quot;variable&quot;&gt;$NGROK_DOMAIN&lt;/span&gt;&quot;&lt;/span&gt; -out server.csr&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;openssl x509 -req -in server.csr -CA base.pem -CAkey base.key -CAcreateserial -days &lt;span class=&quot;number&quot;&gt;10000&lt;/span&gt; -out server.crt&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;cp base.pem assets/client/tls/ngrokroot.crt&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;编译：&lt;code&gt;sudo make release-server release-client&lt;/code&gt;，便宜结束后 &lt;code&gt;bin&lt;/code&gt; 目录下会有 &lt;code&gt;ngrokd&lt;/code&gt; 和 &lt;code&gt;ngrok&lt;/code&gt; 两个可执行文件，对应服务器和客户端。  &lt;/li&gt;
-&lt;li&gt;不同系统使用的客户端需要重新编译  &lt;ul&gt;
-&lt;li&gt;windows: &lt;code&gt;sudo GOOS=windows GOARCH=amd64 CGO_ENABLED=0 make release-client make release-client&lt;/code&gt;  &lt;/li&gt;
-&lt;li&gt;arm: &lt;code&gt;sudo GOOS=linux GOARCH=arm CGO_ENABLED=0 make release-client make release-client&lt;/code&gt;  &lt;/li&gt;
-&lt;li&gt;mac: &lt;code&gt;sudo GOOS=darwin GOARCH=amd64 make release-client&lt;/code&gt;  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;设置域名解析，增加记录 &lt;code&gt;A&lt;/code&gt;，主机记录为 &lt;code&gt;cross&lt;/code&gt;，记录值为云主机公网 IP。  &lt;/li&gt;
-&lt;li&gt;启动服务器，下面命令指定 http 端口映射到 &lt;code&gt;8081&lt;/code&gt;，&lt;code&gt;https&lt;/code&gt; 映射到 8082。 &lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight stylus&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;./bin/ngrokd -tlsKey=server&lt;span class=&quot;class&quot;&gt;.key&lt;/span&gt; -tlsCrt=server&lt;span class=&quot;class&quot;&gt;.crt&lt;/span&gt; -domain=&lt;span class=&quot;string&quot;&gt;&quot;cross.forec.cn&quot;&lt;/span&gt; -httpAddr=&lt;span class=&quot;string&quot;&gt;&quot;:8081&quot;&lt;/span&gt; -httpsAddr=&lt;span class=&quot;string&quot;&gt;&quot;:8082&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h2 id=&quot;域名解析&quot;&gt;&lt;a href=&quot;#域名解析&quot; class=&quot;headerlink&quot; title=&quot;域名解析&quot;&gt;&lt;/a&gt;域名解析&lt;/h2&gt;&lt;p&gt;将 &lt;a href=&quot;http://blog.forec.cn&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn&lt;/a&gt; 解析至 &lt;a href=&quot;https://forec.github.io&quot;&gt;https://forec.github.io&lt;/a&gt;。  &lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;向解析列表添加一条 &lt;code&gt;CNAME&lt;/code&gt; 记录，主机记录为 &lt;code&gt;blog&lt;/code&gt;，记录值为 &lt;code&gt;forec.github.io&lt;/code&gt;。  &lt;/li&gt;
-&lt;li&gt;在 Github 博客仓库中根目录添加一个文件，文件名为 &lt;code&gt;CNAME&lt;/code&gt;，文件内容为 &lt;code&gt;blog.forec.cn&lt;/code&gt;。  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;开启-IPv6&quot;&gt;&lt;a href=&quot;#开启-IPv6&quot; class=&quot;headerlink&quot; title=&quot;开启 IPv6&quot;&gt;&lt;/a&gt;开启 IPv6&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;新建 &lt;code&gt;/etc/modprobe.d/ipv6.conf&lt;/code&gt;，添加 &lt;code&gt;options ipv6 disable=0&lt;/code&gt;。  &lt;/li&gt;
-&lt;li&gt;向自启动脚本添加 &lt;code&gt;sysctl -w net.ipv6.conf.all.disable_ipv6=0&lt;/code&gt;。  &lt;/li&gt;
-&lt;li&gt;重启，或直接运行上面的命令，观察 &lt;code&gt;ifconfig&lt;/code&gt; 结果。  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;使用-tunnelbroker-分配-IPv6-地址&quot;&gt;&lt;a href=&quot;#使用-tunnelbroker-分配-IPv6-地址&quot; class=&quot;headerlink&quot; title=&quot;使用 tunnelbroker 分配 IPv6 地址&quot;&gt;&lt;/a&gt;使用 tunnelbroker 分配 IPv6 地址&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;在 tunnelbroker 注册，并分配一个 tunnel，填入 VPS 外网 IPv4 地址。  &lt;/li&gt;
-&lt;li&gt;在 tunnel 的 example configuration 选项卡下选择 &lt;code&gt;Linux-route2&lt;/code&gt;，将生成的脚本拷贝到自启动脚本中。  &lt;/li&gt;
-&lt;li&gt;重启，观察 &lt;code&gt;ifconfig&lt;/code&gt;，应增加一个 &lt;code&gt;he-ipv6&lt;/code&gt; 网卡，并可看到对应 IPv6 地址。  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;Nginx-配置&quot;&gt;&lt;a href=&quot;#Nginx-配置&quot; class=&quot;headerlink&quot; title=&quot;Nginx 配置&quot;&gt;&lt;/a&gt;Nginx 配置&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;从官网获得 nginx 最新版本链接，wget 到本地  &lt;/li&gt;
-&lt;li&gt;安装编译依赖包： &lt;code&gt;yum -y install zlib zlib-devel openssl openssl--devel pcre   pcre-devel&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;安装 nginx 依赖包：&lt;code&gt;yum install GeoIP gd libXpm libxslt&lt;/code&gt;  &lt;/li&gt;
-&lt;li&gt;编译、安装  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight cpp&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;tar -zxvf nginx-&lt;span class=&quot;number&quot;&gt;1.10&lt;/span&gt;&lt;span class=&quot;number&quot;&gt;.2&lt;/span&gt;.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;cd nginx-&lt;span class=&quot;number&quot;&gt;1.10&lt;/span&gt;-&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;./configure&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;make&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;make install&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;/usr/local/nginx/sbin/nginx&lt;/code&gt; 运行，在浏览器输入 IP 观察是否显示欢迎页  &lt;/li&gt;
-&lt;li&gt;向 &lt;code&gt;/etc/profile&lt;/code&gt; 增加环境变量并 &lt;code&gt;source /etc/profile&lt;/code&gt; 更新  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight xquery&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;PATH=/usr/local/nginx/sbin:&lt;span class=&quot;variable&quot;&gt;$PATH&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;export PATH&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h2 id=&quot;为-Ngrok-做反向代理&quot;&gt;&lt;a href=&quot;#为-Ngrok-做反向代理&quot; class=&quot;headerlink&quot; title=&quot;为 Ngrok 做反向代理&quot;&gt;&lt;/a&gt;为 Ngrok 做反向代理&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;要令 &lt;code&gt;monitor.cross.forec.cn&lt;/code&gt; 作为 ngrok 代理，该域名对应的 80 端口转发至本地 9999 端口。在 &lt;code&gt;/usr/local/nginx/conf&lt;/code&gt; 增加配置文件 &lt;code&gt;ngrok_monitor.conf&lt;/code&gt;。  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight xquery&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;server&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        listen &lt;span class=&quot;number&quot;&gt;80&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        server_name monitor.cross.forec.cn;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        location / &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                proxy_set_header X-Real-IP &lt;span class=&quot;variable&quot;&gt;$remote&lt;/span&gt;_addr;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                proxy_set_header X-Forwarded-For &lt;span class=&quot;variable&quot;&gt;$proxy&lt;/span&gt;_add_x_forwarded_for;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                proxy_set_header Host &lt;span class=&quot;variable&quot;&gt;$http&lt;/span&gt;_host:&lt;span class=&quot;number&quot;&gt;8081&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                proxy_set_header X-Nginx-Proxy true;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                proxy_set_header Connection &lt;span class=&quot;string&quot;&gt;&quot;&quot;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                proxy_pass http://&lt;span class=&quot;number&quot;&gt;127.0&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;.&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;9999&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h2 id=&quot;安装-MySQL&quot;&gt;&lt;a href=&quot;#安装-MySQL&quot; class=&quot;headerlink&quot; title=&quot;安装 MySQL&quot;&gt;&lt;/a&gt;安装 MySQL&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;腾讯云 CentOS 7.2 的 yum 源不提供 &lt;code&gt;mysql-server&lt;/code&gt;  &lt;/li&gt;
-&lt;li&gt;下载 mysql 的 repo 源： &lt;code&gt;wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm&lt;/code&gt;  &lt;/li&gt;
-&lt;li&gt;安装源： &lt;code&gt;sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm&lt;/code&gt;  &lt;/li&gt;
-&lt;li&gt;安装 mysql ：&lt;code&gt;sudo yum install mysql-server&lt;/code&gt;  &lt;/li&gt;
-&lt;li&gt;启动 mysqld 服务：&lt;code&gt;systemctl start  mysqld.service&lt;/code&gt;  &lt;/li&gt;
-&lt;li&gt;修改密码：&lt;code&gt;mysqladmin -u USER -p password PASSWORD&lt;/code&gt; 或使用 root 账户登入 mysql，执行&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight sql&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;operator&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;USE&lt;/span&gt; mysql;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;operator&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;UPDATE&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;SET&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;password&lt;/span&gt;=&lt;span class=&quot;keyword&quot;&gt;PASSWORD&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&#39;123456&#39;&lt;/span&gt;) &lt;span class=&quot;keyword&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;user&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&#39;root&#39;&lt;/span&gt;;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;operator&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;FLUSH&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;PRIVILEGES&lt;/span&gt;;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;开机启动 mysqld 服务：&lt;code&gt;systemctl enable mysqld.service&lt;/code&gt;  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;WordPress-Nginx-配置&quot;&gt;&lt;a href=&quot;#WordPress-Nginx-配置&quot; class=&quot;headerlink&quot; title=&quot;WordPress + Nginx 配置&quot;&gt;&lt;/a&gt;WordPress + Nginx 配置&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;安装 Mysql、PHP 和 nginx： &lt;a href=&quot;https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-centos-6&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;How To Install Linux, nginx, MySQL, PHP (LEMP) stack on CentOS 6&lt;/a&gt;  &lt;/li&gt;
-&lt;li&gt;安装 WordPress 并配置 nginx ：&lt;a href=&quot;https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-nginx-on-centos-6--2&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;How To Install Wordpress with nginx on CentOS 6&lt;/a&gt;  &lt;/li&gt;
-&lt;li&gt;修改静态链接代理：在 wordpress 的 nginx 配置文件中的 &lt;code&gt;locatino / {}&lt;/code&gt; 下添加：&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight xquery&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (-f &lt;span class=&quot;variable&quot;&gt;$request&lt;/span&gt;_filename/index.html)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    rewrite (.*) &lt;span class=&quot;variable&quot;&gt;$1&lt;/span&gt;/index.html break;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (-f &lt;span class=&quot;variable&quot;&gt;$request&lt;/span&gt;_filename/index.php)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    rewrite (.*) &lt;span class=&quot;variable&quot;&gt;$1&lt;/span&gt;/index.php;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (!-f &lt;span class=&quot;variable&quot;&gt;$request&lt;/span&gt;_filename)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    rewrite (.*) /index.php;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h2 id=&quot;Nginx-HTTPS-配置&quot;&gt;&lt;a href=&quot;#Nginx-HTTPS-配置&quot; class=&quot;headerlink&quot; title=&quot;Nginx HTTPS 配置&quot;&gt;&lt;/a&gt;Nginx HTTPS 配置&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;安装 openssl 和 openssl-devel：&lt;code&gt;yum install openssl openssl-devel&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;颁发证书&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight stylus&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;cd /usr/local/nginx/conf&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;openssl genrsa -des3 -out server&lt;span class=&quot;class&quot;&gt;.key&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;1024&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;openssl req -new -key server&lt;span class=&quot;class&quot;&gt;.key&lt;/span&gt; -out server&lt;span class=&quot;class&quot;&gt;.csr&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;openssl rsa -&lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; server&lt;span class=&quot;class&quot;&gt;.key&lt;/span&gt; -out server_nopwd&lt;span class=&quot;class&quot;&gt;.key&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;openssl x509 -req -days &lt;span class=&quot;number&quot;&gt;365&lt;/span&gt; -&lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; server&lt;span class=&quot;class&quot;&gt;.csr&lt;/span&gt; -signkey server_nopwd&lt;span class=&quot;class&quot;&gt;.key&lt;/span&gt; -out server.crt&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;增加配置文件 &lt;code&gt;wordpress_https.conf&lt;/code&gt;，除下面部分，其它和 wordpress 配置文件相同&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight dust&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;xml&quot;&gt;server &lt;/span&gt;&lt;span class=&quot;expression&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;variable&quot;&gt;listen&lt;/span&gt; 443;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;variable&quot;&gt;sever&lt;/span&gt;_&lt;span class=&quot;variable&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;forec.cn&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;variable&quot;&gt;ssl&lt;/span&gt;_&lt;span class=&quot;variable&quot;&gt;certificate&lt;/span&gt;  &lt;span class=&quot;end-block&quot;&gt;/usr&lt;/span&gt;&lt;span class=&quot;end-block&quot;&gt;/local&lt;/span&gt;&lt;span class=&quot;end-block&quot;&gt;/nginx&lt;/span&gt;&lt;span class=&quot;end-block&quot;&gt;/conf&lt;/span&gt;&lt;span class=&quot;end-block&quot;&gt;/server.crt&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;variable&quot;&gt;ssl&lt;/span&gt;_&lt;span class=&quot;variable&quot;&gt;certificate&lt;/span&gt;_&lt;span class=&quot;variable&quot;&gt;key&lt;/span&gt;  &lt;span class=&quot;end-block&quot;&gt;/usr&lt;/span&gt;&lt;span class=&quot;end-block&quot;&gt;/local&lt;/span&gt;&lt;span class=&quot;end-block&quot;&gt;/nginx&lt;/span&gt;&lt;span class=&quot;end-block&quot;&gt;/conf&lt;/span&gt;&lt;span class=&quot;end-block&quot;&gt;/server&lt;/span&gt;_&lt;span class=&quot;variable&quot;&gt;nopwd.key&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&quot;xml&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;hr&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;https://forec.github.io/2016/11/02/cloud-virtual-machine-config/&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;https://forec.github.io/2016/11/02/cloud-virtual-machine-config/&quot;&gt;https://forec.github.io/2016/11/02/cloud-virtual-machine-config/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;https://forec.github.io/&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;CVM 上的操作记录。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="Configuration" scheme="http://forec.github.io/categories/Configuration/"/>
-    
-    
-      <category term="CVM" scheme="http://forec.github.io/tags/CVM/"/>
-    
-      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
     
   </entry>
   

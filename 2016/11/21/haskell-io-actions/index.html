@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Qt msvc2013 问题解决方案 | Forec&#39;s Notes</title>
+    <title>Haskell 中的非纯粹行为 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="Mistakes,OS,Qt,字符编码,线程" />
+        <meta name="keywords" content="Haskell,OS,函数式编程" />
     
-    <meta name="description" content="编写 Remote-Control 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。">
+    <meta name="description" content="整理 Haskell 中的 I/O 行为和性质，包括惰性 I/O、异常、临时文件、缓冲等。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Qt msvc2013 问题解决方案">
-<meta property="og:url" content="http://forec.github.io/2016/09/14/tips-for-qt/index.html">
+<meta property="og:title" content="Haskell 中的非纯粹行为">
+<meta property="og:url" content="http://forec.github.io/2016/11/21/haskell-io-actions/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="编写 Remote-Control 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/tips-for-qt.jpg">
-<meta property="og:updated_time" content="2016-11-08T11:17:52.725Z">
+<meta property="og:description" content="整理 Haskell 中的 I/O 行为和性质，包括惰性 I/O、异常、临时文件、缓冲等。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/haskell-io-actions.jpg">
+<meta property="og:updated_time" content="2016-11-21T16:26:00.289Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Qt msvc2013 问题解决方案">
-<meta name="twitter:description" content="编写 Remote-Control 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。">
+<meta name="twitter:title" content="Haskell 中的非纯粹行为">
+<meta name="twitter:description" content="整理 Haskell 中的 I/O 行为和性质，包括惰性 I/O、异常、临时文件、缓冲等。">
     
 
     
@@ -135,18 +135,18 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Configuration/">Configuration</a>
+    <a class="page-title-link" href="/categories/Language/">Language</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-tips-for-qt" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-haskell-io-actions" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        Qt msvc2013 问题解决方案
+        Haskell 中的非纯粹行为
         </h1>
     
 
@@ -154,86 +154,139 @@
         
         
             <div class="article-subtitle">
-                <a href="/2016/09/14/tips-for-qt/" class="article-date">
-    <time datetime="2016-09-14T02:36:35.000Z" itemprop="datePublished">2016-09-14</time>
+                <a href="/2016/11/21/haskell-io-actions/" class="article-date">
+    <time datetime="2016-11-21T01:03:07.000Z" itemprop="datePublished">2016-11-21</time>
 </a>
                 
-    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mistakes/">Mistakes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Qt/">Qt</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/字符编码/">字符编码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程/">线程</a></li></ul>
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Haskell/">Haskell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程/">函数式编程</a></li></ul>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>编写 <a href="https://github.com/Forec/remote-control" target="_blank" rel="external">Remote-Control</a> 的客户端代码，界面用Qt绘制，记录出现的问题及解决方案。</p>
+<p>整理 Haskell 中的 I/O 行为和性质，包括惰性 I/O、异常、临时文件、缓冲等。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="MSVC的Release问题"><a href="#MSVC的Release问题" class="headerlink" title="MSVC的Release问题"></a>MSVC的Release问题</h1><ul>
-<li>使用Qt版本5.6.0， msvc2013。Release后缺少动态链接库。</li>
-<li><code>msvc2013</code> 的 <code>bin</code> 目录下没有 <code>mingwm10.dll</code>、<code>libgcc_s_dw2-1.dll</code>等。</li>
-<li>在 <code>main()</code> 函数顶部添加 <code>QCoreApplication::addLibraryPath(&quot;./&quot;);</code></li>
-<li>将release出的 <code>app.exe</code> 拷贝到部署文件夹，<code>path_to_msvc2013\bin\windeployqt.exe app.exe</code>。</li>
-<li>可能仍出现 <code>无法定位动态链接库 Qt5Widgets.dll</code>。环境变量中有 <code>MikTex</code> 的路径，该路径下包含 <code>Qt5Widgets.dll</code>， 将 <code>msvc2013</code> 在环境变量中的位置调整高于 <code>MikTex</code>。</li>
-<li>或在部署文件夹下新建 <code>qt.conf</code>，指定 <code>Library</code> 加载目录。</li>
+<h1 id="基本-I-O-行为"><a href="#基本-I-O-行为" class="headerlink" title="基本 I/O 行为"></a>基本 I/O 行为</h1><h2 id="标准输入-输出"><a href="#标准输入-输出" class="headerlink" title="标准输入/输出"></a>标准输入/输出</h2><ul>
+<li><code>Prelude</code> 定义了一些标准输入、输出及其函数：<ul>
+<li><code>print</code>：将任何可打印的值输出到标准输出设备</li>
+<li><code>putStr</code>：向标准输出输出字符串</li>
+<li><code>putStrLn</code>：向标准输出输出字符串并添加换行</li>
+<li><code>getLine</code>：从标准输入中读取一行</li>
+<li><code>interact</code>：其类型签名为 <code>interact :: (String -&gt; String) -&gt; IO()</code>，该函数接受一个签名为 <code>String -&gt; String</code> 的函数，对标准输入中的每个字符串做转换并输出。默认情况下 GHCI 采用 LineBuffering 模式，也就是每输入一行或输入足够长的情况下才产生一次回显</li>
 </ul>
-<h1 id="部署程序图标"><a href="#部署程序图标" class="headerlink" title="部署程序图标"></a>部署程序图标</h1><ul>
-<li>程序图标 <code>icon.ico</code></li>
-<li>在工程目录下 （与<code>project.pro</code>同目录）新建 <code>icon.rc</code>，添加 <code>IDI_ICON1  ICON   DISCARDABLE   &quot;icon.ico&quot;</code></li>
-<li>在 <code>project.pro</code> 中添加 <code>RC_FILE = icon.rc</code></li>
-<li>release可执行文件</li>
+</li>
+<li>标准输入/输出实际是 <code>System.IO</code> 预定义的一些句柄，以上的<code>getLine</code>、<code>putStr</code>等函数实际是由其句柄函数封装得来的：<ul>
+<li><code>stdin</code> ：<code>getLine = hGetLine stdin</code></li>
+<li><code>stdout</code>：<code>putStrLn = hPutStrLn stdout</code></li>
+<li><code>stderr</code>：<code>print = hPrint stdout</code></li>
 </ul>
-<h1 id="宽字符转换"><a href="#宽字符转换" class="headerlink" title="宽字符转换"></a>宽字符转换</h1><ul>
-<li>执行 <code>ShellExecute()</code> 函数时，参数 3 需要宽字符。</li>
-<li><code>ShellExecute(NULL, L&quot;open&quot;, open_file_path, NULL , NULL, SW_SHOWNORMAL);</code></li>
-<li>编写函数 <code>string2LPCWSTR</code> 将 <code>std::string</code> 转为 <code>LPCWSTR</code>。</li>
+</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> LPCWSTR <span class="title">stringToLPCWSTR</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> src)</span></span>&#123;</span><br><span class="line">    <span class="keyword">size_t</span> srcsize = src.length() + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">size_t</span> convertedChars = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">wchar_t</span> *wcstring = (<span class="keyword">wchar_t</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">wchar_t</span>)*(src.length()-<span class="number">1</span>));</span><br><span class="line">    mbstowcs_s(&amp;convertedChars, wcstring, srcsize, src.c_str(), _TRUNCATE);</span><br><span class="line">    <span class="keyword">return</span> wcstring;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="Qt下UTF8和GBK的转换"><a href="#Qt下UTF8和GBK的转换" class="headerlink" title="Qt下UTF8和GBK的转换"></a>Qt下UTF8和GBK的转换</h1><ul>
-<li>UTF82GBK</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> QString <span class="title">UTF82GBK</span><span class="params">(<span class="keyword">const</span> QString &amp;inStr)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    QTextCodec *gbk = QTextCodec::codecForName(<span class="string">"GB18030"</span>);</span><br><span class="line">    QString u2g = gbk-&gt;toUnicode(inStr.toLocal8Bit());</span><br><span class="line">    <span class="keyword">return</span> u2g;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="句柄和简化的文本文件读写"><a href="#句柄和简化的文本文件读写" class="headerlink" title="句柄和简化的文本文件读写"></a>句柄和简化的文本文件读写</h2><p><code>System.IO</code> 包中包含了多数 I/O 相关操作，其中大多数操作已被 <code>Prelude</code> 导入。<code>Handle</code> 类型是文件句柄，Haskell 从句柄读写数据。</p>
 <ul>
-<li>GBK2UTF8</li>
+<li><code>openFile :: FilePath -&gt; IOMode -&gt; IO Handle</code>：以文本方式打开一个文件并返回 IO Monad 包裹的句柄，其中 <code>IOMode</code> 包括：  <ul>
+<li><code>ReadMode</code>：只读</li>
+<li><code>WriteMode</code>：只写</li>
+<li><code>ReadWriteMode</code>：读写</li>
+<li><code>AppendMode</code>：追加</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> QString <span class="title">GBK2UTF8</span><span class="params">(<span class="keyword">const</span> QString &amp;inStr)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    QTextCodec *gbk = QTextCodec::codecForName(<span class="string">"GB18030"</span>);</span><br><span class="line">    QString g2u = gbk-&gt;toUnicode(gbk-&gt;fromUnicode(inStr));</span><br><span class="line">    <span class="keyword">return</span> g2u;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="Qt下线程和ui组件处理"><a href="#Qt下线程和ui组件处理" class="headerlink" title="Qt下线程和ui组件处理"></a>Qt下线程和ui组件处理</h1><ul>
-<li>编写线程子函数 <code>unsigned int __stdcall refreshThread(void* pM)</code>，试图在子线程中修改ui组件</li>
-<li><code>handle = (HANDLE)_beginthreadex(NULL, 0, refreshThread, (void *)(&amp;actives[i]), 0,NULL );</code> 参数 3 不能是非静态成员函数</li>
-<li>Qt中只有 <code>QApplication.exec()</code> 主线程能对界面元素进行控制</li>
-<li>利用 <code>signal/slot</code>，在线程中创建一个 <code>signal</code>，在主线程中创建一个 <code>slot</code>。当线程修改界面时，发送 <code>signal</code> 通知主线程响应。</li>
+</li>
+<li><code>openBinaryFile :: FilePath -&gt; IOMode -&gt; IO Handle</code>：以二进制方式打开一个文件并返回 IO Monad 包裹的句柄，其中 <code>IOMode</code> 与 <code>openFile</code> 中相同</li>
+<li><code>hIsEOF :: Handle -&gt; IO Bool</code>：是否已读取到句柄末尾</li>
+<li><code>hGetLine :: Handle -&gt; IO String</code>：从句柄中读取一行，此函数应只在文本文件的句柄中使用</li>
+<li><code>hPutStrLn :: Handle -&gt; String -&gt; IO ()</code>：向句柄中写入字符串并添加换行</li>
+<li><code>hPutStr :: Handle -&gt; String -&gt; IO ()</code>：向句柄中写入字符串</li>
+<li><code>hPrint :: Show a =&gt; Handle -&gt; a -&gt; IO ()</code>：向句柄中写入可打印值（以上四个函数实际是标准输入/输出函数的内部实现）。注意此函数和 <code>putStr</code> 不同，此函数可打印任何实现了 <code>Show</code> 的实例的值，例如 <code>hPrint stdout &quot;haskell&quot;</code>，则标准输出为 <code>&quot;haskell&quot;</code>，而 <code>hPutStr stdout &quot;haskell&quot;</code> 在标准输出产生的是 <code>haskell</code>。</li>
+<li><code>hClose :: Handle -&gt; IO ()</code>：关闭句柄</li>
+<li><code>hTell :: Handle -&gt; IO Integer</code>：返回此句柄目前对应文件位置</li>
+<li><code>hSeek :: Handle -&gt; SeekMode -&gt; Integer -&gt; IO ()</code>：按 <code>SeekMode</code> 模式设置句柄位置，其中 <code>SeekMode</code> 包括：<ul>
+<li><code>AbsoluteSeek</code>：绝对定位，按照给定的 <code>Integer</code> 参数设置句柄位置</li>
+<li><code>RelativeSeek</code>：相对定位，相对当前句柄位置按给定参数修正</li>
+<li><code>SeekFromEnd</code>：从文件尾部定位，与 <code>AbsoluteSeek</code> 方向相反</li>
 </ul>
-<h1 id="Qt的Sql操作"><a href="#Qt的Sql操作" class="headerlink" title="Qt的Sql操作"></a>Qt的Sql操作</h1><ul>
-<li><code>QSqlDatabase db = QSqlDatabase::addDatabase(&quot;QSQLITE&quot;);</code> 添加 sqlite，可添加第二个参数指定当前连接名称，未指定该参数则为默认连接</li>
-<li><code>db.setDatabaseName(&quot;data.db&quot;);</code> 指定数据库文件</li>
-<li><code>query = QSqlQuery(db);</code> 创建查询</li>
-<li><code>query.exec(&quot;&quot;);</code> 执行sql语句</li>
-<li>添加多个数据库时，<code>addDatabase</code>必须指定不同的连接名称，否则会覆盖默认连接或重名连接引发错误。</li>
+</li>
+<li><code>hIsSeekable :: Handle -&gt; IO Bool</code>：返回该句柄是否可以定位</li>
+<li><code>hGetPosn :: Handle -&gt; IO HandlePosn</code>：返回该句柄位置</li>
+<li><code>hGetChar :: Handle -&gt; IO Char</code>：从句柄读取一个字符</li>
+<li><code>hGetContents :: Handle -&gt; IO String</code>：读取句柄全部内容</li>
+<li><code>hGetEcho :: Handle -&gt; IO Bool</code>：获取一个链接到终端的句柄的回显状态</li>
+<li>使用 <code>openFile</code>、<code>writeFile</code> 可处理文本文件，通常可简化为以下三种操作，其中 <code>FilePath</code> 是 <code>String</code> 的别名：<ul>
+<li><code>readFile :: FilePath -&gt; IO String</code>：接受一个 <code>FilePath</code> 作为文件名，打开该文件（如果存在的话）并以字符串返回文件内容</li>
+<li><code>writeFile :: FilePath -&gt; String -&gt; IO()</code>：接受一个 <code>FilePath</code> 作为文件名，向该文件写入字符串（如果文件不存在则创建，否则覆盖原文件）</li>
+<li><code>appendFile :: FilePath -&gt; String -&gt; IO ()</code>：接受一个 <code>FilePath</code> 作为文件名，并想该文件附加字符串（无论文件是否存在都会写入）</li>
 </ul>
-<h1 id="Socket通信频率问题"><a href="#Socket通信频率问题" class="headerlink" title="Socket通信频率问题"></a>Socket通信频率问题</h1><ul>
-<li>使用同一个 <code>buf</code> 作为发送方的缓冲，当 <code>buf</code>长度过大，超过 <code>Socket</code>默认缓冲长度时，如果发送频率过快，socket的拆分发送将使 <code>buf</code> 同时读写，接收方将收到垃圾数据。</li>
-<li><code>send</code> 返回实际写入的字节数，检查发送的数目并移动缓冲窗口，结尾判断可以用字节填充。</li>
-<li>或缩小 <code>buf</code> 长度，但网络情况差的时候仍会写入垃圾数据，只是垃圾数据较少。传输二进制文件将因为垃圾数据的存在而无效。</li>
+</li>
 </ul>
-<h1 id="一些组件的tips"><a href="#一些组件的tips" class="headerlink" title="一些组件的tips"></a>一些组件的tips</h1><ul>
-<li>添加 <code>QTableWidget</code> 右键菜单</li>
+<h1 id="序列化和语法糖"><a href="#序列化和语法糖" class="headerlink" title="序列化和语法糖"></a>序列化和语法糖</h1><ul>
+<li><code>do</code> 语法糖将执行非纯粹行为的代码包裹起来，其中：<ul>
+<li>整个代码块返回的值是代码块最后一行语句返回的值</li>
+<li>在代码块中使用 <code>&lt;-</code> 从 I/O 行为中获取值</li>
+<li>在代码块中使用 <code>let</code> 从纯粹代码中获取值，注意不是 <code>let..in</code></li>
+<li><code>do</code> 代码块返回的值与 <code>return</code> 函数无关，<code>return</code> 仅仅是将纯粹的值使用 Monad 包裹，与命令式语言中的 <code>return</code> 没有任何联系。在 I/O 操作中，<code>return</code> 的作用就是将纯粹值包裹到 IO Monad 中。</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ui-&gt;tableWidget-&gt;setContextMenuPolicy(Qt::CustomContextMenu);</span><br><span class="line">popMenu = <span class="keyword">new</span> QMenu(ui-&gt;tableWidget);</span><br><span class="line">action = <span class="keyword">new</span> QAction(<span class="string">"connect"</span>,<span class="keyword">this</span>);</span><br><span class="line"><span class="keyword">void</span> MainWindow::on_tableWidget_customContextMenuRequested(<span class="keyword">const</span> QPoint &amp;pos)</span><br><span class="line">&#123;</span><br><span class="line">    popMenu-&gt;clear();    <span class="comment">// popMenu for QTableWidget</span></span><br><span class="line">    popMenu-&gt;addAction(action);    <span class="comment">// action for connect</span></span><br><span class="line">    popMenu-&gt;exec(QCursor::pos());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>你可以假设，<code>do</code> 代码块中的每个语句（除了 <code>let</code>），都会产生一个待执行的 I/O 操作。</li>
+<li><code>mapM</code> 和 <code>mapM_</code> 提供了在列表上应用 Monad 的方式，其中 <code>mapM</code> 返回应用后的列表，而 <code>mapM_</code> 丢弃结果。<ul>
+<li><code>mapM :: (Monad m) =&gt; (a -&gt; m b) -&gt; [a] -&gt; m [b]</code></li>
+<li><code>mapM_ :: (Monad m) =&gt; (a -&gt; m b) -&gt; [a] -&gt; m ()</code></li>
+</ul>
+</li>
+<li>以下两个函数将 Monad 操作连接起来，当 Monad 为 IO Monad 时即为 do 的内部实现<ul>
+<li><code>(&gt;&gt;) :: (Monad m) =&gt; m a -&gt; m b -&gt; m b</code>：该函数连接两个 Monad 操作，首先执行第一个，之后执行第二个，返回是第二个 Monad 操作返回的值</li>
+<li><code>(&gt;&gt;=) :: (Monad m) =&gt; m a -&gt; (a -&gt; m b) -&gt; m b</code>：该函数执行第一个 Monad 操作，将其返回的结果传给第二个参数，第二个参数接受第一个 Monad 操作的结果，并返回另一个 Monad。例如 <code>getLine &gt;&gt;= putStrLn</code> 作用就是从键盘读取一行，再输出到屏幕。</li>
+</ul>
+</li>
+</ul>
+<h1 id="文件操作和临时文件"><a href="#文件操作和临时文件" class="headerlink" title="文件操作和临时文件"></a>文件操作和临时文件</h1><ul>
+<li>涉及非内容的文件操作相关函数包含在 <code>System.Directory</code> 中，常见如：<ul>
+<li><code>removeFile :: FilePath -&gt; IO()</code>：删除参数名指向的文件</li>
+<li><code>renameFile :: FilePath -&gt; FilePath -&gt; IO()</code>：重命名文件，可等同于 <code>mv</code> 操作，但若第二个参数（重命名后的文件名）对应文件已存在，则该文件被要移动的文件覆盖。使用该操作应小心。</li>
+<li><code>renameDirectory :: FilePath -&gt; FilePath -&gt; IO()</code>：重命名文件夹</li>
+<li><code>getTemporaryDirectory :: IO FilePath</code>：获取当前机器的临时文件目录。有些机器并不存在默认的缓存目录，此时调用此函数将导致异常。因此此函数应当被 <code>catchIOError</code> 包裹。例如，<code>catchIOError (getTemporaryDirectory) (\_-&gt;return &quot;.&quot;)</code>。</li>
+</ul>
+</li>
+<li>临时文件主要使用 <code>openTempFile :: FilePath -&gt; String -&gt; IO(FilePath, Handle)</code> 创建，对于二进制临时文件则使用 <code>openBinaryTempFile</code>。该函数第一个参数为要创建临时文件的目录，第二个参数为临时文件的前缀，例如 <code>tempfile</code>，则 Haskell 生成的临时文件会有类似 <code>tempfileXXXXXX</code> 的文件名，后面的 <code>XXXXXX</code> 为随机生成的序列。该函数会返回 IO Monad 包裹的路径和句柄。</li>
+<li>在临时文件试用结束后，通常会通过 <code>hClose</code> 关闭临时文件句柄，之后 <code>removeFile</code> 删除临时文件。此部分处理工作应由 <code>finally</code> 包含以保证执行。</li>
+</ul>
+<h1 id="I-O-异常捕获处理"><a href="#I-O-异常捕获处理" class="headerlink" title="I/O 异常捕获处理"></a>I/O 异常捕获处理</h1><ul>
+<li>I/O 操作的异常捕获通过 <code>catchIOError</code> 执行，该函数包含在 <code>System.IO.Error</code> 中，签名为 <code>catchIOError:: IO a-&gt; (IOError -&gt; IO a) -&gt; IO a</code>。该函数接收两个 IO Monad 作为参数，如果第一个函数执行时产生异常，则执行第二个函数。</li>
+<li>一个更通用的异常捕获函数是 <code>catch</code>，包含在 <code>Control.Exception</code> 中，可捕获任意类型 IO 异常。如果你使用 <code>catch</code> 则必须指定异常的类型，否则编译器会汇报模糊的定义错误。该函数类型签名为 <code>catch:: Exception e =&gt; IO a -&gt; (e -&gt; IO a) -&gt; IO a</code>，第二个参数是一个函数，这个函数接收异常并执行第二个 Monad （即 <code>catchIOError</code> 中捕获到异常后执行的 IO Monad）。这个函数必须指定错误 e 的类型，如果要涵盖所有错误，可以使用 <code>e :: SomeException</code> 来泛解析。</li>
+<li>我们使用 <code>finally</code> 来确保一个 IO 操作的执行，其类型签名为 <code>finally:: IO a-&gt; IO b -&gt; IO a</code>，无论第一个 IO Monad 成功还是失败，第二个 IO Monad 都将执行，且整个代码块返回值为第一个 IO 行为的返回值。</li>
+</ul>
+<h1 id="缓冲模式和命令行参数"><a href="#缓冲模式和命令行参数" class="headerlink" title="缓冲模式和命令行参数"></a>缓冲模式和命令行参数</h1><ul>
+<li>I/O 行为有如下几种缓冲模式：<ul>
+<li><code>NoBuffering</code>：不使用缓冲，按字符逐个读取/写入</li>
+<li><code>LineBuffering</code>：使用行缓冲，当一个换行符被输出或整个缓冲区已经足够长时，输出缓冲才被写入。在交互式终端中，一旦输入一个回车，则缓冲区将立刻被写入/读取。</li>
+<li><code>BlockBuffering</code>：块缓冲，在可能的情况下按固定大小的块读取/写入，在读写大数据的情况下性能更好，但它将阻塞输入（无法获得回显）直到块足够大。它的值构造器接受一个 <code>Maybe</code> 类型作为参数，如果是 Nothing 则使用预定义的缓冲区大小，否则如果输入是 <code>Just 1024</code>，则使用 1024 字节缓冲区。</li>
+</ul>
+</li>
+<li>使用 <code>hGetBuffering Handle</code> 可以获得参数句柄的缓冲模式。</li>
+<li>使用 <code>hSetBuffering Handle BufferMode</code> 可以设置句柄的缓冲模式，例如 <code>hSetBuffering stdin (BlockBuffering Nothing)</code>。</li>
+<li>命令行参数的读取可使用 <code>System.Environment</code> 中定义的函数：<ul>
+<li><code>getArgs</code> 返回 <code>IO [String]</code>，包含了命令行参数的列表，和 C 语言中的 <code>argv</code> 类似，这个列表的第一个元素是程序名，之后为其它参数。</li>
+<li>程序名称可通过 <code>getProgName :: IO String</code> 获得。</li>
+<li>指定的环境变量可通过 <code>getEnv :: String -&gt; IO String</code> 获得，返回 <code>String</code> 参数键对应的值。</li>
+<li>全部的环境变量可通过 <code>getEnvironment</code> 获得，其返回值签名为 <code>[(String, String)]</code>。</li>
+<li>在 POSIX 类系统中，可使用 <code>putEnv</code> 或 <code>setEnv</code>（包含在 <code>System.Posix.Env</code> 模块中） 设置环境变量。但该操作不跨平台，在 Windows 中不存在设置环境变量的方法。</li>
+</ul>
+</li>
+<li><code>System.Console.GetOpt</code> 模块包含了更多处理命令行参数的函数。</li>
+</ul>
+<h1 id="惰性-I-O"><a href="#惰性-I-O" class="headerlink" title="惰性 I/O"></a>惰性 I/O</h1><ul>
+<li>在 Haskell 中，I/O 操作同样保持惰性。例如，<code>hGetContents</code> 会从一个文件中获取全部内容，返回 <code>IO String</code>。这里返回的 <code>String</code> 就将被惰性求值。无论是读取一个 500 GB 的大文件还是一个 2 KB 的小文件，<code>hGetContents</code> 均不会将文件读入内存。只有当真正使用到其返回的 <code>String</code> 时，这个读取动作才开始执行。</li>
+<li>我们通常认为，只有 <strong>输出了对 I/O 返回值计算后的结果</strong> 才算使用到了其返回值。</li>
+<li>当 <code>hGetContents</code> 返回的 <code>String</code> 在代码中不再被引用时，Haskell 的垃圾回收器将自动释放该部分内存。</li>
+<li>惰性 I/O 的体现可以通过下面的代码看出：<code>hPutStr</code>并不是将整个 <code>inpStr</code> 读入内存，<code>inpStr</code> 仅当它写数据时才有效。当传输大文本文件时，你可以通过 <code>readFile</code> 和 <code>writeFile</code> 建立一个类似管道，内存使用不会很高，并且会很稳定。</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- This example is modified</span></span><br><span class="line"><span class="comment">-- Its sources from 《Real World Haskell》</span></span><br><span class="line"><span class="title">main</span> = <span class="keyword">do</span> </span><br><span class="line">       inh &lt;- openFile <span class="string">"input.txt"</span> <span class="type">ReadMode</span></span><br><span class="line">       outh &lt;- openFile <span class="string">"output.txt"</span> <span class="type">WriteMode</span></span><br><span class="line">       inpStr &lt;- hGetContents inh</span><br><span class="line">       hPutStr outh inpStr</span><br><span class="line">       hClose inh</span><br><span class="line">       hClose outh</span><br></pre></td></tr></table></figure>
 <ul>
-<li>滚动条位置设置</li>
+<li>注意：你不能在使用 I/O 动作返回的结果之前就关闭句柄，例如上面的例子，如果 <code>hPutStr outh inpStr</code> 和 <code>hClose inh</code> 交换顺序，则程序崩溃。因为 Haskell 的惰性求值，在 <code>hPutStr</code> 执行前，<code>inpStr</code> 并未真正读入内存。</li>
+<li>惰性 I/O 可能导致副作用：I/O 操作返回的 <code>String</code> 将被纯粹的代码使用，但纯粹的代码并不知道这部分 <code>String</code> 是 I/O 行为的结果，因此当纯粹代码使用它的时候，可能会导致实际数据的读写。因此当需要和用户输入交互、或者输入数据随时间变化时，<code>hGetContents</code> 可能并不合适。</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QTextEdit *edit = ui-&gt;textEdit;        <span class="comment">// example for QTextEdit</span></span><br><span class="line">QScrollBar *sb = edit-&gt;verticalScrollBar();</span><br><span class="line">sb-&gt;setValue(sb-&gt;maximumHeight());</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Qt正则</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">QString <span class="title">IPv4pattern</span><span class="params">(<span class="string">"\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.)&#123;3&#125;(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b"</span>)</span></span>;</span><br><span class="line"><span class="function">QRegExp <span class="title">IPv4rx</span><span class="params">(IPv4pattern)</span></span>;</span><br><span class="line"><span class="keyword">if</span> (IPv4rx.exactMatch(<span class="string">"8.8.8.8"</span>))&#123;</span><br><span class="line">    <span class="comment">// example for IPv4 address check</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <hr>
-<p>参考文献： </p>
-<ul>
-<li><a href="http://blog.csdn.net/ei__nino/article/details/7305024" target="_blank" rel="external">Qt图标修改</a></li>
-<li><a href="http://stackoverflow.com/questions/21268558/application-failed-to-start-because-it-could-not-find-or-load-the-qt-platform-pl" target="_blank" rel="external">Qt Windows部署</a></li>
-<li><a href="http://blog.csdn.net/abeldeng/article/details/24767245" target="_blank" rel="external">Qt 多个数据库文件操作</a></li>
-</ul>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/09/14/tips-for-qt/">原始出处</a>(<a href="https://forec.github.io/2016/09/14/tips-for-qt/">https://forec.github.io/2016/09/14/tips-for-qt/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/21/haskell-io-actions/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/21/haskell-io-actions/" target="_blank" rel="external">http://blog.forec.cn/2016/11/21/haskell-io-actions/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -241,7 +294,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/09/14/tips-for-qt/" data-id="civs9qu3z000mx0ewk3qrr06b" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/21/haskell-io-actions/" data-id="civs9qu5e0031x0ewq84elfcz" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -308,7 +361,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2016/09/14/tips-for-qt/" data-title="Qt msvc2013 问题解决方案" data-url="http://forec.github.io/2016/09/14/tips-for-qt/"></div>
+    <div class="ds-thread" data-thread-key="2016/11/21/haskell-io-actions/" data-title="Haskell 中的非纯粹行为" data-url="http://forec.github.io/2016/11/21/haskell-io-actions/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -412,20 +465,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2016/09/27/duplicate-cantor/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            Cantor Expansion With Duplicate Elements
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2016/09/09/docker-problems/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2016/11/20/ddos-syn-attack/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">Docker配置策略备忘</p>
+        <p class="article-nav-title">基于 LibNET 的 SYN Flood 攻击</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
