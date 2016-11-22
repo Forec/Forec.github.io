@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-11-21T16:26:00.289Z</updated>
+  <updated>2016-11-22T08:01:49.143Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -14,6 +14,187 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>操作系统概念（一）</title>
+    <link href="http://forec.github.io/2016/11/22/os-concepts-1/"/>
+    <id>http://forec.github.io/2016/11/22/os-concepts-1/</id>
+    <published>2016-11-22T02:07:44.000Z</published>
+    <updated>2016-11-22T08:01:49.143Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我按个人理解简化、翻译为中文，可能存在一些不准确之处。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h1 id=&quot;绪论（第一章）&quot;&gt;&lt;a href=&quot;#绪论（第一章）&quot; class=&quot;headerlink&quot; title=&quot;绪论（第一章）&quot;&gt;&lt;/a&gt;绪论（第一章）&lt;/h1&gt;&lt;h2 id=&quot;定义操作系统&quot;&gt;&lt;a href=&quot;#定义操作系统&quot; class=&quot;headerlink&quot; title=&quot;定义操作系统&quot;&gt;&lt;/a&gt;定义操作系统&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;操作系统（operating system）&lt;/strong&gt; 是管理计算机硬件的一个程序，它同时作为用户和硬件的中间层，为应用程序提供了基础。&lt;/li&gt;
+&lt;li&gt;一个计算机系统可被大致划分为四个部件： &lt;em&gt;硬件（hardware）&lt;/em&gt; 、 &lt;em&gt;操作系统&lt;/em&gt; 、 &lt;em&gt;应用程序（application programs）&lt;/em&gt; 、 &lt;em&gt;用户（users）&lt;/em&gt; 。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;硬件（hardware）&lt;/strong&gt; 包括： &lt;strong&gt;中央处理器（central processing unit）&lt;/strong&gt; 、 &lt;strong&gt;存储器（memory）&lt;/strong&gt; 和 &lt;strong&gt;输入输出（I/O）设备&lt;/strong&gt; 。操作系统控制并协调多个用户的多道程序。&lt;/li&gt;
+&lt;li&gt;从计算机的视角看，操作系统类似一个 &lt;strong&gt;资源管理器（resource allocator）&lt;/strong&gt; ，它扮演了硬件资源管理者的角色。另一个略微有所不同的角度是，操作系统是一个控制程序，这个 &lt;strong&gt;控制程序（control program）&lt;/strong&gt; 管理用户程序的执行以防止错误的发生和对计算机不合法的使用。&lt;/li&gt;
+&lt;li&gt;计算机系统最基本的目的是执行用户程序，并让用户问题的解决变得更容易。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;操作系统组织&quot;&gt;&lt;a href=&quot;#操作系统组织&quot; class=&quot;headerlink&quot; title=&quot;操作系统组织&quot;&gt;&lt;/a&gt;操作系统组织&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;计算机用于启动的初始化程序被称作 &lt;strong&gt;引导程序（bootstrap program）&lt;/strong&gt; ，它被存储在只读存储器（ROM）或电擦除只读存储器（EEPROM），也就是常说的固件。&lt;/li&gt;
+&lt;li&gt;一个事件的发生通常通过硬件或软件的 &lt;strong&gt;中断（interrupt）&lt;/strong&gt; 来触发。硬件可能在任何时候通过向 CPU 发送一个信号来 &lt;strong&gt;触发（trigger）&lt;/strong&gt; 中断，该信号通常经由总线传递。软件可能通过执行被称作 &lt;strong&gt;系统调用（system call）&lt;/strong&gt; 的特殊指令来触发中断。&lt;/li&gt;
+&lt;li&gt;计算机程序必须在主存（也被称作 &lt;strong&gt;随机访问存储器（random-access memory）&lt;/strong&gt; ）中执行。主存是 CPU 能直接访问的唯一的大容量存储，它通常由被称作 &lt;strong&gt;动态随机访问存储器（dynamic random-access memory，DRAM）&lt;/strong&gt; 的半导体器件实现。主存是 &lt;em&gt;易失（volatile）&lt;/em&gt; 存储，当电源关闭或其它问题出现时，其内容会丢失。因此多数计算机系统提供了 &lt;strong&gt;二级存储（secondary storage）&lt;/strong&gt; 作为主存的扩展，二级存储设备通常是 &lt;strong&gt;磁盘（magnetic disk）&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;操作系统对每一个设备控制器均设置有一个 &lt;strong&gt;设备驱动（device driver）&lt;/strong&gt; ，要启动一个 I/O 操作需经过如下步骤：&lt;ul&gt;
+&lt;li&gt;设备驱动设置设备控制器内部对应的寄存器&lt;/li&gt;
+&lt;li&gt;设备控制器检查其内部寄存器并确定要执行的行为&lt;/li&gt;
+&lt;li&gt;设备控制器启动数据传输，数据 &lt;strong&gt;从设备发送给本地缓存&lt;/strong&gt; &lt;/li&gt;
+&lt;li&gt;一旦数据传输结束，设备控制器通过触发一个中断通知设备驱动&lt;/li&gt;
+&lt;li&gt;设备驱动将控制权交还给操作系统；如果 I/O 操作是读行为，则携带读取的数据或者指向数据的指针；如果 I/O 操作是其他行为，则返回状态信息。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;大量数据移动通常使用 &lt;strong&gt;直接存储器访问（direct memory access，DMA）&lt;/strong&gt; 。在为 I/O 设备设置缓冲区、指针、计数器后，设备控制器将整块数据直接从它的缓冲区发送到主存（或相反方向）而不经过 CPU。传输一块数据只会触发一次 CPU 中断。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;计算机系统体系与结构&quot;&gt;&lt;a href=&quot;#计算机系统体系与结构&quot; class=&quot;headerlink&quot; title=&quot;计算机系统体系与结构&quot;&gt;&lt;/a&gt;计算机系统体系与结构&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;多处理器系统（multiprocessor system）&lt;/strong&gt; ，也被称作 &lt;strong&gt;并行系统（parallel system）&lt;/strong&gt; 或 &lt;strong&gt;轻耦合系统（lightly coupled system）&lt;/strong&gt; 有以下三个主要优点：&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;增加吞吐量（throughput）&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;性价比高&lt;/strong&gt; ：相比多个单处理器系统，因为多处理器系统可以共享 &lt;strong&gt;外围设备（peripherals）&lt;/strong&gt; 、 &lt;strong&gt;大容量存储器（mass storage）&lt;/strong&gt; 和电源，因此花费更少。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;增加可靠性（reliability）&lt;/strong&gt; ：单处理器出现故障只会减缓系统而不会导致系统终止。根据存活硬件均衡提供服务的能力被称作 &lt;strong&gt;故障弱化（graceful degradation）&lt;/strong&gt; 。有些系统具有 &lt;strong&gt;容错能力（fault tolerant）&lt;/strong&gt; ，当任何一个单件出错时，系统能够继续运行。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;多处理器系统主要有两种类型：&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;非对称多处理器（asymmetric multiprocessing）&lt;/strong&gt; ：每个处理器被赋予一定特殊作业，一个主处理器用于控制系统，其它的处理器要么从主处理器获取信息，要么执行预定义的作业。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;对称多处理器（symmetric multiprocessing，SMP）&lt;/strong&gt; ：每个处理器均可执行操作系统中的所有作业，处理器之间不存在主从关系。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;多道程序（multiprogramming）&lt;/strong&gt; 通过组织作业（代码或数据）增加了 CPU 的利用率（utilization），CPU 无论何时均有一个作业在执行。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;分时（time sharing）&lt;/strong&gt; ，或者 &lt;strong&gt;多工（multitasking）&lt;/strong&gt; 是多道程序在逻辑上的扩展，CPU 在多个程序间跳转执行，因为跳转速度很快，对于用户而言就可以与各个同时运行的程序交互。 分时需要 &lt;strong&gt;交互式（interactive）&lt;/strong&gt; 的计算机系统，用户和系统之间应该可以直接交流，且 &lt;strong&gt;响应时间（response time）&lt;/strong&gt; 应当足够短。&lt;/li&gt;
+&lt;li&gt;一个被装入主存并执行的程序被称作 &lt;strong&gt;进程（process）&lt;/strong&gt; 。分时和多道程序需要主存中同时保持多个作业，因为主存通常不足以同时容纳这些作业，所以它们在执行前被存放在硬盘的 &lt;strong&gt;作业池（job pool）&lt;/strong&gt; 中，它容纳了所有等待分配主存的进程。&lt;/li&gt;
+&lt;li&gt;如果多个作业因为主存空间不足而无法同时装载，那么系统要在作业间进行 &lt;strong&gt;作业调度（job scheduling）&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;在分时系统中，操作系统必须保证响应时间，这一点有时通过进程在主存和硬盘之间的 &lt;strong&gt;交换（swapping）&lt;/strong&gt; 完成。一个更普遍的方式是 &lt;strong&gt;虚拟内存（virtual memory）&lt;/strong&gt; ，它使用户可以运行远大于 &lt;strong&gt;物理内存（physical memory）&lt;/strong&gt; 的程序。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;操作系统运行&quot;&gt;&lt;a href=&quot;#操作系统运行&quot; class=&quot;headerlink&quot; title=&quot;操作系统运行&quot;&gt;&lt;/a&gt;操作系统运行&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;现代操作系统均为 &lt;strong&gt;中断驱动（interrupt driven）&lt;/strong&gt; ，事件几乎都通过中断或陷阱来触发。&lt;/li&gt;
+&lt;li&gt;一个 &lt;strong&gt;陷阱（trap）&lt;/strong&gt; 或者说 &lt;strong&gt;异常（exception）&lt;/strong&gt; ，是软件产生的中断。触发的原因要么是错误的产生（例如除 0 操作或为例内存访问），要么是用户程序执行了对操作系统服务的特殊请求。&lt;/li&gt;
+&lt;li&gt;为了保证操作系统程序正确执行，我们需要区分系统程序段和用户程序段。因此设置了两个独立的操作 &lt;strong&gt;模式（modes）&lt;/strong&gt; ： &lt;strong&gt;用户模式（user mode）&lt;/strong&gt; 和 &lt;strong&gt;内核/管理/系统/特权模式（kernel/supervisor/system/privileged mode）&lt;/strong&gt; 。计算机硬件中需要加入一个 &lt;strong&gt;模式位（mode bit）&lt;/strong&gt; 用于说明当前的模式为内核（0）还是用户（1）。&lt;/li&gt;
+&lt;li&gt;在系统启动时，硬件系统处于内核模式。之后操作系统被加载并且在用户模式中执行用户应用。当一个陷阱或者中断发生，硬件将从用户模式切换到内核模式。&lt;/li&gt;
+&lt;li&gt;我们将一些机器指令指定为可能产生有害作用的 &lt;strong&gt;特权指令（privileged instructions）&lt;/strong&gt; ，硬件只允许特权指令在内核模式中运行。一旦系统调用被执行，它将被硬件视为一个软中断，中断向量将被传递给系统内部的一个服务程序，并且模式位切换至内核模式。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;定时器（timer）&lt;/strong&gt; 可使计算机在一定时间后被中断。在将控制权交还给用户之前，操作系统必须保证定时器已被设置，一旦定时器触发中断，控制权将自动交还给操作系统，操作系统会将该中断视作一个致命的错误（fatal error）或者给这个程序更多的执行时间。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;进程管理&quot;&gt;&lt;a href=&quot;#进程管理&quot; class=&quot;headerlink&quot; title=&quot;进程管理&quot;&gt;&lt;/a&gt;进程管理&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;程序是被动的实体，而进程是主动（active）的实体。&lt;/li&gt;
+&lt;li&gt;一个进程要完成任务需要如下资源：CPU，存储器，文件和 I/O 设备。一个单线程的进程有一个 &lt;strong&gt;程序计数器（program counter）&lt;/strong&gt; 指定下一条要执行的指令，多线程的进程有多个程序计数器。&lt;/li&gt;
+&lt;li&gt;进程是系统中的工作单元。通过在单 CPU 的复用，所有的进程都有机会并行执行。&lt;/li&gt;
+&lt;li&gt;操作系统需要对进程管理及以下相关行为负责：&lt;ul&gt;
+&lt;li&gt;创建或删除用户或系统进程&lt;/li&gt;
+&lt;li&gt;挂起或继续进程&lt;/li&gt;
+&lt;li&gt;为进程同步提供机制&lt;/li&gt;
+&lt;li&gt;为进程通信提供机制&lt;/li&gt;
+&lt;li&gt;为死锁的处理提供机制&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;操作系统结构（第二章）&quot;&gt;&lt;a href=&quot;#操作系统结构（第二章）&quot; class=&quot;headerlink&quot; title=&quot;操作系统结构（第二章）&quot;&gt;&lt;/a&gt;操作系统结构（第二章）&lt;/h1&gt;&lt;h2 id=&quot;操作系统服务&quot;&gt;&lt;a href=&quot;#操作系统服务&quot; class=&quot;headerlink&quot; title=&quot;操作系统服务&quot;&gt;&lt;/a&gt;操作系统服务&lt;/h2&gt;&lt;p&gt;操作系统应提供如下服务。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;用户接口（user interface）&lt;/strong&gt; ，包括：&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;命令行接口（command-line interface，CLI）&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;批处理接口（batch interface）&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;图形化用户接口（graphical user interface，GUI）&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;程序执行（program execution）&lt;/strong&gt; ：操作系统要能够将程序加载到主存并执行程序&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;输入/输出操作（I/O operations）&lt;/strong&gt; ：运行中的程序可能需要涉及到文件或 I/O 设备的读写操作&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;文件系统控制（file-system manipulation）&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;通信（communications）&lt;/strong&gt; ：通信可能通过 &lt;em&gt;共享内存（shared memory）&lt;/em&gt; 或 &lt;em&gt;消息传递（message passing）&lt;/em&gt; 实现&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;错误检测（error detection）&lt;/strong&gt; ：操作系统应当能始终检测到可能的错误&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;资源分配（resource allocation）&lt;/strong&gt; ：一些资源需要特殊的分配行为（如 CPU、主存和文件存储），有的还需要请求和释放代码（如 I/O 设备）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;统计（accounting）&lt;/strong&gt; ：操作系统需要对每个用户使用了多少不同的计算机资源做统计&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全防护（protection and security）&lt;/strong&gt; ：保证所有对系统资源的请求都得以控制&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;用户接口和系统调用&quot;&gt;&lt;a href=&quot;#用户接口和系统调用&quot; class=&quot;headerlink&quot; title=&quot;用户接口和系统调用&quot;&gt;&lt;/a&gt;用户接口和系统调用&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;有的操作系统将命令解释器（command interpreter）作为系统内核的一部分，有的（如 Windows XP 和 UNIX）将命令解释器作为一个特殊的程序。在存在多个可选命令解释器的系统中，它们通常被称作 &lt;strong&gt;壳（shell）&lt;/strong&gt; 。命令解释器的主要功能是获取并执行下一条用户指定的指令，有两种执行的方式：&lt;ul&gt;
+&lt;li&gt;命令解释器本身包含了执行命令的代码：可执行命令的数量决定了命令解释器的大小&lt;/li&gt;
+&lt;li&gt;通过系统程序实现多数指令：命令解释器本身并不理解指令的含义，它仅仅通过命令指定一个文件，将其装载至主存并执行。例如 &lt;code&gt;rm file.txt&lt;/code&gt; 将程序 &lt;code&gt;rm&lt;/code&gt; 加载并传入参数 &lt;code&gt;file.txt&lt;/code&gt; 执行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;图形用户接口提供了一个桌面。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;系统调用（system call）&lt;/strong&gt; 为系统服务提供了一个接口。多数程序开发者并不接触这一细节等级的代码，他们通常使用 &lt;strong&gt;应用程序接口（application programming interface，API）&lt;/strong&gt; 来编写程序。API 为应用程序开发者提供了一组函数，最常见的三组 API 如：Windows 系统的 Win32 API、基于 POSIX 系统的 POSIX API 和 Java API。使用 API 的背后实际涉及了系统调用。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;系统调用和中断的异同点&lt;/strong&gt; ：&lt;ul&gt;
+&lt;li&gt;二者均有索引（系统调用编号-系统调用表、中断向量表），二者的执行均需切换到内核模式&lt;/li&gt;
+&lt;li&gt;二者触发条件不同：系统调用是主动请求（会被硬件视为软中断），中断是外部触发&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;中断和陷阱的不同点&lt;/strong&gt; ：&lt;ul&gt;
+&lt;li&gt;二者起点不同：陷阱是正在执行的程序主动发起的，中断是外部错误或动作产生&lt;/li&gt;
+&lt;li&gt;二者处理方式不同：程序的陷阱（异常）在响应后将停止执行，而程序在中断时保存断点，中断处理结束后从断点恢复执行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;多数程序设计语言的运行时支持系统（一系列包含在编译器链接库中的函数）提供了 &lt;strong&gt;系统调用接口（system-call interface）&lt;/strong&gt; ，它们将程序代码和操作系统提供的系统调用链接起来。每个系统调用都有一个对应的编号，系统调用接口维护了一个编号-系统调用的索引，它们截取应用程序调用的 API，调用操作系统内核中相关的系统调用，并返回系统调用状态及其他返回值。&lt;/li&gt;
+&lt;li&gt;向操作系统传递参数有三种方法：通过寄存器传递、内存的块/表、压入/弹出堆栈。&lt;/li&gt;
+&lt;li&gt;系统调用可被大致分为五类： &lt;strong&gt;进程控制（process control）&lt;/strong&gt; 、 &lt;strong&gt;文件管理（file manipulation）&lt;/strong&gt; 、 &lt;strong&gt;设备管理（device manipulation）&lt;/strong&gt; 、 &lt;strong&gt;信息维护（information maintenance）&lt;/strong&gt; 和 &lt;strong&gt;通信（communications）&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;一个单任务系统： MS-DOS，它在计算机启动时运行一个命令解释器，当运行程序时，它将程序装入内存，并修改命令解释器的大部分内容来为新程序提供尽可能多的空间。之后将指令指针设为程序的第一条指令并运行程序，要么产生错误引起中断（此错误代码会被保存），要么程序执行一个系统调用以终止。最终命令解释器剩余部分程序继续执行，并从磁盘重新装入命令解释器的其他部分。这些步骤完成后，命令解释器会想用户/下一程序提供上一次运行的结果（保存的错误代码）。&lt;/li&gt;
+&lt;li&gt;多任务系统：FreeBSD，用户登录到系统时，从用户选择的 Shell 开始执行。为了启动新进程，Shell 执行 &lt;code&gt;fork()&lt;/code&gt; 系统调用，所选择的程序通过 &lt;code&gt;exec()&lt;/code&gt; 装入内存并执行。根据命令发布方式，Shell 要么等待进程结束，要么在后台执行进程并继续响应用户输入。&lt;/li&gt;
+&lt;li&gt;两种通信模型：&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;消息传递模型（message-passing model）&lt;/strong&gt; ：通信进程通过彼此之间交换消息传递信息，直接/间接通过一个共同的邮箱。通信实体可能是同一主机的不同进程，也可能是通过网络相连的另一主机的进程。进程之间通过 &lt;strong&gt;主机名（host name）&lt;/strong&gt; 和 &lt;strong&gt;进程名（process name）&lt;/strong&gt; 作为标识符区分。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;共享内存模型（shared-memory model）&lt;/strong&gt; ：进程使用 &lt;code&gt;shared memory create&lt;/code&gt; 和 &lt;code&gt;shared memory attach&lt;/code&gt; 系统调用来获得其它进程所拥有内存区域的访问权。操作系统通常需要组织一个进程访问另一个进程的内存，要使用共享内存模型，需要两/多个进程都同意取消这一限制。数据的形式和位置由进程协商决定，不受操作系统控制，进程必须保证它们不会同时向同一地方写入。&lt;/li&gt;
+&lt;li&gt;区别：消息传递对交换少量数据更有效，对于计算机之间的通信也比共享内存更容易实现；共享内存允许最大速度通信（本地可以内存速度），并且比较方便，但需要保护和同步。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;操作系统设计和实现&quot;&gt;&lt;a href=&quot;#操作系统设计和实现&quot; class=&quot;headerlink&quot; title=&quot;操作系统设计和实现&quot;&gt;&lt;/a&gt;操作系统设计和实现&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;系统程序（system program）&lt;/strong&gt; 为开发程序和执行程序提供了一个方便的环境，它们可分为：&lt;ul&gt;
+&lt;li&gt;文件管理（file management）&lt;/li&gt;
+&lt;li&gt;状态信息（status information）&lt;/li&gt;
+&lt;li&gt;文件修改（file modification）&lt;/li&gt;
+&lt;li&gt;程序语言支持（programming-language support）&lt;/li&gt;
+&lt;li&gt;程序装入和执行（program loading and execution）&lt;/li&gt;
+&lt;li&gt;通信（communications）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;操作系统设计目标：分为 &lt;em&gt;用户&lt;/em&gt; 目标 和 &lt;em&gt;系统&lt;/em&gt; 目标&lt;ul&gt;
+&lt;li&gt;用户目标：系统应当方便、容易使用、容易学习、可靠、安全、快速&lt;/li&gt;
+&lt;li&gt;系统目标：操作系统应该容易设计、实现和维护，应该灵活、可靠、高效而没有错误&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;策略（policy）&lt;/strong&gt; 和 &lt;strong&gt;机制（mechanism）&lt;/strong&gt; 的区分：机制决定如何做（ &lt;em&gt;how&lt;/em&gt; to do），而策略决定做什么（ &lt;em&gt;what&lt;/em&gt; will be done）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;操作系统结构&quot;&gt;&lt;a href=&quot;#操作系统结构&quot; class=&quot;headerlink&quot; title=&quot;操作系统结构&quot;&gt;&lt;/a&gt;操作系统结构&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;简单结构：利用最小的空间提供最多的功能，没有被划分为模块，如 MS-DOS。应用程序能够访问最底层的、基本的设备驱动，因此易受恶意程序的伤害。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;分层方法（Layered Approach）&lt;/strong&gt; ：采用自顶向下方法，将总的功能和特征划分为模块。模块化的其中方法是分层方法：将操作系统分为若干层（级），最底层（层0）为硬件，最高层（层N）为用户接口，分层结构类似一个同心圆。分层法最大的 &lt;strong&gt;优点在于构造和调试的简单化&lt;/strong&gt; （每层只能利用较低层的功能和服务、每层为高层隐藏了一定数据结构、操作和硬件存在），主要困难在于 &lt;strong&gt;对层的详细定义&lt;/strong&gt; 和 &lt;strong&gt;相比其他方法的低效&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;微内核（microkernels）&lt;/strong&gt; ：将操作系统中所有非基本部分从内核中移走，将它们实现为系统程序或用户程序，从而得到更小的内核。微内核通常包括最小的进程、内存管理和通信功能。&lt;ul&gt;
+&lt;li&gt;微内核的主要功能是使客户程序和运行在用户空间的各种服务之间通信，客户程序和服务之间不会直接交互，而是通过微内核的 &lt;strong&gt;消息传递&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;因为新服务可在用户空间增加而不需修改内核，因此 &lt;strong&gt;便于扩充操作系统&lt;/strong&gt; ；因为大多数服务作为用户而不是内核进程运行，因此提供了 &lt;strong&gt;更好的安全性和可靠性&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;因为使用消息传递，系统功能总开销增加，因此 &lt;strong&gt;系统性能下降&lt;/strong&gt; 。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;模块（modules）&lt;/strong&gt; ：用面向对象技术生成模块化的内核，动态加载模块。内核可以提供核心服务，也可动态实现特定功能。该方法和微内核方法类似，核心模块只有核心功能以及其他模块加载、通信的相关信息，但模块方法中， &lt;strong&gt;模块之间不需要调用消息传递来通信&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;示例：Mac OS X操作系统的结构，底层为 Mach 微内核，提供内存管理、远程程序调用（remote process call，RPC）和进程间通信（IPC）工具；BSD 提供 BSD 命令行接口，支持网络、文件系统、POSIX API 实现。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;虚拟机和系统生成&quot;&gt;&lt;a href=&quot;#虚拟机和系统生成&quot; class=&quot;headerlink&quot; title=&quot;虚拟机和系统生成&quot;&gt;&lt;/a&gt;虚拟机和系统生成&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;虚拟机的基本思想是单个计算机（CPU、内存、硬盘、网卡等）硬件抽象为几个不同的执行部件。&lt;/li&gt;
+&lt;li&gt;虚拟机除了提供与基本硬件相同的接口外，不提供额外功能。每个进程都有一个与底层机器完全相同的（虚拟）副本。&lt;/li&gt;
+&lt;li&gt;虚拟机为每个虚拟系统提供 &lt;strong&gt;小型磁盘（minidisk）&lt;/strong&gt; ，系统在物理磁盘上为小型磁盘分配所需要的磁道来实现。所有小型磁盘的大小之和必须小于可用的物理磁盘。&lt;/li&gt;
+&lt;li&gt;底层物理机器有两种模式：用户模式和内核模式，虚拟机软件本身在物理机器上运行在用户模式中，而虚拟机在虚拟系统中运行在内核模式，每个虚拟系统有虚拟用户模式和虚拟内核模式，这两种模式均运行在物理用户模式。&lt;/li&gt;
+&lt;li&gt;虚拟的 I/O 操作可能需要更少（脱机操作）或更多（解释执行）的时间。&lt;/li&gt;
+&lt;li&gt;优点：可用于研究、开发操作系统；不同系统资源具有完全的保护，各个虚拟机之间完全独立。&lt;/li&gt;
+&lt;li&gt;操作系统通常设计成能运行在一类计算机上，对于某类特定的计算机场所，配置生成系统的过程称为 &lt;strong&gt;系统生成（system generation，SYSGEN）&lt;/strong&gt; 。需要考虑的信息有：使用什么CPU、多少可用内存、哪些可用设备、需要什么操作系统选项和参数值。这些信息确定后，系统管理员可用这些信息修改操作系统的源代码副本以完全重新编译操作系统；或者创建一个表，从预先编译过的库中选取模块，将这些模块连接起来生成操作系统；或者构造一个完全由表驱动的系统，所有代码都是系统的组成部分， &lt;strong&gt;选择发生在执行时而不是编译时&lt;/strong&gt; ，现代多数操作系统均为此种方式。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;系统引导&quot;&gt;&lt;a href=&quot;#系统引导&quot; class=&quot;headerlink&quot; title=&quot;系统引导&quot;&gt;&lt;/a&gt;系统引导&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;装入内核以启动计算机的过程称为 &lt;strong&gt;引导（booting）&lt;/strong&gt; 系统，多数计算机中均有一小块代码，称为 &lt;strong&gt;引导程序（bootstrap program）&lt;/strong&gt; 或 &lt;strong&gt;引导装载程序（bootstrap loader）&lt;/strong&gt; ，这段代码将定位内核，将其装入内存并开始执行。引导程序被存放在只读存储器中。&lt;/li&gt;
+&lt;li&gt;对于大型操作系统（多数通用操作系统），引导程序存储在固件中，操作系统保存在磁盘上。引导程序运行诊断程序，从磁盘固定位置（0区块）读取整个引导块到内存，并执行这个 &lt;strong&gt;引导块（boot block）&lt;/strong&gt; 中的代码。这个引导块足够复杂，它将一个完整的操作系统装载到内存开始执行。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2015/11/14/Computer-Organization-Architectur6/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计组与体系结构笔记：输入/输出与存储系统&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/11/22/os-concepts-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/11/22/os-concepts-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/22/os-concepts-1/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我按个人理解简化、翻译为中文，可能存在一些不准确之处。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
+    
+  </entry>
   
   <entry>
     <title>Haskell 中的非纯粹行为</title>
@@ -771,121 +952,6 @@
     
       &lt;blockquote&gt;
 &lt;p&gt;分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="Code" scheme="http://forec.github.io/categories/Code/"/>
-    
-    
-      <category term="Golang" scheme="http://forec.github.io/tags/Golang/"/>
-    
-      <category term="云存储" scheme="http://forec.github.io/tags/%E4%BA%91%E5%AD%98%E5%82%A8/"/>
-    
-      <category term="线程" scheme="http://forec.github.io/tags/%E7%BA%BF%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>简易云存储系统项目简介</title>
-    <link href="http://forec.github.io/2016/11/12/cloud-storage-system-0/"/>
-    <id>http://forec.github.io/2016/11/12/cloud-storage-system-0/</id>
-    <published>2016-11-12T15:50:33.000Z</published>
-    <updated>2016-11-18T13:24:57.401Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;此项目为我 2016 年的某个课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在&lt;a href=&quot;/columns/index.html&quot;&gt;专栏&lt;/a&gt;《云存储系统从入门到放弃》中。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;写在前面&quot;&gt;&lt;a href=&quot;#写在前面&quot; class=&quot;headerlink&quot; title=&quot;写在前面&quot;&gt;&lt;/a&gt;写在前面&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;此项目为我 2016 年的某项课程设计，项目题目为自拟，目标是实现一个简易的，与百度云功能类似的云存储系统。项目在 GitHub 托管仓库的网址是：&lt;a href=&quot;https://github.com/Forec/cloud-storage&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/Forec/cloud-storage&lt;/a&gt;。&lt;/li&gt;
-&lt;li&gt;此项目为要实现的云存储系统的服务器，同时附带了一个用于测试的客户端（无GUI）。云存储系统正式的客户端目前正在由 &lt;a href=&quot;https://github.com/non1996&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;non1996&lt;/a&gt; 编写。在我写下这篇文章时，服务器已经实现了文件传输以外的多数逻辑功能，以及文件的并发下载。&lt;/li&gt;
-&lt;li&gt;在接下来的文章中，代码的具体实现均使用 &lt;code&gt;Golang&lt;/code&gt; 表达，我将假设读者掌握 &lt;code&gt;Golang&lt;/code&gt; 的基本语法（或者 C/C++ 的基本语法），并且了解 &lt;code&gt;channel&lt;/code&gt;、&lt;code&gt;goroutine&lt;/code&gt; 的概念。&lt;/li&gt;
-&lt;li&gt;作为本科阶段的一项小型课程设计，且时间紧迫，&lt;strong&gt;我很遗憾此项目中很多实现非常 naive，许多地方为了简化实现，我采用了一些闭门造车的、很愚笨的、且与主流实现方案相悖的方式&lt;/strong&gt;。在将基本功能实现后，如果还有空余时间，我会尽量修正这些糟粕，简化代码。这个项目的 BETA 版本预计完成时间在 11 月底，12 月上旬将完成客户端的图形界面，12 月中旬将完成 Web 版本。如果还有空余时间，可能会考虑实现一个 Android 客户端。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;项目介绍&quot;&gt;&lt;a href=&quot;#项目介绍&quot; class=&quot;headerlink&quot; title=&quot;项目介绍&quot;&gt;&lt;/a&gt;项目介绍&lt;/h1&gt;&lt;h2 id=&quot;面向用户功能&quot;&gt;&lt;a href=&quot;#面向用户功能&quot; class=&quot;headerlink&quot; title=&quot;面向用户功能&quot;&gt;&lt;/a&gt;面向用户功能&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;文件存储：用户可将文件上传至云服务器&lt;/li&gt;
-&lt;li&gt;文件下载：用户可从云服务器下载文件&lt;/li&gt;
-&lt;li&gt;文件传输状态保存（视项目进度快慢考虑）：支持用户下载/上传文件过程中暂停&lt;/li&gt;
-&lt;li&gt;文件共享：用户间可分享资源，通过共享链接和提取码获取其他用户的私有分享文件&lt;/li&gt;
-&lt;li&gt;文件秒传：云存储空间存在相同文件时直接 Fork&lt;/li&gt;
-&lt;li&gt;Fork：用户可 Fork 其他用户分享的文件至自己的存储空间&lt;/li&gt;
-&lt;li&gt;文件操作：用户可对自己上传的文件/Fork的文件进行管理，包括最基本的拷贝、移动、删除&lt;/li&gt;
-&lt;li&gt;目录操作：用户可对自己存储空间中的文件目录进行管理，包括最基本的拷贝、移动、删除、新建&lt;/li&gt;
-&lt;li&gt;在线编辑：用户可在客户端/Web端即时新建并编辑一个文本文件，并随时更新至云服务器&lt;/li&gt;
-&lt;li&gt;图片在线浏览：用户可在线浏览云服务器上的图片&lt;/li&gt;
-&lt;li&gt;视频在线播放：用户可在客户端播放云服务器上的视频文件&lt;/li&gt;
-&lt;li&gt;基本用户交流：用户间可以发送消息，可进行时延不高的延时通讯&lt;/li&gt;
-&lt;li&gt;URL导入数据（视项目进度快慢考虑）：用户可从 URL 导入文件至云存储，即实现类似迅雷离线下载功能&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;系统功能&quot;&gt;&lt;a href=&quot;#系统功能&quot; class=&quot;headerlink&quot; title=&quot;系统功能&quot;&gt;&lt;/a&gt;系统功能&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;文件分块、重用：将文件分块存储，不同文件的相同块仅存储一次，节省物理存储空间。在要实现的云存储系统中，为了降低复杂度，文件将不分块存储，仅仅实现相同文件的重用&lt;/li&gt;
-&lt;li&gt;文件压缩存储、传输：用户上传、下载的文件应采用某种压缩算法以节省带宽&lt;/li&gt;
-&lt;li&gt;文件并发下载：用户下载多个文件时，在允许线程内应支持并发下载&lt;/li&gt;
-&lt;li&gt;文件传输状态保存（视项目进度快慢考虑）：用户下载/上传文件过程中触发终端操作时，传输进度的保存&lt;/li&gt;
-&lt;li&gt;用户目录管理：系统应当对每个用户分别维护文件目录结构&lt;/li&gt;
-&lt;li&gt;用户权限管理：用户文件只能被用户自己或其他持有文件提取码的用户查看、下载、Fork，用户文件只能由用户自身管理（移动、删除、设置私有/分享）&lt;/li&gt;
-&lt;li&gt;用户消息推送：管理员可以向用户推送消息&lt;/li&gt;
-&lt;li&gt;用户消息传递：系统应提供渠道使用户间的消息在短时延内交互，如用户间分享文件提取码&lt;/li&gt;
-&lt;li&gt;用户认证管理：同一时刻允许且仅允许一个用户客户端在线，后登录的客户端应当使先登录的客户端下线。数据库中应存储用户密码的不可逆加密值，用户登录及文件传输过程应使用随机密钥加密（保险的方式是对随机密钥采用非对称加密，但为了简化实现难度，要实现的云存储系统将使用对称加密算法，因此安全性有很大隐患，在后面的文章中将分析对我实现的云存储系统进行中间人攻击的可行性）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;原理分析&quot;&gt;&lt;a href=&quot;#原理分析&quot; class=&quot;headerlink&quot; title=&quot;原理分析&quot;&gt;&lt;/a&gt;原理分析&lt;/h1&gt;&lt;h2 id=&quot;存储逻辑&quot;&gt;&lt;a href=&quot;#存储逻辑&quot; class=&quot;headerlink&quot; title=&quot;存储逻辑&quot;&gt;&lt;/a&gt;存储逻辑&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;要实现重复文件的非冗余存储，需要对每个上传的文件块（在要实现的云存储系统中，因为去除了文件分块操作，因此下面所有“文件块”实际上是文件）计算该文件块的 MD5 值，与数据库中已存在的 MD5 值对比，相同则直接 Fork 并取消用户的上传操作（文件秒传）。&lt;/li&gt;
-&lt;li&gt;相同的文件块仅存储一次，每个文件块应当维护一个“&lt;strong&gt;引用值&lt;/strong&gt;”。“引用”的定义为：当多个用户在各自的存储空间中分别保存同一个文件一次或多次，则实际上这些文件均指向同一个文件块 B，而在物理存储中，文件块 B 仅存储一次。我们称这些用户各自存储空间中的文件记录&lt;strong&gt;引用&lt;/strong&gt;了 B，称这些用户在各自存储空间中指向 B 的文件记录为 &lt;strong&gt;B 的引用&lt;/strong&gt;。&lt;/li&gt;
-&lt;li&gt;根据引用的定义，只要存在某个用户在自己的云存储空间中保存了文件块 B 的引用，该文件块就不能删除。当某个用户对文件块 B 的引用做复制、Fork操作时，文件块 B 的引用值应当随操作数增加；当某个用户删除文件块 B 的某个引用时，文件块 B 的引用值应随删除次数减少。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;存储逻辑对用户不可见&lt;/strong&gt;，即用户可以修改自己用户空间中的引用（引用实际就是用户所看见的文件），如重命名、移动、复制等，但修改的对象仅仅是用户空间中的引用，而非真实的文件块。只有用户对引用的内容做修改时（例如此引用指向一个文本文件，用户修改了文本文件的内容并试图保存），系统才应当创建新的文件块以记录修改。&lt;strong&gt;在下面的介绍中，“引用”和“文件”等价，均为数据库中指向文件块的一条记录，而“文件块”才代表真正物理存储中的文件。&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;用户目录维护&lt;/strong&gt;：为了简化用户存储空间的目录维护，我将每个目录均视作一类&lt;strong&gt;特殊的引用&lt;/strong&gt;，关于这一点的原因、实现和分析将在后面的文章中讨论。举个例子，用户云存储空间中有一个文件 &lt;code&gt;/home/forec/run.sh&lt;/code&gt; ，则在数据库的引用表中，有四条记录属于该用户，分别是 &lt;code&gt;/&lt;/code&gt;，&lt;code&gt;/home/&lt;/code&gt;，&lt;code&gt;/home/forec/&lt;/code&gt; 和 &lt;code&gt;run.sh&lt;/code&gt;。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;数据库结构&quot;&gt;&lt;a href=&quot;#数据库结构&quot; class=&quot;headerlink&quot; title=&quot;数据库结构&quot;&gt;&lt;/a&gt;数据库结构&lt;/h2&gt;&lt;p&gt;根据存储逻辑和之前的功能介绍，我们需要五个表分别记录：文件块、文件块的引用、用户、用户消息、用户操作记录。&lt;/p&gt;
-&lt;h3 id=&quot;文件块表&quot;&gt;&lt;a href=&quot;#文件块表&quot; class=&quot;headerlink&quot; title=&quot;文件块表&quot;&gt;&lt;/a&gt;文件块表&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;文件块的 ID：此列应为该表的主键，自增，&lt;code&gt;INTEGER PRIMARY KEY AUTOINCREMENT&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;文件块的 MD5值，&lt;code&gt;VARCHAR(32)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;文件块的大小，单位为字节：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;文件块的引用数：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;文件块的创建时间：&lt;code&gt;DATE&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&quot;文件块引用表&quot;&gt;&lt;a href=&quot;#文件块引用表&quot; class=&quot;headerlink&quot; title=&quot;文件块引用表&quot;&gt;&lt;/a&gt;文件块引用表&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;文件块引用的 ID：此列应为该表的主键，自增，&lt;code&gt;INTEGER PRIMARY KEY AUTOINCREMENT&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;文件块引用的所属用户 ID：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;引用的文件块的 ID：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;引用在用户目录下的绝对路径：用户根目录为 &lt;code&gt;/&lt;/code&gt;，此列类似 &lt;code&gt;/home/work/cloud/&lt;/code&gt;，&lt;code&gt;VARCHAR(256)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;引用的外链：当用户试图共享此引用时，其他用户可以通过外链访问此引用（Web端，客户端应当可以解析此外链并在客户端中打开）。如果该引用为私有，其他用户需要输入提取码才可查看，&lt;code&gt;VARCHAR(128)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;引用创建的时间：&lt;code&gt;DATE&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;引用的分享数：当一个用户分享该引用时，如果其它用户 Fork 了该引用，则该引用的分享数应增加。与 GitHub 上的 Fork 操作不同的是，如果用户 B Fork 了用户 A 的某个引用，用户 C 又从用户 B Fork 了这个引用，则 A 的引用分享数增加 1（B 的 Fork 操作），用户 B 的引用分享数增加 1（C 的 Fork 操作），&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;引用的下载数：当一个用户从此引用下载对应的文件块时，此引用下载数增加，&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;引用的文件名：此项为用户所看到的文件名，可能有多个不同名的引用指向同一个文件块，&lt;code&gt;VARCHAR(128)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;引用的私有性：此引用是否对其它用户可见，默认为私有，即仅用户个人可见，&lt;code&gt;BOOLEAN&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;引用的提取码：在用户设置引用为私有的情况下，可以生成外链，持有该外链提取码的其它用户可以查看该引用，&lt;code&gt;VARCHAR(4)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;引用是否为目录：此引用是一个目录（文件夹）还是一个文件，&lt;code&gt;BOOLEAN&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&quot;用户列表&quot;&gt;&lt;a href=&quot;#用户列表&quot; class=&quot;headerlink&quot; title=&quot;用户列表&quot;&gt;&lt;/a&gt;用户列表&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;用户的 ID：此列应为该表的主键，自增，&lt;code&gt;INTEGER PRIMARY KEY AUTOINCREMENT&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;用户名：此列应唯一，&lt;code&gt;VARCHAR(64)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;用户密码加密后的值：&lt;code&gt;VARCHAR(128)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;用户创建时间：&lt;code&gt;DATE&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&quot;用户消息列表&quot;&gt;&lt;a href=&quot;#用户消息列表&quot; class=&quot;headerlink&quot; title=&quot;用户消息列表&quot;&gt;&lt;/a&gt;用户消息列表&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;消息的 ID：此列应为该表的主键，自增，&lt;code&gt;INTEGER PRIMARY KEY AUTOINCREMENT&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;接收消息的用户的 ID：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;发送消息的用户的 ID：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;消息内容：&lt;code&gt;VARCHAR(512)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;消息发送时间：&lt;code&gt;DATE&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&quot;用户操作记录列表&quot;&gt;&lt;a href=&quot;#用户操作记录列表&quot; class=&quot;headerlink&quot; title=&quot;用户操作记录列表&quot;&gt;&lt;/a&gt;用户操作记录列表&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;操作记录的 ID：此列应为该表的主键，自增，&lt;code&gt;INTEGER PRIMARY KEY AUTOINCREMENT&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;用户的 ID：&lt;code&gt;INTEGER&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;操作内容：&lt;code&gt;VARCHAR(128)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;操作时间：&lt;code&gt;DATE&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cloud-storage.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;云存储系统从入门到放弃&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/13/cloud-storage-system-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;简易云存储系统的认证、传输协议设计&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/11/12/cloud-storage-system-0/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/11/12/cloud-storage-system-0/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/12/cloud-storage-system-0/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;此项目为我 2016 年的某个课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在&lt;a href=&quot;/columns/index.html&quot;&gt;专栏&lt;/a&gt;《云存储系统从入门到放弃》中。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>

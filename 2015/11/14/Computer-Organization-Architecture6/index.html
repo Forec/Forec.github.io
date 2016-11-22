@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="输入/输出和存储系统。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/computer-organization-6.jpg">
-<meta property="og:updated_time" content="2016-11-21T14:00:51.355Z">
+<meta property="og:updated_time" content="2016-11-22T08:02:14.623Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计组与体系结构笔记（六）">
 <meta name="twitter:description" content="输入/输出和存储系统。">
@@ -234,8 +234,9 @@
 </ul>
 <figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ALGORITHM Arith_Code( Message )</span><br><span class="line">    HiVal &lt;- <span class="number">1.0</span></span><br><span class="line">    LoVal &lt;- <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">WHILE</span> ( more characters <span class="keyword">to</span> process )</span><br><span class="line">        <span class="built_in">Char</span> &lt;- <span class="keyword">Next</span> message character</span><br><span class="line">        Interval &lt;- Hival - Loval</span><br><span class="line">        CharHival &lt;- Upper interval limit <span class="keyword">for</span> <span class="built_in">Char</span></span><br><span class="line">        CharLoval &lt;- Lower interval limit <span class="keyword">for</span> <span class="built_in">Char</span></span><br><span class="line">        HiVal &lt;- Loval + Interval * CharHival</span><br><span class="line">        LoVal &lt;- Loval + Interval * CharLoval</span><br><span class="line">    ENDWHILE</span><br><span class="line">    OUTPUT ( Loval )</span><br><span class="line"><span class="keyword">END</span> Arith_Code</span><br></pre></td></tr></table></figure>
 <p>该过程用表格表示：<table><tbody><tr><td>符号</td><td>区间</td><td>CharLoVal</td><td>CharHiVal</td><td>LoVal</td><td>HiVal</td></tr><tr><td> </td><td> </td><td> </td><td> </td><td>0.0</td><td>1.0</td></tr><tr><td>H</td><td>1.0</td><td>0.167</td><td>0.25</td><td>0.167</td><td>0.25</td></tr><tr><td>E</td><td>0.083</td><td>0.083</td><td>0.167</td><td>0.173889</td><td>0.180861</td></tr><tr><td>L</td><td>0.006972</td><td>0.25</td><td>0.5</td><td>0.1756320</td><td>0.1773750</td></tr><tr><td>L</td><td>0.001743</td><td>0.25</td><td>0.5</td><td>0.17606775</td><td>0.17650350</td></tr><tr><td>O</td><td>0.00043575</td><td>0.5</td><td>0.667</td><td>0.176285625</td><td>0.176358395</td></tr><tr><td>(space)</td><td>0.00007277025</td><td>0.833</td><td>0.917</td><td>0.1763462426</td><td>0.1763523553</td></tr><tr><td>W</td><td>0.00000611270</td><td>0.75</td><td>0.833</td><td>0.1763508271</td><td>0.1763513345</td></tr><tr><td>O</td><td>0.00000050735</td><td>0.5</td><td>0.667</td><td>0.1763510808</td><td>0.1763511655</td></tr><tr><td>R</td><td>0.00000008473</td><td>0.667</td><td>0.75</td><td>0.1763511373</td><td>0.176351444</td></tr><tr><td>L</td><td>0.00000000703</td><td>0.25</td><td>0.5</td><td>0.1763511391</td><td>0.1763511409</td></tr><tr><td>D</td><td>0.00000000176</td><td>0</td><td>0.083</td><td>0.1763511391</td><td>0.1763511392</td></tr><tr><td>!</td><td>0.00000000015</td><td>0.917</td><td>1.0</td><td>0.176351139227</td><td>0.176351139239</td></tr><tr><td> </td><td> </td><td> </td><td> </td><td>0.176351139227</td><td> </td></tr></tbody></table></p>
-<h2 id="Ziv-Lempel字典系统"><a href="#Ziv-Lempel字典系统" class="headerlink" title="Ziv-Lempel字典系统"></a>Ziv-Lempel字典系统</h2><h2 id="JPEG压缩"><a href="#JPEG压缩" class="headerlink" title="JPEG压缩"></a>JPEG压缩</h2><hr>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2015/11/14/Computer-Organization-Architectur6/">原始出处</a>(<a href="https://forec.github.io/2015/11/14/Computer-Organization-Architecture6/">https://forec.github.io/2015/11/14/Computer-Organization-Architecture6/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
+<h2 id="Ziv-Lempel字典系统"><a href="#Ziv-Lempel字典系统" class="headerlink" title="Ziv-Lempel字典系统"></a>Ziv-Lempel字典系统</h2><h2 id="JPEG压缩"><a href="#JPEG压缩" class="headerlink" title="JPEG压缩"></a>JPEG压缩</h2><p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2015/11/01/Computer-Organization-Architecture5/" target="_blank" rel="external">计组与体系结构笔记：存储器相关</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/22/os-concepts-1/" target="_blank" rel="external">操作系统：概念导读</a></p>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2015/11/14/Computer-Organization-Architectur6/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2015/11/14/Computer-Organization-Architecture6/" target="_blank" rel="external">http://blog.forec.cn/2015/11/14/Computer-Organization-Architecture6/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -243,7 +244,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/11/14/Computer-Organization-Architecture6/" data-id="civs9qu81006ux0ewn2kkzojv" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2015/11/14/Computer-Organization-Architecture6/" data-id="civt7fu4s006zwsew9hmgr9pw" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -446,6 +447,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2016/11/22/os-concepts-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-1.jpg)" alt="操作系统概念（一）" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/22/os-concepts-1/" class="title">操作系统概念（一）</a></p>
+                            <p class="item-date"><time datetime="2016-11-22T02:07:44.000Z" itemprop="datePublished">2016-11-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/11/21/haskell-io-actions/" class="thumbnail">
     
     
@@ -523,26 +544,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/17/haskell-graham/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-graham.png)" alt="Haskell 的葛立恒扫描法" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/11/17/haskell-graham/" class="title">Haskell 的葛立恒扫描法</a></p>
-                            <p class="item-date"><time datetime="2016-11-17T15:50:20.000Z" itemprop="datePublished">2016-11-17</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -552,7 +553,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">6</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">7</span></li></ul>
         </div>
     </div>
 
@@ -562,7 +563,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.5px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.25px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.25px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.75px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.75px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 16.25px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.25px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 15px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.25px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.25px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.75px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.5px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 15px;">计组与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.22px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 15.56px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.33px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.33px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 16.67px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 14.44px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.44px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.89px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.78px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14.44px;">计组与体系结构</a>
         </div>
     </div>
 

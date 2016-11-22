@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>操作系统概念（一） | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="OS" />
+    
+    <meta name="description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我按个人理解简化、翻译为中文，可能存在一些不准确之处。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统概念（一）">
+<meta property="og:url" content="http://forec.github.io/2016/11/22/os-concepts-1/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我按个人理解简化、翻译为中文，可能存在一些不准确之处。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-1.jpg">
+<meta property="og:updated_time" content="2016-11-22T08:01:49.143Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统概念（一）">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我按个人理解简化、翻译为中文，可能存在一些不准确之处。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-os-concepts-1" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        操作系统概念（一）
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2016/11/22/os-concepts-1/" class="article-date">
+    <time datetime="2016-11-22T02:07:44.000Z" itemprop="datePublished">2016-11-22</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我按个人理解简化、翻译为中文，可能存在一些不准确之处。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="绪论（第一章）"><a href="#绪论（第一章）" class="headerlink" title="绪论（第一章）"></a>绪论（第一章）</h1><h2 id="定义操作系统"><a href="#定义操作系统" class="headerlink" title="定义操作系统"></a>定义操作系统</h2><ul>
+<li><strong>操作系统（operating system）</strong> 是管理计算机硬件的一个程序，它同时作为用户和硬件的中间层，为应用程序提供了基础。</li>
+<li>一个计算机系统可被大致划分为四个部件： <em>硬件（hardware）</em> 、 <em>操作系统</em> 、 <em>应用程序（application programs）</em> 、 <em>用户（users）</em> 。</li>
+<li><strong>硬件（hardware）</strong> 包括： <strong>中央处理器（central processing unit）</strong> 、 <strong>存储器（memory）</strong> 和 <strong>输入输出（I/O）设备</strong> 。操作系统控制并协调多个用户的多道程序。</li>
+<li>从计算机的视角看，操作系统类似一个 <strong>资源管理器（resource allocator）</strong> ，它扮演了硬件资源管理者的角色。另一个略微有所不同的角度是，操作系统是一个控制程序，这个 <strong>控制程序（control program）</strong> 管理用户程序的执行以防止错误的发生和对计算机不合法的使用。</li>
+<li>计算机系统最基本的目的是执行用户程序，并让用户问题的解决变得更容易。</li>
+</ul>
+<h2 id="操作系统组织"><a href="#操作系统组织" class="headerlink" title="操作系统组织"></a>操作系统组织</h2><ul>
+<li>计算机用于启动的初始化程序被称作 <strong>引导程序（bootstrap program）</strong> ，它被存储在只读存储器（ROM）或电擦除只读存储器（EEPROM），也就是常说的固件。</li>
+<li>一个事件的发生通常通过硬件或软件的 <strong>中断（interrupt）</strong> 来触发。硬件可能在任何时候通过向 CPU 发送一个信号来 <strong>触发（trigger）</strong> 中断，该信号通常经由总线传递。软件可能通过执行被称作 <strong>系统调用（system call）</strong> 的特殊指令来触发中断。</li>
+<li>计算机程序必须在主存（也被称作 <strong>随机访问存储器（random-access memory）</strong> ）中执行。主存是 CPU 能直接访问的唯一的大容量存储，它通常由被称作 <strong>动态随机访问存储器（dynamic random-access memory，DRAM）</strong> 的半导体器件实现。主存是 <em>易失（volatile）</em> 存储，当电源关闭或其它问题出现时，其内容会丢失。因此多数计算机系统提供了 <strong>二级存储（secondary storage）</strong> 作为主存的扩展，二级存储设备通常是 <strong>磁盘（magnetic disk）</strong> 。</li>
+<li>操作系统对每一个设备控制器均设置有一个 <strong>设备驱动（device driver）</strong> ，要启动一个 I/O 操作需经过如下步骤：<ul>
+<li>设备驱动设置设备控制器内部对应的寄存器</li>
+<li>设备控制器检查其内部寄存器并确定要执行的行为</li>
+<li>设备控制器启动数据传输，数据 <strong>从设备发送给本地缓存</strong> </li>
+<li>一旦数据传输结束，设备控制器通过触发一个中断通知设备驱动</li>
+<li>设备驱动将控制权交还给操作系统；如果 I/O 操作是读行为，则携带读取的数据或者指向数据的指针；如果 I/O 操作是其他行为，则返回状态信息。</li>
+</ul>
+</li>
+<li>大量数据移动通常使用 <strong>直接存储器访问（direct memory access，DMA）</strong> 。在为 I/O 设备设置缓冲区、指针、计数器后，设备控制器将整块数据直接从它的缓冲区发送到主存（或相反方向）而不经过 CPU。传输一块数据只会触发一次 CPU 中断。</li>
+</ul>
+<h2 id="计算机系统体系与结构"><a href="#计算机系统体系与结构" class="headerlink" title="计算机系统体系与结构"></a>计算机系统体系与结构</h2><ul>
+<li><strong>多处理器系统（multiprocessor system）</strong> ，也被称作 <strong>并行系统（parallel system）</strong> 或 <strong>轻耦合系统（lightly coupled system）</strong> 有以下三个主要优点：<ul>
+<li><strong>增加吞吐量（throughput）</strong></li>
+<li><strong>性价比高</strong> ：相比多个单处理器系统，因为多处理器系统可以共享 <strong>外围设备（peripherals）</strong> 、 <strong>大容量存储器（mass storage）</strong> 和电源，因此花费更少。</li>
+<li><strong>增加可靠性（reliability）</strong> ：单处理器出现故障只会减缓系统而不会导致系统终止。根据存活硬件均衡提供服务的能力被称作 <strong>故障弱化（graceful degradation）</strong> 。有些系统具有 <strong>容错能力（fault tolerant）</strong> ，当任何一个单件出错时，系统能够继续运行。</li>
+</ul>
+</li>
+<li>多处理器系统主要有两种类型：<ul>
+<li><strong>非对称多处理器（asymmetric multiprocessing）</strong> ：每个处理器被赋予一定特殊作业，一个主处理器用于控制系统，其它的处理器要么从主处理器获取信息，要么执行预定义的作业。</li>
+<li><strong>对称多处理器（symmetric multiprocessing，SMP）</strong> ：每个处理器均可执行操作系统中的所有作业，处理器之间不存在主从关系。</li>
+</ul>
+</li>
+<li><strong>多道程序（multiprogramming）</strong> 通过组织作业（代码或数据）增加了 CPU 的利用率（utilization），CPU 无论何时均有一个作业在执行。</li>
+<li><strong>分时（time sharing）</strong> ，或者 <strong>多工（multitasking）</strong> 是多道程序在逻辑上的扩展，CPU 在多个程序间跳转执行，因为跳转速度很快，对于用户而言就可以与各个同时运行的程序交互。 分时需要 <strong>交互式（interactive）</strong> 的计算机系统，用户和系统之间应该可以直接交流，且 <strong>响应时间（response time）</strong> 应当足够短。</li>
+<li>一个被装入主存并执行的程序被称作 <strong>进程（process）</strong> 。分时和多道程序需要主存中同时保持多个作业，因为主存通常不足以同时容纳这些作业，所以它们在执行前被存放在硬盘的 <strong>作业池（job pool）</strong> 中，它容纳了所有等待分配主存的进程。</li>
+<li>如果多个作业因为主存空间不足而无法同时装载，那么系统要在作业间进行 <strong>作业调度（job scheduling）</strong> 。</li>
+<li>在分时系统中，操作系统必须保证响应时间，这一点有时通过进程在主存和硬盘之间的 <strong>交换（swapping）</strong> 完成。一个更普遍的方式是 <strong>虚拟内存（virtual memory）</strong> ，它使用户可以运行远大于 <strong>物理内存（physical memory）</strong> 的程序。</li>
+</ul>
+<h2 id="操作系统运行"><a href="#操作系统运行" class="headerlink" title="操作系统运行"></a>操作系统运行</h2><ul>
+<li>现代操作系统均为 <strong>中断驱动（interrupt driven）</strong> ，事件几乎都通过中断或陷阱来触发。</li>
+<li>一个 <strong>陷阱（trap）</strong> 或者说 <strong>异常（exception）</strong> ，是软件产生的中断。触发的原因要么是错误的产生（例如除 0 操作或为例内存访问），要么是用户程序执行了对操作系统服务的特殊请求。</li>
+<li>为了保证操作系统程序正确执行，我们需要区分系统程序段和用户程序段。因此设置了两个独立的操作 <strong>模式（modes）</strong> ： <strong>用户模式（user mode）</strong> 和 <strong>内核/管理/系统/特权模式（kernel/supervisor/system/privileged mode）</strong> 。计算机硬件中需要加入一个 <strong>模式位（mode bit）</strong> 用于说明当前的模式为内核（0）还是用户（1）。</li>
+<li>在系统启动时，硬件系统处于内核模式。之后操作系统被加载并且在用户模式中执行用户应用。当一个陷阱或者中断发生，硬件将从用户模式切换到内核模式。</li>
+<li>我们将一些机器指令指定为可能产生有害作用的 <strong>特权指令（privileged instructions）</strong> ，硬件只允许特权指令在内核模式中运行。一旦系统调用被执行，它将被硬件视为一个软中断，中断向量将被传递给系统内部的一个服务程序，并且模式位切换至内核模式。</li>
+<li><strong>定时器（timer）</strong> 可使计算机在一定时间后被中断。在将控制权交还给用户之前，操作系统必须保证定时器已被设置，一旦定时器触发中断，控制权将自动交还给操作系统，操作系统会将该中断视作一个致命的错误（fatal error）或者给这个程序更多的执行时间。</li>
+</ul>
+<h2 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h2><ul>
+<li>程序是被动的实体，而进程是主动（active）的实体。</li>
+<li>一个进程要完成任务需要如下资源：CPU，存储器，文件和 I/O 设备。一个单线程的进程有一个 <strong>程序计数器（program counter）</strong> 指定下一条要执行的指令，多线程的进程有多个程序计数器。</li>
+<li>进程是系统中的工作单元。通过在单 CPU 的复用，所有的进程都有机会并行执行。</li>
+<li>操作系统需要对进程管理及以下相关行为负责：<ul>
+<li>创建或删除用户或系统进程</li>
+<li>挂起或继续进程</li>
+<li>为进程同步提供机制</li>
+<li>为进程通信提供机制</li>
+<li>为死锁的处理提供机制</li>
+</ul>
+</li>
+</ul>
+<h1 id="操作系统结构（第二章）"><a href="#操作系统结构（第二章）" class="headerlink" title="操作系统结构（第二章）"></a>操作系统结构（第二章）</h1><h2 id="操作系统服务"><a href="#操作系统服务" class="headerlink" title="操作系统服务"></a>操作系统服务</h2><p>操作系统应提供如下服务。</p>
+<ul>
+<li><strong>用户接口（user interface）</strong> ，包括：<ul>
+<li><strong>命令行接口（command-line interface，CLI）</strong></li>
+<li><strong>批处理接口（batch interface）</strong></li>
+<li><strong>图形化用户接口（graphical user interface，GUI）</strong></li>
+</ul>
+</li>
+<li><strong>程序执行（program execution）</strong> ：操作系统要能够将程序加载到主存并执行程序</li>
+<li><strong>输入/输出操作（I/O operations）</strong> ：运行中的程序可能需要涉及到文件或 I/O 设备的读写操作</li>
+<li><strong>文件系统控制（file-system manipulation）</strong></li>
+<li><strong>通信（communications）</strong> ：通信可能通过 <em>共享内存（shared memory）</em> 或 <em>消息传递（message passing）</em> 实现</li>
+<li><strong>错误检测（error detection）</strong> ：操作系统应当能始终检测到可能的错误</li>
+<li><strong>资源分配（resource allocation）</strong> ：一些资源需要特殊的分配行为（如 CPU、主存和文件存储），有的还需要请求和释放代码（如 I/O 设备）</li>
+<li><strong>统计（accounting）</strong> ：操作系统需要对每个用户使用了多少不同的计算机资源做统计</li>
+<li><strong>安全防护（protection and security）</strong> ：保证所有对系统资源的请求都得以控制</li>
+</ul>
+<h2 id="用户接口和系统调用"><a href="#用户接口和系统调用" class="headerlink" title="用户接口和系统调用"></a>用户接口和系统调用</h2><ul>
+<li>有的操作系统将命令解释器（command interpreter）作为系统内核的一部分，有的（如 Windows XP 和 UNIX）将命令解释器作为一个特殊的程序。在存在多个可选命令解释器的系统中，它们通常被称作 <strong>壳（shell）</strong> 。命令解释器的主要功能是获取并执行下一条用户指定的指令，有两种执行的方式：<ul>
+<li>命令解释器本身包含了执行命令的代码：可执行命令的数量决定了命令解释器的大小</li>
+<li>通过系统程序实现多数指令：命令解释器本身并不理解指令的含义，它仅仅通过命令指定一个文件，将其装载至主存并执行。例如 <code>rm file.txt</code> 将程序 <code>rm</code> 加载并传入参数 <code>file.txt</code> 执行</li>
+</ul>
+</li>
+<li>图形用户接口提供了一个桌面。</li>
+<li><strong>系统调用（system call）</strong> 为系统服务提供了一个接口。多数程序开发者并不接触这一细节等级的代码，他们通常使用 <strong>应用程序接口（application programming interface，API）</strong> 来编写程序。API 为应用程序开发者提供了一组函数，最常见的三组 API 如：Windows 系统的 Win32 API、基于 POSIX 系统的 POSIX API 和 Java API。使用 API 的背后实际涉及了系统调用。</li>
+<li><strong>系统调用和中断的异同点</strong> ：<ul>
+<li>二者均有索引（系统调用编号-系统调用表、中断向量表），二者的执行均需切换到内核模式</li>
+<li>二者触发条件不同：系统调用是主动请求（会被硬件视为软中断），中断是外部触发</li>
+</ul>
+</li>
+<li><strong>中断和陷阱的不同点</strong> ：<ul>
+<li>二者起点不同：陷阱是正在执行的程序主动发起的，中断是外部错误或动作产生</li>
+<li>二者处理方式不同：程序的陷阱（异常）在响应后将停止执行，而程序在中断时保存断点，中断处理结束后从断点恢复执行</li>
+</ul>
+</li>
+<li>多数程序设计语言的运行时支持系统（一系列包含在编译器链接库中的函数）提供了 <strong>系统调用接口（system-call interface）</strong> ，它们将程序代码和操作系统提供的系统调用链接起来。每个系统调用都有一个对应的编号，系统调用接口维护了一个编号-系统调用的索引，它们截取应用程序调用的 API，调用操作系统内核中相关的系统调用，并返回系统调用状态及其他返回值。</li>
+<li>向操作系统传递参数有三种方法：通过寄存器传递、内存的块/表、压入/弹出堆栈。</li>
+<li>系统调用可被大致分为五类： <strong>进程控制（process control）</strong> 、 <strong>文件管理（file manipulation）</strong> 、 <strong>设备管理（device manipulation）</strong> 、 <strong>信息维护（information maintenance）</strong> 和 <strong>通信（communications）</strong> 。</li>
+<li>一个单任务系统： MS-DOS，它在计算机启动时运行一个命令解释器，当运行程序时，它将程序装入内存，并修改命令解释器的大部分内容来为新程序提供尽可能多的空间。之后将指令指针设为程序的第一条指令并运行程序，要么产生错误引起中断（此错误代码会被保存），要么程序执行一个系统调用以终止。最终命令解释器剩余部分程序继续执行，并从磁盘重新装入命令解释器的其他部分。这些步骤完成后，命令解释器会想用户/下一程序提供上一次运行的结果（保存的错误代码）。</li>
+<li>多任务系统：FreeBSD，用户登录到系统时，从用户选择的 Shell 开始执行。为了启动新进程，Shell 执行 <code>fork()</code> 系统调用，所选择的程序通过 <code>exec()</code> 装入内存并执行。根据命令发布方式，Shell 要么等待进程结束，要么在后台执行进程并继续响应用户输入。</li>
+<li>两种通信模型：<ul>
+<li><strong>消息传递模型（message-passing model）</strong> ：通信进程通过彼此之间交换消息传递信息，直接/间接通过一个共同的邮箱。通信实体可能是同一主机的不同进程，也可能是通过网络相连的另一主机的进程。进程之间通过 <strong>主机名（host name）</strong> 和 <strong>进程名（process name）</strong> 作为标识符区分。</li>
+<li><strong>共享内存模型（shared-memory model）</strong> ：进程使用 <code>shared memory create</code> 和 <code>shared memory attach</code> 系统调用来获得其它进程所拥有内存区域的访问权。操作系统通常需要组织一个进程访问另一个进程的内存，要使用共享内存模型，需要两/多个进程都同意取消这一限制。数据的形式和位置由进程协商决定，不受操作系统控制，进程必须保证它们不会同时向同一地方写入。</li>
+<li>区别：消息传递对交换少量数据更有效，对于计算机之间的通信也比共享内存更容易实现；共享内存允许最大速度通信（本地可以内存速度），并且比较方便，但需要保护和同步。</li>
+</ul>
+</li>
+</ul>
+<h2 id="操作系统设计和实现"><a href="#操作系统设计和实现" class="headerlink" title="操作系统设计和实现"></a>操作系统设计和实现</h2><ul>
+<li><strong>系统程序（system program）</strong> 为开发程序和执行程序提供了一个方便的环境，它们可分为：<ul>
+<li>文件管理（file management）</li>
+<li>状态信息（status information）</li>
+<li>文件修改（file modification）</li>
+<li>程序语言支持（programming-language support）</li>
+<li>程序装入和执行（program loading and execution）</li>
+<li>通信（communications）</li>
+</ul>
+</li>
+<li>操作系统设计目标：分为 <em>用户</em> 目标 和 <em>系统</em> 目标<ul>
+<li>用户目标：系统应当方便、容易使用、容易学习、可靠、安全、快速</li>
+<li>系统目标：操作系统应该容易设计、实现和维护，应该灵活、可靠、高效而没有错误</li>
+</ul>
+</li>
+<li><strong>策略（policy）</strong> 和 <strong>机制（mechanism）</strong> 的区分：机制决定如何做（ <em>how</em> to do），而策略决定做什么（ <em>what</em> will be done）</li>
+</ul>
+<h2 id="操作系统结构"><a href="#操作系统结构" class="headerlink" title="操作系统结构"></a>操作系统结构</h2><ul>
+<li>简单结构：利用最小的空间提供最多的功能，没有被划分为模块，如 MS-DOS。应用程序能够访问最底层的、基本的设备驱动，因此易受恶意程序的伤害。</li>
+<li><strong>分层方法（Layered Approach）</strong> ：采用自顶向下方法，将总的功能和特征划分为模块。模块化的其中方法是分层方法：将操作系统分为若干层（级），最底层（层0）为硬件，最高层（层N）为用户接口，分层结构类似一个同心圆。分层法最大的 <strong>优点在于构造和调试的简单化</strong> （每层只能利用较低层的功能和服务、每层为高层隐藏了一定数据结构、操作和硬件存在），主要困难在于 <strong>对层的详细定义</strong> 和 <strong>相比其他方法的低效</strong> 。</li>
+<li><strong>微内核（microkernels）</strong> ：将操作系统中所有非基本部分从内核中移走，将它们实现为系统程序或用户程序，从而得到更小的内核。微内核通常包括最小的进程、内存管理和通信功能。<ul>
+<li>微内核的主要功能是使客户程序和运行在用户空间的各种服务之间通信，客户程序和服务之间不会直接交互，而是通过微内核的 <strong>消息传递</strong> 。</li>
+<li>因为新服务可在用户空间增加而不需修改内核，因此 <strong>便于扩充操作系统</strong> ；因为大多数服务作为用户而不是内核进程运行，因此提供了 <strong>更好的安全性和可靠性</strong> 。</li>
+<li>因为使用消息传递，系统功能总开销增加，因此 <strong>系统性能下降</strong> 。</li>
+</ul>
+</li>
+<li><strong>模块（modules）</strong> ：用面向对象技术生成模块化的内核，动态加载模块。内核可以提供核心服务，也可动态实现特定功能。该方法和微内核方法类似，核心模块只有核心功能以及其他模块加载、通信的相关信息，但模块方法中， <strong>模块之间不需要调用消息传递来通信</strong> 。</li>
+<li>示例：Mac OS X操作系统的结构，底层为 Mach 微内核，提供内存管理、远程程序调用（remote process call，RPC）和进程间通信（IPC）工具；BSD 提供 BSD 命令行接口，支持网络、文件系统、POSIX API 实现。</li>
+</ul>
+<h2 id="虚拟机和系统生成"><a href="#虚拟机和系统生成" class="headerlink" title="虚拟机和系统生成"></a>虚拟机和系统生成</h2><ul>
+<li>虚拟机的基本思想是单个计算机（CPU、内存、硬盘、网卡等）硬件抽象为几个不同的执行部件。</li>
+<li>虚拟机除了提供与基本硬件相同的接口外，不提供额外功能。每个进程都有一个与底层机器完全相同的（虚拟）副本。</li>
+<li>虚拟机为每个虚拟系统提供 <strong>小型磁盘（minidisk）</strong> ，系统在物理磁盘上为小型磁盘分配所需要的磁道来实现。所有小型磁盘的大小之和必须小于可用的物理磁盘。</li>
+<li>底层物理机器有两种模式：用户模式和内核模式，虚拟机软件本身在物理机器上运行在用户模式中，而虚拟机在虚拟系统中运行在内核模式，每个虚拟系统有虚拟用户模式和虚拟内核模式，这两种模式均运行在物理用户模式。</li>
+<li>虚拟的 I/O 操作可能需要更少（脱机操作）或更多（解释执行）的时间。</li>
+<li>优点：可用于研究、开发操作系统；不同系统资源具有完全的保护，各个虚拟机之间完全独立。</li>
+<li>操作系统通常设计成能运行在一类计算机上，对于某类特定的计算机场所，配置生成系统的过程称为 <strong>系统生成（system generation，SYSGEN）</strong> 。需要考虑的信息有：使用什么CPU、多少可用内存、哪些可用设备、需要什么操作系统选项和参数值。这些信息确定后，系统管理员可用这些信息修改操作系统的源代码副本以完全重新编译操作系统；或者创建一个表，从预先编译过的库中选取模块，将这些模块连接起来生成操作系统；或者构造一个完全由表驱动的系统，所有代码都是系统的组成部分， <strong>选择发生在执行时而不是编译时</strong> ，现代多数操作系统均为此种方式。</li>
+</ul>
+<h2 id="系统引导"><a href="#系统引导" class="headerlink" title="系统引导"></a>系统引导</h2><ul>
+<li>装入内核以启动计算机的过程称为 <strong>引导（booting）</strong> 系统，多数计算机中均有一小块代码，称为 <strong>引导程序（bootstrap program）</strong> 或 <strong>引导装载程序（bootstrap loader）</strong> ，这段代码将定位内核，将其装入内存并开始执行。引导程序被存放在只读存储器中。</li>
+<li>对于大型操作系统（多数通用操作系统），引导程序存储在固件中，操作系统保存在磁盘上。引导程序运行诊断程序，从磁盘固定位置（0区块）读取整个引导块到内存，并执行这个 <strong>引导块（boot block）</strong> 中的代码。这个引导块足够复杂，它将一个完整的操作系统装载到内存开始执行。</li>
+</ul>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2015/11/14/Computer-Organization-Architectur6/" target="_blank" rel="external">计组与体系结构笔记：输入/输出与存储系统</a><br>此专栏的下一篇文章：</p>
+<hr>
+<p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/22/os-concepts-1/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/22/os-concepts-1/" target="_blank" rel="external">http://blog.forec.cn/2016/11/22/os-concepts-1/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2016/11/22/os-concepts-1/" data-id="civt7r76m000j54ewch50izuc" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2016/11/22/os-concepts-1/" data-title="操作系统概念（一）" data-url="http://forec.github.io/2016/11/22/os-concepts-1/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2016/11/21/haskell-io-actions/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">Haskell 中的非纯粹行为</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/22/os-concepts-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-1.jpg)" alt="操作系统概念（一）" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/22/os-concepts-1/" class="title">操作系统概念（一）</a></p>
+                            <p class="item-date"><time datetime="2016-11-22T02:07:44.000Z" itemprop="datePublished">2016-11-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/21/haskell-io-actions/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-io-actions.jpg)" alt="Haskell 中的非纯粹行为" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
+                            <p class="item-title"><a href="/2016/11/21/haskell-io-actions/" class="title">Haskell 中的非纯粹行为</a></p>
+                            <p class="item-date"><time datetime="2016-11-21T01:03:07.000Z" itemprop="datePublished">2016-11-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/20/ddos-syn-attack/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/ddos-syn-attack.jpg)" alt="基于 LibNET 的 SYN Flood 攻击" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/20/ddos-syn-attack/" class="title">基于 LibNET 的 SYN Flood 攻击</a></p>
+                            <p class="item-date"><time datetime="2016-11-20T13:42:03.000Z" itemprop="datePublished">2016-11-20</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/19/cloud-storage-system-5/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-5.png)" alt="简易云存储系统数据用户设计" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/19/cloud-storage-system-5/" class="title">简易云存储系统数据用户设计</a></p>
+                            <p class="item-date"><time datetime="2016-11-19T15:20:42.000Z" itemprop="datePublished">2016-11-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/18/haskell-fold/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-fold.jpg)" alt="Haskell 的 fold 系列" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
+                            <p class="item-title"><a href="/2016/11/18/haskell-fold/" class="title">Haskell 的 fold 系列</a></p>
+                            <p class="item-date"><time datetime="2016-11-18T07:10:11.000Z" itemprop="datePublished">2016-11-18</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">7</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.22px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 15.56px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.33px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.33px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 16.67px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 14.44px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.44px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.89px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.78px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14.44px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2016 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec# enter duoshuo shortname here'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>
