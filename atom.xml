@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-11-22T08:01:49.143Z</updated>
+  <updated>2016-11-22T08:07:30.413Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://forec.github.io/2016/11/22/os-concepts-1/"/>
     <id>http://forec.github.io/2016/11/22/os-concepts-1/</id>
     <published>2016-11-22T02:07:44.000Z</published>
-    <updated>2016-11-22T08:01:49.143Z</updated>
+    <updated>2016-11-22T08:07:30.413Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我按个人理解简化、翻译为中文，可能存在一些不准确之处。&lt;/p&gt;
@@ -175,7 +175,7 @@
 &lt;li&gt;装入内核以启动计算机的过程称为 &lt;strong&gt;引导（booting）&lt;/strong&gt; 系统，多数计算机中均有一小块代码，称为 &lt;strong&gt;引导程序（bootstrap program）&lt;/strong&gt; 或 &lt;strong&gt;引导装载程序（bootstrap loader）&lt;/strong&gt; ，这段代码将定位内核，将其装入内存并开始执行。引导程序被存放在只读存储器中。&lt;/li&gt;
 &lt;li&gt;对于大型操作系统（多数通用操作系统），引导程序存储在固件中，操作系统保存在磁盘上。引导程序运行诊断程序，从磁盘固定位置（0区块）读取整个引导块到内存，并执行这个 &lt;strong&gt;引导块（boot block）&lt;/strong&gt; 中的代码。这个引导块足够复杂，它将一个完整的操作系统装载到内存开始执行。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2015/11/14/Computer-Organization-Architectur6/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计组与体系结构笔记：输入/输出与存储系统&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;/p&gt;
+&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2015/11/14/Computer-Organization-Architecture6/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计组与体系结构笔记：输入/输出与存储系统&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/11/22/os-concepts-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/11/22/os-concepts-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/22/os-concepts-1/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
