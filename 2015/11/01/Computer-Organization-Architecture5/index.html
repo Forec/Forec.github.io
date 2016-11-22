@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="存储器类型和层次结构，高速缓存，虚拟存储器，有效组合方法。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/computer-organization-5.png">
-<meta property="og:updated_time" content="2016-11-22T08:07:49.792Z">
+<meta property="og:updated_time" content="2016-11-22T11:07:27.350Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计组与体系结构笔记（五）">
 <meta name="twitter:description" content="存储器类型和层次结构，高速缓存，虚拟存储器，有效组合方法。">
@@ -247,7 +247,7 @@
 <h1 id="存储器管理"><a href="#存储器管理" class="headerlink" title="存储器管理"></a>存储器管理</h1><blockquote>
 <p>奔腾处理器的存储器管理：奔腾为32位虚拟地址和32位物理地址，分页大小为4KB或4MB，采用分页和分段管理机制的不同组合：包括没有分段和分页的存储器，只有分页的存储器，只有分段的存储器以及二者兼有的存储器。其采用两级高速缓存：L1和L2，都使用一个32位大小的存储区块。L1靠近处理器，L2位于处理器和存储器之间。L1被分割为保存指令的高速缓存（I-Cache）和保存数据的高速缓存（D-Cache）。两个L1 Cache都使用一个LRU位处理置换操作。每个L1有一个TLB，D-Cache的TLB有64个入口目录，I-Cache只有32个入口目录。两个TLB都采用4路的组关联映射方式。L2的规模从512KB（早期）增加到1MB（后期型号）。L2 Cache和两个L1 Cache都采用2路组关联映射方式，都采用MESI高速缓存的一致性协议，每一路高速缓存线都使用2位二进制数存储下列MESI状态中的一种：1）M：高速缓存中数据被修改，与主存储器中不同，2）E：独占的，高速缓存数据没有被修改过，与主存储器相同，3）S：共享的，高速缓存的线/块可以呵其他高速缓存的线/块共享，4）I：无效的，所请求的线/块不在高速缓存中。</p>
 </blockquote>
-<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2015/10/27/Computer-Organization-Architecture4/" target="_blank" rel="external">计组与体系结构笔记：指令系统</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2015/11/14/Computer-Organization-Architecture6/" target="_blank" rel="external">计组与体系结构笔记：输入/输出与存储系统</a></p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2015/10/27/Computer-Organization-Architecture4/" target="_blank" rel="external">计组与体系结构笔记（四）：指令系统</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2015/11/14/Computer-Organization-Architecture6/" target="_blank" rel="external">计组与体系结构笔记（六）：输入/输出与存储系统</a></p>
 <hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2015/11/01/Computer-Organization-Architecture5/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2015/11/01/Computer-Organization-Architecture5/" target="_blank" rel="external">http://blog.forec.cn/2015/11/01/Computer-Organization-Architecture5/</a>) 、作者信息（<a href="http://blog.forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
@@ -257,7 +257,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/11/01/Computer-Organization-Architecture5/" data-id="civt7z2p70073rcewx1nno5ki" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2015/11/01/Computer-Organization-Architecture5/" data-id="civtmf9jk00761cewc084z565" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -460,10 +460,10 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2016/11/22/os-concepts-1/" class="thumbnail">
+                            <a href="/2016/11/22/os-concepts-2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-1.jpg)" alt="操作系统概念（一）" class="thumbnail-image"></span>
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-2.jpg)" alt="操作系统（二）：进程与线程" class="thumbnail-image"></span>
     
     
 </a>
@@ -472,7 +472,27 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
-                            <p class="item-title"><a href="/2016/11/22/os-concepts-1/" class="title">操作系统概念（一）</a></p>
+                            <p class="item-title"><a href="/2016/11/22/os-concepts-2/" class="title">操作系统（二）：进程与线程</a></p>
+                            <p class="item-date"><time datetime="2016-11-22T11:02:51.000Z" itemprop="datePublished">2016-11-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/22/os-concepts-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-1.jpg)" alt="操作系统（一）：概念导读" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/22/os-concepts-1/" class="title">操作系统（一）：概念导读</a></p>
                             <p class="item-date"><time datetime="2016-11-22T02:07:44.000Z" itemprop="datePublished">2016-11-22</time></p>
                         </div>
                     </li>
@@ -537,26 +557,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/18/haskell-fold/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-fold.jpg)" alt="Haskell 的 fold 系列" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
-                            <p class="item-title"><a href="/2016/11/18/haskell-fold/" class="title">Haskell 的 fold 系列</a></p>
-                            <p class="item-date"><time datetime="2016-11-18T07:10:11.000Z" itemprop="datePublished">2016-11-18</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -566,7 +566,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">7</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">8</span></li></ul>
         </div>
     </div>
 
@@ -576,7 +576,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.22px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 15.56px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.33px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.33px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 16.67px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 14.44px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.44px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.89px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.78px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14.44px;">计组与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.5px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.25px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.25px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.75px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.75px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 17.5px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.25px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 15px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.25px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.25px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.75px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.5px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 15px;">计组与体系结构</a>
         </div>
     </div>
 

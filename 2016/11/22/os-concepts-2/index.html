@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>操作系统（二）：进程与线程 | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="OS" />
+    
+    <meta name="description" content="整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文 ，可能存在一些不准确之处。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统（二）：进程与线程">
+<meta property="og:url" content="http://forec.github.io/2016/11/22/os-concepts-2/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文 ，可能存在一些不准确之处。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-2.jpg">
+<meta property="og:updated_time" content="2016-11-22T14:48:25.277Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统（二）：进程与线程">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文 ，可能存在一些不准确之处。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-os-concepts-2" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        操作系统（二）：进程与线程
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2016/11/22/os-concepts-2/" class="article-date">
+    <time datetime="2016-11-22T11:02:51.000Z" itemprop="datePublished">2016-11-22</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书的摘录，由我 <strong>按个人理解简化、翻译为中文</strong> ，可能存在一些不准确之处。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="进程（第三章）"><a href="#进程（第三章）" class="headerlink" title="进程（第三章）"></a>进程（第三章）</h1><h1 id="概念与调度"><a href="#概念与调度" class="headerlink" title="概念与调度"></a>概念与调度</h1><ul>
+<li>进程可看作正在执行的程序，是大多数系统中的工作单元。进程除了包括程序代码（有时也称作 <strong>文本段</strong> ），还包括用 <strong>程序计数器</strong> 和处理器寄存器来表示的当前活动。进程通常还包括进程 <strong>堆栈段（stack）</strong> 和 <strong>数据段（data section）</strong> ，其中堆栈段保存临时数据如函数参数、返回地址、局部变量，数据段保存全局变量。进程还可能包括 <strong>堆（heap）</strong> ，堆是进程运行期间动态分配的内存。</li>
+<li>进程在执行中会改变 <strong>状态（state）</strong> ，每个进程可能处于下列状态：<ul>
+<li><strong>创建（New）</strong> ：进程正在被创建</li>
+<li><strong>运行（Running）</strong> ：进程正在被执行</li>
+<li><strong>等待（Waiting）</strong> ：进程在等待某个事件发生（如 I/O 完成或接收到某个信号）</li>
+<li><strong>就绪（Ready）</strong> ：进程等待分配处理器</li>
+<li><strong>终止（Terminated）</strong> ：进程完成执行</li>
+</ul>
+</li>
+<li>一次只有 <em>一个进程</em> 可以在 <em>一个处理器</em> 上 <em>运行</em> ，但可以有多个进程处于 <em>就绪</em> 或 <em>等待</em> 状态。进程状态转移如下图，图片截取自《操作系统概念》中文版。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/diagram-process-state.jpg" width="400px"></li>
+<li>每个进程在操作系统内部用 <strong>进程控制块（process control block，PCB）</strong> 来表示，它包含了与一个特定进程相关的信息。每个进程控制块包含：<ul>
+<li><strong>进程状态（process state）</strong> ：可为上述五种状态</li>
+<li><strong>程序计数器（program counter）</strong> ：指定进程要执行的下条指令地址</li>
+<li><strong>CPU 寄存器</strong> ：根据计算机体系结构的不同，寄存器数量、类型也不同，多数包括累加器、索引寄存器、堆栈指针、通用寄存器等</li>
+<li><strong>CPU 调度信息（CPU-scheduling information）</strong> ：包括进程优先级、调度队列的指针和其它调度参数</li>
+<li><strong>内存管理信息（memory-management information）</strong> ：根据内存系统，通常包括基址、界限寄存器值、页表或段表</li>
+<li><strong>统计信息（accounting information）</strong> ：包括 CPU 时间、实际使用时间、时间界限、统计数据、作业/进程数量等</li>
+<li><strong>I/O 状态信息</strong> ：包括分配给进程的 I/O 设备列表、打开的文件列表等</li>
+</ul>
+</li>
+<li><strong>进程调度器（process scheduler）</strong> 选择一个可用的进程到 CPU 中执行。进程进入系统时会被加入到 <strong>作业队列（job queue）</strong> 中，该队列包括系统中所有进程。保留在主存中且准备就绪等待运行的进程被保存在 <strong>就绪队列（ready queue）</strong> 中，该队列通常用链表实现，头节点指向了链表的第一个和最后一个 PCB 块指针，每个PCB 包括指向就绪队列的下一个 PCB 的指针。有些进程向共享设备（如磁盘）发送 I/O 请求，若磁盘正忙则该进程需要等待。等待特定 I/O 设备的进程列表称为 <strong>设备队列（device queue）</strong> ，每个设备都有自己的设备队列。</li>
+<li>新进程开始时处于就绪队列，它在就绪队列中等待直到被选中执行或 <strong>派遣（dispatched）</strong> 。一旦进程被分配 CPU 并开始执行，可能发生以下事件。在前两种情况中，经过一定时间的等待，进程最终会从等待状态切换回就绪状态，并放回到就绪队列中。<ul>
+<li>进程发出一个 I/O 请求并被放到 I/O 队列中</li>
+<li>进程创建一个新的子进程并等待其结束</li>
+<li>进程由于中断强制释放 CPU，并被放回到就绪队列中<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/process-scheduling-queue.jpg" width="400px"></li>
+</ul>
+</li>
+<li>操作系统从队列中选择进程的操作由 <strong>调度程序（scheduler）</strong> 执行。在批处理系统中，进程被放到大容量存储设备（如磁盘）的缓冲池（作业池）中等待执行。 <strong>长期调度程序（long-term scheduler）</strong> 或 <strong>作业调度程序（job scheduler）</strong> 从缓冲池选择进程、装入内存以准备执行，而 <strong>短期调度程序（short-term scheduler）</strong> 或 <strong>CPU 调度程序</strong> 从准备执行的进程中选择并分配 CPU。二者的区别主要体现在 <strong>执行的频率不同</strong> 。短期调度程序非常频繁地执行，为CPU选择新进程，如果短期调度需要 10ms 来确定执行一个运行 100ms 的进程，则 <code>10/(100+10) = 9%</code> 的CPU时间浪费在了调度工作上；而长期调度程序执行不频繁，可能数分钟调度一次，它控制 <strong>多道程序设计的程度（degree of multiprogramming）</strong> ，即内存中的进程数量。只有进程离开系统后才可能需要调度长期调度程序。</li>
+<li>有些系统没有/少有长期调度程序，如 UNIX 或 Windows 的分时系统通常没有长期调度程序，它们仅仅简单的将所有新进程放到内存中以供短期调度程序使用。有些系统如分时系统可能引入 <strong>中期调度系统（medium-term scheduler）</strong> ，它可以将进程从内存（或 CPU 竞争）中移出，从而降低多道程序设计的程度。之后，这些进程可以被重新调入内存并从中断处继续执行。这种行为称为 <strong>交换（swapping）</strong> 。有时因为内存要求的改变导致可用内存过度使用，此时便需要交换。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/addition-medium-term-scheduling.jpg" width="500px"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/swapped-state.jpg" width="500px"></li>
+<li>将 CPU 切换到另一个进程需要保存当前进程状态并恢复另一个进程的状态，此任务成为 <strong>上下文切换（context switch）</strong> 。内核会将旧进程的状态保存在其 PCB 中，并装入调度后要执行的并已恢复的新进程的上下文。上下文切换的时间与硬件支持相关。</li>
+</ul>
+<h2 id="进程操作"><a href="#进程操作" class="headerlink" title="进程操作"></a>进程操作</h2><ul>
+<li>进程在其执行过程中能通过创建进程系统调用（create-process system call）创建多个新进程。创建进程称为 <strong>父（parent）进程</strong> ，被创建的新进程称为 <strong>子（children）进程</strong> 。每个新进程可以再创建其他进程以形成 <strong>进程树（tree）</strong> 。</li>
+<li>多数操作系统根据一个唯一的 <strong>进程标识符（process identifier，pid）</strong> 来识别进程，通常是整数值。</li>
+<li>一个进程创建子进程时，子进程可能通过以下方式获取资源：<ul>
+<li>从操作系统直接获取资源</li>
+<li>获取父进程资源。父进程需要在子进程之间分配或共享资源，父进程可以选择和子进程分享全部资源、分享部分资源、不分享资源</li>
+</ul>
+</li>
+<li>进程创建时，除了得到各种物理和逻辑资源，初始化数据（或输入）由父进程传递给子进程。</li>
+<li>当进程创建新进程时，存在两种执行可能：<ul>
+<li>父进程和子进程并发执行</li>
+<li>父进程等待，直到某个或全部子进程执行完</li>
+</ul>
+</li>
+<li>新进程的地址空间有两种可能：<ul>
+<li>子进程是父进程的副本，具有和父进程相同的程序和数据</li>
+<li>子进程装入另一个新程序</li>
+</ul>
+</li>
+<li>在 UNIX 中，通过 <code>fork()</code> 系统调用创建新进程，新进程通过 <strong>复制原来进程的地址空间形成</strong> 。两个进程（父进程、子进程）均继续执行位于系统调用 <code>fork()</code> 之后的指令，对于子进程，系统调用 <code>fork()</code> 返回值为 0，而父进程的返回值为子进程的 pid。</li>
+<li>在系统调用 <code>fork()</code> 后，一个进程会使用系统调用 <code>exec()</code> 以使用新程序取代进程内存空间并开始执行。这样两个进程可以相互通信且执行各自程序。如果父进程在子进程运行时需要等待，则采用系统调用 <code>wait()</code> 将自己移出就绪队列来等待子进程终止。</li>
+<li>以下是 UNIX 系统一个 C 语言例程，来自原书第 92 页。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">pid_t</span> pid;</span><br><span class="line">    pid = fork();     <span class="comment">// fork a child process</span></span><br><span class="line">    <span class="keyword">if</span> (pid &lt; <span class="number">0</span>)&#123;     <span class="comment">// error occurred</span></span><br><span class="line">        <span class="built_in">exit</span>(-<span class="number">1</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>)&#123;    <span class="comment">// child process</span></span><br><span class="line">        execlp(<span class="string">"/bin/ls"</span>, <span class="string">"ls"</span>, <span class="literal">NULL</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;                 <span class="comment">// parent process</span></span><br><span class="line">        wait(<span class="literal">NULL</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>以下是 Win32 API 生成一个单独进程的 C 语言例程，来自原书第 94 页。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    STARTUPINFO si;</span><br><span class="line">    PROCESS_INFORMATION pi;</span><br><span class="line">    ZeroMemory(&amp;si, <span class="keyword">sizeof</span>(si));    <span class="comment">// allocate memory</span></span><br><span class="line">    si.cb = <span class="keyword">sizeof</span>(si);</span><br><span class="line">    ZeroMemory(&amp;pi, <span class="keyword">sizeof</span>(pi));</span><br><span class="line">    <span class="keyword">if</span> (!CreateProcess(<span class="literal">NULL</span>,        <span class="comment">// use command line</span></span><br><span class="line">        <span class="string">"C:\\WINDOWS\\system32\\mspaint.exe"</span>,  </span><br><span class="line">        <span class="literal">NULL</span>, <span class="literal">NULL</span>, FALSE, <span class="number">0</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;si, &amp;pi))&#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;        <span class="comment">// create process failed</span></span><br><span class="line">    &#125;</span><br><span class="line">    WaitForSingleObject(pi.hProcess, INFINITE);</span><br><span class="line">    CloseHandle(pi.hProcess);</span><br><span class="line">    CloseHandle(pi.hThread);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="进程终止和通信"><a href="#进程终止和通信" class="headerlink" title="进程终止和通信"></a>进程终止和通信</h2><ul>
+<li>进程完成执行最后的语句并使用系统调用 <code>exit()</code> 时进程终止，此时进程可以返回状态值（通常为整数）给父进程（通过<code>wait()</code>获取），所有进程资源也会被操作系统是放。</li>
+<li>进程通过系统调用（如 Win32 的 <code>TerminateProcess()</code>）可以终止另一个进程，通常只有被终止进程的父进程才能执行该操作。父进程终止子进程的原因如：<ul>
+<li>子进程使用了超出其所分配的资源</li>
+<li>子进程所分配的任务已不需要</li>
+<li>父进程退出（在有的系统中，如果父进程终止，则其所有子进程也终止，此现象称为 <strong>级联终止（cascading termination）</strong> 。而在 UNIX 中，若父进程终止，其所有子进程会以 init 进程作为父进程，因此子进程仍然有一个父进程来收集状态和执行统计。）</li>
+</ul>
+</li>
+<li>操作系统内并发执行的进程可以为 <em>独立进程</em> 或 <em>协作进程</em> 。如果一个进程不能影响其他进程，也不能被其他进程所影响，则该进程是 <strong>独立（independent）</strong> 的，否则该进程是 <strong>协作（cooperating）</strong> 的。进程协作的原因有很多，如：<ul>
+<li><strong>信息共享（information sharing）</strong> ：多个用户需要同一个共享文件</li>
+<li><strong>提高运算速度（computation speedup）</strong> ：要使一个特定任务快速运行，则需要将其分成子任务以并行执行，这需要计算机有多个处理单元（CPU或 I/O通道）</li>
+<li><strong>模块化（modularity）</strong> ：需要按模块化方式构造系统</li>
+<li><strong>方便</strong> ：单个用户可同时执行多个任务</li>
+</ul>
+</li>
+<li>进程写作需要 <strong>进程间通信机制（interprocess communication， IPC）</strong> 来允许进程相互交换数据，其包括两种基本模式：<ul>
+<li><strong>共享内存（shared memory）</strong> ：通信进程需要建立内存共享区域</li>
+<li><strong>消息传递（massage passing）</strong> ：在分布式环境中非常有用，通信进程之间必须有 <strong>通信线路（communication link）</strong> 。对于 <strong>直接通信</strong> ，采用对称寻址，每个进程必须明确地命名通信的接收者或发送者； <strong>间接通信</strong> 中，通过 <strong>邮箱（mailboxes）</strong> 或 <strong>端口（ports）</strong> 来发送和接收消息，每个邮箱都有唯一的标识符，两个进程仅在其共享至少一个邮箱时可相互通信，一个进程可通过许多不同的邮箱和其他进程通信。</li>
+</ul>
+</li>
+<li>对于使用邮箱的间接通信，通信线路有如下属性：<ul>
+<li>只有在两个进程共享一个邮箱时才能建立通信线路</li>
+<li>一个线路可以与两个或更多的进程相关联</li>
+<li>两个通信进程之间可有多个不同线路，每个线路对应一个邮箱</li>
+</ul>
+</li>
+<li>若多个进程共享同一个邮箱，例如进程 P1、P2、P3均共享邮箱 A，进程 P1 发送一个消息到 A，进程 P2 和 P3 同时对邮箱 A 执行 <code>receive()</code>，则结果取决于所选用地方案：<ul>
+<li>允许一个线路最多只能与两个进程相关联</li>
+<li>一次最多允许一个进程执行 <code>receive()</code> 操作</li>
+<li>允许系统随意选择一个进程接收消息</li>
+</ul>
+</li>
+<li>由操作系统所拥有的邮箱是独立存在的，不属于某个特定的进程。创建新邮箱的进程默认为邮箱拥有者，通过系统调用，拥有权和接收特权可能传递给其他进程。</li>
+<li>消息传递可以是 <strong>阻塞（blocking）</strong> 或者 <strong>非阻塞（nonblocking）</strong> ，也称为 <strong>同步（synchronous）</strong> 或 <strong>异步（asynchronous）</strong> 。<ul>
+<li>阻塞发送：发送进程阻塞直到消息被接收进程或邮箱接收</li>
+<li>非阻塞发送：发送进程可直接发送消息并继续操作</li>
+<li>阻塞接收：接收者阻塞直到有可用消息</li>
+<li>非阻塞接收：接收者可以直接收到一个有效消息或空消息</li>
+</ul>
+</li>
+<li>IPC 系统示例，Windows XP：Windows XP 的消息传递工具称为 <strong>本地过程调用（local procedure call，LPC）</strong> 工具，在位于同一机器的两个进程之间通信。Windows XP 使用了端口对象以建立、维持两个进程之间的链接。通信工作如下，如果客户端要发送更大的消息，则可通过 <strong>区段对象（section object）</strong> 来构建共享内存传递消息。注意，LPC 不是 Win32 API 的一部分，所以对应用程序不可见。<ul>
+<li>客户端打开系统的连接端口对象句柄</li>
+<li>客户端发送连接请求</li>
+<li>服务器创建两个私有通信端口，并返回其中之一的句柄给客户端</li>
+<li>客户端和服务器使用相应端口句柄以发送消息或回调，并等待回答</li>
+</ul>
+</li>
+<li>例程，C 程序调用 POSIX 系统下的共享内存 API，来自原书（英文版）第 104 页。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;sys/shm.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> segment_id;</span><br><span class="line">    <span class="keyword">char</span> *shared_memory;</span><br><span class="line">    <span class="comment">// the size(bytes) of shared memory segment</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> size = <span class="number">4096</span>;    </span><br><span class="line">    <span class="comment">// allocate a shared memory segment</span></span><br><span class="line">    segment_id = shmget(IPC_PRIVATE, size, S_IRUSR | S_IWUSR);</span><br><span class="line">    <span class="comment">// attach the shared memory segment</span></span><br><span class="line">    shared_memory = (<span class="keyword">char</span> *) shmat(segment_id, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// write a message to the shared memory segment</span></span><br><span class="line">    <span class="built_in">sprintf</span>(shared_memory, <span class="string">"Hi there!"</span>);</span><br><span class="line">    <span class="comment">// print out the string from shared memory</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"*%s\n"</span>, shared_memory);</span><br><span class="line">    <span class="comment">// detach the shared memory segment</span></span><br><span class="line">    shmdt(shared_memory);</span><br><span class="line">    <span class="comment">// remove the shared memory segment</span></span><br><span class="line">    shmctl(segment_id, IPC_RMID, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><ul>
+<li><strong>管道（pipe）</strong> 是一条在进程间以字节流方式传送数据的通信通道，由OS核心的缓冲区（通常几十KB）来实现，为单向。</li>
+<li>管道常用于命令行所指定的输入输出重定向和管道命令，使用前要建立相应的管道。管道逻辑上可以看作管道文件，物理上则是由文件系统的高速缓存区构成。</li>
+<li>管道分为 <em>有名管道</em> 和 <em>无名管道</em> ，按先进先出（FIFO）的方式传送消息，且只能单向传送消息。</li>
+<li>管道的发送和接受可使用如下操作：<ul>
+<li>发送进程利用文件系统的系统调用 <code>write(fd[1], buf, size)</code> 把 buf 中长度为 size 字符的消息送入管道入口 <code>fd[1]</code>；</li>
+<li>接收进程利用文件系统的系统调用 <code>read(fd[0], buf, size)</code>从管道出口 <code>fd[0]</code> 读出 size 字符的消息放入 buf 中。</li>
+</ul>
+</li>
+<li>管道应用例程，来自李文生老师的操作系统幻灯片。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> pid,fd[<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">30</span>], s[<span class="number">30</span>];</span><br><span class="line">    pipe(fd);</span><br><span class="line">    <span class="keyword">while</span>((pid = fork()) == -<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (pid==<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">sprintf</span>(buf, <span class="string">"this is an example\n"</span>);</span><br><span class="line">        write(fd[<span class="number">1</span>],buf,<span class="number">30</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        wait(<span class="number">0</span>);</span><br><span class="line">        read(fd[<span class="number">0</span>], s, <span class="number">30</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%s"</span>,s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="线程（第四章）"><a href="#线程（第四章）" class="headerlink" title="线程（第四章）"></a>线程（第四章）</h1><ul>
+<li>线程是 CPU 使用的基本单元，由线程ID、程序计数器、寄存器集合和栈组成。它和 <strong>属于同一进程</strong> 的其他线程共享代码段、数据段和其他操作系统资源（打开文件、信号等）。传统 <strong>重量级（heavyweight）</strong> 的进程只有单个控制线程，若进程有多个控制线程，则可同时做多个任务。</li>
+<li>多线程编程优点：<ul>
+<li>响应度高</li>
+<li>资源共享：线程默认共享它们所属进程的资源和内存，它允许一个应用程序在同一地址空间有多个不同的活动线程</li>
+<li>经济：线程创建所需的内存和资源较进程少很多</li>
+<li>多处理器体系结构的利用：每个进程能并行运行在不同处理器上，加强了并发功能</li>
+</ul>
+</li>
+</ul>
+<h2 id="多线程模型"><a href="#多线程模型" class="headerlink" title="多线程模型"></a>多线程模型</h2><p>有两种方法提供线程支持：用户层的 <strong>用户线程（user threads）</strong> 和内核层的 <strong>内核线程（kernel threads）</strong> 。用户线程受到内核的 <em>支持</em> ，但不需内核管理；内核线程 <em>由操作系统直接支持和管理</em> 。当代所有操作系统均支持内核线程。</p>
+<ul>
+<li><strong>多对一模型（Many-to-One）</strong> ：将多个用户级线程映射到一个内核线程。 <em>线程管理是由线程库在用户空间进行的</em> ，效率较高； <strong>若一个线程执行了阻塞系统调用，则整个进程都会阻塞</strong> ，因为任一时刻只有一个线程能访问内核。</li>
+<li><strong>一对一模型（One-to-One）</strong> ：将每个用户线程映射到一个内核线程，该模型在一个线程执行系统调用时，能允许另一个线程继续执行，所以它提供了更好的并发性能；缺点在于每个用户线程需要创建一个对应的内核线程，因此限制了系统支持的线程数量。Linux 和 Windows 系列系统实现了一对一模型。</li>
+<li><strong>多对多模型（Many-to-Many）</strong> ：复用了许多用户线程到同样数量或者更小数量的内核线程上，开发人员可创建任意多的用户线程，并且相应内核线程能在多处理器系统上并发执行。一个流行的多对多模型的变种允许将一个用户线程绑定到某个内核线程上，这个变种有时称为 <strong>二级模型（two0level model）</strong> 。</li>
+</ul>
+<h2 id="线程库"><a href="#线程库" class="headerlink" title="线程库"></a>线程库</h2><ul>
+<li><strong>线程库（thread library）</strong> 为程序员提供创建和管理线程的 API。有两种方法来实现：<ul>
+<li>在用户空间提供一个没有内核支持的库，此库的所有代码和数据结构均存在用户空间中，调用库中的一个函数只是导致用户空间中一个本地函数的调用，而非系统调用</li>
+<li>执行一个由操作系统直接支持的内核级的库，库的代码和数据结构存储在内核空间中，调用库中的一个 API 会导致对内核的系统调用。</li>
+</ul>
+</li>
+<li>目前主要的三种线程库有：POSIX Pthread、Win32 和 Java。</li>
+<li>Pthread 创建、执行线程的一个 C程序样例如下，例程来自原书（英文版）第 133 页。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> sum = <span class="number">0</span>;                      <span class="comment">// shared by thread</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">runner</span><span class="params">(<span class="keyword">void</span> *param)</span></span>;    <span class="comment">// thread</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span>&#123;</span><br><span class="line">    <span class="keyword">pthread_t</span> tid;        <span class="comment">// pid</span></span><br><span class="line">    <span class="keyword">pthread_attr_t</span> attr;  <span class="comment">// set of thread attributes</span></span><br><span class="line">    <span class="keyword">if</span> (argc != <span class="number">2</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (atoi(argv[<span class="number">1</span>]) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// initialize the default attributes</span></span><br><span class="line">    pthread_attr_init(&amp;attr);        </span><br><span class="line">    <span class="comment">// create the thread</span></span><br><span class="line">    pthread_create(&amp;tid, &amp;attr, runner, argv[<span class="number">1</span>]);</span><br><span class="line">    <span class="comment">// wait for the thread to exit</span></span><br><span class="line">    pthread_join(tid, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"sum = %d\n"</span>, sum);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">runner</span><span class="params">(<span class="keyword">void</span> *param)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, upper = atoi(param);</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= upper; i++)</span><br><span class="line">        sum += i;</span><br><span class="line">    pthread_exit(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Win32 线程库创建线程的例程如下，来自原书（英文版）第 135 页。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line">DWORD sum = <span class="number">0</span>;</span><br><span class="line"><span class="function">DWORD WINAPI <span class="title">Summation</span><span class="params">(LPVOID Param)</span></span>&#123;</span><br><span class="line">    DWORD Upper = *(DWORD*)Param;</span><br><span class="line">    <span class="keyword">for</span> (DWORD i = <span class="number">0</span>; i &lt;= Upper; i++)&#123;</span><br><span class="line">        Sum += i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span>&#123;</span><br><span class="line">    DWORD ThreadId;</span><br><span class="line">    HANDLE ThreadHandle;</span><br><span class="line">    <span class="keyword">int</span> Param;</span><br><span class="line">    <span class="keyword">if</span> (argc != <span class="number">2</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ((Param = atoi(argv[<span class="number">1</span>])) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ThreadHandle = CreateHandle(</span><br><span class="line">        <span class="literal">NULL</span>,       <span class="comment">// default security attributes</span></span><br><span class="line">        <span class="number">0</span>,          <span class="comment">// default stack size</span></span><br><span class="line">        Summation,  <span class="comment">// thread function</span></span><br><span class="line">        &amp;Param,     <span class="comment">// parameter to thread function</span></span><br><span class="line">        <span class="number">0</span>,          <span class="comment">// default creation flags</span></span><br><span class="line">        &amp;ThreadId); <span class="comment">// returns the thread identifier</span></span><br><span class="line">    <span class="keyword">if</span> (ThreadHandle != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        WaitForSingleObject(ThreadHandle, INFINITE);</span><br><span class="line">        CloseHandle(ThreadHandle);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"sum = %d\n"</span>, Sum);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="多线程问题"><a href="#多线程问题" class="headerlink" title="多线程问题"></a>多线程问题</h2><ul>
+<li>在多线程程序中，<code>fork()</code> 和 <code>exec()</code> 的语义有所改变：有的 UNIX 系统存在两种形式的 <code>fork()</code>，如果程序中一个线程调用 <code>fork()</code>，其中一种情况新进程会复制所有线程，另一种则只复制调用系统调用 <code>fork()</code> 的线程。</li>
+<li><code>exec()</code> 工作方式不变， <strong>如果一个线程调用了系统调用 <code>exec()</code>，则<code>exec()</code>参数指定的程序会替换整个进程，包括所有线程</strong> 。</li>
+<li><code>fork()</code> 的两种工作方式和应用程序有关：如果调用 <code>fork()</code> 后立刻调用 <code>exec()</code>，则没必要复制所有线程，因为 <code>exec()</code> 会替换整个进程，此时应当只复制调用的线程，否则应当复制所有线程。</li>
+<li><strong>线程取消（thread cancellation）</strong> 指线程完成之前终止线程任务，要取消的线程通常称为 <strong>目标线程（target thread）</strong> ，目标线程的取消可在如下两种情况下发生：<ul>
+<li><strong>异步取消（asynchronous cancellation）</strong> ：一个线程立刻终止目标线程</li>
+<li><strong>延迟取消（deferred cancellation）</strong> ：目标线程不断检查它是否应当终止</li>
+</ul>
+</li>
+<li>如果资源已分配给要取消的线程或要取消的线程正在更新与其他线程所共享的数据，则取消会非常麻烦。采用延迟取消时，只有当目标线程检查它在安全的点时才会取消，Pthread 称这些点为 <strong>取消点（cancellation point）</strong> 。</li>
+<li>信号处理： <strong>信号（signal）</strong> 在 UNIX中用来通知进程某个特定事件发生，根据需要通知信号的来源和事件理由，无论信号为异步还是同步，它们都具有同样的模式：<ul>
+<li>信号由特定事件产生</li>
+<li>产生信号要发送给进程</li>
+<li>信号一旦被发送就必须被处理</li>
+</ul>
+</li>
+<li>同步信号的例子包括访问违例内存或者除 0，同步信号发送到执行操作而产生信号的同一进程；如果一个信号由运行进程之外的事件产生，则进程异步接收这一信号，如使用Ctrl + C 终止或定时器到期。异步信号通常被发送到另一个进程。每个信号可能由两种可能的处理程序中的一种来处理：<ul>
+<li>默认信号处理程序</li>
+<li>用户定义的信号处理程序</li>
+</ul>
+</li>
+<li>Windows 并不提供对信号的支持，但它们能通过 <strong>异步过程调用（asynchronous procedure call，APC）</strong> 来模拟。APC 工具允许用户线程指定一个函数以便在用户线程受到特定事件通知时能被调用。</li>
+</ul>
+<h2 id="线程池和特定数据"><a href="#线程池和特定数据" class="headerlink" title="线程池和特定数据"></a>线程池和特定数据</h2><ul>
+<li>如果允许所有并发请求都通过新线程来处理，则没法限制在系统中并发执行的线程的数量。可使用 <strong>线程池（thread pool）</strong> 解决：在进程开始时创建一定数量的线程，并放入池中等待工作，当服务器收到请求则唤醒池中一个线程（如果有线程可用），并将要处理的请求传递给该线程；一旦一个线程完成了服务，它会返回池中等待工作。</li>
+<li>线程池优点主要有：<ul>
+<li>使用现有线程处理请求比等待新创建线程更快</li>
+<li>线程池限制了在任何时候可以使用的线程数量</li>
+</ul>
+</li>
+<li>有些情况下线程自己需要维持一定数据的副本，这类数据称为 <strong>线程特定数据（thread-specific data）</strong> 。</li>
+</ul>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/22/os-concepts-1/" target="_blank" rel="external">操作系统（一）：概念导读</a><br>此专栏的下一篇文章：</p>
+<hr>
+<p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/22/os-concepts-2/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/22/os-concepts-2/" target="_blank" rel="external">http://blog.forec.cn/2016/11/22/os-concepts-2/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2016/11/22/os-concepts-2/" data-id="civtmf9e1001l1cew9jd92jc0" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2016/11/22/os-concepts-2/" data-title="操作系统（二）：进程与线程" data-url="http://forec.github.io/2016/11/22/os-concepts-2/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2016/11/22/os-concepts-1/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">操作系统（一）：概念导读</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/22/os-concepts-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-2.jpg)" alt="操作系统（二）：进程与线程" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/22/os-concepts-2/" class="title">操作系统（二）：进程与线程</a></p>
+                            <p class="item-date"><time datetime="2016-11-22T11:02:51.000Z" itemprop="datePublished">2016-11-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/22/os-concepts-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-1.jpg)" alt="操作系统（一）：概念导读" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/22/os-concepts-1/" class="title">操作系统（一）：概念导读</a></p>
+                            <p class="item-date"><time datetime="2016-11-22T02:07:44.000Z" itemprop="datePublished">2016-11-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/21/haskell-io-actions/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-io-actions.jpg)" alt="Haskell 中的非纯粹行为" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
+                            <p class="item-title"><a href="/2016/11/21/haskell-io-actions/" class="title">Haskell 中的非纯粹行为</a></p>
+                            <p class="item-date"><time datetime="2016-11-21T01:03:07.000Z" itemprop="datePublished">2016-11-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/20/ddos-syn-attack/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/ddos-syn-attack.jpg)" alt="基于 LibNET 的 SYN Flood 攻击" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/20/ddos-syn-attack/" class="title">基于 LibNET 的 SYN Flood 攻击</a></p>
+                            <p class="item-date"><time datetime="2016-11-20T13:42:03.000Z" itemprop="datePublished">2016-11-20</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/19/cloud-storage-system-5/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-5.png)" alt="简易云存储系统数据用户设计" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/19/cloud-storage-system-5/" class="title">简易云存储系统数据用户设计</a></p>
+                            <p class="item-date"><time datetime="2016-11-19T15:20:42.000Z" itemprop="datePublished">2016-11-19</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.5px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.25px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.25px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.75px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.75px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 17.5px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.25px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 15px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.25px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.25px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.75px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.5px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 15px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2016 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec# enter duoshuo shortname here'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>

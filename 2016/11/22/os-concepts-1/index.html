@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>操作系统概念（一） | Forec&#39;s Notes</title>
+    <title>操作系统（一）：概念导读 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
         <meta name="keywords" content="OS" />
     
-    <meta name="description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我按个人理解简化、翻译为中文，可能存在一些不准确之处。">
+    <meta name="description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文 ，可能存在一些不准确之处。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="操作系统概念（一）">
+<meta property="og:title" content="操作系统（一）：概念导读">
 <meta property="og:url" content="http://forec.github.io/2016/11/22/os-concepts-1/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我按个人理解简化、翻译为中文，可能存在一些不准确之处。">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文 ，可能存在一些不准确之处。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-1.jpg">
-<meta property="og:updated_time" content="2016-11-22T08:07:30.413Z">
+<meta property="og:updated_time" content="2016-11-22T11:10:02.175Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="操作系统概念（一）">
-<meta name="twitter:description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我按个人理解简化、翻译为中文，可能存在一些不准确之处。">
+<meta name="twitter:title" content="操作系统（一）：概念导读">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文 ，可能存在一些不准确之处。">
     
 
     
@@ -146,7 +146,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-        操作系统概念（一）
+        操作系统（一）：概念导读
         </h1>
     
 
@@ -165,7 +165,7 @@
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我按个人理解简化、翻译为中文，可能存在一些不准确之处。</p>
+<p>整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我 <strong>按个人理解简化、翻译为中文</strong> ，可能存在一些不准确之处。</p>
 </blockquote>
 <a id="more"></a>
 <h1 id="绪论（第一章）"><a href="#绪论（第一章）" class="headerlink" title="绪论（第一章）"></a>绪论（第一章）</h1><h2 id="定义操作系统"><a href="#定义操作系统" class="headerlink" title="定义操作系统"></a>定义操作系统</h2><ul>
@@ -317,7 +317,7 @@
 <li>装入内核以启动计算机的过程称为 <strong>引导（booting）</strong> 系统，多数计算机中均有一小块代码，称为 <strong>引导程序（bootstrap program）</strong> 或 <strong>引导装载程序（bootstrap loader）</strong> ，这段代码将定位内核，将其装入内存并开始执行。引导程序被存放在只读存储器中。</li>
 <li>对于大型操作系统（多数通用操作系统），引导程序存储在固件中，操作系统保存在磁盘上。引导程序运行诊断程序，从磁盘固定位置（0区块）读取整个引导块到内存，并执行这个 <strong>引导块（boot block）</strong> 中的代码。这个引导块足够复杂，它将一个完整的操作系统装载到内存开始执行。</li>
 </ul>
-<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2015/11/14/Computer-Organization-Architecture6/" target="_blank" rel="external">计组与体系结构笔记：输入/输出与存储系统</a><br>此专栏的下一篇文章：</p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2015/11/14/Computer-Organization-Architecture6/" target="_blank" rel="external">计组与体系结构笔记（六）：输入/输出与存储系统</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/22/os-concepts-2/" target="_blank" rel="external">操作系统（二）：进程与线程</a></p>
 <hr>
 <p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/22/os-concepts-1/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/22/os-concepts-1/" target="_blank" rel="external">http://blog.forec.cn/2016/11/22/os-concepts-1/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
@@ -328,7 +328,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/22/os-concepts-1/" data-id="civt7z2lb001lrcew6lm5rrh0" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/22/os-concepts-1/" data-id="civtmf9e5001p1cewgv9yfmv7" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -395,7 +395,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2016/11/22/os-concepts-1/" data-title="操作系统概念（一）" data-url="http://forec.github.io/2016/11/22/os-concepts-1/"></div>
+    <div class="ds-thread" data-thread-key="2016/11/22/os-concepts-1/" data-title="操作系统（一）：概念导读" data-url="http://forec.github.io/2016/11/22/os-concepts-1/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -499,6 +499,16 @@
         
 <nav id="article-nav">
     
+        <a href="/2016/11/22/os-concepts-2/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            操作系统（二）：进程与线程
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
     
         <a href="/2016/11/21/haskell-io-actions/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
@@ -521,10 +531,10 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2016/11/22/os-concepts-1/" class="thumbnail">
+                            <a href="/2016/11/22/os-concepts-2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-1.jpg)" alt="操作系统概念（一）" class="thumbnail-image"></span>
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-2.jpg)" alt="操作系统（二）：进程与线程" class="thumbnail-image"></span>
     
     
 </a>
@@ -533,7 +543,27 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
-                            <p class="item-title"><a href="/2016/11/22/os-concepts-1/" class="title">操作系统概念（一）</a></p>
+                            <p class="item-title"><a href="/2016/11/22/os-concepts-2/" class="title">操作系统（二）：进程与线程</a></p>
+                            <p class="item-date"><time datetime="2016-11-22T11:02:51.000Z" itemprop="datePublished">2016-11-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/22/os-concepts-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-1.jpg)" alt="操作系统（一）：概念导读" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/22/os-concepts-1/" class="title">操作系统（一）：概念导读</a></p>
                             <p class="item-date"><time datetime="2016-11-22T02:07:44.000Z" itemprop="datePublished">2016-11-22</time></p>
                         </div>
                     </li>
@@ -598,26 +628,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/18/haskell-fold/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-fold.jpg)" alt="Haskell 的 fold 系列" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
-                            <p class="item-title"><a href="/2016/11/18/haskell-fold/" class="title">Haskell 的 fold 系列</a></p>
-                            <p class="item-date"><time datetime="2016-11-18T07:10:11.000Z" itemprop="datePublished">2016-11-18</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -627,7 +637,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">7</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">8</span></li></ul>
         </div>
     </div>
 
@@ -637,7 +647,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.22px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 15.56px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.33px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.33px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 16.67px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 14.44px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.44px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.89px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.78px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14.44px;">计组与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.5px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.25px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.25px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.75px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.75px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 17.5px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.25px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 15px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.25px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.25px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.75px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.5px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 15px;">计组与体系结构</a>
         </div>
     </div>
 
