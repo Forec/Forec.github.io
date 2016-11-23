@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>简易云存储系统数据用户设计 | Forec&#39;s Notes</title>
+    <title>简易云存储系统用户结构设计 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
         <meta name="keywords" content="Golang,云存储,线程" />
     
-    <meta name="description" content="介绍云存储系统中用户数据结构的设计、结构，实现用户模型框架。">
+    <meta name="description" content="介绍云存储系统中用户 ADT 的设计、结构，实现用户模型框架。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="简易云存储系统数据用户设计">
+<meta property="og:title" content="简易云存储系统用户结构设计">
 <meta property="og:url" content="http://forec.github.io/2016/11/19/cloud-storage-system-5/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="介绍云存储系统中用户数据结构的设计、结构，实现用户模型框架。">
+<meta property="og:description" content="介绍云存储系统中用户 ADT 的设计、结构，实现用户模型框架。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-5.png">
-<meta property="og:updated_time" content="2016-11-20T14:49:55.272Z">
+<meta property="og:updated_time" content="2016-11-23T10:40:47.328Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="简易云存储系统数据用户设计">
-<meta name="twitter:description" content="介绍云存储系统中用户数据结构的设计、结构，实现用户模型框架。">
+<meta name="twitter:title" content="简易云存储系统用户结构设计">
+<meta name="twitter:description" content="介绍云存储系统中用户 ADT 的设计、结构，实现用户模型框架。">
     
 
     
@@ -146,7 +146,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-        简易云存储系统数据用户设计
+        简易云存储系统用户结构设计
         </h1>
     
 
@@ -165,12 +165,95 @@
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>介绍云存储系统中用户数据结构的设计、结构，实现用户模型框架。</p>
+<p>介绍云存储系统中用户 ADT 的设计、结构，实现用户模型框架。</p>
 </blockquote>
 <a id="more"></a>
-<p>TODO</p>
+<h2 id="用户-ADT-设计"><a href="#用户-ADT-设计" class="headerlink" title="用户 ADT 设计"></a>用户 ADT 设计</h2><ul>
+<li>在 <em><a href="http://blog.forec.cn/2016/11/12/cloud-storage-system-0/" target="_blank" rel="external">项目简介</a></em> 中，我们已经设计好了数据库中用户表结构，下面设计保存在系统内存中的活动用户的数据结构。</li>
+<li>保存在系统内存的用户数据结构中应当包括如下信息，以使系统能够区分用户状态、验证用户身份、接收用户指令、给予用户反馈：<ul>
+<li>用户 Id：数据库中用户表的主键，自增，可区分用户身份，可用于检索用户</li>
+<li>用户名：用于区分用户身份，方便用户记忆，在用户表中不可重复</li>
+<li>接收指令模块：用于接收用户发送的指令</li>
+<li>推送消息模块：用于向用户推送消息</li>
+<li>执行模块：用于执行接收到的合法命令</li>
+<li>其它：包括其它需要存储的零碎信息</li>
+</ul>
+</li>
+<li>用户接口分析：用户 ADT 需要能提供至少如下大致的接口（参数可能和最终实现的代码不同，但函数意义相同）。<ul>
+<li><code>GetUsername() string</code>：获取用户用户名</li>
+<li><code>GetId() int64</code>：获取用户 Id</li>
+<li><code>DealWithRequests()</code>：接收、分析并处理用户发送的指令</li>
+<li><code>DealWithTransmission()</code>：处理用户请求的文件传输</li>
+<li><code>Logout()</code>：登出用户</li>
+</ul>
+</li>
+<li>在工程目录下新建 <code>cstruct</code> 目录，要编写的模块名为 <code>cstruct</code>。在该目录下创建文件 <code>cuser.go</code>， 以下代码均在该文件中编辑。</li>
+</ul>
+<h2 id="用户数据结构"><a href="#用户数据结构" class="headerlink" title="用户数据结构"></a>用户数据结构</h2><ul>
+<li>用户结构需要保存自己的 Id、用户名。</li>
+<li>用户结构需要保存至少两个活动连接，根据最初设计的协议，其中一个用来接收用户发送的文本请求指令并反馈给用户可用文本表达的信息，另一个用来向用户推送请求。</li>
+<li>根据协议，文件传输请求需要启动一个新的活动连接，该连接的建立需要验证用户的 <code>token</code> ，因此用户数据结构需要保存登录时使用的 <code>token</code>。</li>
+<li>用户还需要保存当前活动的文件传输连接。</li>
+<li>综上，用户 <code>struct</code> 应当维持以下基本内容：<ul>
+<li><code>id</code>：<code>int64</code> 类型</li>
+<li><code>username</code>：<code>string</code> 类型，用户名</li>
+<li><code>listen</code>：命令传输、文本传输连接，<code>Transmitable</code> 类型</li>
+<li><code>infos</code>：向用户推送信息的连接，<code>Transmitable</code> 类型</li>
+<li><code>token</code>：用户登录时保存的 <code>token</code> 值，<code>string</code> 类型</li>
+<li><code>worklist []Transmitable</code>：用户当前的文件传输连接列表</li>
+</ul>
+</li>
+<li>拓展基本用户接口，增加了如下方法：<ul>
+<li><code>GetToken() string</code> ：获取用户登录时保存的 <code>token</code> 值（此方法破坏了数据的隐藏性，应当使用如 <code>TokenVerify(token_to_check)</code> 这样的函数来验证）</li>
+<li><code>SetToken(string) bool</code>：为用户设置新 <code>token</code> 值，此方法在用户登录时调用</li>
+<li><code>SetListener(Transmitable) bool</code>：为用户设置命令、文本交互连接</li>
+<li><code>SetInfos(Transmitable) bool</code>：为用户设置消息推送连接</li>
+<li><code>AddTransmit(Transmitable) bool</code>：用户启动一个新的文件传输连接</li>
+<li><code>RemoveTransmit(Transmitable) bool</code>：用户移除一个文件传输连接</li>
+</ul>
+</li>
+</ul>
+<h2 id="用户接口实现"><a href="#用户接口实现" class="headerlink" title="用户接口实现"></a>用户接口实现</h2><ul>
+<li>以上接口均可根据函数名称获知其含义，实现均非常简单，其中 <code>Set()</code> 和 <code>Get()</code> 系列函数和普通的获取、设置值的函数相似，不在此展示。</li>
+<li><code>Logout()</code> 实现如下，断开所有活动连接：</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// cuser.go</span></span><br><span class="line"><span class="keyword">func</span> (u *cuser) Logout() &#123;</span><br><span class="line">	<span class="keyword">if</span> u.listen != <span class="constant">nil</span> &#123;</span><br><span class="line">		u.listen.Destroy()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> _, ut := <span class="keyword">range</span> u.worklist &#123;</span><br><span class="line">		<span class="keyword">if</span> ut != <span class="constant">nil</span> &#123;</span><br><span class="line">			ut.Destroy()</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>AddTransmit(Transmitable) bool</code> 实现如下，向用户的 <code>worklist</code> 中添加一个活动连接，以下代码中将 <code>transmit</code> 包导入为 <code>trans</code>，因此参数为 <code>trans.Transmitable</code> 类型。函数实现中 <code>AppendTransmitable([]Transmitable, Transmitable)</code> 的功能是向传输列表中附加一项，该函数将在 <code>ulist.go</code> 文件中实现：</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// cuser.go</span></span><br><span class="line"><span class="keyword">func</span> (u *cuser) AddTransmit(t trans.Transmitable) <span class="typename">bool</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> u.worklist == <span class="constant">nil</span> &#123;</span><br><span class="line">		u.worklist = <span class="built_in">make</span>([]trans.Transmitable, <span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	tempLen := <span class="built_in">len</span>(u.worklist)</span><br><span class="line">	u.worklist = AppendTransmitable(u.worklist, t)</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">len</span>(u.worklist) != tempLen</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>RemoveTransmit(Transmitable) bool</code> 实现如下，它将参数和用户活动连接挨个比对：</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// cuser.go</span></span><br><span class="line"><span class="keyword">func</span> (u *cuser) RemoveTransmit(t trans.Transmitable) <span class="typename">bool</span> &#123;</span><br><span class="line">	<span class="keyword">for</span> i, ut := <span class="keyword">range</span> u.worklist &#123;</span><br><span class="line">		<span class="keyword">if</span> ut == t &#123;</span><br><span class="line">			u.worklist = <span class="built_in">append</span>(u.worklist[:i], u.worklist[i+<span class="number">1</span>:]...)</span><br><span class="line">			t.Destroy()</span><br><span class="line">			<span class="keyword">return</span> <span class="constant">true</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="constant">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>DealWithRequests()</code> 的实现需要根据设计的命令协议，创建一个 <code>cuser_operation.go</code> 文件，将该函数保存在该文件中。</li>
+</ul>
+<h2 id="处理请求"><a href="#处理请求" class="headerlink" title="处理请求"></a>处理请求</h2><ul>
+<li><code>DealWithRequests()</code> 函数根据协议设计的命令实现，主体由 <code>switch</code> 选择命令对应的行为，<code>switch</code> 由 <code>for</code> 循环包裹，每次执行完命令后，由 <code>RecvBytes()</code> 阻塞等待用户发送新命令。以下实现的 <code>DealWithRequests(*sql.DB)</code> 包含了 <code>rm</code>、<code>cp</code>、<code>mv</code>、<code>ls</code>、<code>fork</code>、<code>touch</code>、<code>chmod</code> 以及 <code>send</code> 指令的选择和实现，对应这些命令的函数将分别编写。因为需要对数据库做增删查改，所以 <code>DealWithRequests()</code> 函数传入了一个数据库对象指针作为参数。 <strong>此处的实现破坏了内部细节的不可见性，数据库不应由用户 ADT 操作，可以采用 Proxy 模式为用户对数据库操作的请求做转发</strong> ，但当初并未考虑到，重构代码时会修正采用的设计模式。</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// cuser_operation.go</span></span><br><span class="line"><span class="keyword">package</span> cstruct</span><br><span class="line"><span class="keyword">func</span> (u *cuser) DealWithRequests(db *sql.DB) &#123;</span><br><span class="line">	u.curpath = <span class="string">"/"</span></span><br><span class="line">	fmt.Println(u.username + <span class="string">" Start deal with args"</span>)</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		recvB, err := u.listen.RecvBytes()</span><br><span class="line">		<span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		command := <span class="typename">string</span>(recvB)</span><br><span class="line">		fmt.Println(command)</span><br><span class="line">		<span class="keyword">switch</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="built_in">len</span>(command) &gt;= <span class="number">2</span> &amp;&amp; strings.ToUpper(command[:<span class="number">2</span>]) == <span class="string">"RM"</span>:</span><br><span class="line">			u.rm(db, command)</span><br><span class="line">		<span class="keyword">case</span> <span class="built_in">len</span>(command) &gt;= <span class="number">2</span> &amp;&amp; strings.ToUpper(command[:<span class="number">2</span>]) == <span class="string">"CP"</span>:</span><br><span class="line">			u.cp(db, command)</span><br><span class="line">		<span class="keyword">case</span> <span class="built_in">len</span>(command) &gt;= <span class="number">2</span> &amp;&amp; strings.ToUpper(command[:<span class="number">2</span>]) == <span class="string">"MV"</span>:</span><br><span class="line">			u.mv(db, command)</span><br><span class="line">		<span class="keyword">case</span> <span class="built_in">len</span>(command) &gt;= <span class="number">2</span> &amp;&amp; strings.ToUpper(command[:<span class="number">2</span>]) == <span class="string">"LS"</span>:</span><br><span class="line">			u.ls(db, command)</span><br><span class="line">		<span class="keyword">case</span> <span class="built_in">len</span>(command) &gt;= <span class="number">4</span> &amp;&amp; strings.ToUpper(command[:<span class="number">4</span>]) == <span class="string">"SEND"</span>:</span><br><span class="line">			u.send(db, command)</span><br><span class="line">		<span class="keyword">case</span> <span class="built_in">len</span>(command) &gt;= <span class="number">4</span> &amp;&amp; strings.ToUpper(command[:<span class="number">4</span>]) == <span class="string">"FORK"</span>:</span><br><span class="line">			u.fork(db, command)</span><br><span class="line">		<span class="keyword">case</span> <span class="built_in">len</span>(command) &gt;= <span class="number">5</span> &amp;&amp; strings.ToUpper(command[:<span class="number">5</span>]) == <span class="string">"TOUCH"</span>:</span><br><span class="line">			u.touch(db, command)</span><br><span class="line">		<span class="keyword">case</span> <span class="built_in">len</span>(command) &gt;= <span class="number">5</span> &amp;&amp; strings.ToUpper(command[:<span class="number">5</span>]) == <span class="string">"CHMOD"</span>:</span><br><span class="line">			u.chmod(db, command)</span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			u.listen.SendBytes([]<span class="typename">byte</span>(<span class="string">"Invalid Command"</span>))</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>对于 <code>DealWithRequests(db *sql.DB)</code> 中可选的每个指令执行函数，用户 ADT 需要将它们分别实现为私有方法。例如，根据此前设计的用户功能，我们要实现的简易云存储系统的 <code>touch</code> 函数实现如下，注意， <strong>此函数的实现是非常失败的</strong> ！事实上，要实现的每个指令执行函数都非常复杂， <code>touch</code> 函数仅仅是这些函数中最简单的一个。因为指令函数需要通过对数据库的修改实现指令逻辑意义，并且不断检查是否有错误发生，所以 <strong>频繁出现的 <code>nil ==</code> 验证扰乱了代码的正常逻辑</strong> 。一个可行的解决方案是， <strong>此类函数运行时错误通过异常来触发，在函数执行结束后由 <code>defer</code> 指令统一 <code>recover</code> 并做出对应反馈</strong> ，这一点在重构时应当涉及。可以看到，<code>touch</code> 函数的执行代码中，大部分都是涉及数据库的查询、更新操作，每次查询、更新都需要检查是否反馈了错误，所以这部分业务逻辑非常繁琐。此外，<code>touch</code> 代码中使用到了 <code>goto</code> 关键字，因此所有的变量都需要在 <code>goto</code> 语句之前声明，这也 <strong>破坏了就近原则</strong> 。作为一个设计失败的初版代码，放置在这里对我自己起到警醒作用，希望对后来者也能避免类似的错误：</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// cuser_operation.go</span></span><br><span class="line"><span class="keyword">type</span> path_name <span class="keyword">struct</span> &#123;</span><br><span class="line">	u_path <span class="typename">string</span></span><br><span class="line">	u_name <span class="typename">string</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">func</span> (u *cuser) touch(db *sql.DB, command <span class="typename">string</span>) &#123;</span><br><span class="line">	<span class="keyword">var</span> valid <span class="typename">bool</span> = <span class="constant">true</span></span><br><span class="line">	<span class="keyword">var</span> execString <span class="typename">string</span></span><br><span class="line">	<span class="keyword">var</span> subpaths []path_name</span><br><span class="line">	<span class="keyword">var</span> queryRow *sql.Row</span><br><span class="line">	<span class="keyword">var</span> isdir, recordCount <span class="typename">int</span></span><br><span class="line">	<span class="keyword">var</span> err error</span><br><span class="line">	args := generateArgs(command, <span class="number">4</span>)</span><br><span class="line">	<span class="keyword">if</span> args == <span class="constant">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">"args format wrong"</span>)</span><br><span class="line">		valid = <span class="constant">false</span></span><br><span class="line">		<span class="keyword">goto</span> TOUCH_VERIFY</span><br><span class="line">	&#125;</span><br><span class="line">	isdir, err = strconv.Atoi(args[<span class="number">3</span>])</span><br><span class="line">	<span class="keyword">if</span> err != <span class="constant">nil</span> || strings.ToUpper(args[<span class="number">0</span>]) != <span class="string">"TOUCH"</span> || !isFilenameValid(args[<span class="number">1</span>]) ||</span><br><span class="line">		!isPathFormatValid(args[<span class="number">2</span>]) || isdir != <span class="number">0</span> &amp;&amp; isdir != <span class="number">1</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">			fmt.Println(err.Error())</span><br><span class="line">		&#125;</span><br><span class="line">		valid = <span class="constant">false</span></span><br><span class="line">		<span class="keyword">goto</span> TOUCH_VERIFY</span><br><span class="line">	&#125;</span><br><span class="line">	subpaths = generateSubpaths(args[<span class="number">2</span>])</span><br><span class="line">	<span class="keyword">for</span> _, subpath := <span class="keyword">range</span> subpaths &#123;</span><br><span class="line">		queryRow = db.QueryRow(fmt.Sprintf(<span class="string">`select count(*) from ufile where ownerid=%d and </span><br><span class="line">		filename='%s' and path='%s' and isdir=1`</span>, u.id, subpath.u_name, subpath.u_path))</span><br><span class="line">		<span class="keyword">if</span> queryRow == <span class="constant">nil</span> &#123;</span><br><span class="line">			valid = <span class="constant">false</span></span><br><span class="line">			<span class="keyword">goto</span> TOUCH_VERIFY</span><br><span class="line">		&#125;</span><br><span class="line">		err = queryRow.Scan(&amp;recordCount)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">			fmt.Println(err.Error())</span><br><span class="line">			valid = <span class="constant">false</span></span><br><span class="line">			<span class="keyword">goto</span> TOUCH_VERIFY</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> recordCount &lt;= <span class="number">0</span> &#123;</span><br><span class="line">			_, err = db.Exec(fmt.Sprintf(<span class="string">`insert into ufile values(null, %d, -1, '%s', '', '%s', 0, 0, </span><br><span class="line">				'%s', 1, '', 1)`</span>, u.id, subpath.u_path, time.Now().Format(<span class="string">"2006-01-02 15:04:05"</span>), subpath.u_name))</span><br><span class="line">			<span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">				fmt.Println(err.Error())</span><br><span class="line">				valid = <span class="constant">false</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	execString = fmt.Sprintf(<span class="string">`insert into ufile values(null, %d, -1, '%s',</span><br><span class="line">	 '', '%s', 0, 0, '%s', 1, '', %d)`</span>,</span><br><span class="line">		u.id, args[<span class="number">2</span>], time.Now().Format(<span class="string">"2006-01-02 15:04:05"</span>), args[<span class="number">1</span>], isdir)</span><br><span class="line">	fmt.Println(execString)</span><br><span class="line">	_, err = db.Exec(execString)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">		fmt.Println(err.Error())</span><br><span class="line">		valid = <span class="constant">false</span></span><br><span class="line">	&#125;</span><br><span class="line">TOUCH_VERIFY:</span><br><span class="line">	<span class="keyword">if</span> !valid &#123;</span><br><span class="line">		u.listen.SendBytes(auth.Int64ToBytes(<span class="typename">int64</span>(<span class="number">400</span>)))</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		u.listen.SendBytes(auth.Int64ToBytes(<span class="typename">int64</span>(<span class="number">200</span>)))</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>同样，当系统需要为用户添加新指令时，需要修改用户 ADT 中的 <code>DealWithRequsts()</code> 共有方法。这也破坏了 <strong>对功能扩展开放，对修改封闭</strong> 的原则，一个可行的替代方法是 <strong>使用 Strategy 模式封装指令，由其代理用户 ADT 中对指令的执行方案</strong> 。我们可以创建一个表驱动的 Strategy 基类，当添加新方法时，向 Strategy 类注册该方法并在具体子类中实现。</li>
+</ul>
+<h2 id="用户结构的列表操作"><a href="#用户结构的列表操作" class="headerlink" title="用户结构的列表操作"></a>用户结构的列表操作</h2><ul>
+<li>此前在 <code>AddTransmit()</code> 函数中使用到的 <code>AppendTransmitable([]Transmitable, Transmitable)</code> 是 <code>ulist.go</code> 文件中的函数，该文件专门用来处理涉及 <code>cstruct</code> 中各类结构的列表操作。其中 <code>AppendTransmitable</code> 函数实现如下，该函数判断当前活动列表是否已经超出设置的最大长度，若仍可加入，则扩展列表：</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ulist.go</span></span><br><span class="line"><span class="keyword">func</span> AppendTransmitable(slice []trans.Transmitable, data ...trans.Transmitable) []trans.Transmitable &#123;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(slice)+<span class="built_in">len</span>(data) &gt;= conf.MAXTRANSMITTER &#123;</span><br><span class="line">		slice = <span class="built_in">append</span>(slice, data[:conf.MAXTRANSMITTER-<span class="built_in">len</span>(slice)]...)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		slice = <span class="built_in">append</span>(slice, data...)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> slice</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>ulist.go</code> 中还存在一个 <code>AppendUser()</code> 函数，该函数用于向一个用户列表附加新用户，可以猜测到，该函数将在服务器处理登录事件时使用。</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ulist.go</span></span><br><span class="line"><span class="keyword">func</span> AppendUser(slice []User, data ...User) []User &#123;</span><br><span class="line">	m := <span class="built_in">len</span>(slice)</span><br><span class="line">	n := m + <span class="built_in">len</span>(data)</span><br><span class="line">	<span class="keyword">if</span> n &gt; <span class="built_in">cap</span>(slice) &#123;</span><br><span class="line">		newSlice := <span class="built_in">make</span>([]User, (n+<span class="number">1</span>)*<span class="number">2</span>)</span><br><span class="line">		<span class="built_in">copy</span>(newSlice, slice)</span><br><span class="line">		slice = newSlice</span><br><span class="line">	&#125;</span><br><span class="line">	slice = slice[<span class="number">0</span>:n]</span><br><span class="line">	<span class="built_in">copy</span>(slice[m:n], data)</span><br><span class="line">	<span class="keyword">return</span> slice</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>服务器需要根据用户名检索用户是否已登录，使用 <code>UserIndexByName</code> 可从一个用户列表中选择某一用户名的用户，该函数实现如下：</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ulist.go</span></span><br><span class="line"><span class="keyword">func</span> UserIndexByName(slice []User, name <span class="typename">string</span>) User &#123;</span><br><span class="line">	<span class="keyword">for</span> _, uc := <span class="keyword">range</span> slice &#123;</span><br><span class="line">		<span class="keyword">if</span> uc.GetUsername() == name &#123;</span><br><span class="line">			<span class="keyword">return</span> uc</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="constant">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <hr>
-<p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">云存储系统从入门到放弃</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/16/cloud-storage-system-4/" target="_blank" rel="external">简易云存储系统传输、认证单元测试</a><br>此专栏的下一篇文章：TODO</p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">云存储系统从入门到放弃</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/16/cloud-storage-system-4/" target="_blank" rel="external">简易云存储系统传输、认证单元测试</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/23/cloud-storage-system-6/" target="_blank" rel="external">简易云存储系统服务器逻辑实现</a></p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/19/cloud-storage-system-5/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/19/cloud-storage-system-5/" target="_blank" rel="external">http://blog.forec.cn/2016/11/19/cloud-storage-system-5/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
@@ -179,7 +262,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/19/cloud-storage-system-5/" data-id="civtmf9hi004y1cewackleu0l" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/19/cloud-storage-system-5/" data-id="civut69tr0054isewyk6842nr" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -246,7 +329,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2016/11/19/cloud-storage-system-5/" data-title="简易云存储系统数据用户设计" data-url="http://forec.github.io/2016/11/19/cloud-storage-system-5/"></div>
+    <div class="ds-thread" data-thread-key="2016/11/19/cloud-storage-system-5/" data-title="简易云存储系统用户结构设计" data-url="http://forec.github.io/2016/11/19/cloud-storage-system-5/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -382,6 +465,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2016/11/23/cloud-storage-system-6/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-6.jpg)" alt="简易云存储系统服务器逻辑实现" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/23/cloud-storage-system-6/" class="title">简易云存储系统服务器逻辑实现</a></p>
+                            <p class="item-date"><time datetime="2016-11-23T10:42:08.000Z" itemprop="datePublished">2016-11-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/11/22/os-concepts-2/" class="thumbnail">
     
     
@@ -459,26 +562,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/19/cloud-storage-system-5/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-5.png)" alt="简易云存储系统数据用户设计" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/11/19/cloud-storage-system-5/" class="title">简易云存储系统数据用户设计</a></p>
-                            <p class="item-date"><time datetime="2016-11-19T15:20:42.000Z" itemprop="datePublished">2016-11-19</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -488,7 +571,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">8</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">8</span></li></ul>
         </div>
     </div>
 
@@ -498,7 +581,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.5px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.25px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.25px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.75px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.75px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 17.5px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.25px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 15px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.25px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.25px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.75px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.5px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 15px;">计组与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 17px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 19px;">机器学习</a> <a href="/tags/线程/" style="font-size: 18px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14px;">计组与体系结构</a>
         </div>
     </div>
 

@@ -3,43 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>专栏 - 云存储系统从入门到放弃 | Forec&#39;s Notes</title>
+    <title>简易云存储系统服务器逻辑实现 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="description" content="此专栏是我在编写一个简单云存储系统时，随进度发布的指南，详述了这个项目的功能设计、协议设计、具体实现等。项目托管在 GitHub 上：https://github.com/Forec/cloud-storage。项目将在 2016 年 12 月中旬编写完成，专栏将与项目更新保持同步。
-
-项目简介
-协议设计
-传输协议实现和封装
-认证基础模块实现
-传输、认证单元测试
-用户 ADT 设计
-服务器逻辑实现">
-<meta property="og:type" content="website">
-<meta property="og:title" content="专栏 - 云存储系统从入门到放弃">
-<meta property="og:url" content="http://forec.github.io/columns/cloud-storage.html">
+        <meta name="keywords" content="Golang,云存储,线程" />
+    
+    <meta name="description" content="分析、设计云存储服务器的执行逻辑，包括用户验证登录、活动连接加入与释放、代理操作等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简易云存储系统服务器逻辑实现">
+<meta property="og:url" content="http://forec.github.io/2016/11/23/cloud-storage-system-6/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="此专栏是我在编写一个简单云存储系统时，随进度发布的指南，详述了这个项目的功能设计、协议设计、具体实现等。项目托管在 GitHub 上：https://github.com/Forec/cloud-storage。项目将在 2016 年 12 月中旬编写完成，专栏将与项目更新保持同步。
-
-项目简介
-协议设计
-传输协议实现和封装
-认证基础模块实现
-传输、认证单元测试
-用户 ADT 设计
-服务器逻辑实现">
-<meta property="og:updated_time" content="2016-11-23T10:41:21.619Z">
+<meta property="og:description" content="分析、设计云存储服务器的执行逻辑，包括用户验证登录、活动连接加入与释放、代理操作等。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-6.jpg">
+<meta property="og:updated_time" content="2016-11-23T10:48:59.067Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="专栏 - 云存储系统从入门到放弃">
-<meta name="twitter:description" content="此专栏是我在编写一个简单云存储系统时，随进度发布的指南，详述了这个项目的功能设计、协议设计、具体实现等。项目托管在 GitHub 上：https://github.com/Forec/cloud-storage。项目将在 2016 年 12 月中旬编写完成，专栏将与项目更新保持同步。
-
-项目简介
-协议设计
-传输协议实现和封装
-认证基础模块实现
-传输、认证单元测试
-用户 ADT 设计
-服务器逻辑实现">
+<meta name="twitter:title" content="简易云存储系统服务器逻辑实现">
+<meta name="twitter:description" content="分析、设计云存储服务器的执行逻辑，包括用户验证登录、活动连接加入与释放、代理操作等。">
     
 
     
@@ -156,36 +135,43 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <em class="page-title-link" data-url="/columns/cloud-storage.html">专栏 - 云存储系统从入门到放弃</em>
+    <a class="page-title-link" href="/categories/Code/">Code</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="page-undefined" class="article article-single article-type-page" itemscope itemprop="blogPost">
+                            <article id="post-cloud-storage-system-6" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        专栏 - 云存储系统从入门到放弃
+        简易云存储系统服务器逻辑实现
         </h1>
     
 
             </header>
         
         
+            <div class="article-subtitle">
+                <a href="/2016/11/23/cloud-storage-system-6/" class="article-date">
+    <time datetime="2016-11-23T10:42:08.000Z" itemprop="datePublished">2016-11-23</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/">Golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/云存储/">云存储</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程/">线程</a></li></ul>
+
+            </div>
+        
         
         <div class="article-entry" itemprop="articleBody">
-            <p>此专栏是我在编写一个简单云存储系统时，随进度发布的指南，详述了这个项目的功能设计、协议设计、具体实现等。项目托管在 GitHub 上：<a href="https://github.com/Forec/cloud-storage" target="_blank" rel="external">https://github.com/Forec/cloud-storage</a>。项目将在 2016 年 12 月中旬编写完成，专栏将与项目更新保持同步。</p>
-<ul>
-<li><a href="http://blog.forec.cn/2016/11/12/cloud-storage-system-0/" target="_blank" rel="external">项目简介</a></li>
-<li><a href="http://blog.forec.cn/2016/11/13/cloud-storage-system-1/" target="_blank" rel="external">协议设计</a></li>
-<li><a href="http://blog.forec.cn/2016/11/14/cloud-storage-system-2/" target="_blank" rel="external">传输协议实现和封装</a></li>
-<li><a href="http://blog.forec.cn/2016/11/15/cloud-storage-system-3/" target="_blank" rel="external">认证基础模块实现</a></li>
-<li><a href="http://blog.forec.cn/2016/11/16/cloud-storage-system-4/" target="_blank" rel="external">传输、认证单元测试</a></li>
-<li><a href="http://blog.forec.cn/2016/11/19/cloud-storage-system-5/" target="_blank" rel="external">用户 ADT 设计</a></li>
-<li><a href="http://blog.forec.cn/2016/11/23/cloud-storage-system-6/" target="_blank" rel="external">服务器逻辑实现</a></li>
-</ul>
+            <blockquote>
+<p>分析、设计云存储服务器的执行逻辑，包括用户验证登录、活动连接加入与释放、代理操作等。</p>
+</blockquote>
+<a id="more"></a>
+<p>TODO</p>
+<hr>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">云存储系统从入门到放弃</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/19/cloud-storage-system-5/" target="_blank" rel="external">简易云存储系统传输、认证单元测试</a><br>此专栏的下一篇文章：TODO</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/23/cloud-storage-system-6/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/23/cloud-storage-system-6/" target="_blank" rel="external">http://blog.forec.cn/2016/11/23/cloud-storage-system-6/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -193,7 +179,7 @@
 
 
 
-    <a data-url="http://forec.github.io/columns/cloud-storage.html" data-id="civut69pf0007isewo9ntife0" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/23/cloud-storage-system-6/" data-id="civut69to004yisew74b9zxy5" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -257,6 +243,51 @@
     </div>
 </article>
 
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2016/11/23/cloud-storage-system-6/" data-title="简易云存储系统服务器逻辑实现" data-url="http://forec.github.io/2016/11/23/cloud-storage-system-6/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
                         </div>
                     </section>
                     <aside id="sidebar">
@@ -315,6 +346,19 @@
             
         </ul>
     </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2016/11/22/os-concepts-2/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">操作系统（二）：进程与线程</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
