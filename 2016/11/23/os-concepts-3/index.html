@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Docker配置策略备忘 | Forec&#39;s Notes</title>
+    <title>操作系统（三）：CPU 调度 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="Docker,Mistakes" />
+        <meta name="keywords" content="OS" />
     
-    <meta name="description" content="整理Docker的配置，以及遇到问题的解决方案。">
+    <meta name="description" content="整理《Operating System Concepts》 第七版第五章（CPU 进程调度）的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文 ，可能存在一些不准确之处。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker配置策略备忘">
-<meta property="og:url" content="http://forec.github.io/2016/09/09/docker-problems/index.html">
+<meta property="og:title" content="操作系统（三）：CPU 调度">
+<meta property="og:url" content="http://forec.github.io/2016/11/23/os-concepts-3/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="整理Docker的配置，以及遇到问题的解决方案。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/docker-problems.png">
-<meta property="og:updated_time" content="2016-11-04T16:44:46.761Z">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版第五章（CPU 进程调度）的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文 ，可能存在一些不准确之处。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-3.jpg">
+<meta property="og:updated_time" content="2016-11-23T16:02:40.658Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Docker配置策略备忘">
-<meta name="twitter:description" content="整理Docker的配置，以及遇到问题的解决方案。">
+<meta name="twitter:title" content="操作系统（三）：CPU 调度">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版第五章（CPU 进程调度）的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文 ，可能存在一些不准确之处。">
     
 
     
@@ -135,18 +135,18 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Configuration/">Configuration</a>
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-docker-problems" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-os-concepts-3" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        Docker配置策略备忘
+        操作系统（三）：CPU 调度
         </h1>
     
 
@@ -154,55 +154,127 @@
         
         
             <div class="article-subtitle">
-                <a href="/2016/09/09/docker-problems/" class="article-date">
-    <time datetime="2016-09-08T16:33:36.000Z" itemprop="datePublished">2016-09-09</time>
+                <a href="/2016/11/23/os-concepts-3/" class="article-date">
+    <time datetime="2016-11-23T13:49:05.000Z" itemprop="datePublished">2016-11-23</time>
 </a>
                 
-    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mistakes/">Mistakes</a></li></ul>
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>整理Docker的配置，以及遇到问题的解决方案。</p>
+<p>整理《Operating System Concepts》 第七版第五章（CPU 进程调度）的理论和概念，内容均为原书的摘录，由我 <strong>按个人理解简化、翻译为中文</strong> ，可能存在一些不准确之处。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="Docker更新Ubuntu被墙"><a href="#Docker更新Ubuntu被墙" class="headerlink" title="Docker更新Ubuntu被墙"></a>Docker更新Ubuntu被墙</h1><ul>
-<li>把<code>/etc/apt/sources.list</code>中的 <code>http://archive.ubuntu.com</code> 全部替换为 <code>http://mirrors.ustc.edu.cn</code>。</li>
-<li>编辑Dockfile文件，添加以下语句更新image resp中的Ubuntu，替换源为中科大镜像。</li>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><ul>
+<li>CPU 调度是多道程序操作系统的基础，在进程之间切换 CPU 可以提高计算机的吞吐率。</li>
+<li>进程执行由 CPU 执行和 I/O 等待 <strong>周期（cycle）</strong> 组成，进程在这两个状态之间切换。进程执行从 <strong>CPU区间（CPU burst）</strong> 开始，之后在 CPU 区间和 <strong>I/O 区间</strong> 交换。</li>
+<li>CPU 区间的长度随进程和计算机的不同而变化，通常具有大量短 CPU 区间和少量长 CPU 区间。I/O <strong>约束（bound）</strong> 程序具有很多短 CPU 区间，CPU 约束程序具有更多的长 CPU 区间。</li>
+<li>每当 CPU 空闲时，操作系统必须从就绪队列中选择一个能够执行的进程并为之分配 CPU。进程选择由 <strong>短期调度程序</strong> 或 CPU 调度程序执行。就绪队列不一定是先进先出（FIFO）队列，也可以被实现为优先队列、树、无序链表等。队列中的记录通常为进程控制块（PCB）。</li>
+<li>在下面四种情况中，CPU 调度需要做出决策：<ul>
+<li>某个进程从运行状态切换到等待状态（如等待 I/O 或调用 wait 等待子进程）</li>
+<li>某个进程终止</li>
+<li>某个进程从运行状态切换到就绪状态（如出现中断）</li>
+<li>某个进程从等待状态切换到就绪状态（如 I/O 完成）</li>
 </ul>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> resp:latest</span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">cp /etc/apt/sources.list /etc/apt/sources.list.bak</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">sudo sed -i <span class="string">'s/archive.ubuntu.com/mirrors.ustc.edu.cn/g'</span> /etc/apt/sources.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">cat /etc/apt/sources.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get clean</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get -y update --fix-missing &amp;&amp; apt-get install -y ******(apps you want to install)</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>执行<code>docker build -t newresp .</code>安装新功能。</li>
-</ul>
-<h1 id="设置Docker镜像"><a href="#设置Docker镜像" class="headerlink" title="设置Docker镜像"></a>设置Docker镜像</h1><ul>
-<li><p>新版的 <code>Docker</code> 使用 <code>/etc/docker/daemon.json（Linux）</code> 或者 <code>%programdata%\docker\config\daemon.json（Windows）</code> 来配置 Daemon。</p>
 </li>
-<li><p>在该配置文件中加入（没有该文件，则创建一个）：</p>
+<li>在上面四种情况中，如果调度程序只在前两种情况发生时运行，则调度方案是 <strong>非抢占（nonpreemptive）调度</strong> ，否则该调度方案是 <strong>抢占（preemptive）调度</strong> 。简单的说，非抢占调度指，一旦 CPU 被分配给一个进程，除非该进程终止或者切换到了等待状态，否则该进程不会释放分配的 CPU 资源，这部分 CPU 资源也无法被分配给其它进程；抢占调度指，分配给一个进程的 CPU 资源可能在该进程运行期间被重新分配给其他进程，此时这部分资源所属的原来的进程会被切换到就绪状态。</li>
+<li><strong>分派程序（dispatcher）</strong> 是一个用来将 CPU 控制权交付给由短期调度程序选择出的要执行的进程的模块。每次进程切换时都会调用分派程序，它应当尽可能快。分派程序停止一个进程并启动另一个要花费的时间称为 <strong>分派延迟（dispatch latency）</strong> 。它的功能包括：<ul>
+<li>切换上下文</li>
+<li>切换到用户模式</li>
+<li>跳转到用户程序的合适位置，以重新启动程序</li>
+</ul>
 </li>
 </ul>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">registry-mirrors</span>": <span class="value">[<span class="string">"https://docker.mirrors.ustc.edu.cn"</span>]</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="Windows下更改Docker的虚拟机、镜像位置"><a href="#Windows下更改Docker的虚拟机、镜像位置" class="headerlink" title="Windows下更改Docker的虚拟机、镜像位置"></a>Windows下更改Docker的虚拟机、镜像位置</h1><ul>
-<li>设置环境变量 <code>MACHINE_STORAGE_PATH</code> 为要存储所有 <code>docker</code> 文件的位置。</li>
-<li>如尚未安装 <code>docker</code>，安装即更改默认位置。</li>
-<li>如已安装 <code>docker</code>，在<code>bash</code>窗口中<code>docker-machine ls</code>查看已有的<code>docker</code>虚拟机，<code>docker-machine create --driver=virtualbox newDockerName</code>即可新建一个虚拟机，新建后可<code>docker-machine rm default</code>删除原有的默认虚拟机，并在新位置新建一个名为<code>default</code>的虚拟机。</li>
-<li><code>docker-machine regenerate-certs default</code>重新生成证书。</li>
-<li>重新执行<code>Docker Quick Terminal</code>。</li>
+<h1 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h1><ul>
+<li>不同的 CPU 调度算法依据不同的属性来选择进程，可通过以下准则衡量调度算法的特点和优势：<ul>
+<li>CPU 利用率（utilization）：调度算法应使 CPU 尽可能忙，40%（轻负荷）~90%（重负荷）</li>
+<li>吞吐量（throughput）：一个时间单元内所完成的进程的数量，对于长、短进程，吞吐量也有所不同</li>
+<li><strong>周转时间（turnaround time）</strong> ：一个特定进程 <strong>从进程提交到进程完成所需的时间</strong> ，该时间为所有时间段之和，包括等待载入内存、在就绪队列中等待、在 CPU 上执行和 I/O 等待时间</li>
+<li><strong>等待时间（waiting time）</strong> ：进程在 <strong>就绪队列</strong> 中等待所花费的时间之和</li>
+<li><strong>响应时间（response time）</strong> ：对交互系统而言需要考虑响应时间，该准则指的是从提交请求到产生第一响应的时间（开始响应所需要的时间，而不是输出响应所需要的时间）</li>
 </ul>
-<h1 id="精简版Ubuntu待安装软件列表"><a href="#精简版Ubuntu待安装软件列表" class="headerlink" title="精简版Ubuntu待安装软件列表"></a>精简版Ubuntu待安装软件列表</h1><ul>
-<li><strong>ping</strong>: inetutils-ping</li>
-<li><strong>ifconfig</strong>: net-tools</li>
+</li>
+<li>需要使 CPU 利用率和吞吐量最大化，而周转时间、等待时间和响应时间最小化。多数情况下需要优化平均值，少数情况需要优化最小值或最大值。例如对于分时系统，为保证所有用户得到更好服务，需要尽可能使最大响应时间最小。</li>
+</ul>
+<h2 id="先到先服务"><a href="#先到先服务" class="headerlink" title="先到先服务"></a>先到先服务</h2><ul>
+<li>最简单的 CPU 调度算法是 <strong>先到先服务（first-come，first-served，FCFS）</strong> 调度算法：先请求 CPU 的进程先分配到 CPU，该算法可用 FIFO 队列实现，且平均等待时间通常较长。</li>
+<li>当系统中存在一个 CPU 约束进程和多个 I/O 约束进程时，可能出现 CPU 约束进程占用 CPU，同时其他进程处理完 I/O 请求并在就绪队列中等待，此时 I/O 设备空闲。当 CPU 约束进程结束、转移到 I/O 区间后，这些 I/O 约束进程很快会执行完计算任务（仅有很短的 CPU 区间）并移回 I/O 区间，此时 CPU 空闲。之后该状态会反复，即多个进程等待一个长进程释放 CPU，此现象称为 <strong>护航效果（convoy effect）</strong> 。这将导致 CPU 和设备利用率变得更低。</li>
+<li>FCFS 调度时非抢占的，因此不适合分时系统，允许一个进程保持过长的 CPU 时间是非常严重的错误。</li>
+</ul>
+<h2 id="最短作业优先"><a href="#最短作业优先" class="headerlink" title="最短作业优先"></a>最短作业优先</h2><ul>
+<li><strong>最短作业优先（shortest-job-first，SJF）</strong> 调度算法：当 CPU 空闲时，调度程序选择需要 CPU 区间最短的进程执行，如果有多个进程的下一次 CPU 区间长度相同，则在这些进程间使用 FCFS。即，先比较需要的 CPU 区间长度，长度越短优先级越高，长度相同时，到达时间越早优先级越高。</li>
+<li>SJF 调度算法可证明为 <em>最佳</em> 的，对于给定的一组进程， <strong>SJF 算法的平均等待时间最小</strong> 。这一点的证明可以考虑贪心算法。</li>
+<li>因为无法获知进程下个 CPU 区间的长度，一种替代方法是近似 SJF 调度，即通过先验长度 <em>预测</em> 下一个 CPU 区间长度。我们认为，下一个 CPU 区间长度与此前的相似，可视作此前 CPU 区间测量长度的 <strong>指数平均（exponential average）</strong> ：设 <code>t_n</code> 为某进程第 n 个 CPU 区间的长度，则该进程下一个 CPU 区间的预测值 <code>τ_n+1 = αt_n + (1-α)τ_n</code>，这里 <code>0 ≤ α ≤ 1</code>。<code>τ_n</code>代表着过去的历史，而 <code>t_n</code> 为最近的信息，参数 <code>α</code> 控制了最近和过去历史在预测中的相对加权。</li>
+<li>SJF 算法可能是抢占的或非抢占的。对于抢占 SJF 调度算法，当一个新进程到达就绪队列且当前正在执行的进程剩余时间比新进程所需 CPU 时间长，则新进程抢占 CPU。抢占 SJF 调度也称为 <strong>最短剩余时间优先（shortest-remaining-time-first）调度</strong> ，与之相反的，新进程始终等待原有进程运行结束的 SJF 调度为非抢占 SJF 调度。</li>
+</ul>
+<h2 id="优先级调度"><a href="#优先级调度" class="headerlink" title="优先级调度"></a>优先级调度</h2><ul>
+<li>SJF 实际是通用 <strong>优先级（priority）调度算法</strong> 的一个特例。每个进程与一个优先级关联，具有最高优先级的进程会被先分配，具有相同优先级的进程按 FCFS 顺序调度。SJF 算法属于简单优先级算法，其优先级为进程预测 CPU 区间的倒数，CPU 区间长度越大则优先级越小。</li>
+<li>通常按照 <em>高</em> 优先级和 <em>低</em> 优先级讨论调度，优先级通常为某个固定区间的数字，如 0 ~ 7，对于不同的系统，0 可以是最高，也可以是最低优先级。</li>
+<li>优先级调度算法可以是抢占的或者非抢占的，对于抢占的优先级调度算法，具有更高优先级的新到达进程会抢占 CPU。</li>
+<li>主要问题： <strong>无穷阻塞（indefinite blocking）</strong> 或 <strong>饥饿（starvation）</strong> ，此调度算法会导致低优先级进程无穷等待 CPU。</li>
+<li>解决饥饿： <strong>老化（aging）</strong> 技术可以逐渐增加在系统中等待时间过长的进程的优先级，即每过一段时间递减等待进程的优先级的值，最终低优先级的进程会成为高优先级的进程并得以执行。</li>
+<li><em>动态优先级例题</em> ：假设某系统采用基于动态优先级的抢占式调度算法，且优先数越大的进程优先级越高，系统为所有新建进程赋予优先级值 0，当一个进程在就绪队列中等待 CPU 时，其优先级值变化速率为 α；当进程获得 CPU 并执行时，执行过程中优先级值变化速率为 β：<ul>
+<li>若 β &gt; α &gt; 0，则调度算法相当于：FCFS</li>
+<li>若 α &lt; β &lt; 0，则调度算法相当于：FCLS</li>
+</ul>
+</li>
+</ul>
+<h2 id="轮转法（RR）"><a href="#轮转法（RR）" class="headerlink" title="轮转法（RR）"></a>轮转法（RR）</h2><ul>
+<li><strong>轮转法（round-robin，RR）</strong> 调度算法是 <em>专门为分时系统设计</em> 的，类似 FCFS 调度，但强制通过抢占切换进程。该调度算法定义一个较小的 <strong>时间单元（time quantum）</strong> 或时间切片，通常在 10 ~ 100 ms之间。就绪队列是环形的，并保持 FIFO 性质， <strong>新到达的进程会被添加到队列末尾</strong> 。调度算法从就绪队列的头部移出进程 A，为其分配 CPU 并执行，同时也会设置一个定时器，当进程 A 执行时间到达一个时间单元时，如果进程 A 仍未结束，则将被就绪队列的下一个进程 B 抢占，进程 A 再次被加入就绪队列。注意，因为就绪队列为环形链表，队列头指针现在已经跳转到进程 B，所以进程 A 已成为整个队列的最后一个进程。</li>
+<li>使用 RR 策略调度的平均等待时间通常比较长。</li>
+<li>RR 算法的性能很大程度上依赖时间单元的大小。考虑极端情况：<ul>
+<li>时间单元（时间片）非常大，则 RR 算法等价于 FCFS 算法</li>
+<li>时间单元非常小，则 RR 算法称为 <strong>处理器共享（processor sharing）</strong> ，此时 n 个进程看起来就像运行在各自独立的 CPU 上，每个 CPU 的运行速度是真实 CPU 的 1/n。</li>
+</ul>
+</li>
+<li>通常希望 <em>时间单元比上下文切换时间长</em> ，例如上下文切换时间为时间片的 10%，则约有 10% 的 CPU 时间浪费在上下文切换上。现代操作系统时间片通常为 10 ~ 100ms，而上下文切换时间通常少于 10μs。</li>
+<li><em>周转时间依赖于时间片大小</em> ：若绝大多数进程能在一个时间单元内完成，则平均周转时间会改善。</li>
+<li>根据经验，80% 的 CPU 区间应当小于时间片。</li>
+</ul>
+<h2 id="多级队列调度"><a href="#多级队列调度" class="headerlink" title="多级队列调度"></a>多级队列调度</h2><ul>
+<li>在进程容易分组的情况下（如划分为 <strong>前台（交互）</strong> 进程和 <strong>后台（批处理）</strong> 进程），可使用 <strong>多级队列（multilevel queue）调度算法</strong> 。该算法将就绪队列划分为多个独立队列，进程按自身属性被 <strong>永久地</strong> 分配到一个队列，每个队列使用自己的调度算法。例如，前台队列可能使用 RR 算法（分时系统），而后台队列使用 FCFS 算法。</li>
+<li>队列之间必须存在调度，通常采用 <em>固定优先级抢占调度</em> 。例如，前台队列要比后台队列具有绝对优先级。</li>
+<li>举例：存在 4 个队列的多级队列调度算法，按优先级排列为：系统进程 &gt; 交互进程 &gt; 交互编辑进程 &gt; 批处理进程。队列之间存在绝对优先级，只有系统进程、交互进程、交互编辑进程队列均为空时，批处理队列内的进程才可运行；在批处理队列有进程运行时，更高优先级队列进入新进程会抢占批处理进程。</li>
+<li>队列之间可划分时间片，每个队列有一定的 CPU 时间用于调度进程，例如前台队列可以将 80% 的 CPU 时间用于进程间的 RR 调度，后台队列可以有 20% 的 CPU 时间采用 FCFS 算法调度。</li>
+</ul>
+<h2 id="多级反馈队列调度"><a href="#多级反馈队列调度" class="headerlink" title="多级反馈队列调度"></a>多级反馈队列调度</h2><ul>
+<li><strong>多级反馈队列（multilevel feedback queue）调度算法</strong> 允许进程在队列之间移动，根据不同 CPU 区间来区分进程。</li>
+<li>如果进程使用过多 CPU 时间，则它会被转移到更低优先级队列。这种方法将 I/O 约束和交互进程留在更高优先级队列。</li>
+<li>在较低优先级队列中等待时间过长的进程会被转移到更高优先级队列，这种老化阻止了饥饿的发生。</li>
+<li>考虑如下的多级反馈队列调度程序，它包含三个队列（0~2），优先级从高到低，只有队列 0 空，队列 1、2 内的进程才可执行，到达队列 0 的进程可以抢占队列 1、2 的进程。进入就绪队列的进程被放入队列 0，队列 0 中每个进程有 8 ms 时间片，如果该进程不能在这个时间片内完成，则它将被移动到队列 1 的尾部；当队列 0 为空时，队列 1 的头部进程会得到一个 16 ms 的时间片，若该进程不能在此时间片内完成，则将被抢占并放置到队列 2 的尾部。</li>
+<li>多级反馈队列调度程序由以下参数定义：<ul>
+<li>队列数量</li>
+<li>每个队列各自的调度算法</li>
+<li>何时升级到更高优先级队列</li>
+<li>何时降级到更低优先级队列</li>
+<li>进程在需要服务时应当进入哪个队列</li>
+</ul>
+</li>
+<li>多级反馈调度程序是最通用的 CPU 调度算法，但也最复杂。</li>
+</ul>
+<h2 id="高响应比优先（补充）"><a href="#高响应比优先（补充）" class="headerlink" title="高响应比优先（补充）"></a>高响应比优先（补充）</h2><ul>
+<li><strong>高响应比优先（highest response-ratio next，HRRN）算法</strong> ：非抢占调度，响应比定义为 <code>R = (W+T)/T = 1+W/T</code>，其中 <code>W</code> 是某个进程在就绪队列中的等待时间，<code>T</code> 是该进程的 CPU 区间长度。</li>
+<li>具有最高响应比的进程会被调度。HRRN 算法同时考虑了等待时间和 CPU 区间。</li>
+<li>缺陷：为每个进程计算响应比需要消耗系统资源。</li>
+</ul>
+<h1 id="多处理器调度"><a href="#多处理器调度" class="headerlink" title="多处理器调度"></a>多处理器调度</h1><ul>
+<li>存在多个 CPU 使 <strong>负载分配（load sharing）</strong> 成为可能，多处理器调度只考虑处理器同构的系统，并可以将任何处理器用于任何队列内的任何进程。</li>
+<li><strong>非对称多处理（asymmetric multiprocessing）</strong> ：使一个处理器（主服务器）处理所有的调度决定、I/O处理以及其他系统活动，其它处理器只执行用户代码</li>
+<li><strong>对称多处理（symmetric multiprocessing，SMP）</strong> ：每个处理器自我调度，所有进程可能处于一个共同的就绪队列，或每个处理器拥有自己的私有就绪队列。调度通过每个处理器检查共同就绪队列并选择一个进程执行。</li>
+<li><strong>处理器亲和性（processor affinity）</strong> ：多数 SMP 系统试图避免将进程从一个处理器移动到另一个处理器，而是努力让一个进程在同一个处理器上运行。一个操作系统使用策略使一个进程保持在同一个处理器上运行，但不能做任何保证时，称为 <strong>软亲和性（soft affinity）</strong> ；有的操作系统，如 Linux，提供一个支持 <strong>硬亲和性（hard affinity）</strong> 的系统调用保证了进程无法转移到其它处理器。</li>
+<li><strong>负载均衡（load balancing）</strong> 保证了所有处理器的工作负载平衡以完全利用多处理器的优点，它仅在每个 CPU 有私有就绪队列的情况下才有必要。它和处理器的亲和性相悖。有两种方法可实现：<ul>
+<li><strong>推送迁移（push migration）</strong> ：一个特定的进程间歇性的检查每个处理器的负载，假如当前夫在不均衡，则将过载处理器上进程推送到空闲处理器。</li>
+<li><strong>拉取迁移（pull migration）</strong> ：一个空闲处理器从一个忙处理器拉取一个处于等待状态的进程。</li>
+</ul>
+</li>
 </ul>
 <hr>
-<p>参考文献： </p>
-<ul>
-<li><a href="https://lug.ustc.edu.cn/wiki/mirrors/help/docker" target="_blank" rel="external">Docker镜像使用帮助</a></li>
-<li><a href="https://lug.ustc.edu.cn/wiki/mirrors/help/ubuntu" target="_blank" rel="external">Ubuntu镜像使用帮助</a></li>
-<li><a href="http://www.linuxdiyf.com/linux/22199.html" target="_blank" rel="external">Docker下Ubuntu Update错误</a></li>
-<li><a href="http://stackoverflow.com/questions/33933107/change-docker-machine-location-windows" target="_blank" rel="external">Windows下修改Docker Images位置</a></li>
-</ul>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/09/09/docker-problems/">原始出处</a>(<a href="https://forec.github.io/2016/09/09/docker-problems/">https://forec.github.io/2016/09/09/docker-problems/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/22/os-concepts-2/" target="_blank" rel="external">操作系统（二）：进程与线程</a><br>此专栏的下一篇文章：TODO</p>
+<p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/23/os-concepts-3/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/23/os-concepts-3/" target="_blank" rel="external">http://blog.forec.cn/2016/11/23/os-concepts-3/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -210,7 +282,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/09/09/docker-problems/" data-id="civv45nbe004b8kewx36km332" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/23/os-concepts-3/" data-id="civv45n9o001l8kewvta54cx7" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -277,7 +349,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2016/09/09/docker-problems/" data-title="Docker配置策略备忘" data-url="http://forec.github.io/2016/09/09/docker-problems/"></div>
+    <div class="ds-thread" data-thread-key="2016/11/23/os-concepts-3/" data-title="操作系统（三）：CPU 调度" data-url="http://forec.github.io/2016/11/23/os-concepts-3/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -381,20 +453,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2016/09/14/tips-for-qt/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            Qt msvc2013 问题解决方案
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2016/09/08/gochan-accumulate/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2016/11/23/cloud-storage-system-6/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">Golang的通道技巧</p>
+        <p class="article-nav-title">简易云存储系统服务器逻辑实现</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
