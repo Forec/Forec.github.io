@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>操作系统（五）：进程同步 | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="OS" />
+    
+    <meta name="description" content="整理《Operating System Concepts》 第七版第六章进程同步部分的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统（五）：进程同步">
+<meta property="og:url" content="http://forec.github.io/2016/11/24/os-concepts-5/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版第六章进程同步部分的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-5.jpg">
+<meta property="og:updated_time" content="2016-11-24T12:54:41.257Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统（五）：进程同步">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版第六章进程同步部分的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-os-concepts-5" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        操作系统（五）：进程同步
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2016/11/24/os-concepts-5/" class="article-date">
+    <time datetime="2016-11-24T10:41:33.000Z" itemprop="datePublished">2016-11-24</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>整理《Operating System Concepts》 第七版第六章进程同步部分的理论和概念，内容均为原书的摘录，由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h1><ul>
+<li>基于硬件的 <code>TestAndSet()</code> 和 <code>Swap()</code> 对应用程序员而言相对复杂，可使用 <strong>信号量（semaphore）</strong> 作为同步工具。信号量 S 是整数变量，除初始化外只能通过两个原子操作访问：<code>wait()</code> 和 <code>signal()</code>，在有些地方使用 <code>P</code>（测试） 和 <code>V</code>（增加）表示。所有关于信号量的讨论均已具备以下前提：在这两个原子访问操作中，对信号量整型值的测试和修改都是不可分的，也就是说，当一个进程修改某个信号量时，其他进程都不能同时操作该信号量。</li>
+<li>信号量按值域可分为<ul>
+<li><strong>计数信号量（counting semaphore）</strong> ：信号量值域不受限制。此类信号量用于控制访问具有若干个实例的某类资源，初始化信号量为可用资源的数量，进程通过调用 <code>wait()</code> 操作获取资源（此时信号量计数也随之减少），进程使用资源后通过 <code>signal()</code> 操作释放资源（信号量计数随之增加）。当信号量的值小于等于 0 时，所有调用 <code>wait()</code> 操作的进程会被阻塞，直到某个进程调用了 <code>signal()</code> 释放了可用资源。</li>
+<li><strong>二进制信号量（binary semaphore）</strong> ：信号量的值只能为 0 或者 1，该类信号量也称为 <strong>互斥锁（mutex locks）</strong> ，可提供互斥操作。对于多进程的临界区问题，可以使所有进程共享一个二进制信号量 mutex，每个进程进入临界区之前调用 <code>waiting(mutex)</code> ，离开临界区之前调用 <code>signal(mutex)</code>。</li>
+</ul>
+</li>
+<li>信号量按功能可分：<ul>
+<li>公有（互斥）信号量：多个进程均需要同一个信号量所代表的资源，信号量起到了互斥的作用</li>
+<li>私有（同步）信号量：部分进程向信号量释放资源，其他进程向信号量请求资源，信号量起到了同步的作用，保证了进程之间执行的先后顺序</li>
+</ul>
+</li>
+</ul>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><ul>
+<li>信号量的主要缺点是 <strong>忙等待（busy waiting）</strong> ，当一个进程位于临界区内时，其它试图进入临界区的进程都陷入循环检查的状态。这样的信号量也称为 <strong>旋转锁（spinlock）</strong> ，它也具有优点：进程在等待锁时不会进行上下文切换（上下文切换可能会花费很长的时间），因此如果等待锁的时间较短则旋转锁更有效。旋转锁通常用于多处理器系统，一个线程在某个处理器旋转时，另一个线程在另一个处理器的临界区内执行。</li>
+<li>修改 <code>wait()</code> 和 <code>signal()</code>：<ul>
+<li>进程执行 <code>wait()</code> 时若信号量值不为正则调用 <code>block()</code> 操作将其阻塞，阻塞操作包括：将该进程状态切换为等待，将该进程放到信号量内部的一个等待队列中。之后 CPU 调度程序选择另一个进程执行。</li>
+<li>进程执行 <code>signal()</code> 操作后，信号量值会增加。同时若存在进程阻塞在信号量上，则操作系统从信号量内部等待队列中选取一个进程，调用 <code>wakeup()</code> 操作将其唤醒，唤醒操作包括：将该进程从等待状态切换到就绪状态、放入就绪队列中（根据 CPU 调度算法，CPU 不一定会选择这个线程立刻执行）。</li>
+</ul>
+</li>
+<li>信号量的 <code>wait()</code> 和 <code>signal()</code> 操作可定义如下，每个信号量包括一个整型值和一个 PCB 链表指针，使用 FIFO 队列可确保有限等待，但一般来说链表可以使用任何排队策略，信号量的使用方式和链表排队策略无关：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span>&#123;</span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">struct</span> process *<span class="built_in">list</span>;</span><br><span class="line">    <span class="comment">// PCB 块链表指针</span></span><br><span class="line">&#125; semaphore;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">wait</span><span class="params">(semaphore *S)</span></span>&#123;</span><br><span class="line">    S-&gt;value--;</span><br><span class="line">    <span class="keyword">if</span> (S-&gt;value &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">// 无可用资源，将进程加入信号量等待列表</span></span><br><span class="line">        block();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">signal</span><span class="params">(semaphore *S)</span></span>&#123;</span><br><span class="line">    S-&gt;value++;</span><br><span class="line">    <span class="keyword">if</span> (S-&gt;value &lt;= <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">// 从信号量等待列表中选取一个进程唤醒</span></span><br><span class="line">        wakeup(P);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>信号量的 <em>关键在于它们的执行具有原子性</em> 。在单处理器上，可在调用 <code>wait()</code> 和 <code>signal()</code> 时禁止中断，而在多处理器系统上，仍需要使用其它加锁计数（如旋转锁）来确保信号量的原子性，因此信号量本身的实现还是没有完全取消忙等，仅仅是 <em>把忙等的状态从等待进入临界区转移到了临界区执行时</em> ，因为经过合理设计的临界区通常比较短，因此比简单的忙等效率高一些。但在临界区很长的情况下，因为采用了忙等，导致信号量极为低效。</li>
+</ul>
+<h2 id="死锁和饥饿"><a href="#死锁和饥饿" class="headerlink" title="死锁和饥饿"></a>死锁和饥饿</h2><ul>
+<li>当两个或多个进程无限等待一个事件，而该事件只能由等待该事件的某个进程来触发（执行 signal 操作），这种情况下，这些进程称为 <strong>死锁（deadlocked）</strong> 。</li>
+<li>链表的出入顺序对信号量有影响，如果采用 LIFO 顺序增加、取出进程，则可能导致 <strong>无穷阻塞（indefinite blocking）</strong> 或 <strong>饥饿（starvation）</strong> 。</li>
+</ul>
+<h1 id="经典同步问题"><a href="#经典同步问题" class="headerlink" title="经典同步问题"></a>经典同步问题</h1><h2 id="有限缓冲问题"><a href="#有限缓冲问题" class="headerlink" title="有限缓冲问题"></a>有限缓冲问题</h2><ul>
+<li><strong><a href="http://blog.forec.cn/2016/11/24/os-concepts-4/" target="_blank" rel="external">进程互斥</a></strong> 中的生产者-消费者问题可以通过三个信号量解决：<ul>
+<li>二进制信号量 <code>mutex</code> 保证了对缓冲池访问的互斥</li>
+<li>计数信号量 <code>empty</code> 和 <code>full</code> 表示缓冲区中空余数量和已有数据数量</li>
+</ul>
+</li>
+<li>生产者和消费者进程使用如下架构保证互斥和同步：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// producer</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="comment">// produce an item</span></span><br><span class="line">    wait(empty);</span><br><span class="line">    wait(mutex);</span><br><span class="line">    <span class="comment">// put item into buffer</span></span><br><span class="line">    signal(mutex);</span><br><span class="line">    signal(full);</span><br><span class="line">&#125; <span class="keyword">while</span>(TRUE);</span><br><span class="line"></span><br><span class="line"><span class="comment">// consumer</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(full);</span><br><span class="line">    wait(mutex);</span><br><span class="line">    <span class="comment">// remove an item from buffer</span></span><br><span class="line">    signal(mutex);</span><br><span class="line">    signal(empty);</span><br><span class="line">&#125; <span class="keyword">while</span>(TRUE);</span><br></pre></td></tr></table></figure>
+<h2 id="读者-写者问题"><a href="#读者-写者问题" class="headerlink" title="读者-写者问题"></a>读者-写者问题</h2><ul>
+<li>一个数据库可以被多个并发进程共享，有的进程只需要读数据库，而有的进程需要读或写数据库。将只需要读权限的进程称为 <strong>读者（Reader）</strong> ，需要写权限的进程称为 <strong>写者（Writer）</strong> 。如果一个写者和其它进程（无论读写）同时访问共享对象，则可能导致混乱。</li>
+<li>有多种优先级方案：<ul>
+<li><strong>第一读者-写者问题</strong> ：读者优先，如果当前获得数据库权限的是读者进程，则其它读者进程无需等待，读者进程只有在当前操作数据库的进程是写者的情况下才需要阻塞。</li>
+<li><strong>第二读者-写者问题</strong> ：写者优先，任何在等待获取数据库权限的写者进程都将比其它正在等待的读者进程先获得权限。</li>
+<li><strong>第三读者-写者问题</strong> ：前两种策略都会导致写者或者读者的饥饿，此策略将保证没有任何进程会被无限阻塞。</li>
+</ul>
+</li>
+<li>读者-写者问题在以下情况非常有效：<ul>
+<li>当进程可以按照对共享对象所需的读写权限划分时</li>
+<li>当读者进程数比写者进程数多时：因为读写锁的建立开销比信号量或互斥锁要大，此开销可通过允许多个读者并发来弥补</li>
+</ul>
+</li>
+</ul>
+<h3 id="第一读者-写者问题"><a href="#第一读者-写者问题" class="headerlink" title="第一读者-写者问题"></a>第一读者-写者问题</h3><ul>
+<li>读优先，只要当前有读者在操作对象，所有读者都可以加入操作而不必等待。</li>
+<li>进程共享如下数据：<ul>
+<li><code>semaphore mutex, wrt</code>：二者均初始化为 1，信号量 <code>wrt</code> 用作读写进程的互斥锁，信号量 <code>mutex</code> 则用于确保更新变量 <code>readcount</code> 时互斥。</li>
+<li><code>int readcount</code>：跟踪当前有多少个进程正在读对象，初始化为 0。</li>
+</ul>
+</li>
+<li>写者-读者进程结构如下，代码来自原书（英文版）第 206 页。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 写者</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(wrt);</span><br><span class="line">    <span class="comment">// 执行写操作</span></span><br><span class="line">    signal(wrt);</span><br><span class="line">&#125; <span class="keyword">while</span>(TRUE);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读者</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(mutex);</span><br><span class="line">    readcount++;</span><br><span class="line">    <span class="keyword">if</span> (readcount == <span class="number">1</span>)</span><br><span class="line">    <span class="comment">// 若此读进程为等待的第一个读者，则需要先获取对象的权限</span></span><br><span class="line">        wait(wrt);</span><br><span class="line">    signal(mutex);</span><br><span class="line">    <span class="comment">// 执行读操作</span></span><br><span class="line">    wait(mutex);</span><br><span class="line">    readcount--;</span><br><span class="line">    <span class="keyword">if</span> (readcount == <span class="number">0</span>)</span><br><span class="line">    <span class="comment">// 若此读进程为最后一个离开的读者，则需要释放对象权限</span></span><br><span class="line">        signal(wrt);</span><br><span class="line">    signal(mutex);</span><br><span class="line">&#125; <span class="keyword">while</span>(TRUE);</span><br></pre></td></tr></table></figure>
+<h3 id="第二读者-写者问题"><a href="#第二读者-写者问题" class="headerlink" title="第二读者-写者问题"></a>第二读者-写者问题</h3><ul>
+<li>写优先，只要当前有写者在操作对象，所有写者都将排队等待，中间不允许读者插入。只有所有写者完成处理后，读者才有机会访问。</li>
+<li>进程之间共享如下数据：<ul>
+<li><code>int readcount, writecount</code>：<code>readcount</code> 记录当前正在等待读对象的读者数量，<code>writecount</code> 记录当前正在等待写对象的写者数量，均初始化为 0。</li>
+<li><code>semaphore rmutex, wmutex</code>：确保更新变量 <code>readcount</code> 和 <code>writecount</code> 时的互斥，均初始化为 1。</li>
+<li><code>semaphore readTry</code>：<code>readTry</code> 信号量用于声明有读者加入等待队列，确保读者和写者之间的互斥，初始化为 1。</li>
+<li><code>semaphore resource</code>：<code>resource</code> 信号量用于确保写者和写者之间的互斥，初始化为 1。</li>
+</ul>
+</li>
+<li>读者-写者结构如下，基本算法来自维基百科。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 读者</span></span><br><span class="line"><span class="keyword">do</span>&#123;</span><br><span class="line">    wait(readTry);</span><br><span class="line">    <span class="comment">// 读者必须在当前没有写者在操作对象时才可进入等待</span></span><br><span class="line">    <span class="comment">// 保证了写优先</span></span><br><span class="line">    wait(rmutex);</span><br><span class="line">    readcount++;</span><br><span class="line">    <span class="keyword">if</span> (readcount == <span class="number">1</span>)</span><br><span class="line">        <span class="comment">// 第一个读者需要获取资源权限</span></span><br><span class="line">        wait(resource);</span><br><span class="line">    signal(rmutex);</span><br><span class="line">    signal(readTry);</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    wait(rmutex);</span><br><span class="line">    readcount--;</span><br><span class="line">    <span class="keyword">if</span> (readcount == <span class="number">0</span>)</span><br><span class="line">        <span class="comment">// 最后一个离开的读者需要释放资源权限</span></span><br><span class="line">        signal(resource);</span><br><span class="line">    signal(rmutex);</span><br><span class="line">&#125; <span class="keyword">while</span>(TRUE);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写者</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(wmutex);</span><br><span class="line">    writecount++;</span><br><span class="line">    <span class="keyword">if</span> (writecount == <span class="number">1</span>)</span><br><span class="line">        <span class="comment">// 第一个写者需要禁止其他读者进入等待</span></span><br><span class="line">        wait(readTry);</span><br><span class="line">    signal(wmutex);</span><br><span class="line">    <span class="comment">// 进入临界区</span></span><br><span class="line">    wait(resource);</span><br><span class="line">    <span class="comment">// 写操作</span></span><br><span class="line">    signal(resource);</span><br><span class="line">    <span class="comment">// 离开临界区</span></span><br><span class="line">    wait(wmutex);</span><br><span class="line">    writecount--;</span><br><span class="line">    <span class="keyword">if</span> (writecount == <span class="number">0</span>)</span><br><span class="line">        <span class="comment">// 最后一个离开的写者需要释放资源权限</span></span><br><span class="line">        signal(readTry);</span><br><span class="line">    signal(wmutex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="第三读者-写者问题"><a href="#第三读者-写者问题" class="headerlink" title="第三读者-写者问题"></a>第三读者-写者问题</h3><ul>
+<li>保证读者和写者均不会出现饥饿现象。</li>
+<li>进程之间共享的信号量有：<ul>
+<li><code>int readCount</code>：当前正在访问对象的读者数量</li>
+<li><code>Semaphore resourceAccess</code>：资源的控制权限，使读者、写者互斥，初始化为 1</li>
+<li><code>Semaphore readCountAccess</code>：保证对 <code>readCount</code> 操作的互斥，初始化为 1</li>
+<li><code>Semaphore serviceQueue</code>：保持请求的顺序，维护先进先出特性，初始化为 1</li>
+</ul>
+</li>
+<li>读者-写者结构如下，基本算法来自维基百科。可能有多个进程在服务队列中等待，当前进入临界区的进程离开后，等待的进程就会接替离开的进程。当 <code>serviceQueue</code> 中阻塞了多个进程时，选择进程唤醒的顺序取决于信号量的链表，因此 <strong><code>serviceQueue</code> 的链表必须维持 FIFO 特性才能保证不会导致饥饿</strong> 。因此，解决饥饿问题实际是由链表的 FIFO 带来的。另一个值得注意的地方是，无论写者还是读者，获得了服务队列的权限后，在获取资源控制权前都将禁止其他任何进程接受服务，而因为只有紧随写者进程的读者才需要获取资源权限，所以在此算法中读者可以同时并发访问。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 读者</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(serviceQueue);</span><br><span class="line">    <span class="comment">// 在服务队列中等待</span></span><br><span class="line">    wait(readCountAccess);</span><br><span class="line">    <span class="keyword">if</span> (readCount == <span class="number">0</span>)</span><br><span class="line">        <span class="comment">// 第一个读者要从写者手中接管资源</span></span><br><span class="line">        wait(resourceAccess);</span><br><span class="line">    readCount++;</span><br><span class="line">    signal(serviceQueue);</span><br><span class="line">    <span class="comment">// 允许下一个进程进入服务队列等待</span></span><br><span class="line">    signal(readCountAccess);</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    wait(readCountAccess);</span><br><span class="line">    readCount--;</span><br><span class="line">    <span class="keyword">if</span> (readCount == <span class="number">0</span>)</span><br><span class="line">        <span class="comment">// 最后一个离开的读者要释放资源权限</span></span><br><span class="line">        signal(resourceAccess);</span><br><span class="line">    signal(readCountAccess);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写者</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(serviceQueue);</span><br><span class="line">    wait(resourceAccess);</span><br><span class="line">    signal(serviceQueue);</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    signal(resourceAccess);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="哲学家进餐问题"><a href="#哲学家进餐问题" class="headerlink" title="哲学家进餐问题"></a>哲学家进餐问题</h2><ul>
+<li>问题描述：假设有 5 个哲学家共用一个圆桌，每人左右两边各有一根筷子，哲学家之间不互相交流。当哲学家感到饥饿时会依次拿起自己身边的筷子（一次只能拿起一根筷子、不能从其它哲学家手中拿筷子），当哲学家同时拥有两根筷子时可以开始进餐，否则将等待空闲的筷子（且并不放下已握在手中的筷子），吃完后他将放下两只筷子。</li>
+<li>一种简单方法是每根筷子使用一个信号量，哲学家通过 <code>wait()</code> 请求相应的筷子，通过 <code>signal()</code> 释放相应的筷子。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span>&#123;</span><br><span class="line">    wait(chopstick[i]);</span><br><span class="line">    wait(chopstick[(i+<span class="number">1</span>)%<span class="number">5</span>]);</span><br><span class="line">    <span class="comment">// 进餐</span></span><br><span class="line">    signal(chopstick[i]);</span><br><span class="line">    signal(chopstick[(i+<span class="number">1</span>)%<span class="number">5</span>]);</span><br><span class="line">&#125; <span class="keyword">while</span>(TRUE);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>上面的算法解决了筷子的互斥问题，但可能导致死锁。若五个哲学家同时拿起同一边的筷子，则所有人都将永远等待。可行的解决方法有：<ul>
+<li>最多只允许四个哲学家同时坐在桌上</li>
+<li>只有两只筷子都可用时才允许一个哲学家拿起筷子，且拿起两只筷子的操作在临界区内进行</li>
+<li>编号为奇数的哲学家先拿起左边的筷子再拿起右边的筷子，编号为偶数的哲学家先拿起右边的筷子再拿起左边的筷子</li>
+<li>Dijkstra解法：每个哲学家都先拿起身边编号较小的筷子，再拿起编号较高的筷子</li>
+</ul>
+</li>
+<li>使用 Dijkstra 解法的哲学家就餐问题解法如下，伪代码根据维基百科的算法描述编写。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">philosopher</span><span class="params">()</span></span>&#123;</span><br><span class="line">    leftChopstickIndex = index;    <span class="comment">// 左侧筷子编号为哲学家编号</span></span><br><span class="line">    rightChopstickIndex = (index + <span class="number">1</span>) % Philosophers;</span><br><span class="line">    firstIndex = min(leftChopstickIndex, rightChopstickIndex);</span><br><span class="line">    secondIndex = max(leftChopstickIndex, rightChopstickIndex);</span><br><span class="line">    <span class="keyword">do</span>&#123;</span><br><span class="line">        wait(chopstick[firstIndex]);</span><br><span class="line">        wait(chopstick[secondIndex]);</span><br><span class="line">        <span class="comment">// 进餐</span></span><br><span class="line">        signal(chopstick[firstIndex]);</span><br><span class="line">        signal(chopstick[secondIndex]);</span><br><span class="line">        <span class="comment">// 释放资源的顺序可随意</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/24/os-concepts-4/" target="_blank" rel="external">操作系统（四）：进程互斥</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/24/os-concepts-6/" target="_blank" rel="external">操作系统（六）：管程（Monitor）</a></p>
+<p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/24/os-concepts-5/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/24/os-concepts-5/" target="_blank" rel="external">http://blog.forec.cn/2016/11/24/os-concepts-5/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2016/11/24/os-concepts-5/" data-id="civwcwaec001pbsewse9q3tvd" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2016/11/24/os-concepts-5/" data-title="操作系统（五）：进程同步" data-url="http://forec.github.io/2016/11/24/os-concepts-5/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2016/11/24/os-concepts-6/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            操作系统（六）：管程（Monitor）
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2016/11/24/os-concepts-4/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">操作系统（四）：进程互斥</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-6/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-6.jpg)" alt="操作系统（六）：管程（Monitor）" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-6/" class="title">操作系统（六）：管程（Monitor）</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T12:47:03.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-5/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-5.jpg)" alt="操作系统（五）：进程同步" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-5/" class="title">操作系统（五）：进程同步</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T10:41:33.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-4/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-4.jpg)" alt="操作系统（四）：进程互斥" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-4/" class="title">操作系统（四）：进程互斥</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T07:29:44.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/23/os-concepts-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-3.jpg)" alt="操作系统（三）：CPU 调度" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/23/os-concepts-3/" class="title">操作系统（三）：CPU 调度</a></p>
+                            <p class="item-date"><time datetime="2016-11-23T13:49:05.000Z" itemprop="datePublished">2016-11-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/23/cloud-storage-system-6/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-6.jpg)" alt="简易云存储系统服务器逻辑实现" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/23/cloud-storage-system-6/" class="title">简易云存储系统服务器逻辑实现</a></p>
+                            <p class="item-date"><time datetime="2016-11-23T10:42:08.000Z" itemprop="datePublished">2016-11-23</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">12</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 18px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 19px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2016 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec# enter duoshuo shortname here'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>

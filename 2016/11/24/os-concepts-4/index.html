@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>操作系统（四）：进程互斥 | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="OS" />
+    
+    <meta name="description" content="整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统（四）：进程互斥">
+<meta property="og:url" content="http://forec.github.io/2016/11/24/os-concepts-4/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-4.jpg">
+<meta property="og:updated_time" content="2016-11-24T10:53:14.008Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统（四）：进程互斥">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-os-concepts-4" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        操作系统（四）：进程互斥
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2016/11/24/os-concepts-4/" class="article-date">
+    <time datetime="2016-11-24T07:29:44.000Z" itemprop="datePublished">2016-11-24</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书的摘录，由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="生产者-消费者冲突模型"><a href="#生产者-消费者冲突模型" class="headerlink" title="生产者-消费者冲突模型"></a>生产者-消费者冲突模型</h1><ul>
+<li><strong>生产者-消费者（producer-consumer）</strong> 问题：生产者进程产生用来被消费者进程消耗的数据，例如一个编译器产生汇编代码，此代码交由汇编器生成对象。生产者、消费者进程之间可通过共享内存来传递数据，可分为：<ul>
+<li><strong>无限缓冲（unbounded buffer）</strong> ：共享内存大小没有限制，当缓冲区为空时，消费者进程需要等待；生产者进程在任何时候都可以直接向缓冲区中投放数据而无需等待</li>
+<li><strong>有限缓冲（bounded buffer）</strong> ：内存共享的缓冲区域大小固定，若缓冲区为空则消费者进程需要等待；若缓冲区已满则生产者进程需要等待。</li>
+</ul>
+</li>
+</ul>
+<h2 id="雏形"><a href="#雏形" class="headerlink" title="雏形"></a>雏形</h2><ul>
+<li>采用共享内存、有限缓冲的生产者消费者代码如下（原书 99 页第三章初次介绍共享内存模型时的代码）。共享缓冲通过循环数组和两个逻辑指针 <code>in</code>、<code>out</code> 实现，变量 <code>in</code> 指向缓冲中下一个空位，<code>out</code> 指向缓冲中的下一个待取走的数据位，<code>(in+1)%BUFFER_SIZE == out</code> 时缓冲区满。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">define</span> BUFFER_SIZE <span class="number">10</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125; item;</span><br><span class="line">item buffer[BUFFER_SIZE];</span><br><span class="line"><span class="keyword">int</span> in = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> out = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// producer</span></span><br><span class="line">item nextProduced;</span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="keyword">while</span> (((in + <span class="number">1</span>) % BUFFER_SIZE) == out) ;</span><br><span class="line">    buffer[in] = nextProduced;</span><br><span class="line">    in = (in + <span class="number">1</span>) % BUFFER_SIZE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// consumer</span></span><br><span class="line">item nextConsumed;</span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="keyword">while</span> (in == out) ;</span><br><span class="line">    nextConsumed = buffer[out];</span><br><span class="line">    out = (out+<span class="number">1</span>) % BUFFER_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>上面的代码存在缺陷，生产者、消费者进程能够使用的最大缓冲区为 BUFFER_SIZE - 1，并且代码也没有解决生产者、消费者进程同时访问共享内存的问题。</li>
+</ul>
+<h2 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h2><ul>
+<li>为使进程能够使用全部缓冲区，使用一个初始化为 0 的整数变量 <code>counter</code> 记录当前缓冲区中的元素数量；每当生产者向缓冲区投放数据，<code>counter</code> 递增；当消费者从缓冲区取走数据，<code>counter</code> 递减。可修改上面代码如下：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// producer</span></span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="keyword">while</span> (counter == BUFFER_SIZE) ;</span><br><span class="line">    buffer[in] = nextProduced;</span><br><span class="line">    in = (in+<span class="number">1</span>) % BUFFER_SIZE;</span><br><span class="line">    counter ++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// consumer</span></span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="keyword">while</span> (counter == <span class="number">0</span>) ;</span><br><span class="line">    nextConsumed = buffuer[out];</span><br><span class="line">    out = (out+<span class="number">1</span>) % BUFFER_SIZE;</span><br><span class="line">    counter --;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>以上代码可使用全部缓冲区资源，但当消费者进程和生产者进程并发执行时，涉及修改 <code>counter</code> 的语句执行顺序将由操作系统设定。由于 C 语言中 <code>counter++</code> 将被拆分为 <code>mov register, counter</code>、<code>inc register</code> 和 <code>mov counter, register</code> 三句汇编指令，假设由于操作系统的调度，当前消费者进程和生产者进程分别执行到 <code>counter++</code> 和 <code>counter--</code> 的最后一条汇编指令处，则 <code>counter</code> 的值将不正确。</li>
+<li><strong>竞争条件（race condition）</strong> ：多个进程同时访问和操作一个相同的数据，且执行结果和访问的特定顺序有关</li>
+<li><strong>进程同步（process synchronization）</strong> 和 <strong>协调（coordination）</strong> ：确保系统不同部分操作资源不会互相影响。</li>
+</ul>
+<h1 id="临界区"><a href="#临界区" class="headerlink" title="临界区"></a>临界区</h1><ul>
+<li>系统中有 n 个进程<code>{P0, P1, ..., Pn-1}</code>，每个进程有一个代码段称为 <strong>临界区（critical section）</strong> ，在该区域中，不同的进程可能会改变相同的数据。临界区中应当最多同时存在一个进程。</li>
+<li><em>临界区问题</em> 指设计一个使进程协作的协议：<ul>
+<li>每个进程需先请求进入临界区（请求的代码称为 <strong>进入区，entry section</strong> ）；</li>
+<li>获得允许，进入临界区执行</li>
+<li>退出临界区（ <strong>退出区，exit section</strong> ）</li>
+<li>执行剩余代码（ <strong>剩余区，remainder section</strong> ）</li>
+</ul>
+</li>
+<li>临界区问题的解决必须满足如下三个要求：<ul>
+<li><strong>互斥（mutual exclusion）</strong> ：若进程 Pi 正在其临界区内，则其他进程都不能在临界区中执行</li>
+<li><strong>发展（前进，progress）</strong> ：如果当前没有进程在临界区内，并且有一些进程在请求进入临界区，则只有不处在剩余区的进程可以参与到选择（选择哪个进程进入临界区）中。这个选择不能被无限期推迟，即必须立刻作出决定。简单的说， <strong>进入临界区请求的选择不应当受当前在剩余区执行进程的影响</strong> 。</li>
+<li><strong>有限等待（bounded waiting）</strong> ：从一个进程发出进入临界区请求，到该请求被允许，这期间只能有有限的其它进程进入临界区。即保证了每个进程都有机会进入临界区而不会饥饿。</li>
+</ul>
+</li>
+<li>假定每个进程的执行速度都不为 0，但是不能对 n 个进程的 <strong>相对速度（relative speed）</strong> 做任何假设。</li>
+<li>操作系统内部的临界区问题：操作系统内同一时刻可能有多个处于内核模式的活动进程，有两种方法解决。<ul>
+<li><strong>抢占内核（preemptive kernel）</strong> ：允许处于内核模式的进程被抢占。此模式可能导致竞争条件，在对称多处理器体系中，此模式更难设计。但此模式适合实时编程，响应更快（Linux 2.6之后内核和 Solaris、IRIX 均为抢占内核）。</li>
+<li><strong>非抢占内核（nonpreemptive kernel）</strong> ：不允许处于内核模式的进程被抢占，处于内核模式的进程会一直运行，直到其退出内核模式、阻塞或者自动释放对 CPU 的控制。这种方式根本不会导致竞争条件的产生。Windows XP、Windows 2000 和传统 UNIX 均为非抢占内核。</li>
+</ul>
+</li>
+</ul>
+<h1 id="Peterson-算法"><a href="#Peterson-算法" class="headerlink" title="Peterson 算法"></a>Peterson 算法</h1><ul>
+<li><strong>Peterson 算法</strong> 是对基于软件的临界区问题的经典解答，但由于现代计算机体系结构执行基本语言指令的不同方式，该算法在此类机器上不能正确执行。</li>
+<li>Peterson 算法仅适用于两个进程（P0和P1），它们都在临界区和剩余区间交替执行。以下当使用 Pi 表示一个进程时，使用 Pj 表示另一个（j == 1-i）。</li>
+<li>Peterson 算法需要在进程间共享两个数据项：<ul>
+<li><code>int turn</code>：指定哪个进程可以进入临界区，若 turn == i，则 Pi 被允许</li>
+<li><code>boolean flag[2]</code>：<code>flag[i]</code> 表示进程 i 已发出进入临界区请求</li>
+</ul>
+</li>
+<li>Peterson 算法中进程 Pi 的结构如下</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    flag[i] = TRUE;</span><br><span class="line">    turn = j;</span><br><span class="line">    <span class="keyword">while</span> (flag[j] &amp;&amp; turn == j);</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    flag[i] = FALSE;</span><br><span class="line">    <span class="comment">// 剩余区</span></span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Peterson 算法正确性的证明：<ul>
+<li>互斥：只有当 <code>flag[j] == FALSE</code> 或 <code>turn == i</code> 时 Pi 才进入临界区。假设 Pi 和 Pj 同时进入临界区，则 <code>flag[0] == flag[1] == TRUE</code>，因为 turn 只能为 0 或 1，所以只有一个进程（假设 <code>turn == i</code>）Pi 能够跳出 While 语句。此外，只要 Pi 在临界区内，<code>flag[i] == TRUE &amp;&amp; turn == i</code> 就始终成立，所以 Pi 在临界区执行期间，Pj 将始终等待或执行剩余区内容。</li>
+<li>发展和有限等待：进程 Pi 仅在 <code>flag[j] == True</code> 且 <code>turn == j</code> 的情况下才会被阻塞，若 Pj 不准备进入临界区，则 <code>flag[j] == True</code>，此时 Pi 可以进入；若 Pj 当前也在请求进入临界区，则 <code>flag[j] == True</code>，此时由 turn 决定哪个进程进入临界区。假设此时 Pj 进入临界区，当 Pj 退出临界区时会设置 <code>flag[j]</code> 为 False 使 Pi 进入临界区；如果 Pj 剩余区执行速度非常快，又重新申请进入临界区，此时 Pj 设置 <code>flag[j]</code> 为 TRUE，同时 turn 被设置为 i。因此 Pi 一定会进入临界区（发展），并且最多需要等待一次。</li>
+</ul>
+</li>
+</ul>
+<h1 id="Bakery-算法（补充）"><a href="#Bakery-算法（补充）" class="headerlink" title="Bakery 算法（补充）"></a>Bakery 算法（补充）</h1><ul>
+<li>Bakery 算法适用于 n 个进程的临界区问题。</li>
+<li>在进入临界区之前，进程需要申请一个号码，拥有最小号码的进程会被允许进入临界区。如果两个进程 Pi 和 Pj 申请到的号码相同（申请号码不是临界区，因此可能获得相同号码），则比较进程编号 i 和 j，编号小的先执行。</li>
+<li>进程可申请到的号码始终是递增的。定义元组比较为 <code>(a, b) &lt; (c, d) if a &lt; c || a == c &amp;&amp; b &lt; d</code>，定义最大值函数 <code>max(a0, a1, ..., an-1)</code> 为 a0 ~ an-1 中的最大值。</li>
+<li>Bakery 算法使用的共享数据有：<ul>
+<li><code>boolean choosing[n]</code>：<code>choosing[i] == TRUE</code> 表明进程 Pi 当前正在申请进入临界区或者正在临界区中执行</li>
+<li><code>int number[n]</code>：<code>number[i]</code> 为进程 Pi 当前申请到的号码</li>
+</ul>
+</li>
+<li>Bakery 算法流程如下</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    choosing[i] = <span class="literal">true</span>;</span><br><span class="line">    number[i] = max(number[<span class="number">0</span>], number[<span class="number">1</span>], ..., number[n-<span class="number">1</span>])+<span class="number">1</span>;</span><br><span class="line">    choosing[i] = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; n; j++)&#123;</span><br><span class="line">    <span class="comment">// 此循环保证所有比当前进程持更高优先级的进程已离开临界区</span></span><br><span class="line">        <span class="keyword">while</span> (chossing[j]);</span><br><span class="line">        <span class="keyword">while</span> (number[j] != <span class="number">0</span> &amp;&amp; (number[j], j) &lt; (number[i], i));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    number[i] = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 剩余区</span></span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Bakery 算法正确性证明：<ul>
+<li>首先，元组的大小比较和取号规则（只增）保证了全部进程都可维持一个严格递增的顺序，而不会出现两个进程地位相等的情况。</li>
+<li>互斥：假设进程 Pi 已进入临界区，则 for 循环保证了，当前所有进程，号码比 Pi 的号码小的进程均已不在临界区，而号码比 Pi 大的进程将因为 <code>number[i] != 0</code> 而被阻塞在它们自己的 for 循环中，因此仅有 Pi 可进入临界区。互斥条件满足。</li>
+<li>发展：假设一个进程 Pj 执行完临界区，则其进入剩余区之前将使 <code>number[j] == 0</code>，此时所有在等待进入临界区的进程中，按元组比较最小的那个进程将因为 <code>number[j] == 0</code> 而跳出 while 循环，此后它将跳过剩余的 for 循环（因为其它进程的元组均大于它）并进入临界区，而其它进程都将继续等待。因此在剩余区的进程（Pj）不会影响到进入临界区申请的选择。</li>
+<li>有限等待：假设一个进程 Pi 已经申请到号码 <code>number[i]</code>，此时所有后申请进入临界区的进程 Pj 都会有 <code>number[j] &gt; number[i]</code>，且在 Pi 执行完临界区之前，Pj 都会因为 <code>number[i] != 0</code> 且 <code>number[i] &lt; number[j]</code> 而阻塞。因此进程 Pi 至多等待 n-1 个进程即可进入临界区。</li>
+</ul>
+</li>
+</ul>
+<h1 id="硬件同步"><a href="#硬件同步" class="headerlink" title="硬件同步"></a>硬件同步</h1><ul>
+<li>无论软硬件方式，解决临界区问题都需要 <strong>锁（lock）</strong> ，所有解决方案都基于锁，且锁的设计可能非常复杂。进程在进入临界区之前获得锁，退出临界区时释放锁。</li>
+<li>硬件特性可以简化编程并提高效率。现代计算机系统提供了特殊硬件指令以允许程序 <strong>原子（atomically）</strong> 检查和修改字地内容或交换两个字地内容。以下的 <code>TestAndSet()</code> 和 <code>Swap()</code> 函数均为原子操作，即硬件保证了它们作为一个完整过程执行而不会被抢占。它们的定义如下：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">boolean <span class="title">TestAndSet</span><span class="params">(boolean *target)</span></span>&#123;</span><br><span class="line">    boolean rv = *target;</span><br><span class="line">    *target = TRUE;</span><br><span class="line">    <span class="keyword">return</span> rv;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Swap</span><span class="params">(boolean *a, boolean *b)</span></span>&#123;</span><br><span class="line">    boolean temp = *a;</span><br><span class="line">    *a = *b;</span><br><span class="line">    *b = temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>仅使用 <code>TestAndSet()</code> 或仅使用 <code>Swap()</code> 都可以解决互斥问题。以下是单独使用这二者实现的互斥，但均未满足有限等待的要求：</li>
+</ul>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TestAndSet Lock</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">while</span>( TestAndSetLock(&amp;<span class="built_in">lock</span>);</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    <span class="built_in">lock</span> = <span class="literal">FALSE</span>;</span><br><span class="line">    <span class="comment">// 剩余区</span></span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="literal">TRUE</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Swap Lock</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    key = <span class="literal">TRUE</span>;</span><br><span class="line">    <span class="keyword">while</span>(key == <span class="literal">TRUE</span>)</span><br><span class="line">        Swap(&amp;<span class="built_in">lock</span>, &amp;key);</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    <span class="built_in">lock</span> = <span class="literal">FALSE</span>;</span><br><span class="line">    <span class="comment">// 剩余区</span></span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="literal">TRUE</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用 <code>TestAndSet()</code> 或 <code>Swap()</code> 也可以解决有限等待问题，以下是使用 <code>TestAndSet()</code> 实现的有限等待互斥，代码为进程 Pi 的结构，来自原书（英文版）第 199 页。可以看出，剩余区前的 while 循环保证一个进程 Pi 强制拉取了排在其后的进程 Pj 进入临界区（如果有的话），这保证了有限等待。使用到的共享数据有：<ul>
+<li><code>boolean waiting[n]</code>：<code>waiting[i] == TRUE</code> 表明进程 i 已申请进入临界区并正在等待选择</li>
+<li><code>boolean lock</code>：lock 是进程间共享的锁</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span>&#123;</span><br><span class="line">    waiting[i] = TRUE;</span><br><span class="line">    key = TRUE;</span><br><span class="line">    <span class="keyword">while</span> (waiting[i] &amp;&amp; key)    <span class="comment">// 进程排队</span></span><br><span class="line">        key = TestAndSet(&amp;lock);</span><br><span class="line">    waiting[i] = FALSE;          <span class="comment">// 进程标注自己已进入临界区</span></span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    j = (i+<span class="number">1</span>) % n;</span><br><span class="line">    <span class="keyword">while</span> ((j != i) &amp;&amp; !waiting[j])</span><br><span class="line">        j = (j+<span class="number">1</span>) % n;</span><br><span class="line">    <span class="keyword">if</span> (j == i)                  <span class="comment">// 当前无其他进程排队则释放锁</span></span><br><span class="line">        lock = FALSE;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        waiting[j] = FALSE;      <span class="comment">// 强制拉取后一个进程进入临界区</span></span><br><span class="line">    <span class="comment">// 剩余区</span></span><br><span class="line">&#125; <span class="keyword">while</span>(TRUE);</span><br></pre></td></tr></table></figure>
+<hr>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/23/os-concepts-3/" target="_blank" rel="external">操作系统（三）：CPU 调度</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/24/os-concepts-5/" target="_blank" rel="external">操作系统（五）：进程同步</a></p>
+<p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/24/os-concepts-4/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/24/os-concepts-4/" target="_blank" rel="external">http://blog.forec.cn/2016/11/24/os-concepts-4/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2016/11/24/os-concepts-4/" data-id="civwcwaec001sbsewaxzuaflt" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2016/11/24/os-concepts-4/" data-title="操作系统（四）：进程互斥" data-url="http://forec.github.io/2016/11/24/os-concepts-4/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2016/11/24/os-concepts-5/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            操作系统（五）：进程同步
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2016/11/23/os-concepts-3/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">操作系统（三）：CPU 调度</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-6/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-6.jpg)" alt="操作系统（六）：管程（Monitor）" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-6/" class="title">操作系统（六）：管程（Monitor）</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T12:47:03.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-5/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-5.jpg)" alt="操作系统（五）：进程同步" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-5/" class="title">操作系统（五）：进程同步</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T10:41:33.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-4/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-4.jpg)" alt="操作系统（四）：进程互斥" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-4/" class="title">操作系统（四）：进程互斥</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T07:29:44.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/23/os-concepts-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-3.jpg)" alt="操作系统（三）：CPU 调度" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/23/os-concepts-3/" class="title">操作系统（三）：CPU 调度</a></p>
+                            <p class="item-date"><time datetime="2016-11-23T13:49:05.000Z" itemprop="datePublished">2016-11-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/23/cloud-storage-system-6/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-6.jpg)" alt="简易云存储系统服务器逻辑实现" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/11/23/cloud-storage-system-6/" class="title">简易云存储系统服务器逻辑实现</a></p>
+                            <p class="item-date"><time datetime="2016-11-23T10:42:08.000Z" itemprop="datePublished">2016-11-23</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">12</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 18px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 19px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2016 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec# enter duoshuo shortname here'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>
