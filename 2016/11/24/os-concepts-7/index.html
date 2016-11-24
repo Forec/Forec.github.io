@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>CVM 操作记录 | Forec&#39;s Notes</title>
+    <title>操作系统（七）：死锁 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="CVM,OS" />
+        <meta name="keywords" content="OS" />
     
-    <meta name="description" content="CVM 上的操作记录。">
+    <meta name="description" content="整理《Operating System Concepts》 第七版的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CVM 操作记录">
-<meta property="og:url" content="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/index.html">
+<meta property="og:title" content="操作系统（七）：死锁">
+<meta property="og:url" content="http://forec.github.io/2016/11/24/os-concepts-7/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="CVM 上的操作记录。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/vps.jpg">
-<meta property="og:updated_time" content="2016-11-05T09:51:52.790Z">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-7.jpg">
+<meta property="og:updated_time" content="2016-11-24T14:17:38.950Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CVM 操作记录">
-<meta name="twitter:description" content="CVM 上的操作记录。">
+<meta name="twitter:title" content="操作系统（七）：死锁">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
     
 
     
@@ -135,18 +135,18 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Configuration/">Configuration</a>
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-cloud-virtual-machine-config" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-os-concepts-7" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        CVM 操作记录
+        操作系统（七）：死锁
         </h1>
     
 
@@ -154,105 +154,25 @@
         
         
             <div class="article-subtitle">
-                <a href="/2016/11/02/cloud-virtual-machine-config/" class="article-date">
-    <time datetime="2016-11-02T15:08:14.000Z" itemprop="datePublished">2016-11-02</time>
+                <a href="/2016/11/24/os-concepts-7/" class="article-date">
+    <time datetime="2016-11-24T14:16:22.000Z" itemprop="datePublished">2016-11-24</time>
 </a>
                 
-    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CVM/">CVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>CVM 上的操作记录。</p>
+<p>整理《Operating System Concepts》 第七版的理论和概念，内容均为原书的摘录，由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="CentOS-7-2"><a href="#CentOS-7-2" class="headerlink" title="CentOS 7.2"></a>CentOS 7.2</h1><h2 id="ngrok-服务器搭建"><a href="#ngrok-服务器搭建" class="headerlink" title="ngrok 服务器搭建"></a>ngrok 服务器搭建</h2><p>可参考 imike 的<a href="http://www.imike.me/2016/03/23/CentOS%E4%B8%8B%E9%83%A8%E7%BD%B2Ngrok%E6%9C%8D%E5%8A%A1%E5%99%A8/" target="_blank" rel="external">CentOS下部署Ngrok服务器</a>。</p>
-<ul>
-<li>安装依赖库  </li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update</span><br><span class="line">sudo yum install build-essential golang mercurial git</span><br></pre></td></tr></table></figure>
-<ul>
-<li>获取 ngrok 源码  </li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/inconshreveable/ngrok.git ngrok</span><br><span class="line"><span class="built_in">cd</span> ngrok</span><br></pre></td></tr></table></figure>
-<ul>
-<li>生成证书并替换代码中默认证书，修改域名为解析到云主机的域名。  </li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">NGROK_DOMAIN=<span class="string">"cross.forec.cn"</span></span><br><span class="line">openssl genrsa -out base.key <span class="number">2048</span></span><br><span class="line">openssl req -new -x509 -nodes -key base.key -days <span class="number">10000</span> -subj <span class="string">"/CN=<span class="variable">$NGROK_DOMAIN</span>"</span> -out base.pem</span><br><span class="line">openssl genrsa -out server.key <span class="number">2048</span></span><br><span class="line">openssl req -new -key server.key -subj <span class="string">"/CN=<span class="variable">$NGROK_DOMAIN</span>"</span> -out server.csr</span><br><span class="line">openssl x509 -req -in server.csr -CA base.pem -CAkey base.key -CAcreateserial -days <span class="number">10000</span> -out server.crt</span><br><span class="line">cp base.pem assets/client/tls/ngrokroot.crt</span><br></pre></td></tr></table></figure>
-<ul>
-<li>编译：<code>sudo make release-server release-client</code>，便宜结束后 <code>bin</code> 目录下会有 <code>ngrokd</code> 和 <code>ngrok</code> 两个可执行文件，对应服务器和客户端。  </li>
-<li>不同系统使用的客户端需要重新编译  <ul>
-<li>windows: <code>sudo GOOS=windows GOARCH=amd64 CGO_ENABLED=0 make release-client make release-client</code>  </li>
-<li>arm: <code>sudo GOOS=linux GOARCH=arm CGO_ENABLED=0 make release-client make release-client</code>  </li>
-<li>mac: <code>sudo GOOS=darwin GOARCH=amd64 make release-client</code>  </li>
-</ul>
-</li>
-<li>设置域名解析，增加记录 <code>A</code>，主机记录为 <code>cross</code>，记录值为云主机公网 IP。  </li>
-<li>启动服务器，下面命令指定 http 端口映射到 <code>8081</code>，<code>https</code> 映射到 8082。 </li>
-</ul>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/ngrokd -tlsKey=server<span class="class">.key</span> -tlsCrt=server<span class="class">.crt</span> -domain=<span class="string">"cross.forec.cn"</span> -httpAddr=<span class="string">":8081"</span> -httpsAddr=<span class="string">":8082"</span></span><br></pre></td></tr></table></figure>
-<h2 id="域名解析"><a href="#域名解析" class="headerlink" title="域名解析"></a>域名解析</h2><p>将 <a href="http://blog.forec.cn" target="_blank" rel="external">http://blog.forec.cn</a> 解析至 <a href="https://forec.github.io">https://forec.github.io</a>。  </p>
-<ul>
-<li>向解析列表添加一条 <code>CNAME</code> 记录，主机记录为 <code>blog</code>，记录值为 <code>forec.github.io</code>。  </li>
-<li>在 Github 博客仓库中根目录添加一个文件，文件名为 <code>CNAME</code>，文件内容为 <code>blog.forec.cn</code>。  </li>
-</ul>
-<h2 id="开启-IPv6"><a href="#开启-IPv6" class="headerlink" title="开启 IPv6"></a>开启 IPv6</h2><ul>
-<li>新建 <code>/etc/modprobe.d/ipv6.conf</code>，添加 <code>options ipv6 disable=0</code>。  </li>
-<li>向自启动脚本添加 <code>sysctl -w net.ipv6.conf.all.disable_ipv6=0</code>。  </li>
-<li>重启，或直接运行上面的命令，观察 <code>ifconfig</code> 结果。  </li>
-</ul>
-<h2 id="使用-tunnelbroker-分配-IPv6-地址"><a href="#使用-tunnelbroker-分配-IPv6-地址" class="headerlink" title="使用 tunnelbroker 分配 IPv6 地址"></a>使用 tunnelbroker 分配 IPv6 地址</h2><ul>
-<li>在 tunnelbroker 注册，并分配一个 tunnel，填入 VPS 外网 IPv4 地址。  </li>
-<li>在 tunnel 的 example configuration 选项卡下选择 <code>Linux-route2</code>，将生成的脚本拷贝到自启动脚本中。  </li>
-<li>重启，观察 <code>ifconfig</code>，应增加一个 <code>he-ipv6</code> 网卡，并可看到对应 IPv6 地址。  </li>
-</ul>
-<h2 id="Nginx-配置"><a href="#Nginx-配置" class="headerlink" title="Nginx 配置"></a>Nginx 配置</h2><ul>
-<li>从官网获得 nginx 最新版本链接，wget 到本地  </li>
-<li>安装编译依赖包： <code>yum -y install zlib zlib-devel openssl openssl--devel pcre   pcre-devel</code></li>
-<li>安装 nginx 依赖包：<code>yum install GeoIP gd libXpm libxslt</code>  </li>
-<li>编译、安装  </li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf nginx-<span class="number">1.10</span><span class="number">.2</span>.tar.gz</span><br><span class="line">cd nginx-<span class="number">1.10</span>-<span class="number">2</span></span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>/usr/local/nginx/sbin/nginx</code> 运行，在浏览器输入 IP 观察是否显示欢迎页  </li>
-<li>向 <code>/etc/profile</code> 增加环境变量并 <code>source /etc/profile</code> 更新  </li>
-</ul>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PATH=/usr/local/nginx/sbin:<span class="variable">$PATH</span></span><br><span class="line">export PATH</span><br></pre></td></tr></table></figure>
-<h2 id="为-Ngrok-做反向代理"><a href="#为-Ngrok-做反向代理" class="headerlink" title="为 Ngrok 做反向代理"></a>为 Ngrok 做反向代理</h2><ul>
-<li>要令 <code>monitor.cross.forec.cn</code> 作为 ngrok 代理，该域名对应的 80 端口转发至本地 9999 端口。在 <code>/usr/local/nginx/conf</code> 增加配置文件 <code>ngrok_monitor.conf</code>。  </li>
-</ul>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">        listen <span class="number">80</span>;</span><br><span class="line">        server_name monitor.cross.forec.cn;</span><br><span class="line">        location / &#123;</span><br><span class="line">                proxy_set_header X-Real-IP <span class="variable">$remote</span>_addr;</span><br><span class="line">                proxy_set_header X-Forwarded-For <span class="variable">$proxy</span>_add_x_forwarded_for;</span><br><span class="line">                proxy_set_header Host <span class="variable">$http</span>_host:<span class="number">8081</span>;</span><br><span class="line">                proxy_set_header X-Nginx-Proxy true;</span><br><span class="line">                proxy_set_header Connection <span class="string">""</span>;</span><br><span class="line">                proxy_pass http://<span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span>:<span class="number">9999</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="安装-MySQL"><a href="#安装-MySQL" class="headerlink" title="安装 MySQL"></a>安装 MySQL</h2><ul>
-<li>腾讯云 CentOS 7.2 的 yum 源不提供 <code>mysql-server</code>  </li>
-<li>下载 mysql 的 repo 源： <code>wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm</code>  </li>
-<li>安装源： <code>sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm</code>  </li>
-<li>安装 mysql ：<code>sudo yum install mysql-server</code>  </li>
-<li>启动 mysqld 服务：<code>systemctl start  mysqld.service</code>  </li>
-<li>修改密码：<code>mysqladmin -u USER -p password PASSWORD</code> 或使用 root 账户登入 mysql，执行</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">USE</span> mysql;</span></span><br><span class="line"><span class="operator"><span class="keyword">UPDATE</span> <span class="keyword">user</span> <span class="keyword">SET</span> <span class="keyword">password</span>=<span class="keyword">PASSWORD</span>(<span class="string">'123456'</span>) <span class="keyword">WHERE</span> <span class="keyword">user</span>=<span class="string">'root'</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">FLUSH</span> <span class="keyword">PRIVILEGES</span>;</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>开机启动 mysqld 服务：<code>systemctl enable mysqld.service</code>  </li>
-</ul>
-<h2 id="WordPress-Nginx-配置"><a href="#WordPress-Nginx-配置" class="headerlink" title="WordPress + Nginx 配置"></a>WordPress + Nginx 配置</h2><ul>
-<li>安装 Mysql、PHP 和 nginx： <a href="https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-centos-6" target="_blank" rel="external">How To Install Linux, nginx, MySQL, PHP (LEMP) stack on CentOS 6</a>  </li>
-<li>安装 WordPress 并配置 nginx ：<a href="https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-nginx-on-centos-6--2" target="_blank" rel="external">How To Install Wordpress with nginx on CentOS 6</a>  </li>
-<li>修改静态链接代理：在 wordpress 的 nginx 配置文件中的 <code>locatino / {}</code> 下添加：</li>
-</ul>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (-f <span class="variable">$request</span>_filename/index.html)&#123;</span><br><span class="line">    rewrite (.*) <span class="variable">$1</span>/index.html break;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (-f <span class="variable">$request</span>_filename/index.php)&#123;</span><br><span class="line">    rewrite (.*) <span class="variable">$1</span>/index.php;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (!-f <span class="variable">$request</span>_filename)&#123;</span><br><span class="line">    rewrite (.*) /index.php;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Nginx-HTTPS-配置"><a href="#Nginx-HTTPS-配置" class="headerlink" title="Nginx HTTPS 配置"></a>Nginx HTTPS 配置</h2><ul>
-<li>安装 openssl 和 openssl-devel：<code>yum install openssl openssl-devel</code></li>
-<li>颁发证书</li>
-</ul>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/nginx/conf</span><br><span class="line">openssl genrsa -des3 -out server<span class="class">.key</span> <span class="number">1024</span></span><br><span class="line">openssl req -new -key server<span class="class">.key</span> -out server<span class="class">.csr</span></span><br><span class="line">openssl rsa -<span class="keyword">in</span> server<span class="class">.key</span> -out server_nopwd<span class="class">.key</span></span><br><span class="line">openssl x509 -req -days <span class="number">365</span> -<span class="keyword">in</span> server<span class="class">.csr</span> -signkey server_nopwd<span class="class">.key</span> -out server.crt</span><br></pre></td></tr></table></figure>
-<ul>
-<li>增加配置文件 <code>wordpress_https.conf</code>，除下面部分，其它和 wordpress 配置文件相同</li>
-</ul>
-<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml">server </span><span class="expression">&#123;</span><br><span class="line">    <span class="variable">listen</span> 443;</span><br><span class="line">    <span class="variable">sever</span>_<span class="variable">name</span> <span class="variable">forec.cn</span>;</span><br><span class="line">    <span class="variable">ssl</span>_<span class="variable">certificate</span>  <span class="end-block">/usr</span><span class="end-block">/local</span><span class="end-block">/nginx</span><span class="end-block">/conf</span><span class="end-block">/server.crt</span>;</span><br><span class="line">    <span class="variable">ssl</span>_<span class="variable">certificate</span>_<span class="variable">key</span>  <span class="end-block">/usr</span><span class="end-block">/local</span><span class="end-block">/nginx</span><span class="end-block">/conf</span><span class="end-block">/server</span>_<span class="variable">nopwd.key</span>;</span><br><span class="line">&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p>TODO</p>
 <hr>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/11/02/cloud-virtual-machine-config/">原始出处</a>(<a href="https://forec.github.io/2016/11/02/cloud-virtual-machine-config/">https://forec.github.io/2016/11/02/cloud-virtual-machine-config/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/24/os-concepts-6/" target="_blank" rel="external">操作系统（六）：管程（Monitor）</a><br>此专栏的下一篇文章：TODO</p>
+<p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/24/os-concepts-7/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/24/os-concepts-7/" target="_blank" rel="external">http://blog.forec.cn/2016/11/24/os-concepts-7/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -260,7 +180,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/" data-id="civwg212s0058acewaavkshkz" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/24/os-concepts-7/" data-id="civwg2100001lacewavwh29ft" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -327,7 +247,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2016/11/02/cloud-virtual-machine-config/" data-title="CVM 操作记录" data-url="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/"></div>
+    <div class="ds-thread" data-thread-key="2016/11/24/os-concepts-7/" data-title="操作系统（七）：死锁" data-url="http://forec.github.io/2016/11/24/os-concepts-7/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -431,20 +351,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2016/11/12/cloud-storage-system-0/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            简易云存储系统项目简介
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2016/10/29/raspberry-settings/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2016/11/24/os-concepts-6/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">Raspberry Pi 3 配置索引</p>
+        <p class="article-nav-title">操作系统（六）：管程（Monitor）</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     

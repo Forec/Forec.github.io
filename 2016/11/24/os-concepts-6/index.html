@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第六章 Monitor 部分的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-6.jpg">
-<meta property="og:updated_time" content="2016-11-24T12:48:55.526Z">
+<meta property="og:updated_time" content="2016-11-24T14:16:09.005Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（六）：管程（Monitor）">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第六章 Monitor 部分的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -168,9 +168,51 @@
 <p>整理《Operating System Concepts》 第七版第六章 Monitor 部分的理论和概念，内容均为原书的摘录，由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
 </blockquote>
 <a id="more"></a>
-<p>TODO</p>
+<ul>
+<li>信号量提供了方便的机制处理进程同步，但不正确的使用信号量仍会导致时序错误，且难以检测。如：<ul>
+<li>先对信号量 <code>signal()</code> 再 <code>wait()</code> 违反了互斥请求</li>
+<li>对信号量始终调用 <code>wait()</code> 将导致死锁</li>
+<li>一个进程遗漏了 <code>wait()</code> 或 <code>signal()</code> 将导致死锁且可能破坏互斥</li>
+</ul>
+</li>
+<li><strong>管程（monitor）</strong> 类型提供了一组由程序员定义的、在管程内互斥的操作。管程内定义的子程序只能访问位于管程内的局部变量和形式参数，管程内的局部变量也只能被管程内部的局部子程序访问。 <strong>管程结构确保了依次只能有一个进程在管程内活动</strong> 。</li>
+<li>管程内部可定义 <code>condition</code> 类型的变量以提供同步机制，称其为条件变量。条件变量可执行操作 <code>wait()</code> 和 <code>signal()</code>。</li>
+<li>我个人对条件变量的理解和信号量类似：<ul>
+<li>条件变量存在于管程内部，对同一个条件变量调用操作的进程将和条件变量建立一定的联系，或者称之为绑定。对于管程内的条件变量 x，进程 P 调用 <code>x.wait()</code> 将时自身挂起到条件变量 x 上；当另一个进程调用 <code>x.signal()</code>时，在 x 上悬挂的进程会被重启，如果此时没有进程悬挂在 x 上，则 <code>x.signal()</code> 操作将被忽略。</li>
+<li>管程模式下的 <code>x.signal()</code> 和信号量的 <code>signal()</code> 区别在于： <strong>信号量操作 <code>signal()</code> 会影响信号量的状态</strong> ，而管程下的 <code>x.signal()</code> 在 x 不存在挂起进程的情况下没有任何影响。</li>
+</ul>
+</li>
+<li>举例：进程 P 调用 <code>x.signal()</code>，且存在悬挂进程 Q 与条件变量 x 关联。根据管程的性质，若进程 Q 开始执行，则进程 P 必须等待。此时可能存在两种可能性，且两种可能性均有合理解释：<ul>
+<li>进程 Q 重启且进程 P 等待：进程 P 将等待，直到进程 Q 离开管程或者等待另一个进程调用 <code>x.signal()</code></li>
+<li>进程 P 唤醒进程 Q 且进程 P 继续执行：进程 Q 被唤醒，但仍然会等待，直到进程 P 离开管程，或者另一个触发条件。因为 P 已经在管程中执行，看起来此种方案更合理，但这破坏了进程 Q 正在等待的逻辑条件，进程 Q 已被触发但又未执行，因此状态难以描述</li>
+<li>Pascal 语言采用折中方式，当进程 P 执行 <code>x.signal()</code> 时，它会立刻离开管程，且进程 Q 会立刻重新执行</li>
+</ul>
+</li>
+</ul>
+<h2 id="哲学家进餐问题的管程解法"><a href="#哲学家进餐问题的管程解法" class="headerlink" title="哲学家进餐问题的管程解法"></a>哲学家进餐问题的管程解法</h2><ul>
+<li>使用 <strong><a href="http://blog.forec.cn/2016/11/24/os-concepts-5/" target="_blank" rel="external">进程同步</a></strong> 中的一种策略：当哲学家在两只筷子均可用的情况下才拿起筷子，且拿起两只筷子的动作是非抢占的。</li>
+<li>为哲学家设置三种状态：<code>enum {THINKING, HUNGRY, EATING} state[5]</code></li>
+<li>哲学家 i 只有在两个邻居都不进餐时才能将变量 <code>state[i]</code> 设置为 <code>EATING</code>，当他处在饥饿状态又无法进餐时可以使自己忍耐一段时间：<code>(state[(i-1)%5] != EATING) &amp;&amp; (state[(i+1)%5] != EATING)</code></li>
+<li>下面给出用管程解决的哲学家进餐问题，只解决了互斥问题，不会导致死锁，但可能导致某个哲学家过度饥饿而死。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">monitor dp&#123;</span><br><span class="line">    <span class="keyword">enum</span> &#123;THINKING, HUNGRY, EATING&#125; state[<span class="number">5</span>];</span><br><span class="line">    condition self[<span class="number">5</span>];</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">pickup</span><span class="params">(<span class="keyword">int</span> i)</span></span>&#123;</span><br><span class="line">        state[i] = HUNGRY;</span><br><span class="line">        test(i);</span><br><span class="line">        <span class="keyword">if</span> (state[i] != EATING)</span><br><span class="line">            self[i].wait();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">putdown</span><span class="params">(<span class="keyword">int</span> i)</span></span>&#123;</span><br><span class="line">        state[i] = THINKING;</span><br><span class="line">        test((i-<span class="number">1</span>) % <span class="number">5</span>);</span><br><span class="line">        test((i+<span class="number">1</span>) % <span class="number">5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">(<span class="keyword">int</span> i)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ((state[(i-<span class="number">1</span>)%<span class="number">5</span>] != EATING) &amp;&amp; (state[(i+<span class="number">1</span>)%<span class="number">5</span>] != EATING))&#123;</span><br><span class="line">            state[i] = EATING;</span><br><span class="line">            self[i].signal();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    initialization_code()&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++)</span><br><span class="line">            state[i] = THINKING;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>一个改进版的 Monitor 解决方案如下。筷子本身并不属于 monitor 的一部分，否则同时只能有一个哲学家在进餐。代码中 <code>NUM_PHILS</code> 是哲学家数目。此代码解决了哲学家饥饿问题，来自<a href="http://www.csee.wvu.edu/~jdm/classes/cs550/notes/tech/mutex/dp-mon.html" target="_blank" rel="external">西弗吉尼亚大学</a>。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">monitor dp&#123;</span><br><span class="line">    condition self[NUM_PHILS];</span><br><span class="line">    <span class="keyword">enum</span> states &#123;THINKING, HUNGRY, EATING&#125; state[NUM_PHILS-<span class="number">1</span>];</span><br><span class="line">	<span class="keyword">int</span> index;</span><br><span class="line">    initialization_code()&#123;</span><br><span class="line">    	<span class="keyword">for</span> (index=<span class="number">0</span>; index&lt;NUM_PHILS; index++)</span><br><span class="line">    		flags[index] = THINKING;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">pickup</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">		state[mynum] = HUNGRY;</span><br><span class="line">		<span class="keyword">if</span> ((state[(i-<span class="number">1</span>)%NUM_PHILS] != EATING) &amp;&amp;</span><br><span class="line">			(state[(i+<span class="number">1</span>)%NUM_PHILS] != EATING))</span><br><span class="line">			state[i] = EATING;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">		    <span class="comment">// 挂起，等待相邻哲学家改变状态时唤醒</span></span><br><span class="line">			self[i].wait;</span><br><span class="line">			state[i] = EATING;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">putdown</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">		state[i] = THINKING;</span><br><span class="line">		<span class="comment">// 唤醒左侧哲学家</span></span><br><span class="line">		<span class="keyword">if</span> ((state [(i-<span class="number">1</span>)%NUM_PHILS] == HUNGRY) &amp;&amp;</span><br><span class="line">		    (state [(i-<span class="number">2</span>)%NUM_PHILS] != EATING))</span><br><span class="line">			self[(i-<span class="number">1</span>)%NUM_PHILS].signal;</span><br><span class="line">		<span class="comment">// 唤醒右侧哲学家</span></span><br><span class="line">		<span class="keyword">if</span> ((state [(i+<span class="number">1</span>)%NUM_PHILS] == HUNGRY) &amp;&amp;</span><br><span class="line">		    (state [(i+<span class="number">2</span>)%NUM_PHILS] != EATING))</span><br><span class="line">			self[(i+<span class="number">1</span>)%NUM_PHILS].signal;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="使用信号量实现管程"><a href="#使用信号量实现管程" class="headerlink" title="使用信号量实现管程"></a>使用信号量实现管程</h2><ul>
+<li>要实现的管程对于重启进程采用的策略是： <strong>调用 <code>x.signal()</code> 的进程挂起自己，直到重新启动的进程离开或者等待</strong> 。</li>
+<li>每个管程都有一个信号量 <code>mutex</code> 初始化为 1，进程进入管程之前必须通过 <code>wait()</code> 获得允许，离开时需要调用 <code>signal()</code> 释放权限。</li>
+<li>信号量 <code>next</code> 初始化为 0，供线程在唤醒重启进程时挂起自己，整数变量 <code>next_count</code> 用于对挂起在 <code>next</code> 上的进程数量计数。</li>
+<li>进入管程的外部子程序结构 F 如下：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">F</span><span class="params">()</span></span>&#123;</span><br><span class="line">    wait(mutex);</span><br><span class="line">    <span class="comment">// body</span></span><br><span class="line">    <span class="keyword">if</span> (next_count &gt; <span class="number">0</span>)</span><br><span class="line">        signal(next);    <span class="comment">//     此前有进程挂起，重启该进程</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        signal(mutex);   <span class="comment">//     管程内无进程挂起，释放控制权</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>对每个管程内的条件变量 <code>x</code>，引入信号量 <code>x_sem</code> 和整数变量 <code>x_count</code> 记录信号量 x 上挂起的进程数量，均初始化为 0。<code>x.wait()</code> 和 <code>x.signal()</code> 实现如下：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> x.wait()&#123;</span><br><span class="line">    x_count++;            <span class="comment">// 将进程挂起到 x 上</span></span><br><span class="line">    <span class="keyword">if</span> (next_count &gt; <span class="number">0</span>)   <span class="comment">// 当前仍有进程挂起在管程中</span></span><br><span class="line">        signal(next);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        signal(mutex);    <span class="comment">// 无进程在等待，释放管程控制权</span></span><br><span class="line">    wait(x_sem);          <span class="comment">// 等待信号量 x_sem，由信号量决定唤醒哪个挂起进程</span></span><br><span class="line">    x_count--; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> x.signal()&#123;</span><br><span class="line">    <span class="keyword">if</span> (x_count &gt; <span class="number">0</span>)&#123;     <span class="comment">// 当前有程序挂起在条件变量 x</span></span><br><span class="line">        next_count ++;    <span class="comment">// 管程挂起数增加</span></span><br><span class="line">        signal(x_sem);    <span class="comment">// 释放信号量，唤醒一个挂起进程</span></span><br><span class="line">        wait(next);       <span class="comment">// 将自身阻塞到管程中</span></span><br><span class="line">        next_count--;     <span class="comment">// 继续执行</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
 <hr>
-<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/24/os-concepts-5/" target="_blank" rel="external">操作系统（五）：进程同步</a><br>此专栏的下一篇文章：TODO</p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/24/os-concepts-5/" target="_blank" rel="external">操作系统（五）：进程同步</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/24/os-concepts-7/" target="_blank" rel="external">操作系统（七）：死锁</a></p>
 <p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/24/os-concepts-6/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/24/os-concepts-6/" target="_blank" rel="external">http://blog.forec.cn/2016/11/24/os-concepts-6/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
@@ -180,7 +222,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/24/os-concepts-6/" data-id="civwcwaec001lbsewiqx4ncck" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/24/os-concepts-6/" data-id="civwg2100001pacewu070ra4z" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -351,6 +393,16 @@
         
 <nav id="article-nav">
     
+        <a href="/2016/11/24/os-concepts-7/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            操作系统（七）：死锁
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
     
         <a href="/2016/11/24/os-concepts-5/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
@@ -369,6 +421,26 @@
         <h3 class="widget-title">最新文章</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-7.jpg)" alt="操作系统（七）：死锁" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-7/" class="title">操作系统（七）：死锁</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T14:16:22.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -450,26 +522,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/23/cloud-storage-system-6/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-6.jpg)" alt="简易云存储系统服务器逻辑实现" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/11/23/cloud-storage-system-6/" class="title">简易云存储系统服务器逻辑实现</a></p>
-                            <p class="item-date"><time datetime="2016-11-23T10:42:08.000Z" itemprop="datePublished">2016-11-23</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -479,7 +531,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">12</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">13</span></li></ul>
         </div>
     </div>
 
@@ -489,7 +541,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 18px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 19px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14px;">计组与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.22px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.67px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.33px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.33px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 18.89px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15.56px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.44px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.89px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.78px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14.44px;">计组与体系结构</a>
         </div>
     </div>
 

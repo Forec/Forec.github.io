@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-1.jpg">
-<meta property="og:updated_time" content="2016-11-24T07:29:02.726Z">
+<meta property="og:updated_time" content="2016-11-24T13:06:12.510Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（一）：概念导读">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -293,9 +293,9 @@
 <li><strong>策略（policy）</strong> 和 <strong>机制（mechanism）</strong> 的区分：机制决定如何做（ <em>how</em> to do），而策略决定做什么（ <em>what</em> will be done）</li>
 </ul>
 <h2 id="操作系统结构"><a href="#操作系统结构" class="headerlink" title="操作系统结构"></a>操作系统结构</h2><ul>
-<li>简单结构：利用最小的空间提供最多的功能，没有被划分为模块，如 MS-DOS。应用程序能够访问最底层的、基本的设备驱动，因此易受恶意程序的伤害。</li>
+<li>简单结构：利用最小的空间提供最多的功能，没有被划分为模块，如 MS-DOS 和最初的 UNIX。应用程序能够访问最底层的、基本的设备驱动，因此易受恶意程序的伤害。</li>
 <li><strong>分层方法（Layered Approach）</strong> ：采用自顶向下方法，将总的功能和特征划分为模块。模块化的其中方法是分层方法：将操作系统分为若干层（级），最底层（层0）为硬件，最高层（层N）为用户接口，分层结构类似一个同心圆。分层法最大的 <strong>优点在于构造和调试的简单化</strong> （每层只能利用较低层的功能和服务、每层为高层隐藏了一定数据结构、操作和硬件存在），主要困难在于 <strong>对层的详细定义</strong> 和 <strong>相比其他方法的低效</strong> 。</li>
-<li><strong>微内核（microkernels）</strong> ：将操作系统中所有非基本部分从内核中移走，将它们实现为系统程序或用户程序，从而得到更小的内核。微内核通常包括最小的进程、内存管理和通信功能。<ul>
+<li><strong>微内核（microkernels）</strong> ：将操作系统中所有非基本部分从内核中移走，将它们实现为系统程序或用户程序，从而得到更小的内核。微内核通常包括最小的进程、内存管理和通信功能。Windows NT 系统采用了分层微内核，有些 UNIX 系统也采用了此种方式。<ul>
 <li>微内核的主要功能是使客户程序和运行在用户空间的各种服务之间通信，客户程序和服务之间不会直接交互，而是通过微内核的 <strong>消息传递</strong> 。</li>
 <li>因为新服务可在用户空间增加而不需修改内核，因此 <strong>便于扩充操作系统</strong> ；因为大多数服务作为用户而不是内核进程运行，因此提供了 <strong>更好的安全性和可靠性</strong> 。</li>
 <li>因为使用消息传递，系统功能总开销增加，因此 <strong>系统性能下降</strong> 。</li>
@@ -328,7 +328,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/22/os-concepts-1/" data-id="civwcwaes0021bsewyj5vx549" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/22/os-concepts-1/" data-id="civwg210g0024acewwdo1sgkc" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -531,6 +531,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-7.jpg)" alt="操作系统（七）：死锁" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-7/" class="title">操作系统（七）：死锁</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T14:16:22.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/11/24/os-concepts-6/" class="thumbnail">
     
     
@@ -608,26 +628,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/23/cloud-storage-system-6/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-6.jpg)" alt="简易云存储系统服务器逻辑实现" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/11/23/cloud-storage-system-6/" class="title">简易云存储系统服务器逻辑实现</a></p>
-                            <p class="item-date"><time datetime="2016-11-23T10:42:08.000Z" itemprop="datePublished">2016-11-23</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -637,7 +637,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">12</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">13</span></li></ul>
         </div>
     </div>
 
@@ -647,7 +647,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 18px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 19px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14px;">计组与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.22px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.67px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.33px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.33px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 18.89px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11.11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15.56px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.44px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11.11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11.11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.89px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.78px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14.44px;">计组与体系结构</a>
         </div>
     </div>
 
