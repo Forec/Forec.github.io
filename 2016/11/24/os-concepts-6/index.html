@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第六章 Monitor 部分的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-6-r.jpg">
-<meta property="og:updated_time" content="2016-11-24T14:34:42.349Z">
+<meta property="og:updated_time" content="2016-11-24T14:37:32.766Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（六）：管程（Monitor）">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第六章 Monitor 部分的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -175,7 +175,7 @@
 <li>一个进程遗漏了 <code>wait()</code> 或 <code>signal()</code> 将导致死锁且可能破坏互斥</li>
 </ul>
 </li>
-<li><strong>管程（monitor）</strong> 类型提供了一组由程序员定义的、在管程内互斥的操作。管程内定义的子程序只能访问位于管程内的局部变量和形式参数，管程内的局部变量也只能被管程内部的局部子程序访问。 <strong>管程结构确保了依次只能有一个进程在管程内活动</strong> 。</li>
+<li><strong>管程（monitor）</strong> 类型提供了一组由程序员定义的、在管程内互斥的操作。管程内定义的子程序只能访问位于管程内的局部变量和形式参数，管程内的局部变量也只能被管程内部的局部子程序访问。 <strong>管程结构确保了同时只能有一个进程在管程内活动</strong> 。</li>
 <li>管程内部可定义 <code>condition</code> 类型的变量以提供同步机制，称其为条件变量。条件变量可执行操作 <code>wait()</code> 和 <code>signal()</code>。</li>
 <li>我个人对条件变量的理解和信号量类似：<ul>
 <li>条件变量存在于管程内部，对同一个条件变量调用操作的进程将和条件变量建立一定的联系，或者称之为绑定。对于管程内的条件变量 x，进程 P 调用 <code>x.wait()</code> 将时自身挂起到条件变量 x 上；当另一个进程调用 <code>x.signal()</code>时，在 x 上悬挂的进程会被重启，如果此时没有进程悬挂在 x 上，则 <code>x.signal()</code> 操作将被忽略。</li>
@@ -222,7 +222,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/24/os-concepts-6/" data-id="civwgoa9m001pbwewvmxdwj0j" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/24/os-concepts-6/" data-id="civwgp9ej001pr8ewurnmq1mo" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -577,7 +577,7 @@
                 <h1 class="logo-wrap">
                     <a href="/" class="logo"></a>
                 </h1>
-                <p>&copy; 2016 Forec</p>
+                <p>京ICP备16060806号-1 &copy; 2016 Forec</p>
             </div>
         </div>
     </div>
@@ -585,7 +585,7 @@
         
     
     <script type="text/javascript">
-    var duoshuoQuery = {short_name:'forec# enter duoshuo shortname here'};
+    var duoshuoQuery = {short_name:'forec'};
     (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;

@@ -8,17 +8,17 @@
     
         <meta name="keywords" content="OS" />
     
-    <meta name="description" content="整理《Operating System Concepts》 第七版的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+    <meta name="description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统（七）：死锁">
 <meta property="og:url" content="http://forec.github.io/2016/11/24/os-concepts-7/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="整理《Operating System Concepts》 第七版的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-7.jpg">
-<meta property="og:updated_time" content="2016-11-24T14:17:38.950Z">
+<meta property="og:updated_time" content="2016-11-25T06:51:05.162Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（七）：死锁">
-<meta name="twitter:description" content="整理《Operating System Concepts》 第七版的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
     
 
     
@@ -165,10 +165,163 @@
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>整理《Operating System Concepts》 第七版的理论和概念，内容均为原书的摘录，由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
+<p>整理《Operating System Concepts》 第七版死锁部分，内容均为原书的摘录，由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
 </blockquote>
 <a id="more"></a>
-<p>TODO</p>
+<h1 id="死锁模型"><a href="#死锁模型" class="headerlink" title="死锁模型"></a>死锁模型</h1><ul>
+<li>多道程序环境下，多个进程竞争有限资源。如果某个进程需求的资源被其他进程占用，则该进程可能被永久阻塞，这种情况称为 <strong>死锁（deadlock）</strong> 。</li>
+<li>进程按照如下顺序使用资源：<ul>
+<li><strong>申请（Request）</strong> ：如果申请不能被允许（如资源正在被其他进程占用），则申请进程必须等待直到获得资源</li>
+<li><strong>使用（Use）</strong></li>
+<li><strong>释放（Release）</strong></li>
+</ul>
+</li>
+<li>资源的申请和释放都是系统调用，如设备的 <code>request()/release()</code>，文件的 <code>open()/close()</code>，内存的 <code>allocate()/free()</code> 等。对于进程或线程的每次执行，操作系统会检查并确保它们以获得所需资源。系统维护一张记录表，说明某个资源是否空闲，被分配给哪个进程。</li>
+<li>永久性资源可分为：<ul>
+<li>可剥夺资源（可重用资源）：当进程所占有的并使用的资源被剥夺时，对进程不产生破坏性影响（如内存、CPU）</li>
+<li>不可剥夺资源：如打印机等，一旦剥夺则任务执行失败</li>
+</ul>
+</li>
+</ul>
+<h1 id="死锁特征"><a href="#死锁特征" class="headerlink" title="死锁特征"></a>死锁特征</h1><ul>
+<li>以下四个条件（四个条件并不完全独立）同时成立时，死锁产生：<ul>
+<li><strong>互斥（mutual exclusion）</strong> ：至少有一个资源处于互斥模式，即该资源同时只能由一个进程使用。</li>
+<li><strong>占有并等待（hold and wait）</strong> ：进程必须占有至少一个资源，并且等待另一资源，且等待的资源已被其他进程占有。</li>
+<li><strong>非抢占（no preemptive）</strong> ：资源不能被抢占。</li>
+<li><strong>循环等待（circular wait）</strong> ：一组等待进程 <code>{P0, p1, ..., pn}</code>，其中 Pi 等待的资源被 Pi+1 占有，Pn 等待的资源被 P0 占有。</li>
+</ul>
+</li>
+<li>死锁问题可用 <strong>系统资源分配图（system resource-allocation  graph）</strong> 描述：<ul>
+<li>该图的节点集合 V 分为系统活动进程集合 <code>P = {P1, P2, ..., Pn}</code> 和系统资源类型集合 <code>R = {R1, R2, ..., Rm}</code>。</li>
+<li>从进程 Pi 到资源类型 Rj 的有向边记为 <code>Pi → Rj</code>，称为 <strong>申请边（request edge）</strong> ，表示进程 Pi 已经申请并正在等待资源类型 Rj 的一个实例。</li>
+<li>从资源类型 Rj 到进程 Pi 的有向边记为 <code>Rj → Pi</code>，称为 <strong>分配边（assignment edge）</strong> ，表示资源类型 Rj 的一个实例已经分配给进程 Pi。</li>
+<li>在图上用圆形表示进程 Pi，用矩形表示资源类型 Rj，资源类型的多个实例在矩形中用圆点表示。</li>
+<li>申请边只需指向矩形 Rj，分配边的源点需要指定矩形内部的某个圆点。</li>
+<li>当进程 Pi 申请资源类型 Rj 的一个实例时，在资源分配图中加入一条申请边，当该申请可以满足时将该申请边 <strong>立即</strong> 转换为分配边。当进程释放资源时，该分配边从图中删除。</li>
+</ul>
+</li>
+<li>可证明：<ul>
+<li><strong>如果分配图中不存在环，则系统未发生进程死锁</strong></li>
+<li><strong>如果分配图中存在环且每个资源类型仅有一个实例，则系统已处于进程死锁</strong></li>
+<li>如果分配图中存在环，且存在某个资源类型有多个实例，则系统可能处于进程死锁</li>
+</ul>
+</li>
+</ul>
+<h1 id="死锁处理"><a href="#死锁处理" class="headerlink" title="死锁处理"></a>死锁处理</h1><ul>
+<li>三种方法可以处理死锁：<ul>
+<li>使用某种协议预防或避免死锁，确保系统不进入死锁状态</li>
+<li>允许系统进入死锁状态，且系统可以检测到死锁并恢复</li>
+<li>忽视死锁问题，认为系统中不可能发生死锁</li>
+</ul>
+</li>
+<li>多数操作系统采用第三种（包括 UNIX 和 Windows），因此死锁由应用程序员处理。</li>
+</ul>
+<h2 id="死锁预防"><a href="#死锁预防" class="headerlink" title="死锁预防"></a>死锁预防</h2><ul>
+<li>根据死锁特征，只要破坏四个条件中的一个使之不同时成立即可实现 <strong>死锁预防（prevention）</strong> 。</li>
+<li>破坏互斥：非共享资源必须满足互斥条件，因此此条件无法破坏</li>
+<li>破坏占有并等待：必须保证一个进程不能在已经占有其他资源的情况下再申请一个资源，两种方法可选（两种方法 <strong><em>资源利用率均较低</em></strong> ，且 <strong><em>可能导致饥饿</em></strong> ，需要多个常用资源的进程可能会永久等待）：<ul>
+<li>每个进程在执行前申请并获得执行期间所需的全部资源；</li>
+<li>仅允许进程在没有资源时才可申请资源，在它申请更多资源前必须释放全部已持有资源。</li>
+</ul>
+</li>
+<li>破坏非抢占：如果一个进程在占有一些资源的同时申请了另一个不能立刻被分配的资源（等待列表中的其他进程也没有持有该资源），则该进程目前已获得的所有资源都可被其它正在等待的进程抢占。也就是说，该进程持有的资源被隐式释放了。该进程要想重新执行，必须分配到要申请的资源，同时还要恢复自己在等待时被抢占的资源。此协议通常用于状态可以保存和恢复的资源，如 CPU 寄存器和内存，对于不可剥夺资源无效。</li>
+<li>破坏循环等待：系统定义一个函数 <code>F: R → N</code> 为资源类型集合编号，不同资源类型的编号不同。每个 <strong>进程只能按照递增顺序申请资源</strong> ，进程开始执行时可以申请任意数量的资源类型 Ri 的实例，之后若想申请资源类型 Rj 的实例，则必须满足 <code>F(Rj) &gt; F(Ri)</code> 才可申请，否则它必须释放所有编号小于 F(Rj) 的资源后才能再申请。<ul>
+<li>证明：若存在循环等待，设循环等待的进程集合为 <code>{P0, P1, ..., Pn}</code> ，其中 Pi 等待资源 Ri，且 Ri 被进程 Pi+1 占有，因为 Pi+1 占有资源 Ri 且申请资源 Ri+1，所以对所有 i 有 <code>F(Ri) &lt; F(Ri+1)</code>，即 <code>F(R0) &lt; F(R1) &lt; ... &lt; F(Rn) &lt; F(R0)</code>，假设不成立。</li>
+<li>按照此协议，程序员必须按系统为资源定义的顺序来编写程序才可防止死锁。有些软件（如 Witness）可以验证资源锁是否按顺序获取，并对不按顺序获取的代码做出警告。</li>
+</ul>
+</li>
+<li>以上通过限制资源申请来预防死锁的方法可行，但会降低设备使用率和系统吞吐率。</li>
+</ul>
+<h2 id="死锁避免"><a href="#死锁避免" class="headerlink" title="死锁避免"></a>死锁避免</h2><ul>
+<li><strong>死锁避免（deadlock-avoidance）</strong> 算法动态监测资源分配状态以保证循环等待条件无法成立，同时它要求进程提供一定的 <strong>先验信息</strong> ，例如进程执行期间可能需要使用的每种资源类型实例的最大数量。</li>
+<li>若系统中的进程按照某个特定顺序执行不会产生死锁，则此时系统处于安全状态，这个进程执行的顺序称为 <strong>安全序列（safe sequence）</strong> 。</li>
+<li>安全状态必然不会导致死锁，不安全状态可能会导致死锁状态，死锁状态必然是不安全状态。</li>
+<li><strong>资源分配图算法</strong> ：<ul>
+<li>适用于每个资源只有一个实例的系统；</li>
+<li>向系统资源分配图中加入一种新类型的边，称为 <strong>需求边（claim edge）</strong> 。需求边 <code>Pi-&gt;Rj</code> 表示进程 Pi 可能在将来某时刻申请资源 Rj，需求边用虚线表示。当 Pi 申请资源 Rj 时，需求边 <code>Pi-&gt;Rj</code>变为申请边，当进程 Pi 释放资源 Rj 时，分配边 <code>Rj-&gt;Pi</code> 变成需求边；</li>
+<li>若进程 Pi 试图申请资源 Rj，则系统需要检查：如果需求边 <code>Pi-&gt;Rj</code> 变成分配边 <code>Rj-&gt;Pi</code> 后，资源分配图中不存在环（虚实线无所谓），则允许申请，否则进程 Pi 必须等待。</li>
+<li>系统检查是否存在环可使用 Tarjan 等求联通子图的 n² 级算法。</li>
+</ul>
+</li>
+<li><strong>银行家（Banker’s）算法</strong> ：<ul>
+<li>适用于每种资源类型有多个实例的情形，效率低于资源分配图</li>
+<li>银行家算法需要在进程请求资源时检查分配后的状态是否保持安全。使用下面的安全性算法可确定系统是否处于安全状态，算法的时间复杂度为 mn²。</li>
+</ul>
+</li>
+<li>银行家算法使用的数据结构：<ul>
+<li>Available：长度为 m 的向量，表示每种资源当前可用的（未被分配给进程的）实例数量</li>
+<li>Max：n × m 的矩阵，<code>Max[i][j]</code> 表示进程 Pi 在整个生命周期中需要申请资源类型 Rj 实例的最大数量</li>
+<li>Allocation：n × m 矩阵，<code>Allocation[i][j]</code> 表示进程 Pi 当前已经持有（已被分配）的资源类型 Rj 的实例数量；Allocation 的第 i 行记作 <code>Allocation[i,]</code>，表示进程 Pi 当前持有的不同资源类型的数量。</li>
+<li>Need：n × m 矩阵，<code>Need[i][j] = Max[i][j] - Allocation[i][j]</code>，表示进程 Pi 还可能申请多少个 Rj 类型的资源实例；Need 的第 i 行记作 <code>Need[i,]</code>，表示进程 Pi 结束前可能仍要申请的不同资源数量</li>
+</ul>
+</li>
+<li><strong>安全性算法</strong> ：<ol>
+<li>令 <code>Work = Available</code> 为长度为 m 的行向量，表示每种资源当前剩余可用的实例数量；令 <code>Finish=[False for i = 0 to n-1]</code> 为长度为 n 的行向量，初始化全部为 False，表示进程当前是否已结束执行。</li>
+<li>寻找一个正在执行的进程 Pi，并且 <code>Need[i,] ≤ Work</code>，即：<code>Finish[i] == False &amp;&amp; Need[i,] ≤ Work</code>，这意味着当前系统剩余资源能够满足 Pi 的全部需求。若不存在这样的进程，则调到第 4 步。</li>
+<li>更新 <code>Work = Work + Allocation[i,]</code> ，令 <code>Finish[i] = True</code> 并跳回第 2 步。这意味着进程 Pi 已经执行结束，并且它所持有的资源全部释放，因此系统可用资源数量 <code>Work</code> 增加。注意这一步实际 <strong>等价于对资源分配图的化简</strong> ，它将一个可消去的进程（即该进程可以得到资源并执行完）和所有该进程与相关资源连接的边从资源分配图中删去。</li>
+<li>检查所有的 i，是否都有 <code>Finish[i] == True</code>，若是则系统处于安全状态，否则系统处于不安全状态。</li>
+</ol>
+</li>
+<li>安全性算法的 C 语言大致表述：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;memory.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> NUM_PROCESS <span class="number">20</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> NUM_RESOURCE <span class="number">10</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> TRUE <span class="number">1</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> FALSE <span class="number">0</span></span></span><br><span class="line"><span class="keyword">typedef</span> Boolean <span class="keyword">unsigned</span> <span class="keyword">int</span>;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> Available[NUM_PROCESS];</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> Max[NUM_PROCESS][NUM_RESOURCE];</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> Allocation[NUM_PROCESS][NUM_RESOURCE];</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> Need[NUM_PROCESS][NUM_RESOURCE];</span><br><span class="line"><span class="function">Boolean <span class="title">safe</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Boolean Finish[NUM_PROCESS];</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> Work[NUM_PROCESS];</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> i, j, k;</span><br><span class="line">    <span class="built_in">memset</span>(Finish, FALSE, <span class="keyword">sizeof</span>(Boolean) * NUM_PROCESS);</span><br><span class="line">    <span class="built_in">memcpy</span>(Work, Available, <span class="keyword">sizeof</span>(<span class="keyword">unsigned</span> <span class="keyword">int</span>) * NUM_PROCESS);</span><br><span class="line">    <span class="keyword">for</span> (k = <span class="number">0</span>; k &lt; NUM_PROCESS; k++)&#123;</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NUM_PROCESS; i++)&#123;</span><br><span class="line">            <span class="comment">// 寻找满足条件的 Pi</span></span><br><span class="line">            <span class="keyword">if</span> (Finish[i])</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            Boolean flag = TRUE;</span><br><span class="line">            <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; NUM_RESOURCE; j++)</span><br><span class="line">                <span class="keyword">if</span> (Need[i][j] &gt; Work[j])&#123;</span><br><span class="line">                    flag = FALSE;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            <span class="keyword">if</span> (flag)&#123;    <span class="comment">// 寻找到进程 Pi 满足条件</span></span><br><span class="line">                <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; NUM_RESOURCE; j++)</span><br><span class="line">                    Work[j] += Allocation[i][j];</span><br><span class="line">                Finish[i] = TRUE;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">                <span class="comment">// 进程 Pi 结束执行</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (k = <span class="number">0</span>; k &lt; NUM_PROCESS; k++)</span><br><span class="line">        <span class="keyword">if</span> (!Finish[k])</span><br><span class="line">            <span class="keyword">return</span> FALSE;</span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>资源请求算法</strong> ：判断进程对资源的申请是否可以维持安全性。设申请资源的进程为 Pi，<code>Request[i,]</code> 为一个长度为 m 的行向量，表示进程 Pi 要申请的不同资源实例数量。<ol>
+<li>若 <code>Request[i,] ≤ Need[i,]</code> 则转到第 2 步，否则产生出错条件（进程 Pi 要申请的资源数量超过了它此前声明的可能使用的最大资源数量）</li>
+<li>若 <code>Request[i,] ≤ Available</code> 则转第 3 步，否则 Pi 等待（剩余资源不满足 Pi 的请求）</li>
+<li>假设系统剩余资源足够 Pi 使用，则系统计算修改后的状态是否安全，若安全则允许修改，不安全则 Pi 必须等待。</li>
+</ol>
+</li>
+<li>资源请求算法的 C 语言大致表述为：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">define</span></span></span><br><span class="line"><span class="function">Boolean <span class="title">allocate</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> i, <span class="keyword">unsigned</span> <span class="keyword">int</span> *Request)</span></span>&#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> j;</span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; NUM_RESOURCE; j++)</span><br><span class="line">        <span class="keyword">if</span> (Request[j] &gt; Need[i][j])</span><br><span class="line">            <span class="keyword">return</span> False;</span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; NUM_RESOURCE; j++)</span><br><span class="line">        <span class="keyword">if</span> (Request[j] &gt; Allocation[i][j])</span><br><span class="line">            wait();    <span class="comment">// 进程 Pi 必须等待资源</span></span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; NUM_RESOURCE; j++)&#123;</span><br><span class="line">        Available[j] -= Request[j];</span><br><span class="line">        Allocation[i][j] += Request[j];</span><br><span class="line">        Need[i][j] -= Request[j];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 假设可以分配</span></span><br><span class="line">    <span class="keyword">if</span> (!safe())&#123;    <span class="comment">// 分配后不安全，恢复状态</span></span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; NUM_RESOURCE; j++)&#123;</span><br><span class="line">            Available[j] += Request[j];</span><br><span class="line">            Allocation[i][j] -= Request[j];</span><br><span class="line">            Need[i][j] += Request[j];</span><br><span class="line">        &#125;</span><br><span class="line">        wait();</span><br><span class="line">    &#125; <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="死锁检测"><a href="#死锁检测" class="headerlink" title="死锁检测"></a>死锁检测</h2><ul>
+<li>如果一个系统既不采用死锁预防算法，也不采用死锁避免算法，则该系统可能出现死锁。此时，系统应当提供：<ul>
+<li>检查系统是否出现死锁的算法</li>
+<li>从死锁状态中恢复的算法</li>
+</ul>
+</li>
+<li>每个资源类型仅存在一个实例：可以使用资源分配图的变种 <strong>等待（wait-for）</strong> 图，该图删去了资源分配图中的资源节点，而将原图中所有 <code>Pi-&gt;Rj-&gt;Pk</code>　的边转化为 <code>Pi-&gt;Pk</code>，即进程 Pi 正在等待进程 Pk 掌握的资源。如果等待图中有环存在，则系统存在死锁。为了检测死锁，系统要维护这个等待图，并且周期性的在图中调用检测算法，该算法时间复杂度为 n²，n 为系统中进程数。</li>
+<li>每种资源类型存在多个实例：算法与银行家算法类似，仍采用 <code>Available</code>，<code>Allocation</code> 和 <code>Request</code> 三个变量保存系统状态，其中此处的 <code>Request</code> 是一个 n × m 的矩阵，<code>Request[i][j]</code> 表示进程 Pi 当前正在申请的资源类型 Rj 的数量。</li>
+<li><strong>死锁检测算法</strong> ，时间复杂度为 mn²：<ol>
+<li>令 <code>Work = Available</code> 为长度为 m 的行向量，表示每种资源当前剩余可用的实例数量；令 <code>Finish</code> 为长度为 n 的行向量，若进程 Pi 当前未持有任何资源（Allocation[i,] == 0）则 <code>Finish[i] = True</code>，否则 <code>Finish[i] = False</code>。这里将不持有资源的进程设置 Finish 为 True 是因为，不持有资源的进程不会对死锁产生影响，不会有其它进程在等待该进程，这实际 <strong>等价于等待图中的孤立点</strong> 。</li>
+<li>寻找一个正在执行的进程 Pi，并且 <code>Request[i,] ≤ Work</code>，即：<code>Finish[i] == False &amp;&amp; Request[i,] ≤ Work</code>，这意味着当前系统剩余资源能够满足 Pi 此刻的需求。若不存在这样的进程，则调到第 4 步。</li>
+<li>更新 <code>Work = Work + Allocation[i,]</code> 且令 <code>Finish[i] = True</code>；跳回第 2 步。</li>
+<li>检查是否存在某个 i 有 <code>Finish[i] == False</code>，若存在则系统处于死锁状态，且进程 Pi 死锁。</li>
+</ol>
+</li>
+<li>注意上面的死锁检测算法的第 2 步：如果 <code>Request[i,] ≤ Work</code> 就回收进程 Pi 的资源。这是基于如下假定，如果 Pi 不会参与到死锁中（因为 <code>Request[i,] ≤ Work</code>，Pi的需求可以被满足所以此时一定不会被死锁），则 <strong>乐观地认为 Pi 直到执行结束都不会再申请更多的资源</strong> 。这里的假定可能不正确，如果假定不正确，Pi 在之后又申请了更多的资源，则在系统下次运行死锁检测算法时仍然会发现，所以这里的假定不影响算法正确性。</li>
+<li><strong>调用检测算法的频率</strong> 受如下两个因素影响：<ul>
+<li>死锁可能发生的概率多少：如果经常发生死锁则应该经常调用检测算法</li>
+<li>死锁发生时有多少进程会受影响</li>
+</ul>
+</li>
+<li>考虑极端情况：每当出现进程请求资源不能被立刻允许的情况时就调用死锁检测算法，则系统不仅能确定哪些进程处于死锁，还能确定导致死锁的特定进程（实际上是死锁环上的每个节点共同导致了死锁）。此种方式会导致巨大的计算开销。但如果使用较低的频率调用检测算法，或当 CPU 使用率低于某个阈值时，则调用检测算法无法确定涉及死锁的进程中是哪些导致了死锁。</li>
+</ul>
+<h2 id="死锁恢复"><a href="#死锁恢复" class="headerlink" title="死锁恢复"></a>死锁恢复</h2><h3 id="进程终止"><a href="#进程终止" class="headerlink" title="进程终止"></a>进程终止</h3><ul>
+<li>两种方法通过终止进程来取消死锁，被终止的进程所持有的所有资源都会被系统回收：<ul>
+<li><strong>终止所有死锁进程</strong> ：代价较大，有些进程可能已经运行很长时间而不得不放弃</li>
+<li><strong>每次终止一个进程，直到死锁状态取消</strong> ：开销较大，每终止一个进程都需要重新调用死锁检测算法</li>
+</ul>
+</li>
+<li>当采用部分终止时，确定终止哪个进程/哪个进程可以打破死锁的因素涉及：<ul>
+<li>进程优先级</li>
+<li>进程已运行的时间和完成任务所需要的剩余时间</li>
+<li>进程使用了哪些、多少资源，以及资源是否可抢占</li>
+<li>进程仍需多少资源</li>
+<li>有多少进程需要被终止</li>
+<li>交互进程还是批处理进程</li>
+</ul>
+</li>
+</ul>
+<h3 id="资源抢占"><a href="#资源抢占" class="headerlink" title="资源抢占"></a>资源抢占</h3><ul>
+<li>死锁的恢复也可以通过抢占资源来逐步取消死锁状态，需要处理三个问题：<ul>
+<li><strong>选择被抢占对象（victim）</strong> ：抢占哪些进程和资源，这和死锁恢复中部分终止要考虑的因素类似。</li>
+<li><strong>回滚（rollback）</strong> ：如果从某个进程抢占资源，则被抢占的进程需要回滚到某个安全状态以便之后重新执行。完全回滚（终止被抢占的进程并重启该进程）比较容易，更有效的方式是将进程回滚到足够打破死锁的状态，但这需要系统维护更多关于进程状态的信息。</li>
+<li><strong>饥饿</strong> ：如何确保不会总从同一个进程抢占资源。通常会考虑回滚次数，确保一个进程只能被抢占有限次。</li>
+</ul>
+</li>
+</ul>
 <hr>
 <p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/24/os-concepts-6/" target="_blank" rel="external">操作系统（六）：管程（Monitor）</a><br>此专栏的下一篇文章：TODO</p>
 <p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
@@ -180,7 +333,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/24/os-concepts-7/" data-id="civwgoa9j001lbwew2617fkiz" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/24/os-concepts-7/" data-id="civwgp9ef001lr8ewyowox0av" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -525,7 +678,7 @@
                 <h1 class="logo-wrap">
                     <a href="/" class="logo"></a>
                 </h1>
-                <p>&copy; 2016 Forec</p>
+                <p>京ICP备16060806号-1 &copy; 2016 Forec</p>
             </div>
         </div>
     </div>
@@ -533,7 +686,7 @@
         
     
     <script type="text/javascript">
-    var duoshuoQuery = {short_name:'forec# enter duoshuo shortname here'};
+    var duoshuoQuery = {short_name:'forec'};
     (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;
