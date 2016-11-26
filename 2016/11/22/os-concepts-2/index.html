@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-2.jpg">
-<meta property="og:updated_time" content="2016-11-24T07:29:17.567Z">
+<meta property="og:updated_time" content="2016-11-25T07:08:09.157Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（二）：进程与线程">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -80,6 +80,10 @@
                             
                                 <li class="main-nav-list-item" >
                                     <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/apis/index.html">API</a>
                                 </li>
                             
                         </ul>
@@ -178,7 +182,7 @@
 <li><strong>终止（Terminated）</strong> ：进程完成执行</li>
 </ul>
 </li>
-<li>一次只有 <em>一个进程</em> 可以在 <em>一个处理器</em> 上 <em>运行</em> ，但可以有多个进程处于 <em>就绪</em> 或 <em>等待</em> 状态。进程状态转移如下图，图片截取自《操作系统概念》中文版。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/diagram-process-state.jpg" width="400px"></li>
+<li>一次只有 <em>一个进程</em> 可以在 <em>一个处理器</em> 上 <em>运行</em> ，但可以有多个进程处于 <em>就绪</em> 或 <em>等待</em> 状态。进程状态转移如下图，图片根据原书内容制作。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/diagram-process-state.jpg" width="400px"></li>
 <li>每个进程在操作系统内部用 <strong>进程控制块（process control block，PCB）</strong> 来表示，它包含了与一个特定进程相关的信息。每个进程控制块包含：<ul>
 <li><strong>进程状态（process state）</strong> ：可为上述五种状态</li>
 <li><strong>程序计数器（program counter）</strong> ：指定进程要执行的下条指令地址</li>
@@ -363,7 +367,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/22/os-concepts-2/" data-id="civxfvfvy0021toewqb141i85" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/22/os-concepts-2/" data-id="civyrz1qk0022b4ewqsfkaxux" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
