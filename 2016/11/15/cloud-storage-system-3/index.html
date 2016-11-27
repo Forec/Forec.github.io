@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="使用 Golang 实现此前设计的云存储系统传输、认证协议所需的基础模块。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-3.jpg">
-<meta property="og:updated_time" content="2016-11-19T14:35:47.650Z">
+<meta property="og:updated_time" content="2016-11-27T02:17:01.494Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简易云存储系统认证基础模块实现">
 <meta name="twitter:description" content="使用 Golang 实现此前设计的云存储系统传输、认证协议所需的基础模块。">
@@ -210,7 +210,7 @@
 </ul>
 <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">import</span>(</span><br><span class="line">    <span class="string">"encoding/binary"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">func</span> Int64ToBytes(i <span class="typename">int64</span>) []<span class="typename">byte</span> &#123;</span><br><span class="line">	<span class="keyword">var</span> buf = <span class="built_in">make</span>([]<span class="typename">byte</span>, <span class="number">8</span>)</span><br><span class="line">	binary.BigEndian.PutUint64(buf, <span class="typename">uint64</span>(i))</span><br><span class="line">	<span class="keyword">return</span> buf</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">func</span> BytesToInt64(buf []<span class="typename">byte</span>) <span class="typename">int64</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="typename">int64</span>(binary.BigEndian.Uint64(buf[:<span class="number">8</span>]))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <hr>
-<p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">云存储系统从入门到放弃</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/14/cloud-storage-system-2/" target="_blank" rel="external">简易云存储系统传输协议实现和封装</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/16/cloud-storage-system-4/" target="_blank" rel="external">简易云存储系统传输、认证单元测试</a></p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">简易云存储系统设计与实现</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/14/cloud-storage-system-2/" target="_blank" rel="external">简易云存储系统传输协议实现和封装</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/16/cloud-storage-system-4/" target="_blank" rel="external">简易云存储系统传输、认证单元测试</a></p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/15/cloud-storage-system-3/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/15/cloud-storage-system-3/" target="_blank" rel="external">http://blog.forec.cn/2016/11/15/cloud-storage-system-3/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
@@ -219,7 +219,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/15/cloud-storage-system-3/" data-id="civyrz1sw005ub4ewxwty7k0e" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/15/cloud-storage-system-3/" data-id="civytkojz005u18ewk0g2sslb" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

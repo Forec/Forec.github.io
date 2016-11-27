@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="介绍云存储系统中用户 ADT 的设计、结构，实现用户模型框架。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-5.png">
-<meta property="og:updated_time" content="2016-11-23T10:40:47.328Z">
+<meta property="og:updated_time" content="2016-11-27T02:16:56.273Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简易云存储系统用户结构设计">
 <meta name="twitter:description" content="介绍云存储系统中用户 ADT 的设计、结构，实现用户模型框架。">
@@ -257,7 +257,7 @@
 </ul>
 <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ulist.go</span></span><br><span class="line"><span class="keyword">func</span> UserIndexByName(slice []User, name <span class="typename">string</span>) User &#123;</span><br><span class="line">	<span class="keyword">for</span> _, uc := <span class="keyword">range</span> slice &#123;</span><br><span class="line">		<span class="keyword">if</span> uc.GetUsername() == name &#123;</span><br><span class="line">			<span class="keyword">return</span> uc</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="constant">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <hr>
-<p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">云存储系统从入门到放弃</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/16/cloud-storage-system-4/" target="_blank" rel="external">简易云存储系统传输、认证单元测试</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/23/cloud-storage-system-6/" target="_blank" rel="external">简易云存储系统服务器逻辑实现</a></p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">简易云存储系统设计与实现</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/16/cloud-storage-system-4/" target="_blank" rel="external">简易云存储系统传输、认证单元测试</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/23/cloud-storage-system-6/" target="_blank" rel="external">简易云存储系统服务器逻辑实现</a></p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/19/cloud-storage-system-5/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/19/cloud-storage-system-5/" target="_blank" rel="external">http://blog.forec.cn/2016/11/19/cloud-storage-system-5/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
@@ -266,7 +266,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/19/cloud-storage-system-5/" data-id="civyrz1st005kb4ewzndlf9to" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/19/cloud-storage-system-5/" data-id="civytkojr005k18ewd377gcku" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
