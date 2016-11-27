@@ -20,7 +20,7 @@ Crypto Mode For English Version Is HereIndex For English Version Is Here
 密文
 密文类 API 请求的前缀为 http://api.forec.cn/crypto，你可以使用 GET 或 POST 方式传递数据。
 此模式目前可以提供如下类">
-<meta property="og:updated_time" content="2016-11-27T11:21:26.834Z">
+<meta property="og:updated_time" content="2016-11-27T14:26:42.308Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="API 服务 - 密文模式">
 <meta name="twitter:description" content="此页面是 密文模式 对应的 API 说明，你可以查看 索引 来寻找需要的 API。
@@ -174,6 +174,13 @@ Crypto Mode For English Version Is HereIndex For English Version Is Here
 <li>密文类 API 请求的前缀为 <code>http://api.forec.cn/crypto</code>，你可以使用 GET 或 POST 方式传递数据。</li>
 <li>此模式目前可以提供如下类型密文格式：<ul>
 <li>md5</li>
+<li>sha1</li>
+<li>sha224</li>
+<li>sha256</li>
+<li>sha384</li>
+<li>sha512</li>
+<li>sha512_224</li>
+<li>sha512_256</li>
 </ul>
 </li>
 <li>服务器将对针对你的请求返回 JSON 格式的数据，包含两个字段：<code>Code</code> 说明了你的请求是否合法以及返回值是否正确，<code>Result</code> 字段为服务器针对你的数据返回的加密/解密结果。其中 <code>Code</code> 可为如下四种指令字：<ul>
@@ -195,20 +202,36 @@ Crypto Mode For English Version Is HereIndex For English Version Is Here
 <h3 id="MD5-格式"><a href="#MD5-格式" class="headerlink" title="MD5 格式"></a>MD5 格式</h3><ul>
 <li>你需要指定 <code>method</code> 类型为 <code>md5</code> 或 <code>MD5</code>。因为 MD5 无法逆向求解，因此此格式不支持 <code>cipher</code> 字段，如果你指定了该字段，服务器会自动忽略。</li>
 <li>MD5 格式有两个可选字段：<ul>
-<li><code>bits=结果长度</code>：指定返回结果的长度，默认为 32 字节。你可以将其指定为 16。如果你将此字段设定为 16 和 32 以外的数值或非法格式，服务器将默认长度为 32</li>
-<li><code>format=大小写</code>：此字段可以为 <code>U</code> 或 <code>L</code>。默认返回结果中的字母为大写，你可以将此字段设为 <code>L</code> 来获得小写格式。如果你将此字段设为 <code>L</code> 和 <code>U</code> 以外的任何值，服务器将默认使用大写格式</li>
+<li><code>bits=结果长度</code>：指定返回结果的长度，默认为 32 字节。你可以将其指定为 16。如果你将此字段设定为 16 和 32 以外的数值或非法格式，服务器将默认长度为 32。</li>
+<li><code>format=大小写</code>：此字段可以为 <code>U</code> 或 <code>L</code>。默认返回结果中的字母为大写，你可以将此字段设为 <code>L</code> 来获得小写格式。如果你将此字段设为 <code>L</code> 和 <code>U</code> 以外的任何值，服务器将默认使用大写格式。</li>
 </ul>
 </li>
+<li>样例：</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; wget http://api.forec.cn/crypto?method=md5&amp;plain=<span class="built_in">test</span></span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">300</span>,<span class="string">"result"</span>:<span class="string">"098F6BCD4621D373CADE4E832627B4F6"</span>&#125;</span><br><span class="line">&gt; wget http://api.forec.cn/crypto?method=md5&amp;plain=<span class="built_in">test</span>&amp;format=L</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">300</span>,<span class="string">"result"</span>:<span class="string">"098f6bcd4621d373cade4e832627b4f6"</span>&#125;</span><br><span class="line">&gt; wget http://api.forec.cn/crypto?method=md5&amp;plain=<span class="built_in">test</span>&amp;bits=<span class="number">16</span>&amp;format=L</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">300</span>,<span class="string">"result"</span>:<span class="string">"4621d373cade4e83"</span>&#125;</span><br></pre></td></tr></table></figure>
-
+<h3 id="SHA-系列格式"><a href="#SHA-系列格式" class="headerlink" title="SHA 系列格式"></a>SHA 系列格式</h3><ul>
+<li>你需要指定 <code>method</code> 类型为 <code>sha*</code> 或 <code>SHA*</code>，这里的 <code>*</code> 是 SHA 格式的版本。因为 SHA 无法逆向求解，因此此格式不支持 <code>cipher</code> 字段，如果你指定了该字段，服务器会自动忽略。</li>
+<li>可使用的格式有：<ul>
+<li><code>method=sha1</code></li>
+<li><code>method=sha224</code></li>
+<li><code>method=sha256</code></li>
+<li><code>method=sha384</code></li>
+<li><code>method=sha512</code></li>
+<li><code>method=sha512_224</code></li>
+<li><code>method=sha512_256</code></li>
+</ul>
+</li>
+<li>SHA 类型有一个可选字段：<code>format=大小写</code>，此字段可以为 <code>U</code> 或 <code>L</code>。默认返回结果中的字母为大写，你可以将此字段设为 <code>L</code> 来获得小写格式。如果你将此字段设为 <code>L</code> 和 <code>U</code> 以外的任何值，服务器将默认使用大写格式。</li>
+<li>样例：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&gt; wget http://api.forec.cn/crypto?method=sha1&amp;plain=testthismessage&amp;format=L</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">300</span>,<span class="string">"result"</span>:<span class="string">"fa715c9065385cc3acdeb93a7b66583fdf06a5b6"</span>&#125;</span><br><span class="line">&gt; wget http://api.forec.cn/crypto?method=sha224&amp;plain=testthismessage&amp;format=L</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">300</span>,<span class="string">"result"</span>:<span class="string">"a08d72e16ab5b7f92eb09c35fa351778ca2dbfe5faa9b5088d8ef421"</span>&#125;</span><br><span class="line">&gt; wget http://api.forec.cn/crypto?method=sha256&amp;plain=testthismessage&amp;format=L</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">300</span>,<span class="string">"result"</span>:<span class="string">"dca92fb06a35f32078ff400c7bb33f8994ba4b2792d12eb2de4507096ae80b08"</span>&#125;</span><br><span class="line">&gt; wget http://api.forec.cn/crypto?method=sha384&amp;plain=testthismessage&amp;format=L</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">300</span>,<span class="string">"result"</span>:<span class="string">"00924267b607f6fac3de0174a32af14bb420f85b65c8fb4c1</span><br><span class="line">    3801f337bab6682d5dbbd1d5bde1d6842bcdff01ec15117"</span>&#125;</span><br><span class="line">&gt; wget http://api.forec.cn/crypto?method=sha512&amp;plain=testthismessage&amp;format=L</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">300</span>,<span class="string">"result"</span>:<span class="string">"90d8971c2b70b32dd24e04f3e114f5268bc10f9621df4960c</span><br><span class="line">    ccc0e3bdc5d74c1e631a1110fabe24cb65d249e17b9119b319e2e2600a6a39987e576c5d86e8dde"</span>&#125;</span><br><span class="line">&gt; wget http://api.forec.cn/crypto?method=sha512_224&amp;plain=testthismessage&amp;format=L</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">300</span>,<span class="string">"result"</span>:<span class="string">"b2d961fa6d7f718ee8336ccbd3d60c030128dc2bf9edb8da92afdbb1"</span>&#125;</span><br><span class="line">&gt; wget http://api.forec.cn/crypto?method=sha512_256&amp;plain=testthismessage&amp;format=L</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">300</span>,<span class="string">"result"</span>:<span class="string">"993e73b7f67bb26cd796833ce5fa21c35b1e55e4b763d6e7982f33cf0fcac593"</span>&#125;</span><br></pre></td></tr></table></figure>
         </div>
         <footer class="article-footer">
             
 
 
 
-    <a data-url="http://forec.github.io/apis/crypto.html" data-id="ciw0k3e6n000c3cew8kk4risu" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/apis/crypto.html" data-id="ciw0v287t000dpcewdhq1ki80" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
