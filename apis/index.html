@@ -8,23 +8,32 @@
     
     <meta name="description" content="此页面是对我个人网站（http://forec.cn）提供的在线 API 所做的说明，所有 API 和服务器的源码托管在我的 GitHub 仓库上。API 请求的前缀均为 http://api.forec.cn。
 English Version Is Here
-压缩
-压缩类 API 请求的前缀为 http://api.forec.cn/compress，你可以使用 GET 或 POST 方式传递数">
+导航
+压缩模式
+密文模式
+
+功能正在更新中…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="个人网站 API 服务">
 <meta property="og:url" content="http://forec.github.io/apis/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="此页面是对我个人网站（http://forec.cn）提供的在线 API 所做的说明，所有 API 和服务器的源码托管在我的 GitHub 仓库上。API 请求的前缀均为 http://api.forec.cn。
 English Version Is Here
-压缩
-压缩类 API 请求的前缀为 http://api.forec.cn/compress，你可以使用 GET 或 POST 方式传递数">
-<meta property="og:updated_time" content="2016-11-26T06:02:03.662Z">
+导航
+压缩模式
+密文模式
+
+功能正在更新中…">
+<meta property="og:updated_time" content="2016-11-27T10:58:02.960Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="个人网站 API 服务">
 <meta name="twitter:description" content="此页面是对我个人网站（http://forec.cn）提供的在线 API 所做的说明，所有 API 和服务器的源码托管在我的 GitHub 仓库上。API 请求的前缀均为 http://api.forec.cn。
 English Version Is Here
-压缩
-压缩类 API 请求的前缀为 http://api.forec.cn/compress，你可以使用 GET 或 POST 方式传递数">
+导航
+压缩模式
+密文模式
+
+功能正在更新中…">
     
 
     
@@ -167,31 +176,9 @@ English Version Is Here
         <div class="article-entry" itemprop="articleBody">
             <p>此页面是对我个人网站（<a href="http://forec.cn" target="_blank" rel="external">http://forec.cn</a>）提供的在线 API 所做的说明，所有 API 和服务器的源码托管在我的 <a href="https://github.com/Forec/web-api" target="_blank" rel="external">GitHub</a> 仓库上。API 请求的前缀均为 <code>http://api.forec.cn</code>。</p>
 <p><a href="https://github.com/Forec/web-api" target="_blank" rel="external">English Version Is Here</a></p>
-<h2 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h2><ul>
-<li>压缩类 API 请求的前缀为 <code>http://api.forec.cn/compress</code>，你可以使用 GET 或 POST 方式传递数据。</li>
-<li>此模式目前可以提供如下类型压缩格式：<ul>
-<li>gzip</li>
-</ul>
-</li>
-<li>服务器将对针对你的请求返回 JSON 格式的数据，包含两个字段：<code>Code</code> 说明了你的请求是否合法以及返回值是否正确，<code>Result</code> 字段为服务器针对你的数据返回的压缩/解压结果。其中 <code>Code</code> 可为如下四种指令字：<ul>
-<li><code>200</code>：成功解压，返回值正确</li>
-<li><code>300</code>：成功压缩，返回值正确</li>
-<li><code>400</code>：你的请求所包含的数据不合法</li>
-<li><code>500</code>：服务器内部错误</li>
-</ul>
-</li>
-<li>压缩类请求均需要指定两个字段：<ul>
-<li><code>method=type_of_compression</code>：指定 <code>method</code> 来告知服务器你要使用的压缩格式</li>
-<li><code>plain=text_you_want_to_compress</code>：此字段放置你要压缩的字节串</li>
-<li><code>cipher=text_you_want_to_decompress</code>：此字段放置你要解压的字节串</li>
-<li><code>plain</code> 和 <code>cipher</code> 字段不应同时被指定，否则服务器会默认忽视 <code>cipher</code> 字段</li>
-</ul>
-</li>
-<li>注意，因为服务器会自动使用 UTF-8 格式为 JSON 数据编码，故接收到的结果需要使用 UTF-8 格式解码。</li>
-</ul>
-<h4 id="GZIP-格式"><a href="#GZIP-格式" class="headerlink" title="GZIP 格式"></a>GZIP 格式</h4><ul>
-<li>你需要指定 <code>method</code> 类型为 <code>gzip</code> 或 <code>GZIP</code>。示例：<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; wget http://api.forec.cn/compress?method=gzip<span class="special">&amp;</span>plain=test</span><br><span class="line">&gt; <span class="special">&#123;</span>"code":300,"result":"<span class="command">\u</span>001f<span class="command">\ufffd</span><span class="command">\u</span>0008<span class="command">\u</span>0000<span class="command">\u</span>0000<span class="command">\tn</span></span><br><span class="line">    <span class="command">\ufffd</span><span class="command">\u</span>0000<span class="command">\ufffd*</span>I-.<span class="command">\u</span>0001<span class="command">\u</span>0000<span class="command">\u</span>0000<span class="command">\u</span>0000<span class="command">\ufffd</span><span class="command">\ufffd</span>"<span class="special">&#125;</span></span><br></pre></td></tr></table></figure>
-</li>
+<h2 id="导航"><a href="#导航" class="headerlink" title="导航"></a>导航</h2><ul>
+<li><a href="http://blog.forec.cn/apis/compression.html" target="_blank" rel="external">压缩模式</a></li>
+<li><a href="http://blog.forec.cn/apis/crypto.html" target="_blank" rel="external">密文模式</a></li>
 </ul>
 <p>功能正在更新中…</p>
 
@@ -201,7 +188,7 @@ English Version Is Here
 
 
 
-    <a data-url="http://forec.github.io/apis/index.html" data-id="civytkof0000b18ewedbayauh" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/apis/index.html" data-id="ciw0k3e6m000b3cew5vv9h0qf" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
