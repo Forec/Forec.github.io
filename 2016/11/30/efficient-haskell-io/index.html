@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Haskell 中的高效 I/O | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Haskell,OS,函数式编程" />
+    
+    <meta name="description" content="Haskell 提高 I/O 效率的技巧及资源控制。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Haskell 中的高效 I/O">
+<meta property="og:url" content="http://forec.github.io/2016/11/30/efficient-haskell-io/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="Haskell 提高 I/O 效率的技巧及资源控制。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/efficient-haskell-io.jpg">
+<meta property="og:updated_time" content="2016-11-30T15:39:16.182Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Haskell 中的高效 I/O">
+<meta name="twitter:description" content="Haskell 提高 I/O 效率的技巧及资源控制。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/apis/index.html">API</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Language/">Language</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-efficient-haskell-io" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        Haskell 中的高效 I/O
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2016/11/30/efficient-haskell-io/" class="article-date">
+    <time datetime="2016-11-30T14:54:30.000Z" itemprop="datePublished">2016-11-30</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Haskell/">Haskell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程/">函数式编程</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>Haskell 提高 I/O 效率的技巧及资源控制。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="二进制-I-O"><a href="#二进制-I-O" class="headerlink" title="二进制 I/O"></a>二进制 I/O</h2><ul>
+<li><code>Data.ByteString</code> ：定义严格求值的 ByteString 类型，将一串二进制数据或文本数据用一个数组表示。适合不在意内存限制并要求随机存取的情况。</li>
+<li><code>Data.ByteString.Lazy</code>：提供了 <code>ByteString</code> 的惰性类型，将一串数据分块组成列表，每块大小 64KB 。该方式惰性执行，对于体积较大的数据，惰性的 ByteString 类型会更好，其块大小针对现代 CPU L1缓存调整过，已处理过的、不会再被使用的流数据会被垃圾处理器快速回收。</li>
+<li>以上两种类型均提供了和 <code>String</code> 类型兼容的接口函数，但元素类型为字节 <code>Word8</code>，该类型在 <code>Data.Word</code> 模块中声明。</li>
+<li>可使用 <code>pack</code> 函数将字节数组装载为 <code>ByteString</code>：<code>L.pack :: [Word.Word8] -&gt; L.ByteString</code>。</li>
+<li><code>ByteString</code> 库提供了两个功能有限的 I/O 功能模块：<code>Data.ByteString.Char8</code> 和 <code>Data.ByteString.Lazy.Char8</code>，其中的函数仅适用于单字节大小的 Char 值（ASCII和某些欧洲字符集，大于 255 会被截断）。这两个模块提供了较多方便的函数，如 <code>readInt</code>、<code>split</code> 等。</li>
+</ul>
+<h2 id="正则"><a href="#正则" class="headerlink" title="正则"></a>正则</h2><ul>
+<li>Haskell 的正则通过 <code>Text.Regex.Posix</code> 模块提供，其中 <code>=~</code> 操作符是正则表达式匹配函数。其参数和返回值都使用了类型类，第一个参数是要被匹配的文本，第二个参数是正则表达式，每个参数都可以用为 <code>String</code> 或者 <code>ByteString</code> 类型。其返回值是多态的，但文本匹配的结果必须和被匹配的字符串一致，我们可以将 <code>String</code> 和 <code>ByteString</code> 组合，但结果类型必须和被匹配字符串一样。正则表达式可以使 <code>String</code> 或者 <code>ByteString</code>，没有限制。根据返回类型签名不同，返回结果也有区别：<ul>
+<li><code>Bool</code>：字符串和正则式是否匹配</li>
+<li><code>Int</code>：正则式在字符串中成功匹配的次数</li>
+<li><code>(Int, Int)</code>：格式为（首次匹配在字符串中的偏移量，首次匹配结果的长度），偏移量为 -1 时表示字符串和正则式不匹配</li>
+<li><code>[(Int, Int)]</code>：得到所有匹配子串的（偏移量，匹配长度），列表为空代表无匹配</li>
+<li><code>String</code>：得到第一个匹配的子串，或者无匹配的空字符串</li>
+<li><code>[[String]]</code>：返回由所有匹配的字符串组成的列表</li>
+<li><code>(String, String, String)</code>：匹配成功时为（首次匹配之前的部分，首次匹配的子串，首次匹配之后的部分），匹配失败时为（整个字符串，””,””）</li>
+<li><code>(String, String, String, [String])</code>：前三个元素和三元组相同，第四个元素是包含了模式中所有分组的列表</li>
+</ul>
+</li>
+<li>正则函数可配合其他函数如 <code>getAllTextMatchs</code> 来获取更多结果：</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">ghci</span>&gt; (<span class="string">"foo buot"</span> =~ <span class="string">"(oo|uo)"</span>) :: [<span class="type">String</span>]</span><br><span class="line">[<span class="string">"oo"</span>, <span class="string">"uo"</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="文件系统路径"><a href="#文件系统路径" class="headerlink" title="文件系统路径"></a>文件系统路径</h2><ul>
+<li>Haskell 的文件系统处理函数主要由 <code>System.Directory</code> 提供，如 <code>doesDirectoryExist</code>、<code>doesFileExist</code>、<code>getCurrentDirectory</code>、<code>getDirectoryContents</code> 等。</li>
+<li><code>System.FilePath</code> 主要处理文件路径，由两个模块构成：<code>System.FilePath.Posix</code> 和 <code>System.FilePath.Windows</code>，二者接口完全相同，适配平台不同。包含函数如：<ul>
+<li><code>getSearchPath</code>：获得 $PATH 环境变量内容</li>
+<li><code>&lt;/&gt;</code>：将两个字符串用 <code>/</code> 合为一个路径</li>
+<li><code>&lt;.&gt;</code>：将后缀名结合，等价于 <code>addExtension</code></li>
+<li><code>-&lt;.&gt;</code>：去掉后缀名并添加一个新的后缀名，等价于 <code>replaceExtension</code></li>
+<li><code>dropTrailingPathSeparator</code>：去掉文件路径后的分隔符，如 <code>/</code></li>
+<li><code>splitFileName</code>：返回将路径切割为父级目录和文件名的二元组</li>
+</ul>
+</li>
+</ul>
+<h2 id="常见-I-O-异常处理"><a href="#常见-I-O-异常处理" class="headerlink" title="常见 I/O 异常处理"></a>常见 I/O 异常处理</h2><ul>
+<li>异常处理的几个常用函数包含在 <code>Control.Exception</code> 中。</li>
+<li><code>handle :: (Exception -&gt; IO a) -&gt; IO a -&gt; IO a</code> 接收的第一个参数是一个函数，该函数接受一个异常值并且返回 IO Monad，第二个参数是可能抛出异常的 IO Monad。当第二个 IO Monad 执行出现异常时，作为 <code>handle</code> 第一个参数的函数会接收产生的异常值，并返回自己的 IO Monad；当第二个参数执行无异常时， <code>handle</code> 返回值与第二个参数相同。</li>
+<li>在 <code>handle</code> 的使用中可使用 <code>const</code> 忽略传入的异常。const 接收两个参数，无论第二个参数是什么都返回第一个参数：</li>
+</ul>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">handle (<span class="keyword">const</span> (<span class="keyword">return</span> [])) (code_may_cause_exception)</span><br><span class="line"><span class="keyword">const</span> (<span class="keyword">return</span> []) :: Monad <span class="keyword">m</span> =&gt; b -&gt; <span class="keyword">m</span> [t]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>也可以使用 <code>finally</code> 捕获异常，其类型签名为 <code>finally:: IO a-&gt; IO b -&gt; IO a</code>，无论第一个 IO Monad 成功或失败，第二个 IO Monad 都会执行。</li>
+<li><code>bracket</code> 可以看作 Haskell 中的 <code>defer</code>：如果你试图获取一个资源，对该资源做一些操作，并想在操作结束后释放这个资源，则可以使用 <code>bracket</code> 来保证最终资源的释放。<br><code>bracket</code> 接收三个参数，第一个参数用于资源的获取，它的返回值会传给第二、三个参数，而第二个参数对应资源的释放，第三个参数为对资源的操作，它的返回值也是整个 <code>bracket</code> 函数的返回值。例如：</li>
+</ul>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bracket :: IO a<span class="function"> -&gt;</span> <span class="function"><span class="params">(a -&gt; IO b)</span> -&gt;</span> <span class="function"><span class="params">(a -&gt; IO c)</span> -&gt;</span> IO c</span><br><span class="line">bracket</span><br><span class="line">  (openFile <span class="string">"filename"</span> ReadMode)</span><br><span class="line">  (hClose)</span><br><span class="line">  (<span class="string">\fileHandle</span> <span class="function">-&gt;</span> <span class="keyword">do</span> &#123; ... &#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>当不需要获取第一个参数的返回值时，或这几个操作之间并无关系，使用 <code>bracket_ :: IO a -&gt; IO b -&gt; IO c -&gt; IO c</code> 替代 <code>bracket</code>。</li>
+<li>如果仅希望释放操作在执行操作出现异常时调用，则使用 <code>bracketOnError:: IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c</code>。</li>
+</ul>
+<hr>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/30/efficient-haskell-io/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/30/efficient-haskell-io/" target="_blank" rel="external">http://blog.forec.cn/2016/11/30/efficient-haskell-io/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2016/11/30/efficient-haskell-io/" data-id="ciw53ees1004o28ew065eok2y" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2016/11/30/efficient-haskell-io/" data-title="Haskell 中的高效 I/O" data-url="http://forec.github.io/2016/11/30/efficient-haskell-io/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2016/11/24/os-concepts-7/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">操作系统（七）：死锁</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/30/efficient-haskell-io/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/efficient-haskell-io.jpg)" alt="Haskell 中的高效 I/O" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
+                            <p class="item-title"><a href="/2016/11/30/efficient-haskell-io/" class="title">Haskell 中的高效 I/O</a></p>
+                            <p class="item-date"><time datetime="2016-11-30T14:54:30.000Z" itemprop="datePublished">2016-11-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-7.jpg)" alt="操作系统（七）：死锁" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-7/" class="title">操作系统（七）：死锁</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T14:16:22.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-6/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-6-r.jpg)" alt="操作系统（六）：管程（Monitor）" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-6/" class="title">操作系统（六）：管程（Monitor）</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T12:47:03.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-5/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-5-r.jpg)" alt="操作系统（五）：进程同步" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-5/" class="title">操作系统（五）：进程同步</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T10:41:33.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-4/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-4.jpg)" alt="操作系统（四）：进程互斥" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-4/" class="title">操作系统（四）：进程互斥</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T07:29:44.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">13</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 14px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 15px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>京ICP备16060806号-1 &copy; 2016 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>
