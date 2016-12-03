@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-1.jpg">
-<meta property="og:updated_time" content="2016-11-27T02:17:09.466Z">
+<meta property="og:updated_time" content="2016-12-03T08:43:40.374Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简易云存储系统认证、传输协议设计">
 <meta name="twitter:description" content="分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。">
@@ -215,7 +215,7 @@
 <h2 id="被动监听推送消息连接过程"><a href="#被动监听推送消息连接过程" class="headerlink" title="被动监听推送消息连接过程"></a>被动监听推送消息连接过程</h2><p>此连接和上述 “非固定活动连接建立过程” 类似，区别在于，该连接在整个客户端存活期间均得以保持。为了将此连接和用于传输长数据流的数据区分，服务器将会把用户登录后申请的第一个 “非固定活动连接”（即密码字段填写 token1 的连接）视作客户端用来监听推送消息的连接，而之后的连接均视作用于传输长数据流的连接。</p>
 <h1 id="执行指令协议"><a href="#执行指令协议" class="headerlink" title="执行指令协议"></a>执行指令协议</h1><p>下面考虑客户端向服务器发送的指令格式，根据指令执行所需要传输的数据流长短，将指令分为端数据流传输指令和长数据流传输指令。其中长数据流传输指令包括文件的上传、下载以及更新。为了简化客户端的实现（正式客户端使用 C++ 编写），指令的传输使用纯文本代替了 JSON 格式。下面用 <code>SEP</code> 表示指令间各个选项的分隔符。<code>SEP</code> 是项目中配置文件可以指定的一个字符串。</p>
 <h2 id="短数据流传输指令"><a href="#短数据流传输指令" class="headerlink" title="短数据流传输指令"></a>短数据流传输指令</h2><ul>
-<li>创建：在云存储空间中创建一个新的文件（夹），初始大小为 0。如果该文件是文本类型，则用户可在线编辑该文件并保存。对于创建操作，需要指定创建的位置、创建的文件（夹）的名称、要创建的是文件还是文件夹。即：<code>TOUCH &lt;SEP&gt; PATH &lt;SEP&gt; NAME &lt;SEP&gt; ISDIR</code>，<code>ISDIR</code>为 0 时创建文件，为 1 时创建文件夹。<code>PATH</code>为绝对路径，如 <code>/home/forec/work/</code>。</li>
+<li>创建：在云存储空间中创建一个新的文件（夹），初始大小为 0。如果该文件是文本类型，则用户可在线编辑该文件并保存。对于创建操作，需要指定创建的位置、创建的文件（夹）的名称、要创建的是文件还是文件夹。即：<code>TOUCH &lt;SEP&gt; NAME &lt;SEP&gt; PATH &lt;SEP&gt; ISDIR</code>，<code>ISDIR</code>为 0 时创建文件，为 1 时创建文件夹。<code>PATH</code>为绝对路径，如 <code>/home/forec/work/</code>。</li>
 <li>复制：将某个文件（夹）拷贝到一个新的位置，即：<code>CP &lt;SEP&gt; UID &lt;SEP&gt; NEWPATH</code>，其中 <code>UID</code> 为要复制的文件（夹）的 ID，以下 <code>UID</code> 均指此意，<code>NEWPATH</code> 为绝对路径。</li>
 <li>移动：将某个文件（夹）移动到一个新的位置，同时指定新的文件（夹）名，即：<code>MV &lt;SEP&gt; UID &lt;SEP&gt; NEWNAME &lt;SEP&gt; NEWPATH</code>，其中 <code>NEWPATH</code>为绝对路径。</li>
 <li>删除：删除某个文件（夹），若为文件夹，该目录下所有文件（夹）均被删除，即<code>RM &lt;SEP&gt; UID</code>。</li>
@@ -238,17 +238,18 @@
 </li>
 </ul>
 <h3 id="上传文件"><a href="#上传文件" class="headerlink" title="上传文件"></a>上传文件</h3><ul>
-<li>上传一个新的文件，即：<code>PUT &lt;SEP&gt; ISDIR &lt;SEP&gt; MD5 &lt;SEP&gt; FILENAME &lt;SEP&gt; PATH</code>。其中 <code>ISDIR</code> 表示是文件或文件夹，<code>MD5</code> 为客户端计算的文件的 MD5 值，若为文件夹则随意填写，<code>FILENAME</code> 为上传后在云存储中的文件名，<code>PATH</code> 为上传到云存储中的路径。</li>
+<li>上传一个新的文件，即：<code>PUT &lt;SEP&gt; UID &lt;SEP&gt; MD5</code>。其中 <code>MD5</code> 为客户端计算的文件的 MD5 值。</li>
 <li>服务器与客户端传输线程之间交互的过程：<ul>
-<li>服务器接收客户端发送的 GET 指令</li>
-<li>服务器向客户端发送标识码，若为成功（200），则开始传输；若为不需传送（300），则客户端停止发送文件并认为秒传成功；若为失败（400），则客户端提示错误</li>
+<li>客户端发送 TOUCH 指令创建空文件</li>
+<li>服务器接收客户端发送的 PUT 指令，向创建的空文件写入数据</li>
+<li>服务器向客户端发送标识码，上传成功（200）；开始传输（201）；传输出错（203）；指令不合法（300）；文件尚未创建（301）；md5不匹配（403）；服务器内部错误（500）</li>
 </ul>
 </li>
 </ul>
 <h3 id="更新文件"><a href="#更新文件" class="headerlink" title="更新文件"></a>更新文件</h3><ul>
 <li>更新一个已有的文件，即： <code>UPDATE &lt;SEP&gt; UID &lt;SEP&gt; MD5</code>。</li>
 <li>服务器与客户端传输线程之间交互过程：<ul>
-<li>服务器接收客户端发送的 UPDATE 指令</li>
+<li>服务器接收客户端发送的 PUT 指令，重新向原文件写入数据</li>
 <li>若云存储中存在新的 MD5 值，则向客户端发送不需传送（300），客户端停止发送并认为秒传成功</li>
 <li>若云存储中不存在新的 MD5 值，则向客户端发送开始传送（200），传送结束后，修改原 UID 指向的文件块</li>
 <li>若发现 UPDATE 指令不合法，则返回错误码</li>
@@ -260,6 +261,11 @@
 <li>文件下载时，客户端仅需发送 UID，服务器根据 UID 指向的记录，为客户端安排下载策略</li>
 <li>文件创建/移动/复制时，若目标路径不存在，服务器应向数据库中添加缺失的路径</li>
 </ul>
+<h2 id="大文件-MD5-值计算"><a href="#大文件-MD5-值计算" class="headerlink" title="大文件 MD5 值计算"></a>大文件 MD5 值计算</h2><ul>
+<li>将文件按 4M 分块，最后一块不足 4M 也算一块</li>
+<li>每块计算 MD5 值，将分别计算出的 MD5 值相连</li>
+<li>将相连的 MD5 值再计算一次 MD5 值</li>
+</ul>
 <hr>
 <p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">简易云存储系统设计与实现</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/12/cloud-storage-system-0/" target="_blank" rel="external">简易云存储系统项目简介</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/14/cloud-storage-system-2/" target="_blank" rel="external">简易云存储系统传输协议实现和封装</a></p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/13/cloud-storage-system-1/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/13/cloud-storage-system-1/" target="_blank" rel="external">http://blog.forec.cn/2016/11/13/cloud-storage-system-1/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
@@ -270,7 +276,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/13/cloud-storage-system-1/" data-id="ciw53eesw006c28ew3g72xx1w" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/13/cloud-storage-system-1/" data-id="ciw9akmeg006hboewy52p08tt" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -473,6 +479,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2016/12/03/cloud-storage-system-7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-7.png)" alt="简易云存储系统用户代理" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/12/03/cloud-storage-system-7/" class="title">简易云存储系统用户代理</a></p>
+                            <p class="item-date"><time datetime="2016-12-03T13:44:07.000Z" itemprop="datePublished">2016-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/11/30/efficient-haskell-io/" class="thumbnail">
     
     
@@ -550,26 +576,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/24/os-concepts-4/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-4.jpg)" alt="操作系统（四）：进程互斥" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
-                            <p class="item-title"><a href="/2016/11/24/os-concepts-4/" class="title">操作系统（四）：进程互斥</a></p>
-                            <p class="item-date"><time datetime="2016-11-24T07:29:44.000Z" itemprop="datePublished">2016-11-24</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -579,7 +585,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">13</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">13</span></li></ul>
         </div>
     </div>
 
@@ -589,7 +595,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 14px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 15px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 14px;">计组与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 11.82px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.36px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 10.91px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.64px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 12.73px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19.09px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10.91px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15.45px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.55px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 10.91px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 10.91px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.27px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 13.64px;">计组与体系结构</a>
         </div>
     </div>
 
