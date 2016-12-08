@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-1.jpg">
-<meta property="og:updated_time" content="2016-12-03T08:43:40.374Z">
+<meta property="og:updated_time" content="2016-12-08T15:35:51.109Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简易云存储系统认证、传输协议设计">
 <meta name="twitter:description" content="分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。">
@@ -238,7 +238,7 @@
 </li>
 </ul>
 <h3 id="上传文件"><a href="#上传文件" class="headerlink" title="上传文件"></a>上传文件</h3><ul>
-<li>上传一个新的文件，即：<code>PUT &lt;SEP&gt; UID &lt;SEP&gt; MD5</code>。其中 <code>MD5</code> 为客户端计算的文件的 MD5 值。</li>
+<li>上传一个新的文件，即：<code>PUT &lt;SEP&gt; UID &lt;SEP&gt; SIZE &lt;SEP&gt; MD5</code>。其中 <code>MD5</code> 为客户端计算的文件的 MD5 值， <code>SIZE</code> 为要上传的文件大小。</li>
 <li>服务器与客户端传输线程之间交互的过程：<ul>
 <li>客户端发送 TOUCH 指令创建空文件</li>
 <li>服务器接收客户端发送的 PUT 指令，向创建的空文件写入数据</li>
@@ -276,7 +276,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/13/cloud-storage-system-1/" data-id="ciw9akmeg006hboewy52p08tt" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/13/cloud-storage-system-1/" data-id="ciwgj0nj6006hj8ewypsr6128" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
