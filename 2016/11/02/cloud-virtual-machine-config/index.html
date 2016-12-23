@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="CVM 上的操作记录。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/vps.jpg">
-<meta property="og:updated_time" content="2016-11-05T09:51:52.790Z">
+<meta property="og:updated_time" content="2016-12-16T07:45:56.667Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CVM 操作记录">
 <meta name="twitter:description" content="CVM 上的操作记录。">
@@ -186,10 +186,10 @@
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">NGROK_DOMAIN=<span class="string">"cross.forec.cn"</span></span><br><span class="line">openssl genrsa -out base.key <span class="number">2048</span></span><br><span class="line">openssl req -new -x509 -nodes -key base.key -days <span class="number">10000</span> -subj <span class="string">"/CN=<span class="variable">$NGROK_DOMAIN</span>"</span> -out base.pem</span><br><span class="line">openssl genrsa -out server.key <span class="number">2048</span></span><br><span class="line">openssl req -new -key server.key -subj <span class="string">"/CN=<span class="variable">$NGROK_DOMAIN</span>"</span> -out server.csr</span><br><span class="line">openssl x509 -req -in server.csr -CA base.pem -CAkey base.key -CAcreateserial -days <span class="number">10000</span> -out server.crt</span><br><span class="line">cp base.pem assets/client/tls/ngrokroot.crt</span><br></pre></td></tr></table></figure>
 <ul>
-<li>编译：<code>sudo make release-server release-client</code>，便宜结束后 <code>bin</code> 目录下会有 <code>ngrokd</code> 和 <code>ngrok</code> 两个可执行文件，对应服务器和客户端。  </li>
+<li>编译：<code>sudo make release-server release-client</code>，编译结束后 <code>bin</code> 目录下会有 <code>ngrokd</code> 和 <code>ngrok</code> 两个可执行文件，对应服务器和客户端。  </li>
 <li>不同系统使用的客户端需要重新编译  <ul>
-<li>windows: <code>sudo GOOS=windows GOARCH=amd64 CGO_ENABLED=0 make release-client make release-client</code>  </li>
-<li>arm: <code>sudo GOOS=linux GOARCH=arm CGO_ENABLED=0 make release-client make release-client</code>  </li>
+<li>windows: <code>sudo GOOS=windows GOARCH=amd64 CGO_ENABLED=0 make release-client</code>  </li>
+<li>arm: <code>sudo GOOS=linux GOARCH=arm CGO_ENABLED=0 make release-client</code>  </li>
 <li>mac: <code>sudo GOOS=darwin GOARCH=amd64 make release-client</code>  </li>
 </ul>
 </li>
@@ -264,7 +264,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/" data-id="ciwgj0nij005hj8ewtz4suqqt" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/" data-id="cix22v0op006mugewlwrb8lym" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -435,11 +435,11 @@
         
 <nav id="article-nav">
     
-        <a href="/2016/11/12/cloud-storage-system-0/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2016/11/12/zenith-cloud-0/" id="article-nav-newer" class="article-nav-link-wrap">
         <strong class="article-nav-caption">下一篇</strong>
         <p class="article-nav-title">
         
-            简易云存储系统项目简介
+            顶点云（应用）项目简介
         
         </p>
         <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
@@ -467,10 +467,10 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2016/12/03/cloud-storage-system-7/" class="thumbnail">
+                            <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-7.png)" alt="简易云存储系统用户代理" class="thumbnail-image"></span>
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-7.png)" alt="顶点云（应用）用户代理" class="thumbnail-image"></span>
     
     
 </a>
@@ -479,7 +479,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/12/03/cloud-storage-system-7/" class="title">简易云存储系统用户代理</a></p>
+                            <p class="item-title"><a href="/2016/12/03/zenith-cloud-7/" class="title">顶点云（应用）用户代理</a></p>
                             <p class="item-date"><time datetime="2016-12-03T13:44:07.000Z" itemprop="datePublished">2016-12-03</time></p>
                         </div>
                     </li>

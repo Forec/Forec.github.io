@@ -3,43 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>专栏 - 简易云存储系统设计与实现 | Forec&#39;s Notes</title>
+    <title>专栏 - 顶点云设计与实现 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="description" content="此专栏是我在编写一个简单云存储系统时，随进度发布的指南，详述了这个项目的功能设计、协议设计、具体实现等。项目托管在 GitHub 上：https://github.com/Forec/cloud-storage。项目将在 2016 年 12 月中旬编写完成，专栏将与项目更新保持同步。
-
-项目简介
-协议设计
-传输协议实现和封装
-认证基础模块实现
-传输、认证单元测试
-用户 ADT 设计
-服务器逻辑实现">
+    <meta name="description" content="此专栏是我对顶点云从设计到编写过程的总结，详述了顶点云的需求分析、协议设计、具体实现等。顶点云的源码（Web 服务器和应用程序）托管在 GitHub 上，顶点云的文档可在 此处 查看。期末时间较紧，此专栏将推迟到寒假一起更新，包含内容大致如当前目录所示。
+为了区分顶点云应用程序服务器和顶点云 Web 服务器，介绍顶点云应用程序服务器的文章名称均以 顶点云（应用） 作为前缀，而介绍顶点云 Web 服">
 <meta property="og:type" content="website">
-<meta property="og:title" content="专栏 - 简易云存储系统设计与实现">
-<meta property="og:url" content="http://forec.github.io/columns/cloud-storage.html">
+<meta property="og:title" content="专栏 - 顶点云设计与实现">
+<meta property="og:url" content="http://forec.github.io/columns/zenith-cloud.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="此专栏是我在编写一个简单云存储系统时，随进度发布的指南，详述了这个项目的功能设计、协议设计、具体实现等。项目托管在 GitHub 上：https://github.com/Forec/cloud-storage。项目将在 2016 年 12 月中旬编写完成，专栏将与项目更新保持同步。
-
-项目简介
-协议设计
-传输协议实现和封装
-认证基础模块实现
-传输、认证单元测试
-用户 ADT 设计
-服务器逻辑实现">
-<meta property="og:updated_time" content="2016-12-03T13:43:08.868Z">
+<meta property="og:description" content="此专栏是我对顶点云从设计到编写过程的总结，详述了顶点云的需求分析、协议设计、具体实现等。顶点云的源码（Web 服务器和应用程序）托管在 GitHub 上，顶点云的文档可在 此处 查看。期末时间较紧，此专栏将推迟到寒假一起更新，包含内容大致如当前目录所示。
+为了区分顶点云应用程序服务器和顶点云 Web 服务器，介绍顶点云应用程序服务器的文章名称均以 顶点云（应用） 作为前缀，而介绍顶点云 Web 服">
+<meta property="og:updated_time" content="2016-12-23T17:34:40.465Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="专栏 - 简易云存储系统设计与实现">
-<meta name="twitter:description" content="此专栏是我在编写一个简单云存储系统时，随进度发布的指南，详述了这个项目的功能设计、协议设计、具体实现等。项目托管在 GitHub 上：https://github.com/Forec/cloud-storage。项目将在 2016 年 12 月中旬编写完成，专栏将与项目更新保持同步。
-
-项目简介
-协议设计
-传输协议实现和封装
-认证基础模块实现
-传输、认证单元测试
-用户 ADT 设计
-服务器逻辑实现">
+<meta name="twitter:title" content="专栏 - 顶点云设计与实现">
+<meta name="twitter:description" content="此专栏是我对顶点云从设计到编写过程的总结，详述了顶点云的需求分析、协议设计、具体实现等。顶点云的源码（Web 服务器和应用程序）托管在 GitHub 上，顶点云的文档可在 此处 查看。期末时间较紧，此专栏将推迟到寒假一起更新，包含内容大致如当前目录所示。
+为了区分顶点云应用程序服务器和顶点云 Web 服务器，介绍顶点云应用程序服务器的文章名称均以 顶点云（应用） 作为前缀，而介绍顶点云 Web 服">
     
 
     
@@ -160,7 +139,7 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <em class="page-title-link" data-url="/columns/cloud-storage.html">专栏 - 简易云存储系统设计与实现</em>
+    <em class="page-title-link" data-url="/columns/zenith-cloud.html">专栏 - 顶点云设计与实现</em>
     </h1>
 </div>
                         <div class="main-body-content">
@@ -171,7 +150,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-        专栏 - 简易云存储系统设计与实现
+        专栏 - 顶点云设计与实现
         </h1>
     
 
@@ -180,16 +159,32 @@
         
         
         <div class="article-entry" itemprop="articleBody">
-            <p>此专栏是我在编写一个简单云存储系统时，随进度发布的指南，详述了这个项目的功能设计、协议设计、具体实现等。项目托管在 GitHub 上：<a href="https://github.com/Forec/cloud-storage" target="_blank" rel="external">https://github.com/Forec/cloud-storage</a>。项目将在 2016 年 12 月中旬编写完成，专栏将与项目更新保持同步。</p>
-<ul>
-<li><a href="http://blog.forec.cn/2016/11/12/cloud-storage-system-0/" target="_blank" rel="external">项目简介</a></li>
-<li><a href="http://blog.forec.cn/2016/11/13/cloud-storage-system-1/" target="_blank" rel="external">协议设计</a></li>
-<li><a href="http://blog.forec.cn/2016/11/14/cloud-storage-system-2/" target="_blank" rel="external">传输协议实现和封装</a></li>
-<li><a href="http://blog.forec.cn/2016/11/15/cloud-storage-system-3/" target="_blank" rel="external">认证基础模块实现</a></li>
-<li><a href="http://blog.forec.cn/2016/11/16/cloud-storage-system-4/" target="_blank" rel="external">传输、认证单元测试</a></li>
-<li><a href="http://blog.forec.cn/2016/11/19/cloud-storage-system-5/" target="_blank" rel="external">用户 ADT 设计</a></li>
-<li><a href="http://blog.forec.cn/2016/11/23/cloud-storage-system-6/" target="_blank" rel="external">服务器逻辑实现</a></li>
-<li><a href="http://blog.forec.cn/2016/12/03/cloud-storage-system-7/" target="_blank" rel="external">用户代理</a>   </li>
+            <p>此专栏是我对顶点云从设计到编写过程的总结，详述了顶点云的需求分析、协议设计、具体实现等。顶点云的源码（Web 服务器和应用程序）托管在 <a href="https://github.com/Forec/zenith-cloud" target="_blank" rel="external">GitHub</a> 上，顶点云的文档可在 <a href="http://zenith-cloud.readthedocs.io/zh_CN/latest/" target="_blank" rel="external">此处</a> 查看。期末时间较紧，此专栏将推迟到寒假一起更新，包含内容大致如当前目录所示。</p>
+<p>为了区分顶点云应用程序服务器和顶点云 Web 服务器，介绍顶点云应用程序服务器的文章名称均以 <code>顶点云（应用）</code> 作为前缀，而介绍顶点云 Web 服务器的文章名称则均以 <code>顶点云（Web）</code> 作为前缀。</p>
+<h2 id="应用程序服务器"><a href="#应用程序服务器" class="headerlink" title="应用程序服务器"></a>应用程序服务器</h2><ul>
+<li><a href="http://blog.forec.cn/2016/11/12/zenith-cloud-0/" target="_blank" rel="external">项目简介</a></li>
+<li><a href="http://blog.forec.cn/2016/11/13/zenith-cloud-1/" target="_blank" rel="external">协议设计</a></li>
+<li><a href="http://blog.forec.cn/2016/11/14/zenith-cloud-2/" target="_blank" rel="external">传输协议实现和封装</a></li>
+<li><a href="http://blog.forec.cn/2016/11/15/zenith-cloud-3/" target="_blank" rel="external">认证基础模块实现</a></li>
+<li><a href="http://blog.forec.cn/2016/11/16/zenith-cloud-4/" target="_blank" rel="external">传输、认证单元测试</a></li>
+<li><a href="http://blog.forec.cn/2016/11/19/zenith-cloud-5/" target="_blank" rel="external">用户 ADT 设计</a></li>
+<li><a href="http://blog.forec.cn/2016/11/23/zenith-cloud-6/" target="_blank" rel="external">服务器逻辑实现</a></li>
+<li><a href="http://blog.forec.cn/2016/12/03/zenith-cloud-7/" target="_blank" rel="external">用户代理</a>   </li>
+<li><a href="#">用户代理细节实现</a></li>
+<li><a href="#">用户文件传输代理</a></li>
+<li><a href="#">文件上传</a></li>
+<li><a href="#">文件下载</a></li>
+</ul>
+<h2 id="Web-服务器"><a href="#Web-服务器" class="headerlink" title="Web 服务器"></a>Web 服务器</h2><ul>
+<li><a href="#">功能简介</a></li>
+<li><a href="#">基本框架</a></li>
+<li><a href="#">主页视图函数</a></li>
+<li><a href="#">云盘视图函数</a></li>
+<li><a href="#">文件操作视图函数</a></li>
+<li><a href="#">个人资料视图函数</a></li>
+<li><a href="#">文件下载</a></li>
+<li><a href="#">文件上传</a></li>
+<li><a href="#">其他</a></li>
 </ul>
 <p>此专栏正在持续更新中…</p>
 
@@ -199,7 +194,7 @@
 
 
 
-    <a data-url="http://forec.github.io/columns/cloud-storage.html" data-id="ciwgj0ne10007j8ew5ok5td6e" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/columns/zenith-cloud.html" data-id="cix233c8r00003gewkk90b3nt" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -334,10 +329,10 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2016/12/03/cloud-storage-system-7/" class="thumbnail">
+                            <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-7.png)" alt="简易云存储系统用户代理" class="thumbnail-image"></span>
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-7.png)" alt="顶点云（应用）用户代理" class="thumbnail-image"></span>
     
     
 </a>
@@ -346,7 +341,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/12/03/cloud-storage-system-7/" class="title">简易云存储系统用户代理</a></p>
+                            <p class="item-title"><a href="/2016/12/03/zenith-cloud-7/" class="title">顶点云（应用）用户代理</a></p>
                             <p class="item-date"><time datetime="2016-12-03T13:44:07.000Z" itemprop="datePublished">2016-12-03</time></p>
                         </div>
                     </li>

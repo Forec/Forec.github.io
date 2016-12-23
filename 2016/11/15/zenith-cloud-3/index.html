@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>简易云存储系统用户代理 | Forec&#39;s Notes</title>
+    <title>顶点云（应用）认证基础模块实现 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
         <meta name="keywords" content="Golang,云存储,线程" />
     
-    <meta name="description" content="设计用户代理，实现 DealWithRequests() 中的几种简单逻辑指令，如文件列表获取、文件拷贝、Fork操作等。">
+    <meta name="description" content="使用 Golang 实现此前设计的云存储系统传输、认证协议所需的基础模块。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="简易云存储系统用户代理">
-<meta property="og:url" content="http://forec.github.io/2016/12/03/cloud-storage-system-7/index.html">
+<meta property="og:title" content="顶点云（应用）认证基础模块实现">
+<meta property="og:url" content="http://forec.github.io/2016/11/15/zenith-cloud-3/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="设计用户代理，实现 DealWithRequests() 中的几种简单逻辑指令，如文件列表获取、文件拷贝、Fork操作等。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-7.png">
-<meta property="og:updated_time" content="2016-12-03T14:05:29.607Z">
+<meta property="og:description" content="使用 Golang 实现此前设计的云存储系统传输、认证协议所需的基础模块。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-3.jpg">
+<meta property="og:updated_time" content="2016-12-23T17:27:30.358Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="简易云存储系统用户代理">
-<meta name="twitter:description" content="设计用户代理，实现 DealWithRequests() 中的几种简单逻辑指令，如文件列表获取、文件拷贝、Fork操作等。">
+<meta name="twitter:title" content="顶点云（应用）认证基础模块实现">
+<meta name="twitter:description" content="使用 Golang 实现此前设计的云存储系统传输、认证协议所需的基础模块。">
     
 
     
@@ -143,14 +143,14 @@
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-cloud-storage-system-7" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-zenith-cloud-3" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        简易云存储系统用户代理
+        顶点云（应用）认证基础模块实现
         </h1>
     
 
@@ -158,8 +158,8 @@
         
         
             <div class="article-subtitle">
-                <a href="/2016/12/03/cloud-storage-system-7/" class="article-date">
-    <time datetime="2016-12-03T13:44:07.000Z" itemprop="datePublished">2016-12-03</time>
+                <a href="/2016/11/15/zenith-cloud-3/" class="article-date">
+    <time datetime="2016-11-15T05:09:47.000Z" itemprop="datePublished">2016-11-15</time>
 </a>
                 
     <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/">Golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/云存储/">云存储</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程/">线程</a></li></ul>
@@ -169,12 +169,49 @@
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>设计用户代理，实现 <code>DealWithRequests()</code> 中的几种简单逻辑指令，如文件列表获取、文件拷贝、Fork操作等。</p>
+<p>使用 Golang 实现<a href="http://blog.forec.cn/2016/11/13/zenith-cloud-1/" target="_blank" rel="external">此前</a>设计的云存储系统传输、认证协议所需的基础模块。</p>
 </blockquote>
 <a id="more"></a>
+<h1 id="实现-authenticate-包"><a href="#实现-authenticate-包" class="headerlink" title="实现 authenticate 包"></a>实现 authenticate 包</h1><p>根据<a href="http://blog.forec.cn/2016/11/12/zenith-cloud-0/" target="_blank" rel="external">项目介绍</a>中提出的需求，authenticate 包中应当提供函数实现以下功能：</p>
+<ul>
+<li>计算文件块的 MD5 值</li>
+<li>随机生成用于加密的 token，且可根据安全等级决定 token 长度</li>
+<li>基本的 AES CFB 加/解密接口</li>
+<li>基本的 Base64 编/解码接口</li>
+<li>int64 和字节流转换</li>
+</ul>
+<p>在工程目录下新建文件夹 <code>authenticate</code> ，在该目录下新建代码 <code>authenticate.go</code> ，以下将逐个实现上述功能。</p>
+<h2 id="MD5-值计算"><a href="#MD5-值计算" class="headerlink" title="MD5 值计算"></a>MD5 值计算</h2><ul>
+<li>Golang 的 <code>crypto</code> 包提供了一个 md5 计算方法，可以直接调用并包装。函数 <code>MD5(string) []byte</code> 接收一个字符串并返回该字符串计算出的 MD5 字节流：</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"crypto/md5"</span></span><br><span class="line">	<span class="string">"encoding/hex"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">func</span> MD5(text <span class="typename">string</span>) []<span class="typename">byte</span> &#123;</span><br><span class="line">	ctx := md5.New()</span><br><span class="line">	ctx.Write([]<span class="typename">byte</span>(text))</span><br><span class="line">	<span class="keyword">return</span> []<span class="typename">byte</span>(hex.EncodeToString(ctx.Sum(<span class="constant">nil</span>)))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Token-生成"><a href="#Token-生成" class="headerlink" title="Token 生成"></a>Token 生成</h2><ul>
+<li>token 的生成方式可以随意选择，这里计算一个随机字符串的 MD5 值作为 token。函数 <code>GenerateToken(level uint8)[]byte</code> 接收一个 uint8 类型的参数 <code>level</code>，该参数指定生成 token 的等级，当 <code>level</code> 为 1 或更低时，生成 16 字节的 token；当 <code>level</code> 为 2 时，生成 24 字节的 token；否则生成 32 字节。<code>GetRandomString(int) string</code> 接收一个正整数，生成参数指定长度的随机字串。</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"math/rand"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">func</span> GenerateToken(level <span class="typename">uint8</span>) []<span class="typename">byte</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> level &lt;= <span class="number">1</span> &#123; <span class="comment">// 128 bits, 16 bits token</span></span><br><span class="line">		<span class="keyword">return</span> MD5(GetRandomString(<span class="number">128</span>))[:<span class="number">16</span>]</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> level == <span class="number">2</span> &#123; <span class="comment">// 192 bits, 24 bits token</span></span><br><span class="line">		<span class="keyword">return</span> MD5(GetRandomString(<span class="number">128</span>))[:<span class="number">24</span>]</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123; <span class="comment">// 256 bits, 32 bits token</span></span><br><span class="line">		<span class="keyword">return</span> MD5(GetRandomString(<span class="number">128</span>))[:<span class="number">32</span>]</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> GetRandomString(leng <span class="typename">int</span>) <span class="typename">string</span> &#123;</span><br><span class="line">	str := <span class="string">"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"</span></span><br><span class="line">	bytes := []<span class="typename">byte</span>(str)</span><br><span class="line">	result := []<span class="typename">byte</span>&#123;&#125;</span><br><span class="line">	r := rand.New(rand.NewSource(time.Now().UnixNano()))</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; leng; i++ &#123;</span><br><span class="line">		result = <span class="built_in">append</span>(result, bytes[r.Intn(<span class="built_in">len</span>(bytes))])</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="typename">string</span>(result)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="AES-CFB-模块创建"><a href="#AES-CFB-模块创建" class="headerlink" title="AES CFB 模块创建"></a>AES CFB 模块创建</h2><ul>
+<li>Golang 的 <code>crypto</code> 包提供了 aes 模块和 cipher 模块，<code>aes.NewCipher(key)</code> 将根据 key 生成一个新的 AES 模块。</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"crypto/aes"</span></span><br><span class="line">	<span class="string">"crypto/cipher"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">func</span> NewAesBlock(key []<span class="typename">byte</span>) cipher.Block &#123;</span><br><span class="line">	block, err := aes.NewCipher(key)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="constant">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> block</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>我们使用 cipher.Block 的 CFB 加密模块，<code>commonIV</code> 是 CFB 模式（密码反馈模式）的唯一 IV，和密钥一起作用于加密器，这里取 0~15。函数 <code>AesEncode([]byte, cipher.Block)[]byte</code> 接收一段明文字节流和加密模块，并返回加密后的字节流。</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">var</span> commonIV = []<span class="typename">byte</span>&#123;<span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>, <span class="number">0x08</span>, <span class="number">0x09</span>, <span class="number">0x0a</span>, <span class="number">0x0b</span>, <span class="number">0x0c</span>, <span class="number">0x0d</span>, <span class="number">0x0e</span>, <span class="number">0x0f</span>&#125;</span><br><span class="line"><span class="keyword">func</span> AesEncode(plaintext []<span class="typename">byte</span>, block cipher.Block) []<span class="typename">byte</span> &#123;</span><br><span class="line">	cfb := cipher.NewCFBEncrypter(block, commonIV)</span><br><span class="line">	ciphertext := <span class="built_in">make</span>([]<span class="typename">byte</span>, <span class="built_in">len</span>(plaintext))</span><br><span class="line">	cfb.XORKeyStream(ciphertext, plaintext)</span><br><span class="line">	<span class="keyword">return</span> []<span class="typename">byte</span>(ciphertext)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>解密过程和加密类似，但需要事先获知明文长度。函数 <code>AesDecode([]byte, int64, cipher.Block)([]byte, error)</code> 接收密文、明文长度和 AES 模块，如果解密成功则返回明文字节流，否则返回信息中携带错误：</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">func</span> AesDecode(cipherText []<span class="typename">byte</span>, plainLen <span class="typename">int64</span>, block cipher.Block) ([]<span class="typename">byte</span>, error) &#123;</span><br><span class="line">	cfbdec := cipher.NewCFBDecrypter(block, commonIV)</span><br><span class="line">	plaintext := <span class="built_in">make</span>([]<span class="typename">byte</span>, plainLen)</span><br><span class="line">	cfbdec.XORKeyStream(plaintext, cipherText)</span><br><span class="line">	<span class="keyword">return</span> []<span class="typename">byte</span>(plaintext), <span class="constant">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Base64-编-解码"><a href="#Base64-编-解码" class="headerlink" title="Base64 编/解码"></a>Base64 编/解码</h2><ul>
+<li>Golang 的 <code>crypto</code> 包提供了可使用的 Base64 编/解码工具，只需要简单将其封装。我们在 <code>authenticate.go</code> 中为其声明一个编码类的实例，将所有编/解码请求委托给该实例。</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">import</span>(</span><br><span class="line">	<span class="string">"encoding/base64"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	base64Table = <span class="string">"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">var</span> coder = base64.NewEncoding(base64Table)</span><br><span class="line"><span class="keyword">func</span> Base64Encode(plaintext []<span class="typename">byte</span>) []<span class="typename">byte</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> []<span class="typename">byte</span>(coder.EncodeToString(plaintext))</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">func</span> Base64Decode(ciphertext []<span class="typename">byte</span>) ([]<span class="typename">byte</span>, error) &#123;</span><br><span class="line">	<span class="keyword">return</span> coder.DecodeString(<span class="typename">string</span>(ciphertext))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="int64-和字节流的转换"><a href="#int64-和字节流的转换" class="headerlink" title="int64 和字节流的转换"></a>int64 和字节流的转换</h2><ul>
+<li><code>encoding</code> 包中的 binary 模块可以提供将 uint64 转化为字节流的方法，我们将其包装为两个函数 <code>Int64ToBytes(int64)[]byte</code> 和 <code>BytesToInt64([]byte)int64</code>。</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">import</span>(</span><br><span class="line">    <span class="string">"encoding/binary"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">func</span> Int64ToBytes(i <span class="typename">int64</span>) []<span class="typename">byte</span> &#123;</span><br><span class="line">	<span class="keyword">var</span> buf = <span class="built_in">make</span>([]<span class="typename">byte</span>, <span class="number">8</span>)</span><br><span class="line">	binary.BigEndian.PutUint64(buf, <span class="typename">uint64</span>(i))</span><br><span class="line">	<span class="keyword">return</span> buf</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">func</span> BytesToInt64(buf []<span class="typename">byte</span>) <span class="typename">int64</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="typename">int64</span>(binary.BigEndian.Uint64(buf[:<span class="number">8</span>]))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <hr>
-<p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">简易云存储系统设计与实现</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/23/cloud-storage-system-6/" target="_blank" rel="external">简易云存储系统服务器逻辑实现</a><br>此专栏的下一篇文章：TODO  </p>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/12/03/cloud-storage-system-7/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/12/03/cloud-storage-system-7/" target="_blank" rel="external">http://blog.forec.cn/2016/12/03/cloud-storage-system-7/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/zenith-cloud.html" target="_blank" rel="external">顶点云（应用）设计与实现</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/14/zenith-cloud-2/" target="_blank" rel="external">顶点云（应用）传输协议实现和封装</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/16/zenith-cloud-4/" target="_blank" rel="external">顶点云（应用）传输、认证单元测试</a></p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/15/zenith-cloud-3/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/15/zenith-cloud-3/" target="_blank" rel="external">http://blog.forec.cn/2016/11/15/zenith-cloud-3/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -182,7 +219,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/12/03/cloud-storage-system-7/" data-id="ciwgj0nin005mj8ewqdo5mnuv" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/15/zenith-cloud-3/" data-id="cix22v0ko001dugewspw3kthd" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -249,7 +286,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2016/12/03/cloud-storage-system-7/" data-title="简易云存储系统用户代理" data-url="http://forec.github.io/2016/12/03/cloud-storage-system-7/"></div>
+    <div class="ds-thread" data-thread-key="2016/11/15/zenith-cloud-3/" data-title="顶点云（应用）认证基础模块实现" data-url="http://forec.github.io/2016/11/15/zenith-cloud-3/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -353,10 +390,20 @@
         
 <nav id="article-nav">
     
+        <a href="/2016/11/16/zenith-cloud-4/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            顶点云（应用）传输、认证单元测试
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
     
-        <a href="/2016/11/30/efficient-haskell-io/" id="article-nav-older" class="article-nav-link-wrap">
+    
+        <a href="/2016/11/14/zenith-cloud-2/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">Haskell 中的高效 I/O</p>
+        <p class="article-nav-title">顶点云（应用）传输协议实现和封装</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -375,10 +422,10 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2016/12/03/cloud-storage-system-7/" class="thumbnail">
+                            <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-7.png)" alt="简易云存储系统用户代理" class="thumbnail-image"></span>
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-7.png)" alt="顶点云（应用）用户代理" class="thumbnail-image"></span>
     
     
 </a>
@@ -387,7 +434,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/12/03/cloud-storage-system-7/" class="title">简易云存储系统用户代理</a></p>
+                            <p class="item-title"><a href="/2016/12/03/zenith-cloud-7/" class="title">顶点云（应用）用户代理</a></p>
                             <p class="item-date"><time datetime="2016-12-03T13:44:07.000Z" itemprop="datePublished">2016-12-03</time></p>
                         </div>
                     </li>

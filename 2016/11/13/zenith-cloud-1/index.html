@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>简易云存储系统认证基础模块实现 | Forec&#39;s Notes</title>
+    <title>顶点云（应用）认证、传输协议设计 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
         <meta name="keywords" content="Golang,云存储,线程" />
     
-    <meta name="description" content="使用 Golang 实现此前设计的云存储系统传输、认证协议所需的基础模块。">
+    <meta name="description" content="分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="简易云存储系统认证基础模块实现">
-<meta property="og:url" content="http://forec.github.io/2016/11/15/cloud-storage-system-3/index.html">
+<meta property="og:title" content="顶点云（应用）认证、传输协议设计">
+<meta property="og:url" content="http://forec.github.io/2016/11/13/zenith-cloud-1/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="使用 Golang 实现此前设计的云存储系统传输、认证协议所需的基础模块。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-3.jpg">
-<meta property="og:updated_time" content="2016-11-27T02:17:01.494Z">
+<meta property="og:description" content="分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-1.jpg">
+<meta property="og:updated_time" content="2016-12-23T17:33:44.804Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="简易云存储系统认证基础模块实现">
-<meta name="twitter:description" content="使用 Golang 实现此前设计的云存储系统传输、认证协议所需的基础模块。">
+<meta name="twitter:title" content="顶点云（应用）认证、传输协议设计">
+<meta name="twitter:description" content="分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。">
     
 
     
@@ -143,14 +143,14 @@
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-cloud-storage-system-3" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-zenith-cloud-1" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        简易云存储系统认证基础模块实现
+        顶点云（应用）认证、传输协议设计
         </h1>
     
 
@@ -158,8 +158,8 @@
         
         
             <div class="article-subtitle">
-                <a href="/2016/11/15/cloud-storage-system-3/" class="article-date">
-    <time datetime="2016-11-15T05:09:47.000Z" itemprop="datePublished">2016-11-15</time>
+                <a href="/2016/11/13/zenith-cloud-1/" class="article-date">
+    <time datetime="2016-11-13T04:32:01.000Z" itemprop="datePublished">2016-11-13</time>
 </a>
                 
     <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/">Golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/云存储/">云存储</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程/">线程</a></li></ul>
@@ -169,49 +169,108 @@
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>使用 Golang 实现<a href="http://blog.forec.cn/2016/11/13/cloud-storage-system-1/" target="_blank" rel="external">此前</a>设计的云存储系统传输、认证协议所需的基础模块。</p>
+<p>分析、设计简易云存储系统之间的协议，包括用户客户端和服务器之间的认证协议、数据传输的协议以及新加入线程的认证。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="实现-authenticate-包"><a href="#实现-authenticate-包" class="headerlink" title="实现 authenticate 包"></a>实现 authenticate 包</h1><p>根据<a href="http://blog.forec.cn/2016/11/12/cloud-storage-system-0/" target="_blank" rel="external">项目介绍</a>中提出的需求，authenticate 包中应当提供函数实现以下功能：</p>
+<h1 id="保活连接"><a href="#保活连接" class="headerlink" title="保活连接"></a>保活连接</h1><p>服务器和客户端之间应当维护几个固定连接，同时随用户发起的文件传输任务，二者间应建立一些短时间的活动连接。</p>
 <ul>
-<li>计算文件块的 MD5 值</li>
-<li>随机生成用于加密的 token，且可根据安全等级决定 token 长度</li>
-<li>基本的 AES CFB 加/解密接口</li>
-<li>基本的 Base64 编/解码接口</li>
-<li>int64 和字节流转换</li>
+<li>用于命令和文本数据传输的交互连接：此连接用于用户向服务器发送命令和接收服务器返回的文本响应，云存储服务器将会把客户端登录、认证时创建的连接作为该连接，在客户端活动期间，此连接应始终保持活动。</li>
+<li>客户端用于接收推送消息的连接：单向连接，仅用于客户端接收服务器推送的消息，在客户端活动期间，此连接应始终保持活动。</li>
+<li>客户端用于上传/下载文件的连接：此连接应在需要时建立，传输任务完成时断开。服务器应当限制每个客户端持有此类连接的数量。</li>
 </ul>
-<p>在工程目录下新建文件夹 <code>authenticate</code> ，在该目录下新建代码 <code>authenticate.go</code> ，以下将逐个实现上述功能。</p>
-<h2 id="MD5-值计算"><a href="#MD5-值计算" class="headerlink" title="MD5 值计算"></a>MD5 值计算</h2><ul>
-<li>Golang 的 <code>crypto</code> 包提供了一个 md5 计算方法，可以直接调用并包装。函数 <code>MD5(string) []byte</code> 接收一个字符串并返回该字符串计算出的 MD5 字节流：</li>
+<h1 id="用户登录认证协议"><a href="#用户登录认证协议" class="headerlink" title="用户登录认证协议"></a>用户登录认证协议</h1><h2 id="认证流程"><a href="#认证流程" class="headerlink" title="认证流程"></a>认证流程</h2><ul>
+<li>根据上一篇文章中的需求，要实现的云存储系统应当能保证客户端和服务器之间传输的文件内容不被拦截，或者即时被中间人拦截也无法获取原始信息。要实现这一点，必须对传输的消息进行加密，而通信双方均需具有对加密消息解密的能力，因此双方均需持有密钥。非对称加密方式中，通信双方只有持有私钥的一方能够解密，因此如果采用非对称加密，服务器和客户端均需持有自己的私钥和对方的公钥。一个可行的方案是：当用户注册/登陆时，客户端随机生成一组密钥，并和服务器交换公钥，双方使用对方的公钥加密要传输的信息。</li>
+<li>在将要实现的云存储系统中，我没有采用上面的方式，而是采用了 AES CFB 对称加密，因为后者相对更容易实现。如果项目完成后还有空余时间，我将更换认证方式。<strong>下面要介绍的云存储系统登录认证协议存在漏洞</strong>，传输消息可能被拦截、破解。如果中间人拦截到了通信双方使用的随机密钥，则可根据协议构造特定的攻击数据包，获取或破坏用户空间。</li>
+<li>客户端和服务器建立连接并认证的过程使用协议如下：<ul>
+<li>客户端向服务器发起 TCP 请求，服务器监听到请求并建立 Socket 连接</li>
+<li>服务器随机生成固定长度的随机密钥 token 并以明文方式发送给客户端</li>
+<li>客户端接收 token，并使用 token 加密用户名和密码的 MD5 值，将加密后的数据发送给服务器</li>
+<li>服务器接收客户端发送的认证信息，使用 token 对消息解密，获取用户名和密码的 MD5 值，将密码与数据库中存储的密码 MD5 值比对，验证通过则向客户端发送使用 token 加密的 token，否则主动断开连接</li>
+<li>客户端等待服务器返回数据或检测到服务器断开连接。如果客户端接收到的数据解密结果不是 token，则主动断开连接并提示认证失败</li>
 </ul>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"crypto/md5"</span></span><br><span class="line">	<span class="string">"encoding/hex"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">func</span> MD5(text <span class="typename">string</span>) []<span class="typename">byte</span> &#123;</span><br><span class="line">	ctx := md5.New()</span><br><span class="line">	ctx.Write([]<span class="typename">byte</span>(text))</span><br><span class="line">	<span class="keyword">return</span> []<span class="typename">byte</span>(hex.EncodeToString(ctx.Sum(<span class="constant">nil</span>)))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Token-生成"><a href="#Token-生成" class="headerlink" title="Token 生成"></a>Token 生成</h2><ul>
-<li>token 的生成方式可以随意选择，这里计算一个随机字符串的 MD5 值作为 token。函数 <code>GenerateToken(level uint8)[]byte</code> 接收一个 uint8 类型的参数 <code>level</code>，该参数指定生成 token 的等级，当 <code>level</code> 为 1 或更低时，生成 16 字节的 token；当 <code>level</code> 为 2 时，生成 24 字节的 token；否则生成 32 字节。<code>GetRandomString(int) string</code> 接收一个正整数，生成参数指定长度的随机字串。</li>
+</li>
 </ul>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"math/rand"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">func</span> GenerateToken(level <span class="typename">uint8</span>) []<span class="typename">byte</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> level &lt;= <span class="number">1</span> &#123; <span class="comment">// 128 bits, 16 bits token</span></span><br><span class="line">		<span class="keyword">return</span> MD5(GetRandomString(<span class="number">128</span>))[:<span class="number">16</span>]</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> level == <span class="number">2</span> &#123; <span class="comment">// 192 bits, 24 bits token</span></span><br><span class="line">		<span class="keyword">return</span> MD5(GetRandomString(<span class="number">128</span>))[:<span class="number">24</span>]</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123; <span class="comment">// 256 bits, 32 bits token</span></span><br><span class="line">		<span class="keyword">return</span> MD5(GetRandomString(<span class="number">128</span>))[:<span class="number">32</span>]</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> GetRandomString(leng <span class="typename">int</span>) <span class="typename">string</span> &#123;</span><br><span class="line">	str := <span class="string">"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"</span></span><br><span class="line">	bytes := []<span class="typename">byte</span>(str)</span><br><span class="line">	result := []<span class="typename">byte</span>&#123;&#125;</span><br><span class="line">	r := rand.New(rand.NewSource(time.Now().UnixNano()))</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; leng; i++ &#123;</span><br><span class="line">		result = <span class="built_in">append</span>(result, bytes[r.Intn(<span class="built_in">len</span>(bytes))])</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="typename">string</span>(result)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="AES-CFB-模块创建"><a href="#AES-CFB-模块创建" class="headerlink" title="AES CFB 模块创建"></a>AES CFB 模块创建</h2><ul>
-<li>Golang 的 <code>crypto</code> 包提供了 aes 模块和 cipher 模块，<code>aes.NewCipher(key)</code> 将根据 key 生成一个新的 AES 模块。</li>
+<h2 id="认证数据协议格式"><a href="#认证数据协议格式" class="headerlink" title="认证数据协议格式"></a>认证数据协议格式</h2><ul>
+<li>假定现在已有函数 <code>RecvBytes()</code> ，该函数将在后面的<a href="http://blog.forec.cn/2016/11/14/zenith-cloud-2/" target="_blank" rel="external">《传输协议的实现和封装》</a>中介绍，它将返回一组维持边界的消息，即该函数能够从 Socket 缓冲区中恰好读取出一组符合协议格式的数据。下面定义协议格式。</li>
+<li>服务器生成固定长度随机密钥后，直接向 socket 缓冲区写入该密钥的明文：<code>conn.Write([]byte(token))</code>。因为接下来服务器需要等待客户端响应，因此客户端不需要考虑消息边界，只需要从缓冲区中读取固定长度的字节即可。</li>
+<li>客户端从 socket 接收固定长度的 token。</li>
+<li>客户端将用户名和密码的 MD5 值使用 token 加密，发送给服务器的包结构如下。因为 AES CFB 算法解密需要获知明文长度，因此传输的包中应当包含该信息：第一个 8 字节表示用户名明文和密码 MD5 值的总长度，第二个 8 字节表示使用 token 将用户名和密码 MD5 值加密后得到的密文长度，第三个 8 字节表示用户名明文的长度，最后跟着密文。前面的三个 8 字节均为 int64 类型的数据的大端序表示。下面称此格式为 <strong>格式0</strong>。</li>
 </ul>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"crypto/aes"</span></span><br><span class="line">	<span class="string">"crypto/cipher"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">func</span> NewAesBlock(key []<span class="typename">byte</span>) cipher.Block &#123;</span><br><span class="line">	block, err := aes.NewCipher(key)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="constant">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> block</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">---------------------------------------------------------------------</span></span><br><span class="line">|  <span class="number">8</span> <span class="keyword">bytes</span>  |  <span class="number">8</span> <span class="keyword">bytes</span>  |  <span class="number">8</span> <span class="keyword">bytes</span>  |  encoded username <span class="operator">and</span> password  |</span><br><span class="line"> <span class="comment">---------------------------------------------------------------------</span></span><br></pre></td></tr></table></figure>
 <ul>
-<li>我们使用 cipher.Block 的 CFB 加密模块，<code>commonIV</code> 是 CFB 模式（密码反馈模式）的唯一 IV，和密钥一起作用于加密器，这里取 0~15。函数 <code>AesEncode([]byte, cipher.Block)[]byte</code> 接收一段明文字节流和加密模块，并返回加密后的字节流。</li>
+<li>服务器接收到客户端发送的认证包，按大端序将包的前 24 个字节分别转化为 3 个 int64 类型，并使用 token 解密后面的密文。如果验证成功，则按照下面 “数据传输协议” 中的 “格式1” 将 token 传输给客户端。</li>
 </ul>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">var</span> commonIV = []<span class="typename">byte</span>&#123;<span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>, <span class="number">0x08</span>, <span class="number">0x09</span>, <span class="number">0x0a</span>, <span class="number">0x0b</span>, <span class="number">0x0c</span>, <span class="number">0x0d</span>, <span class="number">0x0e</span>, <span class="number">0x0f</span>&#125;</span><br><span class="line"><span class="keyword">func</span> AesEncode(plaintext []<span class="typename">byte</span>, block cipher.Block) []<span class="typename">byte</span> &#123;</span><br><span class="line">	cfb := cipher.NewCFBEncrypter(block, commonIV)</span><br><span class="line">	ciphertext := <span class="built_in">make</span>([]<span class="typename">byte</span>, <span class="built_in">len</span>(plaintext))</span><br><span class="line">	cfb.XORKeyStream(ciphertext, plaintext)</span><br><span class="line">	<span class="keyword">return</span> []<span class="typename">byte</span>(ciphertext)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="数据传输协议"><a href="#数据传输协议" class="headerlink" title="数据传输协议"></a>数据传输协议</h1><p>当客户端和服务器建立连接并认证成功后，所有的数据传输操作均应当遵从以下协议。</p>
+<h2 id="数据协议格式"><a href="#数据协议格式" class="headerlink" title="数据协议格式"></a>数据协议格式</h2><ul>
+<li>应用层数据包格式如下，第一个 8 字节表示明文长度，第二个 8 字节表示密文长度 + 16，后跟密文。两个 8 字节均为大端序表示的 int64 类型。下面称此格式为 <strong>格式1</strong> 。</li>
+</ul>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> ----------------------------------------</span><br><span class="line">|<span class="string">  8 bytes  </span>|<span class="string">  8 bytes  </span>|<span class="string">  encoded data  </span>|</span><br><span class="line"> ----------------------------------------</span><br></pre></td></tr></table></figure>
+<h2 id="非固定活动连接建立过程"><a href="#非固定活动连接建立过程" class="headerlink" title="非固定活动连接建立过程"></a>非固定活动连接建立过程</h2><p>当客户端需要执行传输文件操作时，主动向服务器申请连接。连接过程和上面 “认证数据协议格式” 过程类似：</p>
 <ul>
-<li>解密过程和加密类似，但需要事先获知明文长度。函数 <code>AesDecode([]byte, int64, cipher.Block)([]byte, error)</code> 接收密文、明文长度和 AES 模块，如果解密成功则返回明文字节流，否则返回信息中携带错误：</li>
+<li>服务器向客户端发送新的随机密钥 token0</li>
+<li>客户端不再将用户名和密码的 MD5 值发送给服务器，而是将用户名和之前登录认证时获得的 token1 连接在一起，使用 token0 加密，并发送给服务器（发送此段消息时，使用 格式0 ）</li>
+<li>服务器接收到数据后首先解析用户名，发现该用户已登录，则将密码部分字段和该用户登录认证时使用的 token1 比对，符合则返回 token0，否则主动断开连接</li>
+<li>客户端检查 token0 无误后开始发送相应指令</li>
 </ul>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">func</span> AesDecode(cipherText []<span class="typename">byte</span>, plainLen <span class="typename">int64</span>, block cipher.Block) ([]<span class="typename">byte</span>, error) &#123;</span><br><span class="line">	cfbdec := cipher.NewCFBDecrypter(block, commonIV)</span><br><span class="line">	plaintext := <span class="built_in">make</span>([]<span class="typename">byte</span>, plainLen)</span><br><span class="line">	cfbdec.XORKeyStream(plaintext, cipherText)</span><br><span class="line">	<span class="keyword">return</span> []<span class="typename">byte</span>(plaintext), <span class="constant">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Base64-编-解码"><a href="#Base64-编-解码" class="headerlink" title="Base64 编/解码"></a>Base64 编/解码</h2><ul>
-<li>Golang 的 <code>crypto</code> 包提供了可使用的 Base64 编/解码工具，只需要简单将其封装。我们在 <code>authenticate.go</code> 中为其声明一个编码类的实例，将所有编/解码请求委托给该实例。</li>
+<h2 id="被动监听推送消息连接过程"><a href="#被动监听推送消息连接过程" class="headerlink" title="被动监听推送消息连接过程"></a>被动监听推送消息连接过程</h2><p>此连接和上述 “非固定活动连接建立过程” 类似，区别在于，该连接在整个客户端存活期间均得以保持。为了将此连接和用于传输长数据流的数据区分，服务器将会把用户登录后申请的第一个 “非固定活动连接”（即密码字段填写 token1 的连接）视作客户端用来监听推送消息的连接，而之后的连接均视作用于传输长数据流的连接。</p>
+<h1 id="执行指令协议"><a href="#执行指令协议" class="headerlink" title="执行指令协议"></a>执行指令协议</h1><p>下面考虑客户端向服务器发送的指令格式，根据指令执行所需要传输的数据流长短，将指令分为端数据流传输指令和长数据流传输指令。其中长数据流传输指令包括文件的上传、下载以及更新。为了简化客户端的实现（正式客户端使用 C++ 编写），指令的传输使用纯文本代替了 JSON 格式。下面用 <code>SEP</code> 表示指令间各个选项的分隔符。<code>SEP</code> 是项目中配置文件可以指定的一个字符串。</p>
+<h2 id="短数据流传输指令"><a href="#短数据流传输指令" class="headerlink" title="短数据流传输指令"></a>短数据流传输指令</h2><ul>
+<li>创建：在云存储空间中创建一个新的文件（夹），初始大小为 0。如果该文件是文本类型，则用户可在线编辑该文件并保存。对于创建操作，需要指定创建的位置、创建的文件（夹）的名称、要创建的是文件还是文件夹。即：<code>TOUCH &lt;SEP&gt; NAME &lt;SEP&gt; PATH &lt;SEP&gt; ISDIR</code>，<code>ISDIR</code>为 0 时创建文件，为 1 时创建文件夹。<code>PATH</code>为绝对路径，如 <code>/home/forec/work/</code>。</li>
+<li>复制：将某个文件（夹）拷贝到一个新的位置，即：<code>CP &lt;SEP&gt; UID &lt;SEP&gt; NEWPATH</code>，其中 <code>UID</code> 为要复制的文件（夹）的 ID，以下 <code>UID</code> 均指此意，<code>NEWPATH</code> 为绝对路径。</li>
+<li>移动：将某个文件（夹）移动到一个新的位置，同时指定新的文件（夹）名，即：<code>MV &lt;SEP&gt; UID &lt;SEP&gt; NEWNAME &lt;SEP&gt; NEWPATH</code>，其中 <code>NEWPATH</code>为绝对路径。</li>
+<li>删除：删除某个文件（夹），若为文件夹，该目录下所有文件（夹）均被删除，即<code>RM &lt;SEP&gt; UID</code>。</li>
+<li>获取文件列表：获取某个目录下的文件（夹）列表，支持按关键词筛选，即：<code>LS &lt;SEP&gt; RECURSSIVE &lt;SEP&gt; PATH &lt;SEP&gt; ARG0 &lt;SEP&gt; ARG1 &lt;SEP&gt; ...</code>。其中，<code>RECURSSIVE</code>为 0 表示仅显示该目录下的文件（夹），为 1 表示递归显示，将整个目录内的所有文件（夹）列表返回给客户端；<code>PATH</code> 为绝对路径，<code>ARGn</code> 为要筛选的关键词，例如在 <code>SEP</code> 为 <code>+</code> ，筛选条件为路径 <code>/home/</code> 下所有文件（夹）名包括 <code>ed</code> 和 <code>afd</code> 的情况下，可使用 <code>LS+1+/home/+ed+afd</code>。服务器向客户端返回的是一个以 <code>\n</code> 划分的纯文本流，每行为一个文件记录，记录各项之间以 <code>SEP</code> 划分。</li>
+<li>FORK：Fork其它用户的文件（夹），即：<code>FORK &lt;SEP&gt; UID &lt;SEP&gt; PASSWORD &lt;SEP&gt; NEWPATH</code>，其中 <code>PASSWORD</code> 是要 Fork 的文件（夹）的提取码，如果不存在提取码则可为任意值，<code>NEWPATH</code> 为要 Fork 到自己存储空间中的路径， <code>UID</code> 为要 Fork 的文件（夹）的唯一标识。</li>
+<li>改变私有/共享：改变某个文件（夹）的私有或共享性质，即：<code>CHMOD &lt;SEP&gt; UID &lt;SEP&gt; PRIVATE</code>，其中 <code>PRIVATE</code> 为 0 表示共享，<code>PRIVATE</code> 为 1 表示私有，若 <code>PRIVATE</code> 为 1，则系统将随机生成一个 4 位提取码，并将该文件或文件夹下的所有文件提取码设置为该提取码。</li>
+<li>向其他用户发送消息：即 <code>SEND &lt;SEP&gt; CID &lt;SEP&gt; MESSAGE</code>，其中 <code>CID</code> 为对方的唯一标识符，<code>MESSAGE</code> 为要发送的消息，其中不能包含 <code>SEP</code>。</li>
+<li>以上所有消息均会返回一个状态码，表示成功或错误信息。状态码将在具体实现时讨论。</li>
 </ul>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">import</span>(</span><br><span class="line">	<span class="string">"encoding/base64"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	base64Table = <span class="string">"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">var</span> coder = base64.NewEncoding(base64Table)</span><br><span class="line"><span class="keyword">func</span> Base64Encode(plaintext []<span class="typename">byte</span>) []<span class="typename">byte</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> []<span class="typename">byte</span>(coder.EncodeToString(plaintext))</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">func</span> Base64Decode(ciphertext []<span class="typename">byte</span>) ([]<span class="typename">byte</span>, error) &#123;</span><br><span class="line">	<span class="keyword">return</span> coder.DecodeString(<span class="typename">string</span>(ciphertext))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="int64-和字节流的转换"><a href="#int64-和字节流的转换" class="headerlink" title="int64 和字节流的转换"></a>int64 和字节流的转换</h2><ul>
-<li><code>encoding</code> 包中的 binary 模块可以提供将 uint64 转化为字节流的方法，我们将其包装为两个函数 <code>Int64ToBytes(int64)[]byte</code> 和 <code>BytesToInt64([]byte)int64</code>。</li>
+<h2 id="长数据流传输指令"><a href="#长数据流传输指令" class="headerlink" title="长数据流传输指令"></a>长数据流传输指令</h2><h3 id="下载文件（夹）"><a href="#下载文件（夹）" class="headerlink" title="下载文件（夹）"></a>下载文件（夹）</h3><ul>
+<li>下载指定 <code>UID</code> 对应的文件（夹），即：<code>GET &lt;SEP&gt; UID &lt;SEP&gt; PASSWORD</code>。当 <code>UID</code> 指向的记录不是用户自己的时，需要使用 <code>PASSWORD</code> 作为提取码，如果要下载的 <code>UID</code> 是用户自己的文件（夹），则 <code>PASSWORD</code> 可以填写任意非空值（这里为了简化服务器对指令的识别，选择了非常幼稚的方法）。每启动一条这样的指令，客户端将主动建立一个新的长数据流传输连接，当客户端创建的长数据流传输连接达到设置的上限时，客户端将阻止创建新的连接，并将新的命令排队，直到此前的长数据流传输连接结束后，才会启动下载线程。</li>
+<li>服务器与客户端传输线程之间交互的过程：<ul>
+<li>客户端发送 GET 命令</li>
+<li>服务器接收 GET 命令并检查命令是否合法，包括检查文件是否存在、用户是否具有此文件的读权限等，如果合法返回 <code>&quot;VALID&quot;</code>，否则返回 <code>&quot;NOTPERMITTED&quot;</code>。</li>
+<li>服务器发送要下载的文件数目（包括文件夹的数目），使用 8 个字节的 <code>int64</code> 类型表示此数目。</li>
+<li>对每个文件：</li>
+<li>服务器发送该文件文件名</li>
+<li>服务器发送 <code>ISDIR</code>，即是文件还是文件夹（0或1），若该文件为文件夹（1），则跳过下面的循环，使用 8 个字节的 <code>int64</code> 类型表示 1 或 0。</li>
+<li>服务器开始传输文件</li>
+<li>文件传输结束，进入下一个循环</li>
 </ul>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// authenticate.go</span></span><br><span class="line"><span class="keyword">import</span>(</span><br><span class="line">    <span class="string">"encoding/binary"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">func</span> Int64ToBytes(i <span class="typename">int64</span>) []<span class="typename">byte</span> &#123;</span><br><span class="line">	<span class="keyword">var</span> buf = <span class="built_in">make</span>([]<span class="typename">byte</span>, <span class="number">8</span>)</span><br><span class="line">	binary.BigEndian.PutUint64(buf, <span class="typename">uint64</span>(i))</span><br><span class="line">	<span class="keyword">return</span> buf</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">func</span> BytesToInt64(buf []<span class="typename">byte</span>) <span class="typename">int64</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="typename">int64</span>(binary.BigEndian.Uint64(buf[:<span class="number">8</span>]))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="上传文件"><a href="#上传文件" class="headerlink" title="上传文件"></a>上传文件</h3><ul>
+<li>上传一个新的文件，即：<code>PUT &lt;SEP&gt; UID &lt;SEP&gt; SIZE &lt;SEP&gt; MD5</code>。其中 <code>MD5</code> 为客户端计算的文件的 MD5 值， <code>SIZE</code> 为要上传的文件大小。</li>
+<li>服务器与客户端传输线程之间交互的过程：<ul>
+<li>客户端发送 TOUCH 指令创建空文件</li>
+<li>服务器接收客户端发送的 PUT 指令，向创建的空文件写入数据</li>
+<li>服务器向客户端发送标识码，上传成功（200）；开始传输（201）；传输出错（203）；指令不合法（300）；文件尚未创建（301）；md5不匹配（403）；服务器内部错误（500）</li>
+</ul>
+</li>
+</ul>
+<h3 id="更新文件"><a href="#更新文件" class="headerlink" title="更新文件"></a>更新文件</h3><ul>
+<li>更新一个已有的文件，即： <code>UPDATE &lt;SEP&gt; UID &lt;SEP&gt; MD5</code>。</li>
+<li>服务器与客户端传输线程之间交互过程：<ul>
+<li>服务器接收客户端发送的 PUT 指令，重新向原文件写入数据</li>
+<li>若云存储中存在新的 MD5 值，则向客户端发送不需传送（300），客户端停止发送并认为秒传成功</li>
+<li>若云存储中不存在新的 MD5 值，则向客户端发送开始传送（200），传送结束后，修改原 UID 指向的文件块</li>
+<li>若发现 UPDATE 指令不合法，则返回错误码</li>
+</ul>
+</li>
+</ul>
+<h2 id="指令的简化"><a href="#指令的简化" class="headerlink" title="指令的简化"></a>指令的简化</h2><p>为了简化客户端设计，服务器应当尽量对客户端发送的指令容错。例如：</p>
+<ul>
+<li>文件下载时，客户端仅需发送 UID，服务器根据 UID 指向的记录，为客户端安排下载策略</li>
+<li>文件创建/移动/复制时，若目标路径不存在，服务器应向数据库中添加缺失的路径</li>
+</ul>
+<h2 id="大文件-MD5-值计算"><a href="#大文件-MD5-值计算" class="headerlink" title="大文件 MD5 值计算"></a>大文件 MD5 值计算</h2><ul>
+<li>将文件按 4M 分块，最后一块不足 4M 也算一块</li>
+<li>每块计算 MD5 值，将分别计算出的 MD5 值相连</li>
+<li>将相连的 MD5 值再计算一次 MD5 值</li>
+</ul>
 <hr>
-<p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">简易云存储系统设计与实现</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/14/cloud-storage-system-2/" target="_blank" rel="external">简易云存储系统传输协议实现和封装</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/16/cloud-storage-system-4/" target="_blank" rel="external">简易云存储系统传输、认证单元测试</a></p>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/15/cloud-storage-system-3/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/15/cloud-storage-system-3/" target="_blank" rel="external">http://blog.forec.cn/2016/11/15/cloud-storage-system-3/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/zenith-cloud.html" target="_blank" rel="external">顶点云（应用）设计与实现</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/12/zenith-cloud-0/" target="_blank" rel="external">顶点云（应用）项目简介</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/14/zenith-cloud-2/" target="_blank" rel="external">顶点云（应用）传输协议实现和封装</a></p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/13/zenith-cloud-1/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/13/zenith-cloud-1/" target="_blank" rel="external">http://blog.forec.cn/2016/11/13/zenith-cloud-1/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -219,7 +278,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/15/cloud-storage-system-3/" data-id="ciwgj0niz0067j8ew0ij6x32n" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/13/zenith-cloud-1/" data-id="cix22v0kw001nugewljhwq7m1" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -286,7 +345,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2016/11/15/cloud-storage-system-3/" data-title="简易云存储系统认证基础模块实现" data-url="http://forec.github.io/2016/11/15/cloud-storage-system-3/"></div>
+    <div class="ds-thread" data-thread-key="2016/11/13/zenith-cloud-1/" data-title="顶点云（应用）认证、传输协议设计" data-url="http://forec.github.io/2016/11/13/zenith-cloud-1/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -390,20 +449,20 @@
         
 <nav id="article-nav">
     
-        <a href="/2016/11/16/cloud-storage-system-4/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2016/11/14/zenith-cloud-2/" id="article-nav-newer" class="article-nav-link-wrap">
         <strong class="article-nav-caption">下一篇</strong>
         <p class="article-nav-title">
         
-            简易云存储系统传输、认证单元测试
+            顶点云（应用）传输协议实现和封装
         
         </p>
         <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
     </a>
     
     
-        <a href="/2016/11/14/cloud-storage-system-2/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2016/11/12/zenith-cloud-0/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">简易云存储系统传输协议实现和封装</p>
+        <p class="article-nav-title">顶点云（应用）项目简介</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -422,10 +481,10 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2016/12/03/cloud-storage-system-7/" class="thumbnail">
+                            <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-7.png)" alt="简易云存储系统用户代理" class="thumbnail-image"></span>
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-7.png)" alt="顶点云（应用）用户代理" class="thumbnail-image"></span>
     
     
 </a>
@@ -434,7 +493,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/12/03/cloud-storage-system-7/" class="title">简易云存储系统用户代理</a></p>
+                            <p class="item-title"><a href="/2016/12/03/zenith-cloud-7/" class="title">顶点云（应用）用户代理</a></p>
                             <p class="item-date"><time datetime="2016-12-03T13:44:07.000Z" itemprop="datePublished">2016-12-03</time></p>
                         </div>
                     </li>

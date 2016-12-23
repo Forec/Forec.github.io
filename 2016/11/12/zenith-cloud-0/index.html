@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>简易云存储系统项目简介 | Forec&#39;s Notes</title>
+    <title>顶点云（应用）项目简介 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
         <meta name="keywords" content="Golang,云存储,线程" />
     
-    <meta name="description" content="此项目为我 2016 年的某个课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在专栏《云存储系统从入门到放弃》中。">
+    <meta name="description" content="顶点云为我 2016 年的某个课程设计，旨在基于北邮校园网搭建一个小规模的云存储、共享平台。本文简单介绍顶点云应用程序服务器设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在专栏 《顶点云设计与实现》 中。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="简易云存储系统项目简介">
-<meta property="og:url" content="http://forec.github.io/2016/11/12/cloud-storage-system-0/index.html">
+<meta property="og:title" content="顶点云（应用）项目简介">
+<meta property="og:url" content="http://forec.github.io/2016/11/12/zenith-cloud-0/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="此项目为我 2016 年的某个课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在专栏《云存储系统从入门到放弃》中。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-0.jpg">
-<meta property="og:updated_time" content="2016-11-27T02:17:11.308Z">
+<meta property="og:description" content="顶点云为我 2016 年的某个课程设计，旨在基于北邮校园网搭建一个小规模的云存储、共享平台。本文简单介绍顶点云应用程序服务器设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在专栏 《顶点云设计与实现》 中。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-0.jpg">
+<meta property="og:updated_time" content="2016-12-23T17:26:14.658Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="简易云存储系统项目简介">
-<meta name="twitter:description" content="此项目为我 2016 年的某个课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在专栏《云存储系统从入门到放弃》中。">
+<meta name="twitter:title" content="顶点云（应用）项目简介">
+<meta name="twitter:description" content="顶点云为我 2016 年的某个课程设计，旨在基于北邮校园网搭建一个小规模的云存储、共享平台。本文简单介绍顶点云应用程序服务器设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在专栏 《顶点云设计与实现》 中。">
     
 
     
@@ -143,14 +143,14 @@
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-cloud-storage-system-0" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-zenith-cloud-0" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        简易云存储系统项目简介
+        顶点云（应用）项目简介
         </h1>
     
 
@@ -158,7 +158,7 @@
         
         
             <div class="article-subtitle">
-                <a href="/2016/11/12/cloud-storage-system-0/" class="article-date">
+                <a href="/2016/11/12/zenith-cloud-0/" class="article-date">
     <time datetime="2016-11-12T15:50:33.000Z" itemprop="datePublished">2016-11-12</time>
 </a>
                 
@@ -169,14 +169,14 @@
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>此项目为我 2016 年的某个课程设计。本文简单介绍此项目的设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在<a href="/columns/index.html">专栏</a>《云存储系统从入门到放弃》中。</p>
+<p>顶点云为我 2016 年的某个课程设计，旨在基于北邮校园网搭建一个小规模的云存储、共享平台。本文简单介绍顶点云应用程序服务器设计目标，分析需求。此文章发布时项目尚未编写完成，与此项目相关的文章将随项目同步更新，并收集在专栏 <a href="http://blog.forec.cn/columns/zenith-cloud.html" target="_blank" rel="external">《顶点云设计与实现》</a> 中。</p>
 </blockquote>
 <a id="more"></a>
 <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><ul>
-<li>此项目为我 2016 年的某项课程设计，项目题目为自拟，目标是实现一个简易的，与百度云功能类似的云存储系统。项目在 GitHub 托管仓库的网址是：<a href="https://github.com/Forec/cloud-storage" target="_blank" rel="external">https://github.com/Forec/cloud-storage</a>。</li>
-<li>此项目为要实现的云存储系统的服务器，同时附带了一个用于测试的客户端（无GUI）。云存储系统正式的客户端目前正在由 <a href="https://github.com/non1996" target="_blank" rel="external">non1996</a> 编写。在我写下这篇文章时，服务器已经实现了文件传输以外的多数逻辑功能，以及文件的并发下载。</li>
-<li>在接下来的文章中，代码的具体实现均使用 <code>Golang</code> 表达，我将假设读者掌握 <code>Golang</code> 的基本语法（或者 C/C++ 的基本语法），并且了解 <code>channel</code>、<code>goroutine</code> 的概念。</li>
-<li>作为本科阶段的一项小型课程设计，且时间紧迫，<strong>我很遗憾此项目中很多实现非常 naive，许多地方为了简化实现，我采用了一些闭门造车的、很愚笨的、且与主流实现方案相悖的方式</strong>。在将基本功能实现后，如果还有空余时间，我会尽量修正这些糟粕，简化代码。这个项目的 BETA 版本预计完成时间在 11 月底，12 月上旬将完成客户端的图形界面，12 月中旬将完成 Web 版本。如果还有空余时间，可能会考虑实现一个 Android 客户端。</li>
+<li>顶点云为我 2016 年的某项课程设计，项目题目为自拟，目标是基于北邮校园网搭建一个小规模的云存储、共享平台。项目在 GitHub 托管仓库的网址是：<a href="https://github.com/Forec/zenith-cloud" target="_blank" rel="external">https://github.com/Forec/zenith-cloud</a>。</li>
+<li>此部分文章主要介绍顶点云的应用程序服务，同时附带了一个用于测试的客户端（无GUI）。顶点云正式的客户端目前正在由 <a href="https://github.com/non1996" target="_blank" rel="external">non1996</a> 编写。在我写下这篇文章时，顶点云的应用程序服务器已经实现了文件传输以外的多数逻辑功能，以及文件的并发下载。</li>
+<li>在接下来的文章中，代码的具体实现均使用 <code>Golang</code> 代码表示，我将假设读者掌握 <code>Golang</code> 的基本语法（或者 C/C++ 的基本语法），并且了解 <code>channel</code>、<code>goroutine</code> 的概念。</li>
+<li>作为本科阶段的一项小型课程设计，且时间紧迫，<strong>我很遗憾此项目中很多实现非常幼稚，许多地方为了简化实现，我采用了一些闭门造车的、很愚笨的、且与主流实现方案相悖的方式</strong>。在将基本功能实现后，如果还有空余时间，我会尽量修正这些糟粕，简化代码。这个项目的 BETA 版本预计完成时间在 11 月底，12 月上旬将完成客户端的图形界面，12 月中旬将完成 Web 版本。如果还有空余时间，可能会考虑实现一个 Android 客户端。</li>
 </ul>
 <h1 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h1><h2 id="面向用户功能"><a href="#面向用户功能" class="headerlink" title="面向用户功能"></a>面向用户功能</h2><ul>
 <li>文件存储：用户可将文件上传至云服务器</li>
@@ -252,9 +252,9 @@
 <li>操作内容：<code>VARCHAR(128)</code></li>
 <li>操作时间：<code>DATE</code></li>
 </ul>
-<p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">简易云存储系统设计与实现</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/13/cloud-storage-system-1/" target="_blank" rel="external">简易云存储系统的认证、传输协议设计</a></p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cloud-storage.html" target="_blank" rel="external">顶点云（应用）设计与实现</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/13/zenith-cloud-1/" target="_blank" rel="external">顶点云（应用）的认证、传输协议设计</a></p>
 <hr>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/12/cloud-storage-system-0/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/12/cloud-storage-system-0/" target="_blank" rel="external">http://blog.forec.cn/2016/11/12/cloud-storage-system-0/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/12/zenith-cloud-0/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/12/zenith-cloud-0/" target="_blank" rel="external">http://blog.forec.cn/2016/11/12/zenith-cloud-0/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -262,7 +262,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/12/cloud-storage-system-0/" data-id="ciwgj0nja006mj8ewt5bvg95q" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/12/zenith-cloud-0/" data-id="cix22v0l3001sugew3nu144nb" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -329,7 +329,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2016/11/12/cloud-storage-system-0/" data-title="简易云存储系统项目简介" data-url="http://forec.github.io/2016/11/12/cloud-storage-system-0/"></div>
+    <div class="ds-thread" data-thread-key="2016/11/12/zenith-cloud-0/" data-title="顶点云（应用）项目简介" data-url="http://forec.github.io/2016/11/12/zenith-cloud-0/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -433,11 +433,11 @@
         
 <nav id="article-nav">
     
-        <a href="/2016/11/13/cloud-storage-system-1/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2016/11/13/zenith-cloud-1/" id="article-nav-newer" class="article-nav-link-wrap">
         <strong class="article-nav-caption">下一篇</strong>
         <p class="article-nav-title">
         
-            简易云存储系统认证、传输协议设计
+            顶点云（应用）认证、传输协议设计
         
         </p>
         <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
@@ -465,10 +465,10 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2016/12/03/cloud-storage-system-7/" class="thumbnail">
+                            <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/cloud-storage-system-7.png)" alt="简易云存储系统用户代理" class="thumbnail-image"></span>
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-7.png)" alt="顶点云（应用）用户代理" class="thumbnail-image"></span>
     
     
 </a>
@@ -477,7 +477,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/12/03/cloud-storage-system-7/" class="title">简易云存储系统用户代理</a></p>
+                            <p class="item-title"><a href="/2016/12/03/zenith-cloud-7/" class="title">顶点云（应用）用户代理</a></p>
                             <p class="item-date"><time datetime="2016-12-03T13:44:07.000Z" itemprop="datePublished">2016-12-03</time></p>
                         </div>
                     </li>
