@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-7.jpg">
-<meta property="og:updated_time" content="2016-11-25T07:00:33.638Z">
+<meta property="og:updated_time" content="2017-01-03T02:28:38.008Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（七）：死锁">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -327,7 +327,7 @@
 </li>
 </ul>
 <hr>
-<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/24/os-concepts-6/" target="_blank" rel="external">操作系统（六）：管程（Monitor）</a><br>此专栏的下一篇文章：TODO</p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2016/11/24/os-concepts-6/" target="_blank" rel="external">操作系统（六）：管程（Monitor）</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2017/01/03/os-concepts-8/" target="_blank" rel="external">操作系统（八）：内存管理</a>    </p>
 <p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2016/11/24/os-concepts-7/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2016/11/24/os-concepts-7/" target="_blank" rel="external">http://blog.forec.cn/2016/11/24/os-concepts-7/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
@@ -337,7 +337,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/24/os-concepts-7/" data-id="cix22v0m3002vugew55k5gj9p" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/24/os-concepts-7/" data-id="cixgwfhfm002z58ew85jrwca9" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -540,6 +540,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2017/01/03/os-concepts-8/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-8.jpg)" alt="操作系统（八）：内存管理" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/03/os-concepts-8/" class="title">操作系统（八）：内存管理</a></p>
+                            <p class="item-date"><time datetime="2017-01-03T02:27:12.000Z" itemprop="datePublished">2017-01-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
     
     
@@ -617,26 +637,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/24/os-concepts-5/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-5-r.jpg)" alt="操作系统（五）：进程同步" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
-                            <p class="item-title"><a href="/2016/11/24/os-concepts-5/" class="title">操作系统（五）：进程同步</a></p>
-                            <p class="item-date"><time datetime="2016-11-24T10:41:33.000Z" itemprop="datePublished">2016-11-24</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -646,7 +646,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">13</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">14</span></li></ul>
         </div>
     </div>
 
@@ -692,7 +692,7 @@
                 <h1 class="logo-wrap">
                     <a href="/" class="logo"></a>
                 </h1>
-                <p>京ICP备16060806号-1 &copy; 2016 Forec</p>
+                <p>京ICP备16060806号-1 &copy; 2017 Forec</p>
             </div>
         </div>
     </div>
