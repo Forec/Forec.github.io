@@ -8,17 +8,17 @@
     
         <meta name="keywords" content="OS" />
     
-    <meta name="description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+    <meta name="description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统（七）：死锁">
 <meta property="og:url" content="http://forec.github.io/2016/11/24/os-concepts-7/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-7.jpg">
-<meta property="og:updated_time" content="2017-01-03T02:28:38.008Z">
+<meta property="og:updated_time" content="2017-01-05T15:47:07.998Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（七）：死锁">
-<meta name="twitter:description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书的摘录，由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
     
 
     
@@ -169,7 +169,7 @@
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>整理《Operating System Concepts》 第七版死锁部分，内容均为原书的摘录，由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
+<p>整理《Operating System Concepts》 第七版死锁部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
 </blockquote>
 <a id="more"></a>
 <h1 id="死锁模型"><a href="#死锁模型" class="headerlink" title="死锁模型"></a>死锁模型</h1><ul>
@@ -210,6 +210,7 @@
 <li>如果分配图中存在环，且存在某个资源类型有多个实例，则系统可能处于进程死锁</li>
 </ul>
 </li>
+<li>一个带有死锁的资源分配图如下图所示：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/resource-allocation-graph-with-deadlock.jpg" width="200px"></li>
 </ul>
 <h1 id="死锁处理"><a href="#死锁处理" class="headerlink" title="死锁处理"></a>死锁处理</h1><ul>
 <li>三种方法可以处理死锁：<ul>
@@ -229,7 +230,7 @@
 </ul>
 </li>
 <li>破坏非抢占：如果一个进程在占有一些资源的同时申请了另一个不能立刻被分配的资源（等待列表中的其他进程也没有持有该资源），则该进程目前已获得的所有资源都可被其它正在等待的进程抢占。也就是说，该进程持有的资源被隐式释放了。该进程要想重新执行，必须分配到要申请的资源，同时还要恢复自己在等待时被抢占的资源。此协议通常用于状态可以保存和恢复的资源，如 CPU 寄存器和内存，对于不可剥夺资源无效。</li>
-<li>破坏循环等待：系统定义一个函数 <code>F: R → N</code> 为资源类型集合编号，不同资源类型的编号不同。每个 <strong>进程只能按照递增顺序申请资源</strong> ，进程开始执行时可以申请任意数量的资源类型 Ri 的实例，之后若想申请资源类型 Rj 的实例，则必须满足 <code>F(Rj) &gt; F(Ri)</code> 才可申请，否则它必须释放所有编号小于 F(Rj) 的资源后才能再申请。<ul>
+<li>破坏循环等待：系统定义一个函数 <code>F: R → N</code> 为资源类型集合编号，不同资源类型的编号不同。每个 <strong>进程只能按照递增顺序申请资源</strong> ，进程开始执行时可以申请任意数量的资源类型 Ri 的实例，之后若想申请资源类型 Rj 的实例，则必须满足 <code>F(Rj) &gt; F(Ri)</code> 才可申请，否则它必须释放所有编号 <strong>大于</strong> F(Rj) 的资源后才能再申请。<ul>
 <li>证明：若存在循环等待，设循环等待的进程集合为 <code>{P0, P1, ..., Pn}</code> ，其中 Pi 等待资源 Ri，且 Ri 被进程 Pi+1 占有，因为 Pi+1 占有资源 Ri 且申请资源 Ri+1，所以对所有 i 有 <code>F(Ri) &lt; F(Ri+1)</code>，即 <code>F(R0) &lt; F(R1) &lt; ... &lt; F(Rn) &lt; F(R0)</code>，假设不成立。</li>
 <li>按照此协议，程序员必须按系统为资源定义的顺序来编写程序才可防止死锁。有些软件（如 Witness）可以验证资源锁是否按顺序获取，并对不按顺序获取的代码做出警告。</li>
 </ul>
@@ -245,6 +246,7 @@
 <li>向系统资源分配图中加入一种新类型的边，称为 <strong>需求边（claim edge）</strong> 。需求边 <code>Pi-&gt;Rj</code> 表示进程 Pi 可能在将来某时刻申请资源 Rj，需求边用虚线表示。当 Pi 申请资源 Rj 时，需求边 <code>Pi-&gt;Rj</code>变为申请边，当进程 Pi 释放资源 Rj 时，分配边 <code>Rj-&gt;Pi</code> 变成需求边；</li>
 <li>若进程 Pi 试图申请资源 Rj，则系统需要检查：如果需求边 <code>Pi-&gt;Rj</code> 变成分配边 <code>Rj-&gt;Pi</code> 后，资源分配图中不存在环（虚实线无所谓），则允许申请，否则进程 Pi 必须等待。</li>
 <li>系统检查是否存在环可使用 Tarjan 等求联通子图的 n² 级算法。</li>
+<li>一个资源分配图算法的实例如下图。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/resource-allocation-graph-algorithm.jpg" width="400px"></li>
 </ul>
 </li>
 <li><strong>银行家（Banker’s）算法</strong> ：<ul>
@@ -337,7 +339,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/24/os-concepts-7/" data-id="cixgx27vy002zx4ewtopg3825" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/24/os-concepts-7/" data-id="cixkixjll0032egewhf8k8xwk" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -540,26 +542,6 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2017/01/03/os-concepts-8/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-8.jpg)" alt="操作系统（八）：内存管理" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
-                            <p class="item-title"><a href="/2017/01/03/os-concepts-8/" class="title">操作系统（八）：内存管理</a></p>
-                            <p class="item-date"><time datetime="2017-01-03T02:27:12.000Z" itemprop="datePublished">2017-01-03</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-thumbnail">
                             <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
     
     
@@ -637,6 +619,26 @@
                         </div>
                     </li>
                 
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-5/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-5-r.jpg)" alt="操作系统（五）：进程同步" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-5/" class="title">操作系统（五）：进程同步</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T10:41:33.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
             </ul>
         </div>
     </div>
@@ -646,7 +648,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">14</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">13</span></li></ul>
         </div>
     </div>
 
