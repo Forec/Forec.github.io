@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>操作系统（十三）：I/O 输入系统 | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="OS" />
+    
+    <meta name="description" content="整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统（十三）：I/O 输入系统">
+<meta property="og:url" content="http://forec.github.io/2017/01/06/os-concepts-13/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg">
+<meta property="og:updated_time" content="2017-01-06T09:27:31.970Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统（十三）：I/O 输入系统">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/apis/index.html">API</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-os-concepts-13" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        操作系统（十三）：I/O 输入系统
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2017/01/06/os-concepts-13/" class="article-date">
+    <time datetime="2017-01-06T04:17:33.000Z" itemprop="datePublished">2017-01-06</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
+</blockquote>
+<a id="more"></a>
+<p>注：只包含第 13 章内核 I/O 子系统之前的内容。</p>
+<h1 id="I-O-硬件"><a href="#I-O-硬件" class="headerlink" title="I/O 硬件"></a>I/O 硬件</h1><ul>
+<li><strong>设备驱动程序（device drivers）</strong> 为 I/O 子系统提供了统一设备的访问接口。</li>
+<li>设备和计算机的通信通过 <strong>端口（port）</strong> ，一组被一个/多个设备共同使用的线称为 <strong>总线（bus）</strong> 。总线是一组线和一组严格定义的描述在线上传输信息的协议。 <strong>链环（daisy chaine）</strong> 形容的是多个设备相连，最终设备通过端口连接到计算机上的模式。链环常常按总线方式工作，一个典型的 PC 总线结构如下图。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/typical-pc-bus.png" width="500px"></li>
+<li>上图中包含一个 <strong>PCI 总线</strong> （最常用的 PC 系统总线）用于连接 CPU 和内存子系统/快速设备， <strong>扩展总线（expansion bus）</strong> 用于连接串/并行端口和相对慢的设备（键盘）。</li>
+<li><strong>控制器（controller）</strong> 是用来操作端口、总线或者设备的一组电子器件，它的复杂程度和传输协议有关，如串行端口控制器比较简单，而 SCSI 总线控制器常实现为一个和计算机相连的独立的 <strong>主机适配器（host adapter）</strong> ，这个适配器会有处理器、微码以及一定的私有内存，从而能够处理 SCSI 协议信息。</li>
+<li>控制器有一个/多个用于数据和控制信号的寄存器， <strong>处理器通过读写这些寄存器来来实现与控制器的通信</strong> 。这种通信的可以通过特殊的 I/O 指令向指定的 I/O 端口地址传输一个字节/字，也可以通过 <strong>内存映射</strong> I/O 模式（在 <a href="http://blog.forec.cn/2017/01/04/os-concepts-9/" target="_blank" rel="external">虚拟内存</a> 中介绍过），处理器能够通过标准数据传输指令完成对控制器的读写。部分系统同时采用这两种方式，例如图像控制器有 I/O 端口来完成基本控制操作，还有一个较大的内存映射区域来支持屏幕内容的接收和生成。</li>
+<li>I/O 端口通常有 4 种寄存器，寄存器通常为 1 ~ 4B：状态寄存器、控制寄存器、数据输入寄存器和数据输出寄存器。有的控制器有 FIFO 芯片从而可以保留多个输入/输出数据。上述四种寄存器的主要功能有：<ul>
+<li>主机从 <strong>数据输入寄存器</strong> 读出数据</li>
+<li>主机向 <strong>数据输出寄存器</strong> 写入数据</li>
+<li>主机可从 <strong>状态寄存器</strong> 读出设备当前的状态</li>
+<li>主机向 <strong>控制寄存器</strong> 写入数据来发送命令、改变设备状态</li>
+</ul>
+</li>
+</ul>
+<h2 id="轮询"><a href="#轮询" class="headerlink" title="轮询"></a>轮询</h2><ul>
+<li>主机和控制器之间交互很复杂，但基本的 <strong>握手（handshaking）</strong> 比较简单。假设控制器的状态寄存器中有一位用于说明设备当前是否在忙，控制器正忙时就将这一位置位。控制器的命令寄存器中有一位说明主机是否有任务准备就绪，当主机需要控制器执行某个操作时，需要将命令寄存器的这一位置位。主机和控制器交互输出一个字节时的握手流程如下：<ol>
+<li>主机不断读取状态寄存器，直到状态寄存器中的 <em>忙位</em> 为 0</li>
+<li>主机设置命令寄存器中的 <em>写位</em> 并把一个字节写到数据输出寄存器</li>
+<li>主机设置命令寄存器中的 <em>就绪位</em></li>
+<li>控制器注意到命令寄存器中的就绪位被置位，因此将状态寄存器中的 <em>忙位</em> 置位</li>
+<li>控制器读取命令寄存器并发现 <em>写位</em> 被置位，因此了解到需要执行一条写命令。它从数据输出寄存器读出一个字节，并向设备执行 I/O 操作</li>
+<li>控制器操作完成后将命令寄存器中的 <em>就绪位</em> 清除，并清除状态寄存器中的 <em>故障位</em> （这说明 I/O 设备成功完成任务），最后清除状态寄存器中的 <em>忙位</em> 表示本次字节传输操作结束</li>
+</ol>
+</li>
+<li>在步骤 1 中主机将处于 <strong>忙等待（busy-waiting）</strong> 或者 <strong>轮询（polling）</strong> 状态。多数计算机体系只需要三个 CPU 指令周期就可以完成基本的轮询操作，但不断地重复轮询会浪费处理器资源。</li>
+</ul>
+<h2 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h2><ul>
+<li><strong>中断（interrupt）</strong> 是使外设通知 CPU 的硬件机制。CPU 硬件有一条 <strong>中断请求线（Interrupt-request line，IRL）</strong> ，CPU 执行完每条指令都会检测 IRL 判断是否有控制器通过 IRL 发送了信号。如果有，CPU 会保存当前的状态并且跳转到 <strong>中断处理程序（interrupt-handler）</strong> 。中断处理程序会判断中断原因、进行处理、恢复状态并执行中断返回指令使 CPU 返回中断之前的执行状态。整个流程大致为：<ul>
+<li>设备控制器通过中断请求线 <strong>发送中断信号引起（raise）中断</strong> </li>
+<li>CPU <strong>捕获（catch）中断并分发（dispatch）到中断处理程序</strong></li>
+<li>中断处理程序处理设备请求以 <strong>清除中断</strong> </li>
+</ul>
+</li>
+<li>CPU 和 <strong>中断控制器（interrupt-controller）</strong> 硬件提供了以下三个特性：<ul>
+<li>在 CPU 执行关键指令时可以延迟对中断的处理</li>
+<li>能够将中断快速转发给适当的中断处理程序，而不必检查所有设备以确定是哪个设备引发了中断</li>
+<li>支持多级中断，可以根据紧迫性来相应中断</li>
+</ul>
+</li>
+<li>多数 CPU 有两个中断请求线： <strong>非屏蔽中断（nonmaskable）</strong> 用于处理非常严重的，不可以恢复的内存错误等问题， <strong>可屏蔽中断（maskable）</strong> 可被设备控制器用来请求服务，如果 CPU 正在执行关键、不可中断指令，则可以屏蔽这一类中断线上的请求。</li>
+<li>中断机制根据 <strong>中断向量（interrupt vector）</strong> 来选择中断服务程序。中断向量和中断服务程序被维护在一张表中，中断向量支持的地址数量有限（例如 8 位中断向量只能对应 256 个中断服务程序，奔腾即为 256 个中断向量，0~31 用于各种错误等非屏蔽中断，剩下的为可屏蔽中断）， <strong>中断链接（interrupt chaining）</strong> 可解决这个问题：中断向量指向的不再是单一的中断服务程序，而是一个中断服务程序的链表，中断一旦发生，对应链表中的全部中断处理程序都会一一调用，直到发现了能够处理请求的中断服务程序为止。</li>
+<li><strong>中断优先级（interrupt priority）</strong> 使 CPU 可以在不屏蔽所有中断的情况下延迟处理低优先级的中断，并且也允许高优先级的中断抢占低优先级的中断处理。</li>
+<li>现代操作系统启动时会探查硬件总线、确定哪些设备存在并将对应的中断处理程序安装到中断向量中。操作系统对于中断机制的应用非常广泛：<ul>
+<li>设备控制器通过中断表明自己已经准备好服务</li>
+<li>通过中断机制处理例如被 0 除、违例内存访问等 <strong>异常（Exception）</strong></li>
+<li>使用中断进行虚拟内存分页，页错误会引发中断异常，这个中断会挂起当前进程并跳转到内核的页错误处理程序</li>
+<li>程序执行系统调用会触发 <strong>软中断（software interrupt）</strong> 或者 <strong>陷阱指令（trap）</strong> </li>
+</ul>
+</li>
+</ul>
+<h2 id="直接内存访问"><a href="#直接内存访问" class="headerlink" title="直接内存访问"></a>直接内存访问</h2><ul>
+<li>使用通用处理器不断监听设备控制器的寄存器并按字节传输（ <strong>程序控制 I/O</strong> ，Programmed I/O，PIO）是对计算资源的非常过分的浪费。计算机为了避免 PIO 增加 CPU 负担，将一部分数据传输任务交付 <strong>直接内存访问（direct-memory access，DMA）</strong> 控制器。</li>
+<li>开始 DMA 传输时，主机向内存写入 DMA 命令块，块中包含传输的源、目的地址指针以及传输的字节数。 <strong>CPU 将该命令块的地址写到 DMA 控制器中</strong> 并继续其他工作，DMA 控制器会根据命令块直接操作内存总线完成传输（这段时间 CPU 无法使用总线）。传输完成后 DMA 控制器会中断 CPU 并交还给  CPU 总线控制权。</li>
+<li>DMA 和设备控制器之间的握手通过 <strong>DMA-request</strong> 和 <strong>DMA-acknowledge</strong> 线进行，设备有数据需要传输时，设备控制器就通过 DMA-request 线通知 DMA 控制器，DMA 控制器会发出申请中断 CPU，在从 CPU 获取所需要的地址后将地址放到内存地址总线上，并通过 DMA-acknowledge 线通知设备控制器。设备控制器收到这个信号，向内存地址总线上的地址写入数据。交互过程如下图。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/steps-dma-transfer.png" width="500px"></li>
+<li>DMA 控制总线传输期间 CPU 不能访问主存（仍可访问 L1、L2 缓存），这称为 <strong>周期挪用（cycle stealing）</strong> ，会放慢 CPU 计算，当往往能够改善系统总体性能。有的 DMA 使用物理内存地址，有的使用虚拟内存地址（这时候需要有一个虚拟到物理地址的转换），使用虚拟内存地址的 DMA 称为 <strong>直接虚拟内存访问（direct virtual-memory access，DVMA）</strong> 。DVMA 可以直接实现两个内存映射设备之间的传输而无需 CPU 干涉。</li>
+</ul>
+<h1 id="I-O-应用接口摘要"><a href="#I-O-应用接口摘要" class="headerlink" title="I/O 应用接口摘要"></a>I/O 应用接口摘要</h1><ul>
+<li>设备在很多方面有很大差异：<ul>
+<li>字符流或块：字符流设备按字节传输，块设备以块为单位传输</li>
+<li>顺序访问或随机访问</li>
+<li>同步或异步：同步设备按照一定响应时间进行数据传输，异步设备则呈现无规则/不可预测的响应时间</li>
+<li>共享或专用：共享设备可以被多个进程/线程并发使用，专用设备则不可以</li>
+<li>操作速度：设备速度不同</li>
+<li>读写/只读/只写：设备支持的数据传输方向不同</li>
+</ul>
+</li>
+<li><strong>块设备（block-device）</strong> 接口规定了访问磁盘驱动器以及其它块设备所需的各个方面。操作系统本身和特殊的应用程序（如数据库）倾向于将块设备当作简单的线性块数组访问，这种访问方式称为 <strong>原始（raw） I/O</strong> 。</li>
+<li><strong>阻塞和非阻塞 I/O</strong> ：<ul>
+<li>应用程序发出 <strong>阻塞（blocking） I/O</strong> 类型的系统调用时，应用程序就会被挂起，移动到进程等待队列中。因为阻塞式的 I/O 容易理解，并且 I/O 设备执行所需的时间是异步的，执行时间不可预估，因此绝大多数操作系统给应用程序预留的接口都是阻塞系统调用。</li>
+<li>有的用户级进程需要 <strong>非阻塞（nonblocking） I/O</strong> ，例如用户接口，它用来接收键盘/鼠标输入，同时还要在屏幕回显，又或者视频应用程序，他需要从磁盘读取帧并解码到显示器上。非阻塞 I/O 通常使用多线程实现，有的线程执行阻塞系统调用，其他线程继续执行。</li>
+<li><strong>异步系统调用（asynchronous system call）</strong> 不必等待 I/O 完成就可以立刻返回，应用程序继续执行。I/O 完成时会通知应用程序，比如设置程序空间里某个变量，或者触发信号/软件中断等。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/two-io-methods.png" width="400px"></li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2017/01/05/os-concepts-12/" target="_blank" rel="external">操作系统（十二）：大容量存储器结构</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2017/01/06/os-concepts-14/" target="_blank" rel="external">操作系统（专题）：信号量编程</a>    </p>
+<p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/01/06/os-concepts-13/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/01/06/os-concepts-13/" target="_blank" rel="external">http://blog.forec.cn/2017/01/06/os-concepts-13/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2017/01/06/os-concepts-13/" data-id="cixlw6lwi003e88ew96y3bvkr" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2017/01/06/os-concepts-13/" data-title="操作系统（十三）：I/O 输入系统" data-url="http://forec.github.io/2017/01/06/os-concepts-13/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2016/12/03/zenith-cloud-7/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">顶点云（应用）用户代理</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/06/os-concepts-13/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg)" alt="操作系统（十三）：I/O 输入系统" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/06/os-concepts-13/" class="title">操作系统（十三）：I/O 输入系统</a></p>
+                            <p class="item-date"><time datetime="2017-01-06T04:17:33.000Z" itemprop="datePublished">2017-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-7.png)" alt="顶点云（应用）用户代理" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/12/03/zenith-cloud-7/" class="title">顶点云（应用）用户代理</a></p>
+                            <p class="item-date"><time datetime="2016-12-03T13:44:07.000Z" itemprop="datePublished">2016-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/30/efficient-haskell-io/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/efficient-haskell-io.jpg)" alt="Haskell 中的高效 I/O" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
+                            <p class="item-title"><a href="/2016/11/30/efficient-haskell-io/" class="title">Haskell 中的高效 I/O</a></p>
+                            <p class="item-date"><time datetime="2016-11-30T14:54:30.000Z" itemprop="datePublished">2016-11-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-7.jpg)" alt="操作系统（七）：死锁" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-7/" class="title">操作系统（七）：死锁</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T14:16:22.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/24/os-concepts-6/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-6-r.jpg)" alt="操作系统（六）：管程（Monitor）" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2016/11/24/os-concepts-6/" class="title">操作系统（六）：管程（Monitor）</a></p>
+                            <p class="item-date"><time datetime="2016-11-24T12:47:03.000Z" itemprop="datePublished">2016-11-24</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">14</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 11.82px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.36px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 10.91px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.64px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 12.73px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19.09px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10.91px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15.45px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.55px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 10.91px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 10.91px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.27px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 13.64px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>京ICP备16060806号-1 &copy; 2017 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>

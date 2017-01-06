@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-4.jpg">
-<meta property="og:updated_time" content="2017-01-05T04:56:54.285Z">
+<meta property="og:updated_time" content="2017-01-06T11:58:33.867Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（四）：进程互斥">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -192,7 +192,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// producer</span></span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="keyword">while</span> (counter == BUFFER_SIZE) ;</span><br><span class="line">    buffer[in] = nextProduced;</span><br><span class="line">    in = (in+<span class="number">1</span>) % BUFFER_SIZE;</span><br><span class="line">    counter ++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// consumer</span></span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="keyword">while</span> (counter == <span class="number">0</span>) ;</span><br><span class="line">    nextConsumed = buffuer[out];</span><br><span class="line">    out = (out+<span class="number">1</span>) % BUFFER_SIZE;</span><br><span class="line">    counter --;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>以上代码可使用全部缓冲区资源，但当消费者进程和生产者进程并发执行时，涉及修改 <code>counter</code> 的语句执行顺序将由操作系统设定。由于 C 语言中 <code>counter++</code> 将被拆分为 <code>mov register, counter</code>、<code>inc register</code> 和 <code>mov counter, register</code> 三句汇编指令，假设由于操作系统的调度，当前消费者进程和生产者进程分别执行到 <code>counter++</code> 和 <code>counter--</code> 的最后一条汇编指令处，则 <code>counter</code> 的值将不正确。</li>
-<li><strong>竞争条件（race condition）</strong> ：多个进程同时访问和操作一个相同的数据，且执行结果和访问的特定顺序有关</li>
+<li><strong>竞争条件（race condition）</strong> ：多个进程同时访问和操作一个相同的数据，且执行结果和访问的特定顺序有关。</li>
 <li><strong>进程同步（process synchronization）</strong> 和 <strong>协调（coordination）</strong> ：确保系统不同部分操作资源不会互相影响。</li>
 </ul>
 <h1 id="临界区"><a href="#临界区" class="headerlink" title="临界区"></a>临界区</h1><ul>
@@ -231,7 +231,7 @@
 <ul>
 <li>Peterson 算法正确性的证明：<ul>
 <li>互斥：只有当 <code>flag[j] == FALSE</code> 或 <code>turn == i</code> 时 Pi 才进入临界区。假设 Pi 和 Pj 同时进入临界区，则 <code>flag[0] == flag[1] == TRUE</code>，因为 turn 只能为 0 或 1，所以只有一个进程（假设 <code>turn == i</code>）Pi 能够跳出 While 语句。此外，只要 Pi 在临界区内，<code>flag[i] == TRUE &amp;&amp; turn == i</code> 就始终成立，所以 Pi 在临界区执行期间，Pj 将始终等待或执行剩余区内容。</li>
-<li>发展和有限等待：进程 Pi 仅在 <code>flag[j] == True</code> 且 <code>turn == j</code> 的情况下才会被阻塞，若 Pj 不准备进入临界区，则 <code>flag[j] == True</code>，此时 Pi 可以进入；若 Pj 当前也在请求进入临界区，则 <code>flag[j] == True</code>，此时由 turn 决定哪个进程进入临界区。假设此时 Pj 进入临界区，当 Pj 退出临界区时会设置 <code>flag[j]</code> 为 False 使 Pi 进入临界区；如果 Pj 剩余区执行速度非常快，又重新申请进入临界区，此时 Pj 设置 <code>flag[j]</code> 为 TRUE，同时 turn 被设置为 i。因此 Pi 一定会进入临界区（发展），并且最多需要等待一次。</li>
+<li>发展和有限等待：进程 Pi 仅在 <code>flag[j] == True</code> 且 <code>turn == j</code> 的情况下才会被阻塞，若 Pj 不准备进入临界区，则 <code>flag[j] == False</code>，此时 Pi 可以进入；若 Pj 当前也在请求进入临界区，则 <code>flag[j] == True</code>，此时由 turn 决定哪个进程进入临界区。假设此时 Pj 进入临界区，当 Pj 退出临界区时会设置 <code>flag[j]</code> 为 False 使 Pi 进入临界区；如果 Pj 剩余区执行速度非常快，又重新申请进入临界区，此时 Pj 设置 <code>flag[j]</code> 为 TRUE，同时 turn 被设置为 i。因此 Pi 一定会进入临界区（发展），并且最多需要等待一次。</li>
 </ul>
 </li>
 </ul>
@@ -264,7 +264,7 @@
 <ul>
 <li>仅使用 <code>TestAndSet()</code> 或仅使用 <code>Swap()</code> 都可以解决互斥问题。以下是单独使用这二者实现的互斥，但均未满足有限等待的要求：</li>
 </ul>
-<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TestAndSet Lock</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">while</span>( TestAndSetLock(&amp;<span class="built_in">lock</span>);</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    <span class="built_in">lock</span> = <span class="literal">FALSE</span>;</span><br><span class="line">    <span class="comment">// 剩余区</span></span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="literal">TRUE</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Swap Lock</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    key = <span class="literal">TRUE</span>;</span><br><span class="line">    <span class="keyword">while</span>(key == <span class="literal">TRUE</span>)</span><br><span class="line">        Swap(&amp;<span class="built_in">lock</span>, &amp;key);</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    <span class="built_in">lock</span> = <span class="literal">FALSE</span>;</span><br><span class="line">    <span class="comment">// 剩余区</span></span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="literal">TRUE</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TestAndSet Lock</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">while</span>(TestAndSetLock(&amp;<span class="built_in">lock</span>));</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    <span class="built_in">lock</span> = <span class="literal">FALSE</span>;</span><br><span class="line">    <span class="comment">// 剩余区</span></span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="literal">TRUE</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Swap Lock</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    key = <span class="literal">TRUE</span>;</span><br><span class="line">    <span class="keyword">while</span>(key == <span class="literal">TRUE</span>)</span><br><span class="line">        Swap(&amp;<span class="built_in">lock</span>, &amp;key);</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    <span class="built_in">lock</span> = <span class="literal">FALSE</span>;</span><br><span class="line">    <span class="comment">// 剩余区</span></span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="literal">TRUE</span>);</span><br></pre></td></tr></table></figure>
 <ul>
 <li>使用 <code>TestAndSet()</code> 或 <code>Swap()</code> 也可以解决有限等待问题，以下是使用 <code>TestAndSet()</code> 实现的有限等待互斥，代码为进程 Pi 的结构，来自原书（英文版）第 199 页。可以看出，剩余区前的 while 循环保证一个进程 Pi 强制拉取了排在其后的进程 Pj 进入临界区（如果有的话），这保证了有限等待。使用到的共享数据有：<ul>
 <li><code>boolean waiting[n]</code>：<code>waiting[i] == TRUE</code> 表明进程 i 已申请进入临界区并正在等待选择</li>
@@ -284,7 +284,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/24/os-concepts-4/" data-id="cixkixjll003begew6vsfgw2h" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/24/os-concepts-4/" data-id="cixlw6lwb003588ewljjpfy3m" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -487,6 +487,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2017/01/06/os-concepts-13/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg)" alt="操作系统（十三）：I/O 输入系统" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/06/os-concepts-13/" class="title">操作系统（十三）：I/O 输入系统</a></p>
+                            <p class="item-date"><time datetime="2017-01-06T04:17:33.000Z" itemprop="datePublished">2017-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
     
     
@@ -564,26 +584,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/24/os-concepts-5/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-5-r.jpg)" alt="操作系统（五）：进程同步" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
-                            <p class="item-title"><a href="/2016/11/24/os-concepts-5/" class="title">操作系统（五）：进程同步</a></p>
-                            <p class="item-date"><time datetime="2016-11-24T10:41:33.000Z" itemprop="datePublished">2016-11-24</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -593,7 +593,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">13</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">14</span></li></ul>
         </div>
     </div>
 

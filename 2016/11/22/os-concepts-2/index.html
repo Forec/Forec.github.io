@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-2.jpg">
-<meta property="og:updated_time" content="2017-01-05T11:22:17.880Z">
+<meta property="og:updated_time" content="2017-01-06T11:23:03.962Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（二）：进程与线程">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -202,7 +202,7 @@
 </li>
 <li>操作系统从队列中选择进程的操作由 <strong>调度程序（scheduler）</strong> 执行。在批处理系统中，进程被放到大容量存储设备（如磁盘）的缓冲池（作业池）中等待执行。 <strong>长期调度程序（long-term scheduler）</strong> 或 <strong>作业调度程序（job scheduler）</strong> 从缓冲池选择进程、装入内存以准备执行，而 <strong>短期调度程序（short-term scheduler）</strong> 或 <strong>CPU 调度程序</strong> 从准备执行的进程中选择并分配 CPU。二者的区别主要体现在 <strong>执行的频率不同</strong> 。短期调度程序非常频繁地执行，为CPU选择新进程，如果短期调度需要 10ms 来确定执行一个运行 100ms 的进程，则 <code>10/(100+10) = 9%</code> 的CPU时间浪费在了调度工作上；而长期调度程序执行不频繁，可能数分钟调度一次，它控制 <strong>多道程序设计的程度（degree of multiprogramming）</strong> ，即内存中的进程数量。只有进程离开系统后才可能需要调度长期调度程序。</li>
 <li>有些系统没有/少有长期调度程序，如 UNIX 或 Windows 的分时系统通常没有长期调度程序，它们仅仅简单的将所有新进程放到内存中以供短期调度程序使用。有些系统如分时系统可能引入 <strong>中期调度系统（medium-term scheduler）</strong> ，它可以将进程从内存（或 CPU 竞争）中移出，从而降低多道程序设计的程度。之后，这些进程可以被重新调入内存并从中断处继续执行。这种行为称为 <strong>交换（swapping）</strong> 。有时因为内存要求的改变导致可用内存过度使用，此时便需要交换。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/addition-medium-term-scheduling.jpg" width="500px"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/swapped-state.jpg" width="500px"></li>
-<li>将 CPU 切换到另一个进程需要保存当前进程状态并恢复另一个进程的状态，此任务成为 <strong>上下文切换（context switch）</strong> 。内核会将旧进程的状态保存在其 PCB 中，并装入调度后要执行的并已恢复的新进程的上下文。上下文切换的时间与硬件支持相关。</li>
+<li>将 CPU 切换到另一个进程需要保存当前进程状态并恢复另一个进程的状态，此任务称为 <strong>上下文切换（context switch）</strong> 。内核会将旧进程的状态保存在其 PCB 中，并装入调度后要执行的并已恢复的新进程的上下文。上下文切换的时间与硬件支持相关。</li>
 </ul>
 <h2 id="进程操作"><a href="#进程操作" class="headerlink" title="进程操作"></a>进程操作</h2><ul>
 <li>进程在其执行过程中能通过创建进程系统调用（create-process system call）创建多个新进程。创建进程称为 <strong>父（parent）进程</strong> ，被创建的新进程称为 <strong>子（children）进程</strong> 。每个新进程可以再创建其他进程以形成 <strong>进程树（tree）</strong> 。</li>
@@ -233,7 +233,7 @@
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    STARTUPINFO si;</span><br><span class="line">    PROCESS_INFORMATION pi;</span><br><span class="line">    ZeroMemory(&amp;si, <span class="keyword">sizeof</span>(si));    <span class="comment">// allocate memory</span></span><br><span class="line">    si.cb = <span class="keyword">sizeof</span>(si);</span><br><span class="line">    ZeroMemory(&amp;pi, <span class="keyword">sizeof</span>(pi));</span><br><span class="line">    <span class="keyword">if</span> (!CreateProcess(<span class="literal">NULL</span>,        <span class="comment">// use command line</span></span><br><span class="line">        <span class="string">"C:\\WINDOWS\\system32\\mspaint.exe"</span>,  </span><br><span class="line">        <span class="literal">NULL</span>, <span class="literal">NULL</span>, FALSE, <span class="number">0</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;si, &amp;pi))&#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;        <span class="comment">// create process failed</span></span><br><span class="line">    &#125;</span><br><span class="line">    WaitForSingleObject(pi.hProcess, INFINITE);</span><br><span class="line">    CloseHandle(pi.hProcess);</span><br><span class="line">    CloseHandle(pi.hThread);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="进程终止和通信"><a href="#进程终止和通信" class="headerlink" title="进程终止和通信"></a>进程终止和通信</h2><ul>
-<li>进程完成执行最后的语句并使用系统调用 <code>exit()</code> 时进程终止，此时进程可以返回状态值（通常为整数）给父进程（通过<code>wait()</code>获取），所有进程资源也会被操作系统是放。</li>
+<li>进程完成执行最后的语句并使用系统调用 <code>exit()</code> 时进程终止，此时进程可以返回状态值（通常为整数）给父进程（通过<code>wait()</code>获取），所有进程资源也会被操作系统释放。</li>
 <li>进程通过系统调用（如 Win32 的 <code>TerminateProcess()</code>）可以终止另一个进程，通常只有被终止进程的父进程才能执行该操作。父进程终止子进程的原因如：<ul>
 <li>子进程使用了超出其所分配的资源</li>
 <li>子进程所分配的任务已不需要</li>
@@ -247,7 +247,7 @@
 <li><strong>方便</strong> ：单个用户可同时执行多个任务</li>
 </ul>
 </li>
-<li>进程写作需要 <strong>进程间通信机制（interprocess communication， IPC）</strong> 来允许进程相互交换数据，其包括两种基本模式：<ul>
+<li>进程协作需要 <strong>进程间通信机制（interprocess communication， IPC）</strong> 来允许进程相互交换数据，其包括两种基本模式：<ul>
 <li><strong>共享内存（shared memory）</strong> ：通信进程需要建立内存共享区域</li>
 <li><strong>消息传递（massage passing）</strong> ：在分布式环境中非常有用，通信进程之间必须有 <strong>通信线路（communication link）</strong> 。对于 <strong>直接通信</strong> ，采用对称寻址，每个进程必须明确地命名通信的接收者或发送者； <strong>间接通信</strong> 中，通过 <strong>邮箱（mailboxes）</strong> 或 <strong>端口（ports）</strong> 来发送和接收消息，每个邮箱都有唯一的标识符，两个进程仅在其共享至少一个邮箱时可相互通信，一个进程可通过许多不同的邮箱和其他进程通信。</li>
 </ul>
@@ -258,13 +258,13 @@
 <li>两个通信进程之间可有多个不同线路，每个线路对应一个邮箱</li>
 </ul>
 </li>
-<li>若多个进程共享同一个邮箱，例如进程 P1、P2、P3均共享邮箱 A，进程 P1 发送一个消息到 A，进程 P2 和 P3 同时对邮箱 A 执行 <code>receive()</code>，则结果取决于所选用地方案：<ul>
+<li>若多个进程共享同一个邮箱，例如进程 P1、P2、P3均共享邮箱 A，进程 P1 发送一个消息到 A，进程 P2 和 P3 同时对邮箱 A 执行 <code>receive()</code>，则结果取决于所选用的方案：<ul>
 <li>允许一个线路最多只能与两个进程相关联</li>
 <li>一次最多允许一个进程执行 <code>receive()</code> 操作</li>
 <li>允许系统随意选择一个进程接收消息</li>
 </ul>
 </li>
-<li>由操作系统所拥有的邮箱是独立存在的，不属于某个特定的进程。创建新邮箱的进程默认为邮箱拥有者，通过系统调用，拥有权和接收特权可能传递给其他进程。</li>
+<li>由操作系统所拥有的邮箱是独立存在的，不属于某个特定的进程。创建新邮箱的进程默认为邮箱拥有者，通过系统调用，拥有和接收的特权可能传递给其他进程。</li>
 <li>消息传递可以是 <strong>阻塞（blocking）</strong> 或者 <strong>非阻塞（nonblocking）</strong> ，也称为 <strong>同步（synchronous）</strong> 或 <strong>异步（asynchronous）</strong> 。<ul>
 <li>阻塞发送：发送进程阻塞直到消息被接收进程或邮箱接收</li>
 <li>非阻塞发送：发送进程可直接发送消息并继续操作</li>
@@ -282,10 +282,10 @@
 <li>例程，C 程序调用 POSIX 系统下的共享内存 API，来自原书（英文版）第 104 页。</li>
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;sys/shm.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> segment_id;</span><br><span class="line">    <span class="keyword">char</span> *shared_memory;</span><br><span class="line">    <span class="comment">// the size(bytes) of shared memory segment</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> size = <span class="number">4096</span>;    </span><br><span class="line">    <span class="comment">// allocate a shared memory segment</span></span><br><span class="line">    segment_id = shmget(IPC_PRIVATE, size, S_IRUSR | S_IWUSR);</span><br><span class="line">    <span class="comment">// attach the shared memory segment</span></span><br><span class="line">    shared_memory = (<span class="keyword">char</span> *) shmat(segment_id, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// write a message to the shared memory segment</span></span><br><span class="line">    <span class="built_in">sprintf</span>(shared_memory, <span class="string">"Hi there!"</span>);</span><br><span class="line">    <span class="comment">// print out the string from shared memory</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"*%s\n"</span>, shared_memory);</span><br><span class="line">    <span class="comment">// detach the shared memory segment</span></span><br><span class="line">    shmdt(shared_memory);</span><br><span class="line">    <span class="comment">// remove the shared memory segment</span></span><br><span class="line">    shmctl(segment_id, IPC_RMID, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><ul>
+<h2 id="管道（补充）"><a href="#管道（补充）" class="headerlink" title="管道（补充）"></a>管道（补充）</h2><ul>
 <li><strong>管道（pipe）</strong> 是一条在进程间以字节流方式传送数据的通信通道，由OS核心的缓冲区（通常几十KB）来实现，为单向。</li>
 <li>管道常用于命令行所指定的输入输出重定向和管道命令，使用前要建立相应的管道。管道逻辑上可以看作管道文件，物理上则是由文件系统的高速缓存区构成。</li>
-<li>管道分为 <em>有名管道</em> 和 <em>无名管道</em> ，按先进先出（FIFO）的方式传送消息，且只能单向传送消息。</li>
+<li>管道分为 <em>有名管道</em> 和 <em>无名管道</em> ，按先进先出（FIFO）的方式传送消息，且 <strong>只能单向传送消息</strong> 。</li>
 <li>管道的发送和接受可使用如下操作：<ul>
 <li>发送进程利用文件系统的系统调用 <code>write(fd[1], buf, size)</code> 把 buf 中长度为 size 字符的消息送入管道入口 <code>fd[1]</code>；</li>
 <li>接收进程利用文件系统的系统调用 <code>read(fd[0], buf, size)</code>从管道出口 <code>fd[0]</code> 读出 size 字符的消息放入 buf 中。</li>
@@ -374,7 +374,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/22/os-concepts-2/" data-id="cixkixjll003hegewt7bs4245" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/22/os-concepts-2/" data-id="cixlw6lwg003b88ew20fakgif" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -577,6 +577,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2017/01/06/os-concepts-13/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg)" alt="操作系统（十三）：I/O 输入系统" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/06/os-concepts-13/" class="title">操作系统（十三）：I/O 输入系统</a></p>
+                            <p class="item-date"><time datetime="2017-01-06T04:17:33.000Z" itemprop="datePublished">2017-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
     
     
@@ -654,26 +674,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/24/os-concepts-5/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-5-r.jpg)" alt="操作系统（五）：进程同步" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
-                            <p class="item-title"><a href="/2016/11/24/os-concepts-5/" class="title">操作系统（五）：进程同步</a></p>
-                            <p class="item-date"><time datetime="2016-11-24T10:41:33.000Z" itemprop="datePublished">2016-11-24</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -683,7 +683,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">13</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">14</span></li></ul>
         </div>
     </div>
 

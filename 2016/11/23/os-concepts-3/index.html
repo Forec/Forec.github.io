@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第五章（CPU 进程调度），内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-3.jpg">
-<meta property="og:updated_time" content="2017-01-05T04:56:57.442Z">
+<meta property="og:updated_time" content="2017-01-06T11:38:52.584Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（三）：CPU 调度">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第五章（CPU 进程调度），内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -206,7 +206,7 @@
 <h2 id="先到先服务"><a href="#先到先服务" class="headerlink" title="先到先服务"></a>先到先服务</h2><ul>
 <li>最简单的 CPU 调度算法是 <strong>先到先服务（first-come，first-served，FCFS）</strong> 调度算法：先请求 CPU 的进程先分配到 CPU，该算法可用 FIFO 队列实现，且平均等待时间通常较长。</li>
 <li>当系统中存在一个 CPU 约束进程和多个 I/O 约束进程时，可能出现 CPU 约束进程占用 CPU，同时其他进程处理完 I/O 请求并在就绪队列中等待，此时 I/O 设备空闲。当 CPU 约束进程结束、转移到 I/O 区间后，这些 I/O 约束进程很快会执行完计算任务（仅有很短的 CPU 区间）并移回 I/O 区间，此时 CPU 空闲。之后该状态会反复，即多个进程等待一个长进程释放 CPU，此现象称为 <strong>护航效果（convoy effect）</strong> 。这将导致 CPU 和设备利用率变得更低。</li>
-<li>FCFS 调度时非抢占的，因此不适合分时系统，允许一个进程保持过长的 CPU 时间是非常严重的错误。</li>
+<li>FCFS 调度是非抢占的，因此不适合分时系统，允许一个进程保持过长的 CPU 时间是非常严重的错误。</li>
 </ul>
 <h2 id="最短作业优先"><a href="#最短作业优先" class="headerlink" title="最短作业优先"></a>最短作业优先</h2><ul>
 <li><strong>最短作业优先（shortest-job-first，SJF）</strong> 调度算法：当 CPU 空闲时，调度程序选择需要 CPU 区间最短的进程执行，如果有多个进程的下一次 CPU 区间长度相同，则在这些进程间使用 FCFS。即，先比较需要的 CPU 区间长度，长度越短优先级越高，长度相同时，到达时间越早优先级越高。</li>
@@ -270,7 +270,7 @@
 <li><strong>对称多处理（symmetric multiprocessing，SMP）</strong> ：每个处理器自我调度，所有进程可能处于一个共同的就绪队列，或每个处理器拥有自己的私有就绪队列。调度通过每个处理器检查共同就绪队列并选择一个进程执行。</li>
 <li><strong>处理器亲和性（processor affinity）</strong> ：多数 SMP 系统试图避免将进程从一个处理器移动到另一个处理器，而是努力让一个进程在同一个处理器上运行。一个操作系统使用策略使一个进程保持在同一个处理器上运行，但不能做任何保证时，称为 <strong>软亲和性（soft affinity）</strong> ；有的操作系统，如 Linux，提供一个支持 <strong>硬亲和性（hard affinity）</strong> 的系统调用保证了进程无法转移到其它处理器。</li>
 <li><strong>负载均衡（load balancing）</strong> 保证了所有处理器的工作负载平衡以完全利用多处理器的优点，它仅在每个 CPU 有私有就绪队列的情况下才有必要。它和处理器的亲和性相悖。有两种方法可实现：<ul>
-<li><strong>推送迁移（push migration）</strong> ：一个特定的进程间歇性的检查每个处理器的负载，假如当前夫在不均衡，则将过载处理器上进程推送到空闲处理器。</li>
+<li><strong>推送迁移（push migration）</strong> ：一个特定的进程间歇性的检查每个处理器的负载，假如当前负载不均衡，则将过载处理器上进程推送到空闲处理器。</li>
 <li><strong>拉取迁移（pull migration）</strong> ：一个空闲处理器从一个忙处理器拉取一个处于等待状态的进程。</li>
 </ul>
 </li>
@@ -286,7 +286,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/23/os-concepts-3/" data-id="cixkixjll003eegew61uxx533" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/23/os-concepts-3/" data-id="cixlw6lwe003888ew4omdo78s" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -489,6 +489,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2017/01/06/os-concepts-13/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg)" alt="操作系统（十三）：I/O 输入系统" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/06/os-concepts-13/" class="title">操作系统（十三）：I/O 输入系统</a></p>
+                            <p class="item-date"><time datetime="2017-01-06T04:17:33.000Z" itemprop="datePublished">2017-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
     
     
@@ -566,26 +586,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/24/os-concepts-5/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-5-r.jpg)" alt="操作系统（五）：进程同步" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
-                            <p class="item-title"><a href="/2016/11/24/os-concepts-5/" class="title">操作系统（五）：进程同步</a></p>
-                            <p class="item-date"><time datetime="2016-11-24T10:41:33.000Z" itemprop="datePublished">2016-11-24</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -595,7 +595,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">13</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">14</span></li></ul>
         </div>
     </div>
 

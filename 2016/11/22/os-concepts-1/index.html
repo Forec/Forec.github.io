@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-1.jpg">
-<meta property="og:updated_time" content="2017-01-05T04:57:03.723Z">
+<meta property="og:updated_time" content="2017-01-06T10:56:23.260Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（一）：概念导读">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -213,7 +213,7 @@
 </ul>
 <h2 id="操作系统运行"><a href="#操作系统运行" class="headerlink" title="操作系统运行"></a>操作系统运行</h2><ul>
 <li>现代操作系统均为 <strong>中断驱动（interrupt driven）</strong> ，事件几乎都通过中断或陷阱来触发。</li>
-<li>一个 <strong>陷阱（trap）</strong> 或者说 <strong>异常（exception）</strong> ，是软件产生的中断。触发的原因要么是错误的产生（例如除 0 操作或为例内存访问），要么是用户程序执行了对操作系统服务的特殊请求。</li>
+<li>一个 <strong>陷阱（trap）</strong> 或者说 <strong>异常（exception）</strong> ，是软件产生的中断。触发的原因要么是错误的产生（例如除 0 操作或违例内存访问），要么是用户程序执行了对操作系统服务的特殊请求。</li>
 <li>为了保证操作系统程序正确执行，我们需要区分系统程序段和用户程序段。因此设置了两个独立的操作 <strong>模式（modes）</strong> ： <strong>用户模式（user mode）</strong> 和 <strong>内核/管理/系统/特权模式（kernel/supervisor/system/privileged mode）</strong> 。计算机硬件中需要加入一个 <strong>模式位（mode bit）</strong> 用于说明当前的模式为内核（0）还是用户（1）。</li>
 <li>在系统启动时，硬件系统处于内核模式。之后操作系统被加载并且在用户模式中执行用户应用。当一个陷阱或者中断发生，硬件将从用户模式切换到内核模式。</li>
 <li>我们将一些机器指令指定为可能产生有害作用的 <strong>特权指令（privileged instructions）</strong> ，硬件只允许特权指令在内核模式中运行。一旦系统调用被执行，它将被硬件视为一个软中断，中断向量将被传递给系统内部的一个服务程序，并且模式位切换至内核模式。</li>
@@ -270,7 +270,7 @@
 <li>多数程序设计语言的运行时支持系统（一系列包含在编译器链接库中的函数）提供了 <strong>系统调用接口（system-call interface）</strong> ，它们将程序代码和操作系统提供的系统调用链接起来。每个系统调用都有一个对应的编号，系统调用接口维护了一个编号-系统调用的索引，它们截取应用程序调用的 API，调用操作系统内核中相关的系统调用，并返回系统调用状态及其他返回值。</li>
 <li>向操作系统传递参数有三种方法：通过寄存器传递、内存的块/表、压入/弹出堆栈。</li>
 <li>系统调用可被大致分为五类： <strong>进程控制（process control）</strong> 、 <strong>文件管理（file manipulation）</strong> 、 <strong>设备管理（device manipulation）</strong> 、 <strong>信息维护（information maintenance）</strong> 和 <strong>通信（communications）</strong> 。</li>
-<li>一个单任务系统： MS-DOS，它在计算机启动时运行一个命令解释器，当运行程序时，它将程序装入内存，并修改命令解释器的大部分内容来为新程序提供尽可能多的空间。之后将指令指针设为程序的第一条指令并运行程序，要么产生错误引起中断（此错误代码会被保存），要么程序执行一个系统调用以终止。最终命令解释器剩余部分程序继续执行，并从磁盘重新装入命令解释器的其他部分。这些步骤完成后，命令解释器会想用户/下一程序提供上一次运行的结果（保存的错误代码）。</li>
+<li>一个单任务系统： MS-DOS，它在计算机启动时运行一个命令解释器，当运行程序时，它将程序装入内存，并修改命令解释器的大部分内容来为新程序提供尽可能多的空间。之后将指令指针设为程序的第一条指令并运行程序，要么产生错误引起中断（此错误代码会被保存），要么程序执行一个系统调用以终止。最终命令解释器剩余部分程序继续执行，并从磁盘重新装入命令解释器的其他部分。这些步骤完成后，命令解释器会向用户/下一程序提供上一次运行的结果（保存的错误代码）。</li>
 <li>多任务系统：FreeBSD，用户登录到系统时，从用户选择的 Shell 开始执行。为了启动新进程，Shell 执行 <code>fork()</code> 系统调用，所选择的程序通过 <code>exec()</code> 装入内存并执行。根据命令发布方式，Shell 要么等待进程结束，要么在后台执行进程并继续响应用户输入。</li>
 <li>两种通信模型：<ul>
 <li><strong>消息传递模型（message-passing model）</strong> ：通信进程通过彼此之间交换消息传递信息，直接/间接通过一个共同的邮箱。通信实体可能是同一主机的不同进程，也可能是通过网络相连的另一主机的进程。进程之间通过 <strong>主机名（host name）</strong> 和 <strong>进程名（process name）</strong> 作为标识符区分。</li>
@@ -319,7 +319,7 @@
 </ul>
 <h2 id="系统引导"><a href="#系统引导" class="headerlink" title="系统引导"></a>系统引导</h2><ul>
 <li>装入内核以启动计算机的过程称为 <strong>引导（booting）</strong> 系统，多数计算机中均有一小块代码，称为 <strong>引导程序（bootstrap program）</strong> 或 <strong>引导装载程序（bootstrap loader）</strong> ，这段代码将定位内核，将其装入内存并开始执行。引导程序被存放在只读存储器中。</li>
-<li>对于大型操作系统（多数通用操作系统），引导程序存储在固件中，操作系统保存在磁盘上。引导程序运行诊断程序，从磁盘固定位置（0区块）读取整个引导块到内存，并执行这个 <strong>引导块（boot block）</strong> 中的代码。这个引导块足够复杂，它将一个完整的操作系统装载到内存开始执行。</li>
+<li>对于大型操作系统（多数通用操作系统），引导程序存储在固件中，操作系统保存在磁盘上。引导程序运行后会从磁盘固定位置（0区块）读取整个引导块到内存，并执行这个 <strong>引导块（boot block）</strong> 中的代码。这个引导块足够复杂，它将一个完整的操作系统装载到内存开始执行。</li>
 </ul>
 <hr>
 <p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2015/11/14/Computer-Organization-Architecture6/" target="_blank" rel="external">计组与体系结构笔记（六）：输入/输出与存储系统</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2016/11/22/os-concepts-2/" target="_blank" rel="external">操作系统（二）：进程与线程</a></p>
@@ -332,7 +332,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/22/os-concepts-1/" data-id="cixkixjm0003tegewf1j5t872" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/22/os-concepts-1/" data-id="cixlw6lwl003h88ewsxdgn3dq" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -535,6 +535,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2017/01/06/os-concepts-13/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg)" alt="操作系统（十三）：I/O 输入系统" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/06/os-concepts-13/" class="title">操作系统（十三）：I/O 输入系统</a></p>
+                            <p class="item-date"><time datetime="2017-01-06T04:17:33.000Z" itemprop="datePublished">2017-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
     
     
@@ -612,26 +632,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/11/24/os-concepts-5/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-5-r.jpg)" alt="操作系统（五）：进程同步" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
-                            <p class="item-title"><a href="/2016/11/24/os-concepts-5/" class="title">操作系统（五）：进程同步</a></p>
-                            <p class="item-date"><time datetime="2016-11-24T10:41:33.000Z" itemprop="datePublished">2016-11-24</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -641,7 +641,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">13</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">14</span></li></ul>
         </div>
     </div>
 

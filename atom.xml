@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2016-12-23T17:28:14.844Z</updated>
+  <updated>2017-01-06T09:27:31.970Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -14,6 +14,113 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>操作系统（十三）：I/O 输入系统</title>
+    <link href="http://forec.github.io/2017/01/06/os-concepts-13/"/>
+    <id>http://forec.github.io/2017/01/06/os-concepts-13/</id>
+    <published>2017-01-06T04:17:33.000Z</published>
+    <updated>2017-01-06T09:27:31.970Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;注：只包含第 13 章内核 I/O 子系统之前的内容。&lt;/p&gt;
+&lt;h1 id=&quot;I-O-硬件&quot;&gt;&lt;a href=&quot;#I-O-硬件&quot; class=&quot;headerlink&quot; title=&quot;I/O 硬件&quot;&gt;&lt;/a&gt;I/O 硬件&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;设备驱动程序（device drivers）&lt;/strong&gt; 为 I/O 子系统提供了统一设备的访问接口。&lt;/li&gt;
+&lt;li&gt;设备和计算机的通信通过 &lt;strong&gt;端口（port）&lt;/strong&gt; ，一组被一个/多个设备共同使用的线称为 &lt;strong&gt;总线（bus）&lt;/strong&gt; 。总线是一组线和一组严格定义的描述在线上传输信息的协议。 &lt;strong&gt;链环（daisy chaine）&lt;/strong&gt; 形容的是多个设备相连，最终设备通过端口连接到计算机上的模式。链环常常按总线方式工作，一个典型的 PC 总线结构如下图。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/typical-pc-bus.png&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
+&lt;li&gt;上图中包含一个 &lt;strong&gt;PCI 总线&lt;/strong&gt; （最常用的 PC 系统总线）用于连接 CPU 和内存子系统/快速设备， &lt;strong&gt;扩展总线（expansion bus）&lt;/strong&gt; 用于连接串/并行端口和相对慢的设备（键盘）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;控制器（controller）&lt;/strong&gt; 是用来操作端口、总线或者设备的一组电子器件，它的复杂程度和传输协议有关，如串行端口控制器比较简单，而 SCSI 总线控制器常实现为一个和计算机相连的独立的 &lt;strong&gt;主机适配器（host adapter）&lt;/strong&gt; ，这个适配器会有处理器、微码以及一定的私有内存，从而能够处理 SCSI 协议信息。&lt;/li&gt;
+&lt;li&gt;控制器有一个/多个用于数据和控制信号的寄存器， &lt;strong&gt;处理器通过读写这些寄存器来来实现与控制器的通信&lt;/strong&gt; 。这种通信的可以通过特殊的 I/O 指令向指定的 I/O 端口地址传输一个字节/字，也可以通过 &lt;strong&gt;内存映射&lt;/strong&gt; I/O 模式（在 &lt;a href=&quot;http://blog.forec.cn/2017/01/04/os-concepts-9/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;虚拟内存&lt;/a&gt; 中介绍过），处理器能够通过标准数据传输指令完成对控制器的读写。部分系统同时采用这两种方式，例如图像控制器有 I/O 端口来完成基本控制操作，还有一个较大的内存映射区域来支持屏幕内容的接收和生成。&lt;/li&gt;
+&lt;li&gt;I/O 端口通常有 4 种寄存器，寄存器通常为 1 ~ 4B：状态寄存器、控制寄存器、数据输入寄存器和数据输出寄存器。有的控制器有 FIFO 芯片从而可以保留多个输入/输出数据。上述四种寄存器的主要功能有：&lt;ul&gt;
+&lt;li&gt;主机从 &lt;strong&gt;数据输入寄存器&lt;/strong&gt; 读出数据&lt;/li&gt;
+&lt;li&gt;主机向 &lt;strong&gt;数据输出寄存器&lt;/strong&gt; 写入数据&lt;/li&gt;
+&lt;li&gt;主机可从 &lt;strong&gt;状态寄存器&lt;/strong&gt; 读出设备当前的状态&lt;/li&gt;
+&lt;li&gt;主机向 &lt;strong&gt;控制寄存器&lt;/strong&gt; 写入数据来发送命令、改变设备状态&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;轮询&quot;&gt;&lt;a href=&quot;#轮询&quot; class=&quot;headerlink&quot; title=&quot;轮询&quot;&gt;&lt;/a&gt;轮询&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;主机和控制器之间交互很复杂，但基本的 &lt;strong&gt;握手（handshaking）&lt;/strong&gt; 比较简单。假设控制器的状态寄存器中有一位用于说明设备当前是否在忙，控制器正忙时就将这一位置位。控制器的命令寄存器中有一位说明主机是否有任务准备就绪，当主机需要控制器执行某个操作时，需要将命令寄存器的这一位置位。主机和控制器交互输出一个字节时的握手流程如下：&lt;ol&gt;
+&lt;li&gt;主机不断读取状态寄存器，直到状态寄存器中的 &lt;em&gt;忙位&lt;/em&gt; 为 0&lt;/li&gt;
+&lt;li&gt;主机设置命令寄存器中的 &lt;em&gt;写位&lt;/em&gt; 并把一个字节写到数据输出寄存器&lt;/li&gt;
+&lt;li&gt;主机设置命令寄存器中的 &lt;em&gt;就绪位&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;控制器注意到命令寄存器中的就绪位被置位，因此将状态寄存器中的 &lt;em&gt;忙位&lt;/em&gt; 置位&lt;/li&gt;
+&lt;li&gt;控制器读取命令寄存器并发现 &lt;em&gt;写位&lt;/em&gt; 被置位，因此了解到需要执行一条写命令。它从数据输出寄存器读出一个字节，并向设备执行 I/O 操作&lt;/li&gt;
+&lt;li&gt;控制器操作完成后将命令寄存器中的 &lt;em&gt;就绪位&lt;/em&gt; 清除，并清除状态寄存器中的 &lt;em&gt;故障位&lt;/em&gt; （这说明 I/O 设备成功完成任务），最后清除状态寄存器中的 &lt;em&gt;忙位&lt;/em&gt; 表示本次字节传输操作结束&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;在步骤 1 中主机将处于 &lt;strong&gt;忙等待（busy-waiting）&lt;/strong&gt; 或者 &lt;strong&gt;轮询（polling）&lt;/strong&gt; 状态。多数计算机体系只需要三个 CPU 指令周期就可以完成基本的轮询操作，但不断地重复轮询会浪费处理器资源。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;中断&quot;&gt;&lt;a href=&quot;#中断&quot; class=&quot;headerlink&quot; title=&quot;中断&quot;&gt;&lt;/a&gt;中断&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;中断（interrupt）&lt;/strong&gt; 是使外设通知 CPU 的硬件机制。CPU 硬件有一条 &lt;strong&gt;中断请求线（Interrupt-request line，IRL）&lt;/strong&gt; ，CPU 执行完每条指令都会检测 IRL 判断是否有控制器通过 IRL 发送了信号。如果有，CPU 会保存当前的状态并且跳转到 &lt;strong&gt;中断处理程序（interrupt-handler）&lt;/strong&gt; 。中断处理程序会判断中断原因、进行处理、恢复状态并执行中断返回指令使 CPU 返回中断之前的执行状态。整个流程大致为：&lt;ul&gt;
+&lt;li&gt;设备控制器通过中断请求线 &lt;strong&gt;发送中断信号引起（raise）中断&lt;/strong&gt; &lt;/li&gt;
+&lt;li&gt;CPU &lt;strong&gt;捕获（catch）中断并分发（dispatch）到中断处理程序&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;中断处理程序处理设备请求以 &lt;strong&gt;清除中断&lt;/strong&gt; &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;CPU 和 &lt;strong&gt;中断控制器（interrupt-controller）&lt;/strong&gt; 硬件提供了以下三个特性：&lt;ul&gt;
+&lt;li&gt;在 CPU 执行关键指令时可以延迟对中断的处理&lt;/li&gt;
+&lt;li&gt;能够将中断快速转发给适当的中断处理程序，而不必检查所有设备以确定是哪个设备引发了中断&lt;/li&gt;
+&lt;li&gt;支持多级中断，可以根据紧迫性来相应中断&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;多数 CPU 有两个中断请求线： &lt;strong&gt;非屏蔽中断（nonmaskable）&lt;/strong&gt; 用于处理非常严重的，不可以恢复的内存错误等问题， &lt;strong&gt;可屏蔽中断（maskable）&lt;/strong&gt; 可被设备控制器用来请求服务，如果 CPU 正在执行关键、不可中断指令，则可以屏蔽这一类中断线上的请求。&lt;/li&gt;
+&lt;li&gt;中断机制根据 &lt;strong&gt;中断向量（interrupt vector）&lt;/strong&gt; 来选择中断服务程序。中断向量和中断服务程序被维护在一张表中，中断向量支持的地址数量有限（例如 8 位中断向量只能对应 256 个中断服务程序，奔腾即为 256 个中断向量，0~31 用于各种错误等非屏蔽中断，剩下的为可屏蔽中断）， &lt;strong&gt;中断链接（interrupt chaining）&lt;/strong&gt; 可解决这个问题：中断向量指向的不再是单一的中断服务程序，而是一个中断服务程序的链表，中断一旦发生，对应链表中的全部中断处理程序都会一一调用，直到发现了能够处理请求的中断服务程序为止。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;中断优先级（interrupt priority）&lt;/strong&gt; 使 CPU 可以在不屏蔽所有中断的情况下延迟处理低优先级的中断，并且也允许高优先级的中断抢占低优先级的中断处理。&lt;/li&gt;
+&lt;li&gt;现代操作系统启动时会探查硬件总线、确定哪些设备存在并将对应的中断处理程序安装到中断向量中。操作系统对于中断机制的应用非常广泛：&lt;ul&gt;
+&lt;li&gt;设备控制器通过中断表明自己已经准备好服务&lt;/li&gt;
+&lt;li&gt;通过中断机制处理例如被 0 除、违例内存访问等 &lt;strong&gt;异常（Exception）&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;使用中断进行虚拟内存分页，页错误会引发中断异常，这个中断会挂起当前进程并跳转到内核的页错误处理程序&lt;/li&gt;
+&lt;li&gt;程序执行系统调用会触发 &lt;strong&gt;软中断（software interrupt）&lt;/strong&gt; 或者 &lt;strong&gt;陷阱指令（trap）&lt;/strong&gt; &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;直接内存访问&quot;&gt;&lt;a href=&quot;#直接内存访问&quot; class=&quot;headerlink&quot; title=&quot;直接内存访问&quot;&gt;&lt;/a&gt;直接内存访问&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;使用通用处理器不断监听设备控制器的寄存器并按字节传输（ &lt;strong&gt;程序控制 I/O&lt;/strong&gt; ，Programmed I/O，PIO）是对计算资源的非常过分的浪费。计算机为了避免 PIO 增加 CPU 负担，将一部分数据传输任务交付 &lt;strong&gt;直接内存访问（direct-memory access，DMA）&lt;/strong&gt; 控制器。&lt;/li&gt;
+&lt;li&gt;开始 DMA 传输时，主机向内存写入 DMA 命令块，块中包含传输的源、目的地址指针以及传输的字节数。 &lt;strong&gt;CPU 将该命令块的地址写到 DMA 控制器中&lt;/strong&gt; 并继续其他工作，DMA 控制器会根据命令块直接操作内存总线完成传输（这段时间 CPU 无法使用总线）。传输完成后 DMA 控制器会中断 CPU 并交还给  CPU 总线控制权。&lt;/li&gt;
+&lt;li&gt;DMA 和设备控制器之间的握手通过 &lt;strong&gt;DMA-request&lt;/strong&gt; 和 &lt;strong&gt;DMA-acknowledge&lt;/strong&gt; 线进行，设备有数据需要传输时，设备控制器就通过 DMA-request 线通知 DMA 控制器，DMA 控制器会发出申请中断 CPU，在从 CPU 获取所需要的地址后将地址放到内存地址总线上，并通过 DMA-acknowledge 线通知设备控制器。设备控制器收到这个信号，向内存地址总线上的地址写入数据。交互过程如下图。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/steps-dma-transfer.png&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
+&lt;li&gt;DMA 控制总线传输期间 CPU 不能访问主存（仍可访问 L1、L2 缓存），这称为 &lt;strong&gt;周期挪用（cycle stealing）&lt;/strong&gt; ，会放慢 CPU 计算，当往往能够改善系统总体性能。有的 DMA 使用物理内存地址，有的使用虚拟内存地址（这时候需要有一个虚拟到物理地址的转换），使用虚拟内存地址的 DMA 称为 &lt;strong&gt;直接虚拟内存访问（direct virtual-memory access，DVMA）&lt;/strong&gt; 。DVMA 可以直接实现两个内存映射设备之间的传输而无需 CPU 干涉。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;I-O-应用接口摘要&quot;&gt;&lt;a href=&quot;#I-O-应用接口摘要&quot; class=&quot;headerlink&quot; title=&quot;I/O 应用接口摘要&quot;&gt;&lt;/a&gt;I/O 应用接口摘要&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;设备在很多方面有很大差异：&lt;ul&gt;
+&lt;li&gt;字符流或块：字符流设备按字节传输，块设备以块为单位传输&lt;/li&gt;
+&lt;li&gt;顺序访问或随机访问&lt;/li&gt;
+&lt;li&gt;同步或异步：同步设备按照一定响应时间进行数据传输，异步设备则呈现无规则/不可预测的响应时间&lt;/li&gt;
+&lt;li&gt;共享或专用：共享设备可以被多个进程/线程并发使用，专用设备则不可以&lt;/li&gt;
+&lt;li&gt;操作速度：设备速度不同&lt;/li&gt;
+&lt;li&gt;读写/只读/只写：设备支持的数据传输方向不同&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;块设备（block-device）&lt;/strong&gt; 接口规定了访问磁盘驱动器以及其它块设备所需的各个方面。操作系统本身和特殊的应用程序（如数据库）倾向于将块设备当作简单的线性块数组访问，这种访问方式称为 &lt;strong&gt;原始（raw） I/O&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;阻塞和非阻塞 I/O&lt;/strong&gt; ：&lt;ul&gt;
+&lt;li&gt;应用程序发出 &lt;strong&gt;阻塞（blocking） I/O&lt;/strong&gt; 类型的系统调用时，应用程序就会被挂起，移动到进程等待队列中。因为阻塞式的 I/O 容易理解，并且 I/O 设备执行所需的时间是异步的，执行时间不可预估，因此绝大多数操作系统给应用程序预留的接口都是阻塞系统调用。&lt;/li&gt;
+&lt;li&gt;有的用户级进程需要 &lt;strong&gt;非阻塞（nonblocking） I/O&lt;/strong&gt; ，例如用户接口，它用来接收键盘/鼠标输入，同时还要在屏幕回显，又或者视频应用程序，他需要从磁盘读取帧并解码到显示器上。非阻塞 I/O 通常使用多线程实现，有的线程执行阻塞系统调用，其他线程继续执行。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;异步系统调用（asynchronous system call）&lt;/strong&gt; 不必等待 I/O 完成就可以立刻返回，应用程序继续执行。I/O 完成时会通知应用程序，比如设置程序空间里某个变量，或者触发信号/软件中断等。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/two-io-methods.png&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/05/os-concepts-12/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（十二）：大容量存储器结构&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/06/os-concepts-14/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（专题）：信号量编程&lt;/a&gt;    &lt;/p&gt;
+&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/01/06/os-concepts-13/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/01/06/os-concepts-13/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/01/06/os-concepts-13/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
+    
+  </entry>
   
   <entry>
     <title>顶点云（应用）用户代理</title>
@@ -326,7 +433,7 @@
     <link href="http://forec.github.io/2016/11/24/os-concepts-6/"/>
     <id>http://forec.github.io/2016/11/24/os-concepts-6/</id>
     <published>2016-11-24T12:47:03.000Z</published>
-    <updated>2017-01-05T04:56:32.488Z</updated>
+    <updated>2017-01-06T12:34:52.416Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第六章 Monitor 部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
@@ -363,18 +470,18 @@
 &lt;ul&gt;
 &lt;li&gt;一个改进版的 Monitor 解决方案如下。筷子本身并不属于 monitor 的一部分，否则同时只能有一个哲学家在进餐。代码中 &lt;code&gt;NUM_PHILS&lt;/code&gt; 是哲学家数目。此代码解决了哲学家饥饿问题，来自&lt;a href=&quot;http://www.csee.wvu.edu/~jdm/classes/cs550/notes/tech/mutex/dp-mon.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;西弗吉尼亚大学&lt;/a&gt;。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;monitor dp&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    condition self[NUM_PHILS];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;enum&lt;/span&gt; states &amp;#123;THINKING, HUNGRY, EATING&amp;#125; state[NUM_PHILS-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; index;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    initialization_code()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (index=&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; index&amp;lt;NUM_PHILS; index++)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        flags[index] = THINKING;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;pickup&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        state[mynum] = HUNGRY;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; ((state[(i-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%NUM_PHILS] != EATING) &amp;amp;&amp;amp;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            (state[(i+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%NUM_PHILS] != EATING))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            state[i] = EATING;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;comment&quot;&gt;// 挂起，等待相邻哲学家改变状态时唤醒&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            self[i].wait;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            state[i] = EATING;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;putdown&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        state[i] = THINKING;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 唤醒左侧哲学家&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; ((state [(i-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%NUM_PHILS] == HUNGRY) &amp;amp;&amp;amp;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            (state [(i-&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;)%NUM_PHILS] != EATING))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            self[(i-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%NUM_PHILS].signal;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 唤醒右侧哲学家&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; ((state [(i+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%NUM_PHILS] == HUNGRY) &amp;amp;&amp;amp;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            (state [(i+&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;)%NUM_PHILS] != EATING))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            self[(i+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%NUM_PHILS].signal;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;monitor dp&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    condition self[NUM_PHILS];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;enum&lt;/span&gt; states &amp;#123;THINKING, HUNGRY, EATING&amp;#125; state[NUM_PHILS-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; index;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    initialization_code()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (index=&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; index&amp;lt;NUM_PHILS; index++)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            flags[index] = THINKING;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;pickup&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        state[i] = HUNGRY;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; ((state[(i-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%NUM_PHILS] != EATING) &amp;amp;&amp;amp;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            (state[(i+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%NUM_PHILS] != EATING))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            state[i] = EATING;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;comment&quot;&gt;// 挂起，等待相邻哲学家改变状态时唤醒&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            self[i].wait;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;comment&quot;&gt;// wait 操作被唤醒后可以改变状态为 EATING&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            state[i] = EATING;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;putdown&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        state[i] = THINKING;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 唤醒左侧哲学家&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; ((state [(i-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%NUM_PHILS] == HUNGRY) &amp;amp;&amp;amp;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            (state [(i-&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;)%NUM_PHILS] != EATING))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            self[(i-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%NUM_PHILS].signal;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 唤醒右侧哲学家&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; ((state [(i+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%NUM_PHILS] == HUNGRY) &amp;amp;&amp;amp;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            (state [(i+&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;)%NUM_PHILS] != EATING))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            self[(i+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%NUM_PHILS].signal;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;h2 id=&quot;使用信号量实现管程&quot;&gt;&lt;a href=&quot;#使用信号量实现管程&quot; class=&quot;headerlink&quot; title=&quot;使用信号量实现管程&quot;&gt;&lt;/a&gt;使用信号量实现管程&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;要实现的管程对于重启进程采用的策略是： &lt;strong&gt;调用 &lt;code&gt;x.signal()&lt;/code&gt; 的进程挂起自己，直到重新启动的进程离开或者等待&lt;/strong&gt; 。&lt;/li&gt;
 &lt;li&gt;每个管程都有一个信号量 &lt;code&gt;mutex&lt;/code&gt; 初始化为 1，进程进入管程之前必须通过 &lt;code&gt;wait()&lt;/code&gt; 获得允许，离开时需要调用 &lt;code&gt;signal()&lt;/code&gt; 释放权限。&lt;/li&gt;
 &lt;li&gt;信号量 &lt;code&gt;next&lt;/code&gt; 初始化为 0，供线程在唤醒重启进程时挂起自己，整数变量 &lt;code&gt;next_count&lt;/code&gt; 用于对挂起在 &lt;code&gt;next&lt;/code&gt; 上的进程数量计数。&lt;/li&gt;
 &lt;li&gt;进入管程的外部子程序结构 F 如下：&lt;/li&gt;
 &lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// body&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (next_count &amp;gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(next);    &lt;span class=&quot;comment&quot;&gt;//     此前有进程挂起，重启该进程&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(mutex);   &lt;span class=&quot;comment&quot;&gt;//     管程内无进程挂起，释放控制权&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 子程序执行&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// ...&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 子程序执行结束&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (next_count &amp;gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(next);    &lt;span class=&quot;comment&quot;&gt;//     此前有进程挂起，重启该进程&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(mutex);   &lt;span class=&quot;comment&quot;&gt;//     管程内无进程挂起，释放控制权&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;ul&gt;
 &lt;li&gt;对每个管程内的条件变量 &lt;code&gt;x&lt;/code&gt;，引入信号量 &lt;code&gt;x_sem&lt;/code&gt; 和整数变量 &lt;code&gt;x_count&lt;/code&gt; 记录信号量 x 上挂起的进程数量，均初始化为 0。&lt;code&gt;x.wait()&lt;/code&gt; 和 &lt;code&gt;x.signal()&lt;/code&gt; 实现如下：&lt;/li&gt;
 &lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; x.wait()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    x_count++;            &lt;span class=&quot;comment&quot;&gt;// 将进程挂起到 x 上&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (next_count &amp;gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)   &lt;span class=&quot;comment&quot;&gt;// 当前仍有进程挂起在管程中&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(next);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(mutex);    &lt;span class=&quot;comment&quot;&gt;// 无进程在等待，释放管程控制权&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(x_sem);          &lt;span class=&quot;comment&quot;&gt;// 等待信号量 x_sem，由信号量决定唤醒哪个挂起进程&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    x_count--; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; x.signal()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (x_count &amp;gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&amp;#123;     &lt;span class=&quot;comment&quot;&gt;// 当前有程序挂起在条件变量 x&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        next_count ++;    &lt;span class=&quot;comment&quot;&gt;// 管程挂起数增加&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(x_sem);    &lt;span class=&quot;comment&quot;&gt;// 释放信号量，唤醒一个挂起进程&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        wait(next);       &lt;span class=&quot;comment&quot;&gt;// 将自身阻塞到管程中&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        next_count--;     &lt;span class=&quot;comment&quot;&gt;// 继续执行&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; x.wait()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    x_count++;            &lt;span class=&quot;comment&quot;&gt;// 将进程挂起到 x 上&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (next_count &amp;gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)   &lt;span class=&quot;comment&quot;&gt;// 当前仍有进程挂起在管程中&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(next);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(mutex);    &lt;span class=&quot;comment&quot;&gt;// 无进程在等待，释放管程控制权&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(x_sem);          &lt;span class=&quot;comment&quot;&gt;// 等待信号量 x_sem，由信号量决定唤醒哪个挂起进程&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    x_count--;            &lt;span class=&quot;comment&quot;&gt;// 等待结束，进程被唤醒&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; x.signal()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (x_count &amp;gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&amp;#123;     &lt;span class=&quot;comment&quot;&gt;// 当前有程序挂起在条件变量 x&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        next_count ++;    &lt;span class=&quot;comment&quot;&gt;// 自己将要被阻塞，故管程挂起数增加&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(x_sem);    &lt;span class=&quot;comment&quot;&gt;// 释放信号量，唤醒一个挂起进程&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        wait(next);       &lt;span class=&quot;comment&quot;&gt;// 将自身阻塞到管程中&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        next_count--;     &lt;span class=&quot;comment&quot;&gt;// 被唤醒，继续执行&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 没有程序挂起在条件变量 x，不产生任何影响&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;hr&gt;
 &lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-5/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（五）：进程同步&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-7/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（七）：死锁&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
@@ -536,7 +643,7 @@
     <link href="http://forec.github.io/2016/11/24/os-concepts-4/"/>
     <id>http://forec.github.io/2016/11/24/os-concepts-4/</id>
     <published>2016-11-24T07:29:44.000Z</published>
-    <updated>2017-01-05T04:56:54.285Z</updated>
+    <updated>2017-01-06T11:58:33.867Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
@@ -562,7 +669,7 @@
 &lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// producer&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (&lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (counter == BUFFER_SIZE) ;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    buffer[in] = nextProduced;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    in = (in+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) % BUFFER_SIZE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    counter ++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// consumer&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (&lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (counter == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;) ;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    nextConsumed = buffuer[out];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    out = (out+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) % BUFFER_SIZE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    counter --;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;ul&gt;
 &lt;li&gt;以上代码可使用全部缓冲区资源，但当消费者进程和生产者进程并发执行时，涉及修改 &lt;code&gt;counter&lt;/code&gt; 的语句执行顺序将由操作系统设定。由于 C 语言中 &lt;code&gt;counter++&lt;/code&gt; 将被拆分为 &lt;code&gt;mov register, counter&lt;/code&gt;、&lt;code&gt;inc register&lt;/code&gt; 和 &lt;code&gt;mov counter, register&lt;/code&gt; 三句汇编指令，假设由于操作系统的调度，当前消费者进程和生产者进程分别执行到 &lt;code&gt;counter++&lt;/code&gt; 和 &lt;code&gt;counter--&lt;/code&gt; 的最后一条汇编指令处，则 &lt;code&gt;counter&lt;/code&gt; 的值将不正确。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;竞争条件（race condition）&lt;/strong&gt; ：多个进程同时访问和操作一个相同的数据，且执行结果和访问的特定顺序有关&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;竞争条件（race condition）&lt;/strong&gt; ：多个进程同时访问和操作一个相同的数据，且执行结果和访问的特定顺序有关。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;进程同步（process synchronization）&lt;/strong&gt; 和 &lt;strong&gt;协调（coordination）&lt;/strong&gt; ：确保系统不同部分操作资源不会互相影响。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id=&quot;临界区&quot;&gt;&lt;a href=&quot;#临界区&quot; class=&quot;headerlink&quot; title=&quot;临界区&quot;&gt;&lt;/a&gt;临界区&lt;/h1&gt;&lt;ul&gt;
@@ -601,7 +708,7 @@
 &lt;ul&gt;
 &lt;li&gt;Peterson 算法正确性的证明：&lt;ul&gt;
 &lt;li&gt;互斥：只有当 &lt;code&gt;flag[j] == FALSE&lt;/code&gt; 或 &lt;code&gt;turn == i&lt;/code&gt; 时 Pi 才进入临界区。假设 Pi 和 Pj 同时进入临界区，则 &lt;code&gt;flag[0] == flag[1] == TRUE&lt;/code&gt;，因为 turn 只能为 0 或 1，所以只有一个进程（假设 &lt;code&gt;turn == i&lt;/code&gt;）Pi 能够跳出 While 语句。此外，只要 Pi 在临界区内，&lt;code&gt;flag[i] == TRUE &amp;amp;&amp;amp; turn == i&lt;/code&gt; 就始终成立，所以 Pi 在临界区执行期间，Pj 将始终等待或执行剩余区内容。&lt;/li&gt;
-&lt;li&gt;发展和有限等待：进程 Pi 仅在 &lt;code&gt;flag[j] == True&lt;/code&gt; 且 &lt;code&gt;turn == j&lt;/code&gt; 的情况下才会被阻塞，若 Pj 不准备进入临界区，则 &lt;code&gt;flag[j] == True&lt;/code&gt;，此时 Pi 可以进入；若 Pj 当前也在请求进入临界区，则 &lt;code&gt;flag[j] == True&lt;/code&gt;，此时由 turn 决定哪个进程进入临界区。假设此时 Pj 进入临界区，当 Pj 退出临界区时会设置 &lt;code&gt;flag[j]&lt;/code&gt; 为 False 使 Pi 进入临界区；如果 Pj 剩余区执行速度非常快，又重新申请进入临界区，此时 Pj 设置 &lt;code&gt;flag[j]&lt;/code&gt; 为 TRUE，同时 turn 被设置为 i。因此 Pi 一定会进入临界区（发展），并且最多需要等待一次。&lt;/li&gt;
+&lt;li&gt;发展和有限等待：进程 Pi 仅在 &lt;code&gt;flag[j] == True&lt;/code&gt; 且 &lt;code&gt;turn == j&lt;/code&gt; 的情况下才会被阻塞，若 Pj 不准备进入临界区，则 &lt;code&gt;flag[j] == False&lt;/code&gt;，此时 Pi 可以进入；若 Pj 当前也在请求进入临界区，则 &lt;code&gt;flag[j] == True&lt;/code&gt;，此时由 turn 决定哪个进程进入临界区。假设此时 Pj 进入临界区，当 Pj 退出临界区时会设置 &lt;code&gt;flag[j]&lt;/code&gt; 为 False 使 Pi 进入临界区；如果 Pj 剩余区执行速度非常快，又重新申请进入临界区，此时 Pj 设置 &lt;code&gt;flag[j]&lt;/code&gt; 为 TRUE，同时 turn 被设置为 i。因此 Pi 一定会进入临界区（发展），并且最多需要等待一次。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
@@ -634,7 +741,7 @@
 &lt;ul&gt;
 &lt;li&gt;仅使用 &lt;code&gt;TestAndSet()&lt;/code&gt; 或仅使用 &lt;code&gt;Swap()&lt;/code&gt; 都可以解决互斥问题。以下是单独使用这二者实现的互斥，但均未满足有限等待的要求：&lt;/li&gt;
 &lt;/ul&gt;
-&lt;figure class=&quot;highlight sqf&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// TestAndSet Lock&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;( TestAndSetLock(&amp;amp;&lt;span class=&quot;built_in&quot;&gt;lock&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;lock&lt;/span&gt; = &lt;span class=&quot;literal&quot;&gt;FALSE&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 剩余区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(&lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// Swap Lock&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    key = &lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(key == &lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        Swap(&amp;amp;&lt;span class=&quot;built_in&quot;&gt;lock&lt;/span&gt;, &amp;amp;key);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;lock&lt;/span&gt; = &lt;span class=&quot;literal&quot;&gt;FALSE&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 剩余区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(&lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight sqf&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// TestAndSet Lock&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TestAndSetLock(&amp;amp;&lt;span class=&quot;built_in&quot;&gt;lock&lt;/span&gt;));&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;lock&lt;/span&gt; = &lt;span class=&quot;literal&quot;&gt;FALSE&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 剩余区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(&lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// Swap Lock&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    key = &lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(key == &lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        Swap(&amp;amp;&lt;span class=&quot;built_in&quot;&gt;lock&lt;/span&gt;, &amp;amp;key);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;lock&lt;/span&gt; = &lt;span class=&quot;literal&quot;&gt;FALSE&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 剩余区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(&lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;ul&gt;
 &lt;li&gt;使用 &lt;code&gt;TestAndSet()&lt;/code&gt; 或 &lt;code&gt;Swap()&lt;/code&gt; 也可以解决有限等待问题，以下是使用 &lt;code&gt;TestAndSet()&lt;/code&gt; 实现的有限等待互斥，代码为进程 Pi 的结构，来自原书（英文版）第 199 页。可以看出，剩余区前的 while 循环保证一个进程 Pi 强制拉取了排在其后的进程 Pj 进入临界区（如果有的话），这保证了有限等待。使用到的共享数据有：&lt;ul&gt;
 &lt;li&gt;&lt;code&gt;boolean waiting[n]&lt;/code&gt;：&lt;code&gt;waiting[i] == TRUE&lt;/code&gt; 表明进程 i 已申请进入临界区并正在等待选择&lt;/li&gt;
@@ -669,7 +776,7 @@
     <link href="http://forec.github.io/2016/11/23/os-concepts-3/"/>
     <id>http://forec.github.io/2016/11/23/os-concepts-3/</id>
     <published>2016-11-23T13:49:05.000Z</published>
-    <updated>2017-01-05T04:56:57.442Z</updated>
+    <updated>2017-01-06T11:38:52.584Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第五章（CPU 进程调度），内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
@@ -709,7 +816,7 @@
 &lt;h2 id=&quot;先到先服务&quot;&gt;&lt;a href=&quot;#先到先服务&quot; class=&quot;headerlink&quot; title=&quot;先到先服务&quot;&gt;&lt;/a&gt;先到先服务&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;最简单的 CPU 调度算法是 &lt;strong&gt;先到先服务（first-come，first-served，FCFS）&lt;/strong&gt; 调度算法：先请求 CPU 的进程先分配到 CPU，该算法可用 FIFO 队列实现，且平均等待时间通常较长。&lt;/li&gt;
 &lt;li&gt;当系统中存在一个 CPU 约束进程和多个 I/O 约束进程时，可能出现 CPU 约束进程占用 CPU，同时其他进程处理完 I/O 请求并在就绪队列中等待，此时 I/O 设备空闲。当 CPU 约束进程结束、转移到 I/O 区间后，这些 I/O 约束进程很快会执行完计算任务（仅有很短的 CPU 区间）并移回 I/O 区间，此时 CPU 空闲。之后该状态会反复，即多个进程等待一个长进程释放 CPU，此现象称为 &lt;strong&gt;护航效果（convoy effect）&lt;/strong&gt; 。这将导致 CPU 和设备利用率变得更低。&lt;/li&gt;
-&lt;li&gt;FCFS 调度时非抢占的，因此不适合分时系统，允许一个进程保持过长的 CPU 时间是非常严重的错误。&lt;/li&gt;
+&lt;li&gt;FCFS 调度是非抢占的，因此不适合分时系统，允许一个进程保持过长的 CPU 时间是非常严重的错误。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&quot;最短作业优先&quot;&gt;&lt;a href=&quot;#最短作业优先&quot; class=&quot;headerlink&quot; title=&quot;最短作业优先&quot;&gt;&lt;/a&gt;最短作业优先&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;最短作业优先（shortest-job-first，SJF）&lt;/strong&gt; 调度算法：当 CPU 空闲时，调度程序选择需要 CPU 区间最短的进程执行，如果有多个进程的下一次 CPU 区间长度相同，则在这些进程间使用 FCFS。即，先比较需要的 CPU 区间长度，长度越短优先级越高，长度相同时，到达时间越早优先级越高。&lt;/li&gt;
@@ -773,7 +880,7 @@
 &lt;li&gt;&lt;strong&gt;对称多处理（symmetric multiprocessing，SMP）&lt;/strong&gt; ：每个处理器自我调度，所有进程可能处于一个共同的就绪队列，或每个处理器拥有自己的私有就绪队列。调度通过每个处理器检查共同就绪队列并选择一个进程执行。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;处理器亲和性（processor affinity）&lt;/strong&gt; ：多数 SMP 系统试图避免将进程从一个处理器移动到另一个处理器，而是努力让一个进程在同一个处理器上运行。一个操作系统使用策略使一个进程保持在同一个处理器上运行，但不能做任何保证时，称为 &lt;strong&gt;软亲和性（soft affinity）&lt;/strong&gt; ；有的操作系统，如 Linux，提供一个支持 &lt;strong&gt;硬亲和性（hard affinity）&lt;/strong&gt; 的系统调用保证了进程无法转移到其它处理器。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;负载均衡（load balancing）&lt;/strong&gt; 保证了所有处理器的工作负载平衡以完全利用多处理器的优点，它仅在每个 CPU 有私有就绪队列的情况下才有必要。它和处理器的亲和性相悖。有两种方法可实现：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;推送迁移（push migration）&lt;/strong&gt; ：一个特定的进程间歇性的检查每个处理器的负载，假如当前夫在不均衡，则将过载处理器上进程推送到空闲处理器。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;推送迁移（push migration）&lt;/strong&gt; ：一个特定的进程间歇性的检查每个处理器的负载，假如当前负载不均衡，则将过载处理器上进程推送到空闲处理器。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;拉取迁移（pull migration）&lt;/strong&gt; ：一个空闲处理器从一个忙处理器拉取一个处于等待状态的进程。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
@@ -925,7 +1032,7 @@
     <link href="http://forec.github.io/2016/11/22/os-concepts-2/"/>
     <id>http://forec.github.io/2016/11/22/os-concepts-2/</id>
     <published>2016-11-22T11:02:51.000Z</published>
-    <updated>2017-01-05T11:22:17.880Z</updated>
+    <updated>2017-01-06T11:23:03.962Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
@@ -961,7 +1068,7 @@
 &lt;/li&gt;
 &lt;li&gt;操作系统从队列中选择进程的操作由 &lt;strong&gt;调度程序（scheduler）&lt;/strong&gt; 执行。在批处理系统中，进程被放到大容量存储设备（如磁盘）的缓冲池（作业池）中等待执行。 &lt;strong&gt;长期调度程序（long-term scheduler）&lt;/strong&gt; 或 &lt;strong&gt;作业调度程序（job scheduler）&lt;/strong&gt; 从缓冲池选择进程、装入内存以准备执行，而 &lt;strong&gt;短期调度程序（short-term scheduler）&lt;/strong&gt; 或 &lt;strong&gt;CPU 调度程序&lt;/strong&gt; 从准备执行的进程中选择并分配 CPU。二者的区别主要体现在 &lt;strong&gt;执行的频率不同&lt;/strong&gt; 。短期调度程序非常频繁地执行，为CPU选择新进程，如果短期调度需要 10ms 来确定执行一个运行 100ms 的进程，则 &lt;code&gt;10/(100+10) = 9%&lt;/code&gt; 的CPU时间浪费在了调度工作上；而长期调度程序执行不频繁，可能数分钟调度一次，它控制 &lt;strong&gt;多道程序设计的程度（degree of multiprogramming）&lt;/strong&gt; ，即内存中的进程数量。只有进程离开系统后才可能需要调度长期调度程序。&lt;/li&gt;
 &lt;li&gt;有些系统没有/少有长期调度程序，如 UNIX 或 Windows 的分时系统通常没有长期调度程序，它们仅仅简单的将所有新进程放到内存中以供短期调度程序使用。有些系统如分时系统可能引入 &lt;strong&gt;中期调度系统（medium-term scheduler）&lt;/strong&gt; ，它可以将进程从内存（或 CPU 竞争）中移出，从而降低多道程序设计的程度。之后，这些进程可以被重新调入内存并从中断处继续执行。这种行为称为 &lt;strong&gt;交换（swapping）&lt;/strong&gt; 。有时因为内存要求的改变导致可用内存过度使用，此时便需要交换。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/addition-medium-term-scheduling.jpg&quot; width=&quot;500px&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/swapped-state.jpg&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
-&lt;li&gt;将 CPU 切换到另一个进程需要保存当前进程状态并恢复另一个进程的状态，此任务成为 &lt;strong&gt;上下文切换（context switch）&lt;/strong&gt; 。内核会将旧进程的状态保存在其 PCB 中，并装入调度后要执行的并已恢复的新进程的上下文。上下文切换的时间与硬件支持相关。&lt;/li&gt;
+&lt;li&gt;将 CPU 切换到另一个进程需要保存当前进程状态并恢复另一个进程的状态，此任务称为 &lt;strong&gt;上下文切换（context switch）&lt;/strong&gt; 。内核会将旧进程的状态保存在其 PCB 中，并装入调度后要执行的并已恢复的新进程的上下文。上下文切换的时间与硬件支持相关。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&quot;进程操作&quot;&gt;&lt;a href=&quot;#进程操作&quot; class=&quot;headerlink&quot; title=&quot;进程操作&quot;&gt;&lt;/a&gt;进程操作&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;进程在其执行过程中能通过创建进程系统调用（create-process system call）创建多个新进程。创建进程称为 &lt;strong&gt;父（parent）进程&lt;/strong&gt; ，被创建的新进程称为 &lt;strong&gt;子（children）进程&lt;/strong&gt; 。每个新进程可以再创建其他进程以形成 &lt;strong&gt;进程树（tree）&lt;/strong&gt; 。&lt;/li&gt;
@@ -992,7 +1099,7 @@
 &lt;/ul&gt;
 &lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;preprocessor&quot;&gt;#&lt;span class=&quot;keyword&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;preprocessor&quot;&gt;#&lt;span class=&quot;keyword&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&amp;lt;windows.h&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    STARTUPINFO si;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    PROCESS_INFORMATION pi;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    ZeroMemory(&amp;amp;si, &lt;span class=&quot;keyword&quot;&gt;sizeof&lt;/span&gt;(si));    &lt;span class=&quot;comment&quot;&gt;// allocate memory&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    si.cb = &lt;span class=&quot;keyword&quot;&gt;sizeof&lt;/span&gt;(si);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    ZeroMemory(&amp;amp;pi, &lt;span class=&quot;keyword&quot;&gt;sizeof&lt;/span&gt;(pi));&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (!CreateProcess(&lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;,        &lt;span class=&quot;comment&quot;&gt;// use command line&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;string&quot;&gt;&quot;C:\\WINDOWS\\system32\\mspaint.exe&quot;&lt;/span&gt;,  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;, &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;, FALSE, &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;, &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;, &amp;amp;si, &amp;amp;pi))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; -&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;        &lt;span class=&quot;comment&quot;&gt;// create process failed&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    WaitForSingleObject(pi.hProcess, INFINITE);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    CloseHandle(pi.hProcess);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    CloseHandle(pi.hThread);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;h2 id=&quot;进程终止和通信&quot;&gt;&lt;a href=&quot;#进程终止和通信&quot; class=&quot;headerlink&quot; title=&quot;进程终止和通信&quot;&gt;&lt;/a&gt;进程终止和通信&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;进程完成执行最后的语句并使用系统调用 &lt;code&gt;exit()&lt;/code&gt; 时进程终止，此时进程可以返回状态值（通常为整数）给父进程（通过&lt;code&gt;wait()&lt;/code&gt;获取），所有进程资源也会被操作系统是放。&lt;/li&gt;
+&lt;li&gt;进程完成执行最后的语句并使用系统调用 &lt;code&gt;exit()&lt;/code&gt; 时进程终止，此时进程可以返回状态值（通常为整数）给父进程（通过&lt;code&gt;wait()&lt;/code&gt;获取），所有进程资源也会被操作系统释放。&lt;/li&gt;
 &lt;li&gt;进程通过系统调用（如 Win32 的 &lt;code&gt;TerminateProcess()&lt;/code&gt;）可以终止另一个进程，通常只有被终止进程的父进程才能执行该操作。父进程终止子进程的原因如：&lt;ul&gt;
 &lt;li&gt;子进程使用了超出其所分配的资源&lt;/li&gt;
 &lt;li&gt;子进程所分配的任务已不需要&lt;/li&gt;
@@ -1006,7 +1113,7 @@
 &lt;li&gt;&lt;strong&gt;方便&lt;/strong&gt; ：单个用户可同时执行多个任务&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;进程写作需要 &lt;strong&gt;进程间通信机制（interprocess communication， IPC）&lt;/strong&gt; 来允许进程相互交换数据，其包括两种基本模式：&lt;ul&gt;
+&lt;li&gt;进程协作需要 &lt;strong&gt;进程间通信机制（interprocess communication， IPC）&lt;/strong&gt; 来允许进程相互交换数据，其包括两种基本模式：&lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;共享内存（shared memory）&lt;/strong&gt; ：通信进程需要建立内存共享区域&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;消息传递（massage passing）&lt;/strong&gt; ：在分布式环境中非常有用，通信进程之间必须有 &lt;strong&gt;通信线路（communication link）&lt;/strong&gt; 。对于 &lt;strong&gt;直接通信&lt;/strong&gt; ，采用对称寻址，每个进程必须明确地命名通信的接收者或发送者； &lt;strong&gt;间接通信&lt;/strong&gt; 中，通过 &lt;strong&gt;邮箱（mailboxes）&lt;/strong&gt; 或 &lt;strong&gt;端口（ports）&lt;/strong&gt; 来发送和接收消息，每个邮箱都有唯一的标识符，两个进程仅在其共享至少一个邮箱时可相互通信，一个进程可通过许多不同的邮箱和其他进程通信。&lt;/li&gt;
 &lt;/ul&gt;
@@ -1017,13 +1124,13 @@
 &lt;li&gt;两个通信进程之间可有多个不同线路，每个线路对应一个邮箱&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;若多个进程共享同一个邮箱，例如进程 P1、P2、P3均共享邮箱 A，进程 P1 发送一个消息到 A，进程 P2 和 P3 同时对邮箱 A 执行 &lt;code&gt;receive()&lt;/code&gt;，则结果取决于所选用地方案：&lt;ul&gt;
+&lt;li&gt;若多个进程共享同一个邮箱，例如进程 P1、P2、P3均共享邮箱 A，进程 P1 发送一个消息到 A，进程 P2 和 P3 同时对邮箱 A 执行 &lt;code&gt;receive()&lt;/code&gt;，则结果取决于所选用的方案：&lt;ul&gt;
 &lt;li&gt;允许一个线路最多只能与两个进程相关联&lt;/li&gt;
 &lt;li&gt;一次最多允许一个进程执行 &lt;code&gt;receive()&lt;/code&gt; 操作&lt;/li&gt;
 &lt;li&gt;允许系统随意选择一个进程接收消息&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;由操作系统所拥有的邮箱是独立存在的，不属于某个特定的进程。创建新邮箱的进程默认为邮箱拥有者，通过系统调用，拥有权和接收特权可能传递给其他进程。&lt;/li&gt;
+&lt;li&gt;由操作系统所拥有的邮箱是独立存在的，不属于某个特定的进程。创建新邮箱的进程默认为邮箱拥有者，通过系统调用，拥有和接收的特权可能传递给其他进程。&lt;/li&gt;
 &lt;li&gt;消息传递可以是 &lt;strong&gt;阻塞（blocking）&lt;/strong&gt; 或者 &lt;strong&gt;非阻塞（nonblocking）&lt;/strong&gt; ，也称为 &lt;strong&gt;同步（synchronous）&lt;/strong&gt; 或 &lt;strong&gt;异步（asynchronous）&lt;/strong&gt; 。&lt;ul&gt;
 &lt;li&gt;阻塞发送：发送进程阻塞直到消息被接收进程或邮箱接收&lt;/li&gt;
 &lt;li&gt;非阻塞发送：发送进程可直接发送消息并继续操作&lt;/li&gt;
@@ -1041,10 +1148,10 @@
 &lt;li&gt;例程，C 程序调用 POSIX 系统下的共享内存 API，来自原书（英文版）第 104 页。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;preprocessor&quot;&gt;#&lt;span class=&quot;keyword&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;preprocessor&quot;&gt;#&lt;span class=&quot;keyword&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&amp;lt;sys/shm.h&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;preprocessor&quot;&gt;#&lt;span class=&quot;keyword&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&amp;lt;sys/stat.h&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; segment_id;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;char&lt;/span&gt; *shared_memory;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// the size(bytes) of shared memory segment&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; size = &lt;span class=&quot;number&quot;&gt;4096&lt;/span&gt;;    &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// allocate a shared memory segment&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    segment_id = shmget(IPC_PRIVATE, size, S_IRUSR | S_IWUSR);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// attach the shared memory segment&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    shared_memory = (&lt;span class=&quot;keyword&quot;&gt;char&lt;/span&gt; *) shmat(segment_id, &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// write a message to the shared memory segment&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;sprintf&lt;/span&gt;(shared_memory, &lt;span class=&quot;string&quot;&gt;&quot;Hi there!&quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// print out the string from shared memory&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;printf&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&quot;*%s\n&quot;&lt;/span&gt;, shared_memory);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// detach the shared memory segment&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    shmdt(shared_memory);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// remove the shared memory segment&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    shmctl(segment_id, IPC_RMID, &lt;span class=&quot;literal&quot;&gt;NULL&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h2 id=&quot;管道&quot;&gt;&lt;a href=&quot;#管道&quot; class=&quot;headerlink&quot; title=&quot;管道&quot;&gt;&lt;/a&gt;管道&lt;/h2&gt;&lt;ul&gt;
+&lt;h2 id=&quot;管道（补充）&quot;&gt;&lt;a href=&quot;#管道（补充）&quot; class=&quot;headerlink&quot; title=&quot;管道（补充）&quot;&gt;&lt;/a&gt;管道（补充）&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;管道（pipe）&lt;/strong&gt; 是一条在进程间以字节流方式传送数据的通信通道，由OS核心的缓冲区（通常几十KB）来实现，为单向。&lt;/li&gt;
 &lt;li&gt;管道常用于命令行所指定的输入输出重定向和管道命令，使用前要建立相应的管道。管道逻辑上可以看作管道文件，物理上则是由文件系统的高速缓存区构成。&lt;/li&gt;
-&lt;li&gt;管道分为 &lt;em&gt;有名管道&lt;/em&gt; 和 &lt;em&gt;无名管道&lt;/em&gt; ，按先进先出（FIFO）的方式传送消息，且只能单向传送消息。&lt;/li&gt;
+&lt;li&gt;管道分为 &lt;em&gt;有名管道&lt;/em&gt; 和 &lt;em&gt;无名管道&lt;/em&gt; ，按先进先出（FIFO）的方式传送消息，且 &lt;strong&gt;只能单向传送消息&lt;/strong&gt; 。&lt;/li&gt;
 &lt;li&gt;管道的发送和接受可使用如下操作：&lt;ul&gt;
 &lt;li&gt;发送进程利用文件系统的系统调用 &lt;code&gt;write(fd[1], buf, size)&lt;/code&gt; 把 buf 中长度为 size 字符的消息送入管道入口 &lt;code&gt;fd[1]&lt;/code&gt;；&lt;/li&gt;
 &lt;li&gt;接收进程利用文件系统的系统调用 &lt;code&gt;read(fd[0], buf, size)&lt;/code&gt;从管道出口 &lt;code&gt;fd[0]&lt;/code&gt; 读出 size 字符的消息放入 buf 中。&lt;/li&gt;
@@ -1132,187 +1239,6 @@
     
       &lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>操作系统（一）：概念导读</title>
-    <link href="http://forec.github.io/2016/11/22/os-concepts-1/"/>
-    <id>http://forec.github.io/2016/11/22/os-concepts-1/</id>
-    <published>2016-11-22T02:07:44.000Z</published>
-    <updated>2017-01-05T04:57:03.723Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;绪论（第一章）&quot;&gt;&lt;a href=&quot;#绪论（第一章）&quot; class=&quot;headerlink&quot; title=&quot;绪论（第一章）&quot;&gt;&lt;/a&gt;绪论（第一章）&lt;/h1&gt;&lt;h2 id=&quot;定义操作系统&quot;&gt;&lt;a href=&quot;#定义操作系统&quot; class=&quot;headerlink&quot; title=&quot;定义操作系统&quot;&gt;&lt;/a&gt;定义操作系统&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;操作系统（operating system）&lt;/strong&gt; 是管理计算机硬件的一个程序，它同时作为用户和硬件的中间层，为应用程序提供了基础。&lt;/li&gt;
-&lt;li&gt;一个计算机系统可被大致划分为四个部件： &lt;em&gt;硬件（hardware）&lt;/em&gt; 、 &lt;em&gt;操作系统&lt;/em&gt; 、 &lt;em&gt;应用程序（application programs）&lt;/em&gt; 、 &lt;em&gt;用户（users）&lt;/em&gt; 。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;硬件（hardware）&lt;/strong&gt; 包括： &lt;strong&gt;中央处理器（central processing unit）&lt;/strong&gt; 、 &lt;strong&gt;存储器（memory）&lt;/strong&gt; 和 &lt;strong&gt;输入输出（I/O）设备&lt;/strong&gt; 。操作系统控制并协调多个用户的多道程序。&lt;/li&gt;
-&lt;li&gt;从计算机的视角看，操作系统类似一个 &lt;strong&gt;资源管理器（resource allocator）&lt;/strong&gt; ，它扮演了硬件资源管理者的角色。另一个略微有所不同的角度是，操作系统是一个控制程序，这个 &lt;strong&gt;控制程序（control program）&lt;/strong&gt; 管理用户程序的执行以防止错误的发生和对计算机不合法的使用。&lt;/li&gt;
-&lt;li&gt;计算机系统最基本的目的是执行用户程序，并让用户问题的解决变得更容易。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;操作系统组织&quot;&gt;&lt;a href=&quot;#操作系统组织&quot; class=&quot;headerlink&quot; title=&quot;操作系统组织&quot;&gt;&lt;/a&gt;操作系统组织&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;计算机用于启动的初始化程序被称作 &lt;strong&gt;引导程序（bootstrap program）&lt;/strong&gt; ，它被存储在只读存储器（ROM）或电擦除只读存储器（EEPROM），也就是常说的固件。&lt;/li&gt;
-&lt;li&gt;一个事件的发生通常通过硬件或软件的 &lt;strong&gt;中断（interrupt）&lt;/strong&gt; 来触发。硬件可能在任何时候通过向 CPU 发送一个信号来 &lt;strong&gt;触发（trigger）&lt;/strong&gt; 中断，该信号通常经由总线传递。软件可能通过执行被称作 &lt;strong&gt;系统调用（system call）&lt;/strong&gt; 的特殊指令来触发中断。&lt;/li&gt;
-&lt;li&gt;计算机程序必须在主存（也被称作 &lt;strong&gt;随机访问存储器（random-access memory）&lt;/strong&gt; ）中执行。主存是 CPU 能直接访问的唯一的大容量存储，它通常由被称作 &lt;strong&gt;动态随机访问存储器（dynamic random-access memory，DRAM）&lt;/strong&gt; 的半导体器件实现。主存是 &lt;em&gt;易失（volatile）&lt;/em&gt; 存储，当电源关闭或其它问题出现时，其内容会丢失。因此多数计算机系统提供了 &lt;strong&gt;二级存储（secondary storage）&lt;/strong&gt; 作为主存的扩展，二级存储设备通常是 &lt;strong&gt;磁盘（magnetic disk）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;操作系统对每一个设备控制器均设置有一个 &lt;strong&gt;设备驱动（device driver）&lt;/strong&gt; ，要启动一个 I/O 操作需经过如下步骤：&lt;ul&gt;
-&lt;li&gt;设备驱动设置设备控制器内部对应的寄存器&lt;/li&gt;
-&lt;li&gt;设备控制器检查其内部寄存器并确定要执行的行为&lt;/li&gt;
-&lt;li&gt;设备控制器启动数据传输，数据 &lt;strong&gt;从设备发送给本地缓存&lt;/strong&gt; &lt;/li&gt;
-&lt;li&gt;一旦数据传输结束，设备控制器通过触发一个中断通知设备驱动&lt;/li&gt;
-&lt;li&gt;设备驱动将控制权交还给操作系统；如果 I/O 操作是读行为，则携带读取的数据或者指向数据的指针；如果 I/O 操作是其他行为，则返回状态信息。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;大量数据移动通常使用 &lt;strong&gt;直接存储器访问（direct memory access，DMA）&lt;/strong&gt; 。在为 I/O 设备设置缓冲区、指针、计数器后，设备控制器将整块数据直接从它的缓冲区发送到主存（或相反方向）而不经过 CPU。传输一块数据只会触发一次 CPU 中断。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;计算机系统体系与结构&quot;&gt;&lt;a href=&quot;#计算机系统体系与结构&quot; class=&quot;headerlink&quot; title=&quot;计算机系统体系与结构&quot;&gt;&lt;/a&gt;计算机系统体系与结构&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;多处理器系统（multiprocessor system）&lt;/strong&gt; ，也被称作 &lt;strong&gt;并行系统（parallel system）&lt;/strong&gt; 或 &lt;strong&gt;轻耦合系统（lightly coupled system）&lt;/strong&gt; 有以下三个主要优点：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;增加吞吐量（throughput）&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;性价比高&lt;/strong&gt; ：相比多个单处理器系统，因为多处理器系统可以共享 &lt;strong&gt;外围设备（peripherals）&lt;/strong&gt; 、 &lt;strong&gt;大容量存储器（mass storage）&lt;/strong&gt; 和电源，因此花费更少。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;增加可靠性（reliability）&lt;/strong&gt; ：单处理器出现故障只会减缓系统而不会导致系统终止。根据存活硬件均衡提供服务的能力被称作 &lt;strong&gt;故障弱化（graceful degradation）&lt;/strong&gt; 。有些系统具有 &lt;strong&gt;容错能力（fault tolerant）&lt;/strong&gt; ，当任何一个单件出错时，系统能够继续运行。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;多处理器系统主要有两种类型：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;非对称多处理器（asymmetric multiprocessing）&lt;/strong&gt; ：每个处理器被赋予一定特殊作业，一个主处理器用于控制系统，其它的处理器要么从主处理器获取信息，要么执行预定义的作业。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;对称多处理器（symmetric multiprocessing，SMP）&lt;/strong&gt; ：每个处理器均可执行操作系统中的所有作业，处理器之间不存在主从关系。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;多道程序（multiprogramming）&lt;/strong&gt; 通过组织作业（代码或数据）增加了 CPU 的利用率（utilization），CPU 无论何时均有一个作业在执行。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;分时（time sharing）&lt;/strong&gt; ，或者 &lt;strong&gt;多工（multitasking）&lt;/strong&gt; 是多道程序在逻辑上的扩展，CPU 在多个程序间跳转执行，因为跳转速度很快，对于用户而言就可以与各个同时运行的程序交互。 分时需要 &lt;strong&gt;交互式（interactive）&lt;/strong&gt; 的计算机系统，用户和系统之间应该可以直接交流，且 &lt;strong&gt;响应时间（response time）&lt;/strong&gt; 应当足够短。&lt;/li&gt;
-&lt;li&gt;一个被装入主存并执行的程序被称作 &lt;strong&gt;进程（process）&lt;/strong&gt; 。分时和多道程序需要主存中同时保持多个作业，因为主存通常不足以同时容纳这些作业，所以它们在执行前被存放在硬盘的 &lt;strong&gt;作业池（job pool）&lt;/strong&gt; 中，它容纳了所有等待分配主存的进程。&lt;/li&gt;
-&lt;li&gt;如果多个作业因为主存空间不足而无法同时装载，那么系统要在作业间进行 &lt;strong&gt;作业调度（job scheduling）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;在分时系统中，操作系统必须保证响应时间，这一点有时通过进程在主存和硬盘之间的 &lt;strong&gt;交换（swapping）&lt;/strong&gt; 完成。一个更普遍的方式是 &lt;strong&gt;虚拟内存（virtual memory）&lt;/strong&gt; ，它使用户可以运行远大于 &lt;strong&gt;物理内存（physical memory）&lt;/strong&gt; 的程序。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;操作系统运行&quot;&gt;&lt;a href=&quot;#操作系统运行&quot; class=&quot;headerlink&quot; title=&quot;操作系统运行&quot;&gt;&lt;/a&gt;操作系统运行&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;现代操作系统均为 &lt;strong&gt;中断驱动（interrupt driven）&lt;/strong&gt; ，事件几乎都通过中断或陷阱来触发。&lt;/li&gt;
-&lt;li&gt;一个 &lt;strong&gt;陷阱（trap）&lt;/strong&gt; 或者说 &lt;strong&gt;异常（exception）&lt;/strong&gt; ，是软件产生的中断。触发的原因要么是错误的产生（例如除 0 操作或为例内存访问），要么是用户程序执行了对操作系统服务的特殊请求。&lt;/li&gt;
-&lt;li&gt;为了保证操作系统程序正确执行，我们需要区分系统程序段和用户程序段。因此设置了两个独立的操作 &lt;strong&gt;模式（modes）&lt;/strong&gt; ： &lt;strong&gt;用户模式（user mode）&lt;/strong&gt; 和 &lt;strong&gt;内核/管理/系统/特权模式（kernel/supervisor/system/privileged mode）&lt;/strong&gt; 。计算机硬件中需要加入一个 &lt;strong&gt;模式位（mode bit）&lt;/strong&gt; 用于说明当前的模式为内核（0）还是用户（1）。&lt;/li&gt;
-&lt;li&gt;在系统启动时，硬件系统处于内核模式。之后操作系统被加载并且在用户模式中执行用户应用。当一个陷阱或者中断发生，硬件将从用户模式切换到内核模式。&lt;/li&gt;
-&lt;li&gt;我们将一些机器指令指定为可能产生有害作用的 &lt;strong&gt;特权指令（privileged instructions）&lt;/strong&gt; ，硬件只允许特权指令在内核模式中运行。一旦系统调用被执行，它将被硬件视为一个软中断，中断向量将被传递给系统内部的一个服务程序，并且模式位切换至内核模式。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;定时器（timer）&lt;/strong&gt; 可使计算机在一定时间后被中断。在将控制权交还给用户之前，操作系统必须保证定时器已被设置，一旦定时器触发中断，控制权将自动交还给操作系统，操作系统会将该中断视作一个致命的错误（fatal error）或者给这个程序更多的执行时间。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;进程管理&quot;&gt;&lt;a href=&quot;#进程管理&quot; class=&quot;headerlink&quot; title=&quot;进程管理&quot;&gt;&lt;/a&gt;进程管理&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;程序是被动的实体，而进程是主动（active）的实体。&lt;/li&gt;
-&lt;li&gt;一个进程要完成任务需要如下资源：CPU，存储器，文件和 I/O 设备。一个单线程的进程有一个 &lt;strong&gt;程序计数器（program counter）&lt;/strong&gt; 指定下一条要执行的指令，多线程的进程有多个程序计数器。&lt;/li&gt;
-&lt;li&gt;进程是系统中的工作单元。通过在单 CPU 的复用，所有的进程都有机会并行执行。&lt;/li&gt;
-&lt;li&gt;操作系统需要对进程管理及以下相关行为负责：&lt;ul&gt;
-&lt;li&gt;创建或删除用户或系统进程&lt;/li&gt;
-&lt;li&gt;挂起或继续进程&lt;/li&gt;
-&lt;li&gt;为进程同步提供机制&lt;/li&gt;
-&lt;li&gt;为进程通信提供机制&lt;/li&gt;
-&lt;li&gt;为死锁的处理提供机制&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;操作系统结构（第二章）&quot;&gt;&lt;a href=&quot;#操作系统结构（第二章）&quot; class=&quot;headerlink&quot; title=&quot;操作系统结构（第二章）&quot;&gt;&lt;/a&gt;操作系统结构（第二章）&lt;/h1&gt;&lt;h2 id=&quot;操作系统服务&quot;&gt;&lt;a href=&quot;#操作系统服务&quot; class=&quot;headerlink&quot; title=&quot;操作系统服务&quot;&gt;&lt;/a&gt;操作系统服务&lt;/h2&gt;&lt;p&gt;操作系统应提供如下服务。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;用户接口（user interface）&lt;/strong&gt; ，包括：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;命令行接口（command-line interface，CLI）&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;批处理接口（batch interface）&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;图形化用户接口（graphical user interface，GUI）&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;程序执行（program execution）&lt;/strong&gt; ：操作系统要能够将程序加载到主存并执行程序&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;输入/输出操作（I/O operations）&lt;/strong&gt; ：运行中的程序可能需要涉及到文件或 I/O 设备的读写操作&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;文件系统控制（file-system manipulation）&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;通信（communications）&lt;/strong&gt; ：通信可能通过 &lt;em&gt;共享内存（shared memory）&lt;/em&gt; 或 &lt;em&gt;消息传递（message passing）&lt;/em&gt; 实现&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;错误检测（error detection）&lt;/strong&gt; ：操作系统应当能始终检测到可能的错误&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;资源分配（resource allocation）&lt;/strong&gt; ：一些资源需要特殊的分配行为（如 CPU、主存和文件存储），有的还需要请求和释放代码（如 I/O 设备）&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;统计（accounting）&lt;/strong&gt; ：操作系统需要对每个用户使用了多少不同的计算机资源做统计&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;安全防护（protection and security）&lt;/strong&gt; ：保证所有对系统资源的请求都得以控制&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;用户接口和系统调用&quot;&gt;&lt;a href=&quot;#用户接口和系统调用&quot; class=&quot;headerlink&quot; title=&quot;用户接口和系统调用&quot;&gt;&lt;/a&gt;用户接口和系统调用&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;有的操作系统将命令解释器（command interpreter）作为系统内核的一部分，有的（如 Windows XP 和 UNIX）将命令解释器作为一个特殊的程序。在存在多个可选命令解释器的系统中，它们通常被称作 &lt;strong&gt;壳（shell）&lt;/strong&gt; 。命令解释器的主要功能是获取并执行下一条用户指定的指令，有两种执行的方式：&lt;ul&gt;
-&lt;li&gt;命令解释器本身包含了执行命令的代码：可执行命令的数量决定了命令解释器的大小&lt;/li&gt;
-&lt;li&gt;通过系统程序实现多数指令：命令解释器本身并不理解指令的含义，它仅仅通过命令指定一个文件，将其装载至主存并执行。例如 &lt;code&gt;rm file.txt&lt;/code&gt; 将程序 &lt;code&gt;rm&lt;/code&gt; 加载并传入参数 &lt;code&gt;file.txt&lt;/code&gt; 执行&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;图形用户接口提供了一个桌面。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;系统调用（system call）&lt;/strong&gt; 为系统服务提供了一个接口。多数程序开发者并不接触这一细节等级的代码，他们通常使用 &lt;strong&gt;应用程序接口（application programming interface，API）&lt;/strong&gt; 来编写程序。API 为应用程序开发者提供了一组函数，最常见的三组 API 如：Windows 系统的 Win32 API、基于 POSIX 系统的 POSIX API 和 Java API。使用 API 的背后实际涉及了系统调用。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;系统调用和中断的异同点&lt;/strong&gt; ：&lt;ul&gt;
-&lt;li&gt;二者均有索引（系统调用编号-系统调用表、中断向量表），二者的执行均需切换到内核模式&lt;/li&gt;
-&lt;li&gt;二者触发条件不同：系统调用是主动请求（会被硬件视为软中断），中断是外部触发&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;中断和陷阱的不同点&lt;/strong&gt; ：&lt;ul&gt;
-&lt;li&gt;二者起点不同：陷阱是正在执行的程序主动发起的，中断是外部错误或动作产生&lt;/li&gt;
-&lt;li&gt;二者处理方式不同：程序的陷阱（异常）在响应后将停止执行，而程序在中断时保存断点，中断处理结束后从断点恢复执行&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;多数程序设计语言的运行时支持系统（一系列包含在编译器链接库中的函数）提供了 &lt;strong&gt;系统调用接口（system-call interface）&lt;/strong&gt; ，它们将程序代码和操作系统提供的系统调用链接起来。每个系统调用都有一个对应的编号，系统调用接口维护了一个编号-系统调用的索引，它们截取应用程序调用的 API，调用操作系统内核中相关的系统调用，并返回系统调用状态及其他返回值。&lt;/li&gt;
-&lt;li&gt;向操作系统传递参数有三种方法：通过寄存器传递、内存的块/表、压入/弹出堆栈。&lt;/li&gt;
-&lt;li&gt;系统调用可被大致分为五类： &lt;strong&gt;进程控制（process control）&lt;/strong&gt; 、 &lt;strong&gt;文件管理（file manipulation）&lt;/strong&gt; 、 &lt;strong&gt;设备管理（device manipulation）&lt;/strong&gt; 、 &lt;strong&gt;信息维护（information maintenance）&lt;/strong&gt; 和 &lt;strong&gt;通信（communications）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;一个单任务系统： MS-DOS，它在计算机启动时运行一个命令解释器，当运行程序时，它将程序装入内存，并修改命令解释器的大部分内容来为新程序提供尽可能多的空间。之后将指令指针设为程序的第一条指令并运行程序，要么产生错误引起中断（此错误代码会被保存），要么程序执行一个系统调用以终止。最终命令解释器剩余部分程序继续执行，并从磁盘重新装入命令解释器的其他部分。这些步骤完成后，命令解释器会想用户/下一程序提供上一次运行的结果（保存的错误代码）。&lt;/li&gt;
-&lt;li&gt;多任务系统：FreeBSD，用户登录到系统时，从用户选择的 Shell 开始执行。为了启动新进程，Shell 执行 &lt;code&gt;fork()&lt;/code&gt; 系统调用，所选择的程序通过 &lt;code&gt;exec()&lt;/code&gt; 装入内存并执行。根据命令发布方式，Shell 要么等待进程结束，要么在后台执行进程并继续响应用户输入。&lt;/li&gt;
-&lt;li&gt;两种通信模型：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;消息传递模型（message-passing model）&lt;/strong&gt; ：通信进程通过彼此之间交换消息传递信息，直接/间接通过一个共同的邮箱。通信实体可能是同一主机的不同进程，也可能是通过网络相连的另一主机的进程。进程之间通过 &lt;strong&gt;主机名（host name）&lt;/strong&gt; 和 &lt;strong&gt;进程名（process name）&lt;/strong&gt; 作为标识符区分。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;共享内存模型（shared-memory model）&lt;/strong&gt; ：进程使用 &lt;code&gt;shared memory create&lt;/code&gt; 和 &lt;code&gt;shared memory attach&lt;/code&gt; 系统调用来获得其它进程所拥有内存区域的访问权。操作系统通常需要组织一个进程访问另一个进程的内存，要使用共享内存模型，需要两/多个进程都同意取消这一限制。数据的形式和位置由进程协商决定，不受操作系统控制，进程必须保证它们不会同时向同一地方写入。&lt;/li&gt;
-&lt;li&gt;区别：消息传递对交换少量数据更有效，对于计算机之间的通信也比共享内存更容易实现；共享内存允许最大速度通信（本地可以内存速度），并且比较方便，但需要保护和同步。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;操作系统设计和实现&quot;&gt;&lt;a href=&quot;#操作系统设计和实现&quot; class=&quot;headerlink&quot; title=&quot;操作系统设计和实现&quot;&gt;&lt;/a&gt;操作系统设计和实现&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;系统程序（system program）&lt;/strong&gt; 为开发程序和执行程序提供了一个方便的环境，它们可分为：&lt;ul&gt;
-&lt;li&gt;文件管理（file management）&lt;/li&gt;
-&lt;li&gt;状态信息（status information）&lt;/li&gt;
-&lt;li&gt;文件修改（file modification）&lt;/li&gt;
-&lt;li&gt;程序语言支持（programming-language support）&lt;/li&gt;
-&lt;li&gt;程序装入和执行（program loading and execution）&lt;/li&gt;
-&lt;li&gt;通信（communications）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;操作系统设计目标：分为 &lt;em&gt;用户&lt;/em&gt; 目标 和 &lt;em&gt;系统&lt;/em&gt; 目标&lt;ul&gt;
-&lt;li&gt;用户目标：系统应当方便、容易使用、容易学习、可靠、安全、快速&lt;/li&gt;
-&lt;li&gt;系统目标：操作系统应该容易设计、实现和维护，应该灵活、可靠、高效而没有错误&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;策略（policy）&lt;/strong&gt; 和 &lt;strong&gt;机制（mechanism）&lt;/strong&gt; 的区分：机制决定如何做（ &lt;em&gt;how&lt;/em&gt; to do），而策略决定做什么（ &lt;em&gt;what&lt;/em&gt; will be done）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;操作系统结构&quot;&gt;&lt;a href=&quot;#操作系统结构&quot; class=&quot;headerlink&quot; title=&quot;操作系统结构&quot;&gt;&lt;/a&gt;操作系统结构&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;简单结构：利用最小的空间提供最多的功能，没有被划分为模块，如 MS-DOS 和最初的 UNIX。应用程序能够访问最底层的、基本的设备驱动，因此易受恶意程序的伤害。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;分层方法（Layered Approach）&lt;/strong&gt; ：采用自顶向下方法，将总的功能和特征划分为模块。模块化的其中方法是分层方法：将操作系统分为若干层（级），最底层（层0）为硬件，最高层（层N）为用户接口，分层结构类似一个同心圆。分层法最大的 &lt;strong&gt;优点在于构造和调试的简单化&lt;/strong&gt; （每层只能利用较低层的功能和服务、每层为高层隐藏了一定数据结构、操作和硬件存在），主要困难在于 &lt;strong&gt;对层的详细定义&lt;/strong&gt; 和 &lt;strong&gt;相比其他方法的低效&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;微内核（microkernels）&lt;/strong&gt; ：将操作系统中所有非基本部分从内核中移走，将它们实现为系统程序或用户程序，从而得到更小的内核。微内核通常包括最小的进程、内存管理和通信功能。Windows NT 系统采用了分层微内核，有些 UNIX 系统也采用了此种方式。&lt;ul&gt;
-&lt;li&gt;微内核的主要功能是使客户程序和运行在用户空间的各种服务之间通信，客户程序和服务之间不会直接交互，而是通过微内核的 &lt;strong&gt;消息传递&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;因为新服务可在用户空间增加而不需修改内核，因此 &lt;strong&gt;便于扩充操作系统&lt;/strong&gt; ；因为大多数服务作为用户而不是内核进程运行，因此提供了 &lt;strong&gt;更好的安全性和可靠性&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;因为使用消息传递，系统功能总开销增加，因此 &lt;strong&gt;系统性能下降&lt;/strong&gt; 。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;模块（modules）&lt;/strong&gt; ：用面向对象技术生成模块化的内核，动态加载模块。内核可以提供核心服务，也可动态实现特定功能。该方法和微内核方法类似，核心模块只有核心功能以及其他模块加载、通信的相关信息，但模块方法中， &lt;strong&gt;模块之间不需要调用消息传递来通信&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;示例：Mac OS X操作系统的结构，底层为 Mach 微内核，提供内存管理、远程程序调用（remote process call，RPC）和进程间通信（IPC）工具；BSD 提供 BSD 命令行接口，支持网络、文件系统、POSIX API 实现。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;虚拟机和系统生成&quot;&gt;&lt;a href=&quot;#虚拟机和系统生成&quot; class=&quot;headerlink&quot; title=&quot;虚拟机和系统生成&quot;&gt;&lt;/a&gt;虚拟机和系统生成&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;虚拟机的基本思想是单个计算机（CPU、内存、硬盘、网卡等）硬件抽象为几个不同的执行部件。&lt;/li&gt;
-&lt;li&gt;虚拟机除了提供与基本硬件相同的接口外，不提供额外功能。每个进程都有一个与底层机器完全相同的（虚拟）副本。&lt;/li&gt;
-&lt;li&gt;虚拟机为每个虚拟系统提供 &lt;strong&gt;小型磁盘（minidisk）&lt;/strong&gt; ，系统在物理磁盘上为小型磁盘分配所需要的磁道来实现。所有小型磁盘的大小之和必须小于可用的物理磁盘。&lt;/li&gt;
-&lt;li&gt;底层物理机器有两种模式：用户模式和内核模式，虚拟机软件本身在物理机器上运行在用户模式中，而虚拟机在虚拟系统中运行在内核模式，每个虚拟系统有虚拟用户模式和虚拟内核模式，这两种模式均运行在物理用户模式。&lt;/li&gt;
-&lt;li&gt;虚拟的 I/O 操作可能需要更少（脱机操作）或更多（解释执行）的时间。&lt;/li&gt;
-&lt;li&gt;优点：可用于研究、开发操作系统；不同系统资源具有完全的保护，各个虚拟机之间完全独立。&lt;/li&gt;
-&lt;li&gt;操作系统通常设计成能运行在一类计算机上，对于某类特定的计算机场所，配置生成系统的过程称为 &lt;strong&gt;系统生成（system generation，SYSGEN）&lt;/strong&gt; 。需要考虑的信息有：使用什么CPU、多少可用内存、哪些可用设备、需要什么操作系统选项和参数值。这些信息确定后，系统管理员可用这些信息修改操作系统的源代码副本以完全重新编译操作系统；或者创建一个表，从预先编译过的库中选取模块，将这些模块连接起来生成操作系统；或者构造一个完全由表驱动的系统，所有代码都是系统的组成部分， &lt;strong&gt;选择发生在执行时而不是编译时&lt;/strong&gt; ，现代多数操作系统均为此种方式。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;系统引导&quot;&gt;&lt;a href=&quot;#系统引导&quot; class=&quot;headerlink&quot; title=&quot;系统引导&quot;&gt;&lt;/a&gt;系统引导&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;装入内核以启动计算机的过程称为 &lt;strong&gt;引导（booting）&lt;/strong&gt; 系统，多数计算机中均有一小块代码，称为 &lt;strong&gt;引导程序（bootstrap program）&lt;/strong&gt; 或 &lt;strong&gt;引导装载程序（bootstrap loader）&lt;/strong&gt; ，这段代码将定位内核，将其装入内存并开始执行。引导程序被存放在只读存储器中。&lt;/li&gt;
-&lt;li&gt;对于大型操作系统（多数通用操作系统），引导程序存储在固件中，操作系统保存在磁盘上。引导程序运行诊断程序，从磁盘固定位置（0区块）读取整个引导块到内存，并执行这个 &lt;strong&gt;引导块（boot block）&lt;/strong&gt; 中的代码。这个引导块足够复杂，它将一个完整的操作系统装载到内存开始执行。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2015/11/14/Computer-Organization-Architecture6/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计组与体系结构笔记（六）：输入/输出与存储系统&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/22/os-concepts-2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（二）：进程与线程&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/11/22/os-concepts-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/11/22/os-concepts-1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/22/os-concepts-1/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
