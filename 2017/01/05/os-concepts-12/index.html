@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>第一日 | Forec&#39;s Notes</title>
+    <title>操作系统（十二）：大容量存储器结构 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="" />
+        <meta name="keywords" content="OS" />
     
-    <meta name="description" content="Github和Gitcafe同时push的_config.yml，测试hexo效果">
+    <meta name="description" content="整理《Operating System Concepts》 第七版第十二章大容量存储器结构部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第一日">
-<meta property="og:url" content="http://forec.github.io/2015/08/04/Show/index.html">
+<meta property="og:title" content="操作系统（十二）：大容量存储器结构">
+<meta property="og:url" content="http://forec.github.io/2017/01/05/os-concepts-12/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="Github和Gitcafe同时push的_config.yml，测试hexo效果">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/hello-world-mes.jpg">
-<meta property="og:updated_time" content="2016-11-25T06:57:56.455Z">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版第十二章大容量存储器结构部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-12.jpg">
+<meta property="og:updated_time" content="2017-01-06T04:23:51.029Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="第一日">
-<meta name="twitter:description" content="Github和Gitcafe同时push的_config.yml，测试hexo效果">
+<meta name="twitter:title" content="操作系统（十二）：大容量存储器结构">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版第十二章大容量存储器结构部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
     
 
     
@@ -139,18 +139,18 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    未分类
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-Show" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-os-concepts-12" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        第一日
+        操作系统（十二）：大容量存储器结构
         </h1>
     
 
@@ -158,42 +158,110 @@
         
         
             <div class="article-subtitle">
-                <a href="/2015/08/04/Show/" class="article-date">
-    <time datetime="2015-08-04T10:35:09.000Z" itemprop="datePublished">2015-08-04</time>
+                <a href="/2017/01/05/os-concepts-12/" class="article-date">
+    <time datetime="2017-01-05T15:23:30.000Z" itemprop="datePublished">2017-01-05</time>
 </a>
                 
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>Github和Gitcafe同时push的_config.yml，测试hexo效果</p>
+<p>整理《Operating System Concepts》 第七版第十二章大容量存储器结构部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
 </blockquote>
 <a id="more"></a>
-<h2 id="config-yml"><a href="#config-yml" class="headerlink" title="_config.yml"></a>_config.yml</h2><ul>
-<li>部署部分：</li>
+<h1 id="大容量存储器结构"><a href="#大容量存储器结构" class="headerlink" title="大容量存储器结构"></a>大容量存储器结构</h1><h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h2><ul>
+<li><strong>磁盘（magnetic disk）</strong> 是现代计算机系统使用的大容量外存。磁盘片为扁平原盘，两面均涂有磁质材料，读写头在磁盘片的表面飞行，磁头和 <strong>磁臂（disk arm）</strong> 相连 ，磁臂将每个盘面两侧的全部磁头作为一个整体一起移动。磁盘片表面被逻辑划分为圆形 <strong>磁道（track）</strong> ，一圈磁道被进一步划分为 <strong>扇区（sector）</strong> 。同一圈磁道在不同盘片的集合组成了 <strong>柱面（cylinder）</strong> 。磁盘结构如下图。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/moving-head-disk-machanism.png" width="400px"></li>
+<li>多数驱动器每秒可旋转 60~200 圈，磁盘速度由 <strong>传输速率（transfer rate）</strong> 和 <strong>定位时间（positioning time）</strong> 决定。其中传输速率指驱动器和计算机之间的数据传输速率；定位时间又称 <strong>随机访问时间（random access time）</strong> ，包括 <strong>寻道时间（seek time）</strong> （移动磁臂到所需柱面所需的时间） 和 <strong>旋转等待时间（rotational latency）</strong> （等待磁盘驱动器将所需扇区旋转到磁头下的时间）。寻道时间和旋转等待时间通常为几毫秒，典型的磁盘能够以几兆每秒的速率传输。</li>
+<li>磁盘的传输速率总是低于有效的传输速率。 <strong>磁盘表现的传输速率是磁盘头从磁性介质读取比特的速率</strong> ，这不同于给操作系统传输块的速率（与操作系统之间传输的速率才是决定磁盘速度的传输速率）。</li>
+<li>磁头飞行在盘片数微米上的空气层中，一旦磁头和盘片接触就会损坏磁盘表面，这称为 <strong>磁头碰撞（head crash）</strong> 。磁头碰撞不能修复，整个磁盘必须替换。</li>
+<li>磁盘可移动或更换。 <strong>软盘（floppy disk）</strong> 是便宜的可移动磁盘，存储容量在 1.44MB 左右。</li>
+<li>磁盘驱动器通过 <strong>I/O总线</strong> 和计算机相连，可用的总线包括 <strong>EIDE（enhanced integrated drive electronics）</strong> 、 <strong>ATA（advanced technology attachment）</strong> 和 <strong>串行 ATA（serial ATA，SATA）</strong> 、 <strong>USB（universal serial bus）</strong> 、 <strong>FC（fiber channel）</strong> 和 SCSI 总线。</li>
+<li><strong>控制器（controller）</strong> 是一个特殊处理器，用于执行总线上的数据传输。其中， <strong>主机（host）</strong> 控制器是计算机上位于总线末端的控制器，而 <strong>磁盘（disk）</strong> 控制器位于磁盘驱动器内。</li>
+<li><strong>磁带（magnetic tape）</strong> 是早期次级存储介质，但访问速度过慢。典型磁带可以存储 20~200GB。</li>
+<li><strong>火线（FireWire）</strong> 指一个接口，这个接口可以讲外部设备如磁盘驱动器、DVD 驱动器等连接到计算机系统。</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  <span class="built_in">type</span>: git</span><br><span class="line">  repo:</span><br><span class="line">    github: git@github.com:Forec/Forec.github.io.git,master</span><br><span class="line">    gitcafe: git@gitcafe.com:Forec/Forec.git,gitcafe-pages</span><br></pre></td></tr></table></figure>
-<p>在gitcafe中建立静态网页需要设置branch为gitcafe-pages</p>
+<h2 id="磁盘结构和附属"><a href="#磁盘结构和附属" class="headerlink" title="磁盘结构和附属"></a>磁盘结构和附属</h2><ul>
+<li>现代磁盘驱动器可以看作一个一维的 <strong>逻辑块（logical blocks）</strong> 数组，逻辑块是最小的传输单位，通常为 512B，部分磁盘可以通过 <strong>低级格式化（low-level formatted）</strong> 来选择不同的逻辑块大小。</li>
+<li>一维逻辑块数组按顺序映射到磁盘的扇区， <strong>扇区 0 是最外面柱面的第一个磁道的第一个扇区</strong> ，这个映射关系先按磁道内的扇区顺序，之后按这一柱面上各个盘面的磁道顺序，最后按照 <strong>从外向内</strong> 的柱面顺序排序。通过这种映射， <strong>可以将逻辑块号转换为磁盘内的柱面号、柱面内的磁道号以及磁道内的扇区号</strong> 。这种转换有一些问题，原因在于：<ul>
+<li>多数磁盘有一些缺陷扇区，这时候映射需要用其它空闲扇区替代这些缺陷扇区</li>
+<li>有些磁盘每个磁道上的扇区数不是常量</li>
+</ul>
+</li>
+<li>对于使用 <strong>常量线性速度（constant linear velocity，CLV）</strong> 的介质，每个磁道的位密度均匀，离盘片中心更远的磁道的长度更长，容纳的扇区也就更多，这样从内向外的磁道所包含的扇区数就会逐渐增多，外部磁道的扇区数通常比内部磁道的扇区数多 40%。这时，盘片驱动器在磁头的不同位置的旋转速度将不同，磁头越靠近盘片中心则旋转速度越快。</li>
+<li>硬盘中通常采用 <strong>恒定圆角速度（constant angular velocity，CAV）</strong> ，这时内磁道到外磁道的位密度会不断降低，以使磁盘驱动器转速恒定的情况下也能维持恒定的数据率。</li>
+<li>计算机访问磁盘可通过 I/O 端口，或称 <strong>主机附属存储（host-attached storage）</strong> ，这一般在小系统中采用；或者通过分布式文件系统的远程主机，这称为 <strong>网络附属存储（network-attached storage）</strong> 。</li>
+</ul>
+<h1 id="磁盘调度"><a href="#磁盘调度" class="headerlink" title="磁盘调度"></a>磁盘调度</h1><ul>
+<li>强调磁盘的几个参数：<ul>
+<li><strong>寻道时间</strong> 是磁臂旋转以使磁头位于目标扇区所属的柱面上的时间</li>
+<li><strong>旋转延迟</strong> 是磁盘驱动器将盘片旋转以使目标扇区转动到磁头下的时间</li>
+<li><strong>磁盘带宽</strong> 是传输的总字节数除以从 <em>服务</em> 请求开始到传递结束的总时间。可以通过磁盘 I/O 请求调度来排列访问顺序，从而提高访问速度和带宽。</li>
+</ul>
+</li>
+<li>进程需要磁盘 I/O 操作时会向操作系统发出系统调用，这个调用请求包括：<ul>
+<li>操作类型：输入/输出</li>
+<li>本次传输的磁盘地址、内存地址、扇区数</li>
+</ul>
+</li>
+<li>多个进程的多道程序系统，磁盘队列可能有多个待处理请求，此时操作系统需对磁盘请求进行调度，包括 FCFS、SSTF、SCAN、C-SCAN、LOOK、C-LOOK。</li>
+</ul>
+<h2 id="FCFS-调度"><a href="#FCFS-调度" class="headerlink" title="FCFS 调度"></a>FCFS 调度</h2><ul>
+<li>先来先服务算法，此算法比较公平但无法提供最快的服务。</li>
+</ul>
+<h2 id="SSTF-调度"><a href="#SSTF-调度" class="headerlink" title="SSTF 调度"></a>SSTF 调度</h2><ul>
+<li><strong>最短寻道时间优先法（shortest-seek-time-first，SSTF）</strong> 会先处理最靠近当前磁头位置的请求，即选择距离当前磁头位置所需寻道时间最短的请求来处理。</li>
+<li>本质上是最短作业优先（SJF）调度，但与 SJF 类似，它可能导致一些请求得不到服务，如果待处理请求队列比较长，很有可能某个请求会产生饥饿。SSTF 调度相比 FCFS 调度有很大改善，但仍不是最优的。</li>
+</ul>
+<h2 id="SCAN-和-C-SCAN-调度"><a href="#SCAN-和-C-SCAN-调度" class="headerlink" title="SCAN 和 C-SCAN 调度"></a>SCAN 和 C-SCAN 调度</h2><ul>
+<li>SCAN 算法有时称为 <strong>电梯算法（elevator algorithm）</strong> ，磁臂会从磁盘的一端向另一端移动（按一维逻辑块数组的顺序），当磁头移动过每个柱面时就会处理这个柱面的服务请求。到达另一端后磁头会反向继续移动，如此往返。</li>
+<li>如果一个请求刚好在磁头移动到请求位置之前加入磁盘请求队列，则它会马上得到服务</li>
+<li>如果一个请求刚好在磁头移动过请求位置后加入队列，则它需要等待磁头到达另一端并调转方向、返回后才能得到服务</li>
+<li><strong>C-SCAN（circular SCAN）</strong> 调度和 SCAN 类似，但当磁头从磁盘的 0 号扇区移动到磁盘的最后一个扇区（或者柱面）后不会调转方向，而是从 0 号重新开始扫描整个磁盘。</li>
+<li>这两种算法都不会导致饥饿现象。</li>
+</ul>
+<h2 id="LOOK-和-C-LOOK-调度"><a href="#LOOK-和-C-LOOK-调度" class="headerlink" title="LOOK 和 C-LOOK 调度"></a>LOOK 和 C-LOOK 调度</h2><ul>
+<li>LOOK 和 SCAN 算法类似，磁头向一个方向移动，但不会一直移动到最后一个柱面才折返，而是处理完这个方向上最后一个请求后就掉头。</li>
+<li>C-LOOK 和 C-SCAN 类似，处理完最后一个请求后就会将磁头恢复到磁盘一端重新开始按固定顺序扫描。</li>
+</ul>
+<h2 id="算法选择"><a href="#算法选择" class="headerlink" title="算法选择"></a>算法选择</h2><ul>
+<li>磁盘服务请求很大程度上受文件分配方法影响：一个连续分配文件会产生几个磁盘上相近位置的请求，而链接/索引文件会产生很多分散在磁盘上的块。</li>
+<li>目录和索引块在磁盘上的位置也很重要，如果目录位于第一个柱面而文件数据位于最后一个柱面，则磁头需要横跨整个磁盘宽度。如果目录在中央柱面，则磁头只需要移动不到一半的磁盘宽度。</li>
+<li>磁盘调度算法应该作为一个操作系统的独立模块，在必要的时候模块应该可以被替换。SSTF 或 LOOK 算法是比较合理的默认算法。</li>
+<li>调度算法只考虑了寻道距离。旋转延迟几乎和寻道时间一样，但操作系统无法通过调度改善旋转延迟，因为现代磁盘并不透露逻辑块的物理位置。磁盘制造商会在磁盘控制器中加入磁盘调度算法缓解寻道时间和旋转延迟问题。</li>
+<li>因为操作系统对请求服务的顺序有更多限制（如按需分页的 I/O 请求比普通应用程序的 I/O 请求优先级高），因此操作系统不能完全将磁盘调度交给磁盘控制器，而是选择自己的磁盘调度算法，将请求按调度好的顺序、按批次交给磁盘控制器。</li>
+</ul>
+<h1 id="磁盘管理"><a href="#磁盘管理" class="headerlink" title="磁盘管理"></a>磁盘管理</h1><h2 id="磁盘格式化"><a href="#磁盘格式化" class="headerlink" title="磁盘格式化"></a>磁盘格式化</h2><ul>
+<li>新磁盘仅仅是含有磁性记录材料的盘片，需要通过 <strong>低级格式化（物理格式化，physical formatting）</strong> 分为扇区。</li>
+<li>低级格式化将磁盘的每个扇区按特定的数据结构填充数据，扇区的数据结构包括头、数据区（通常 512B）和尾部。头部和尾部包含磁盘控制器需要的信息，如扇区号码和 <strong>纠错代码（error-correcting code，ECC）</strong> 。</li>
+<li>操作系统需要将自己的数据结构记录到磁盘上，首先需要将磁盘分为一个或多个柱面组成的分区，操作系统可以将每个分区视作独立的磁盘。分区之后，操作系统需要通过 <strong>逻辑格式化（logical formatting）</strong> 来创建文件系统，操作系统会将初始的文件系统数据结构存储到磁盘上。这些数据结构包括那些仍空闲的和已经分配的空间（如分配给 FAT 或者 inode）和一个初始为空的目录。</li>
+<li>为提高效率，多数操作系统将多个块集中到一大块，称为 <strong>簇（cluster）</strong> 。磁盘 I/O 通过块完成，文件系统 I/O 通过簇完成。</li>
+</ul>
+<h2 id="引导块"><a href="#引导块" class="headerlink" title="引导块"></a>引导块</h2><ul>
+<li>计算机开始运行时需要初始化（自举，bootstrap）程序，它负责初始化系统所需的各个方面，并找到磁盘上的操作系统内核，将其装入内存开始执行。</li>
+<li>自举程序保存在 <strong>只读存储器（ROM）</strong> 中，其位置固定，并且只读（不受病毒影响），但改变自举代码就需要改变 ROM 硬件芯片。因此操作系统只在启动 ROM 中保留一个非常小的自举程序，这个小自举程序会从磁盘上调入更完整的自举程序。更完整的自举程序可以修改，并且保存在磁盘的启动块上。</li>
+<li>磁盘的 <strong>启动块（boot blocks）</strong> 位于磁盘的固定位置，拥有启动分区的磁盘称为 <strong>启动磁盘（boot disk）</strong> 或者 <strong>系统磁盘（system disk）</strong> 。启动 ROM 中的代码将启动块中的代码装入内存并执行，启动块中的完整自举程序会从 <strong>非固定位置</strong> 装入整个操作系统并执行。</li>
+<li>以 Windows 2000 为例，其启动代码放置在硬盘的第一个扇区，被称为 <strong>主引导记录（master boot record，MBR）</strong> ，MRB 中除了包含自举程序的代码，还包含硬盘分区列表和系统引导分区的具体标识。Win 2000 将硬盘分成多个分区，其中一个为 <strong>引导分区（boot partition）</strong> ，该分区包括了操作系统和设备驱动程序。MBR 确定引导分区的位置后就会读取引导分区的第一个扇区（引导扇区，boot sector）并继续剩余的启动过程。</li>
+</ul>
+<h2 id="坏块"><a href="#坏块" class="headerlink" title="坏块"></a>坏块</h2><ul>
+<li>磁盘有移动部件且容错能力小，容易出问题。多数磁盘从工厂出来就有 <strong>坏块（bad blocks）</strong> 。坏块中的数据会丢失。</li>
+<li>简单磁盘可手动处理坏扇区。如 MS-DOS 的 <code>format</code> 命令执行逻辑格式化时，会扫描磁盘查找坏扇区，如果找到就在 FAT 的条目中写上特殊值以标明该块已损毁。</li>
+<li>复杂磁盘（高端 PC、WorkStation 或服务器上的 SCSI 磁盘）需要控制器维护一个磁盘坏块链表，这个链表在磁盘出厂前进行低级格式化时就已经初始化，并在磁盘使用过程中不断更新。低级格式化会将一些块备用，操作系统无法看到这些块。当坏块出现时，控制器会用备用块替换这些坏块。这种方案称为 <strong>扇区备用（sector sparing）</strong> 或 <strong>转寄（forwarding）</strong> 。</li>
+<li>典型的坏块区事务处理：<ul>
+<li>操作系统访问逻辑块 87</li>
+<li>控制器计算该块的 ECC 值，发现该块已经损坏，因此将结果通知操作系统</li>
+<li>下次操作系统重启时运行特殊程序告知 SCSI 控制器用备用块替代坏块</li>
+<li>之后的每次系统访问逻辑块 87，请求都会被转换成替代后的备用块地址</li>
+</ul>
+</li>
+<li>扇区备用的另一方案是 <strong>扇区滑动（sector slipping）</strong> ：假定逻辑块 17 损坏，第一个可用的备用块是扇区 203，则将 18 ~ 202 扇区向下滑动一个扇区，变为 19 ~ 203 扇区。这样原本的扇区 18 变为空，用来替换扇区 17。</li>
+</ul>
 <hr>
-<h2 id="测试hexo"><a href="#测试hexo" class="headerlink" title="测试hexo"></a>测试hexo</h2><h3 id="Test-Photo"><a href="#Test-Photo" class="headerlink" title="Test - Photo"></a>Test - Photo</h3><p><img src="http://7xktmz.com1.z0.glb.clouddn.com/changchang.jpg" width="200px"></p>
-<h3 id="Test-LanguageList"><a href="#Test-LanguageList" class="headerlink" title="Test - LanguageList"></a>Test - LanguageList</h3><ul>
-<li>c</li>
-<li>c++</li>
-<li>java</li>
-<li>python</li>
-<li>golang</li>
-<li>haskell</li>
-</ul>
-<h3 id="Test-Code"><a href="#Test-Code" class="headerlink" title="Test - Code"></a>Test - Code</h3><ul>
-<li>Some code below</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHexo</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String...args)</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"test"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Test-Link"><a href="#Test-Link" class="headerlink" title="Test - Link"></a>Test - Link</h3><ul>
-<li>This is <a href="https://www.google.com" target="_blank" rel="external">google</a></li>
-<li>This is <a href="http://forec.cn" target="_blank" rel="external">forec.cn</a></li>
-<li>This is forec’s <a href="https://github.com/Forec" target="_blank" rel="external">github</a></li>
-</ul>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2017/01/05/os-concepts-11/" target="_blank" rel="external">操作系统（十一）：文件系统实现</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2017/01/06/os-concepts-13/" target="_blank" rel="external">操作系统（十三）：I/O 输入系统</a>     </p>
+<p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/01/05/os-concepts-12/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/01/05/os-concepts-12/" target="_blank" rel="external">http://blog.forec.cn/2017/01/05/os-concepts-12/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -201,7 +269,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/08/04/Show/" data-id="cixlxlz0p007qk0ewj2jrbjlm" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/01/05/os-concepts-12/" data-id="cixlxlyw1003qk0ewezcrpmnm" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -268,7 +336,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2015/08/04/Show/" data-title="第一日" data-url="http://forec.github.io/2015/08/04/Show/"></div>
+    <div class="ds-thread" data-thread-key="2017/01/05/os-concepts-12/" data-title="操作系统（十二）：大容量存储器结构" data-url="http://forec.github.io/2017/01/05/os-concepts-12/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -372,16 +440,22 @@
         
 <nav id="article-nav">
     
-        <a href="/2015/08/08/Win10-Fedora22/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2017/01/06/os-concepts-13/" id="article-nav-newer" class="article-nav-link-wrap">
         <strong class="article-nav-caption">下一篇</strong>
         <p class="article-nav-title">
         
-            Win10+Fedora22
+            操作系统（十三）：I/O 输入系统
         
         </p>
         <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
     </a>
     
+    
+        <a href="/2016/12/03/zenith-cloud-7/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">顶点云（应用）用户代理</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
     
 </nav>
 
