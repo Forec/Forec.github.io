@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>操作系统（十）：文件系统接口 | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="OS" />
+    
+    <meta name="description" content="整理《Operating System Concepts》 第七版第十章文件系统接口部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统（十）：文件系统接口">
+<meta property="og:url" content="http://forec.github.io/2017/01/05/os-concepts-10/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版第十章文件系统接口部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-10.jpg">
+<meta property="og:updated_time" content="2017-01-05T15:32:02.765Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统（十）：文件系统接口">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版第十章文件系统接口部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/apis/index.html">API</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-os-concepts-10" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        操作系统（十）：文件系统接口
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2017/01/05/os-concepts-10/" class="article-date">
+    <time datetime="2017-01-05T03:55:47.000Z" itemprop="datePublished">2017-01-05</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>整理《Operating System Concepts》 第七版第十章文件系统接口部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h1><h2 id="概念、属性和操作"><a href="#概念、属性和操作" class="headerlink" title="概念、属性和操作"></a>概念、属性和操作</h2><ul>
+<li>信息可以在多种介质上存储，为了方便使用，操作系统为不同的信息存储设备提供了统一的逻辑接口：对存储设备的各类属性加以抽象，定义了逻辑存储单元（文件），之后再将文件映射到非易失性的物理设备上。</li>
+<li>文件是 <strong>一系列有名称的、记录在二级存储器上的信息集合</strong> 。在用户眼里，文件是逻辑外存的最小分配单元，数据必须通过文件的形式才能写入到外存。文件根据不同的类型有一定 <strong>结构（structure）</strong> ，例如 <em>文本文件</em> 由行（页）组成，每行又由字符组成； <em>源文件</em> 由子程序和函数组成，子程序和函数又由声明、执行语句组成； <em>目标文件</em> 是一系列字节序列，按目标系统链接器所能理解的方式组成； <em>可执行文件</em> 为一系列可以装入程序调入内存执行的代码段。</li>
+<li>所有文件的信息都保存在文件系统的目录结构中，目录结构（必须也是非易失性的）也保存在外存中。 <strong>文件属性（file attributes）</strong> 通常包括：<ul>
+<li>名称：文件符号名称，按人类理解方式保存</li>
+<li>标识符：文件系统内标识此文件的唯一标签，通常为数字</li>
+<li>类型：此字段仅对于支持多类型文件系统有效</li>
+<li>位置：指向设备和设备上该文件位置的指针</li>
+<li>大小：文件当前大小，也可表示文件允许的最大容量</li>
+<li>保护：读、写、执行控制权限</li>
+<li>时间、日期、用户标识：文件创建、上次修改、最近访问等信息，用于保护、安全以及使用记录的追踪</li>
+</ul>
+</li>
+<li>文件属于 <strong>抽象数据类型（abstract data type）</strong> ，文件操作的最小集合包括如下六条，这六条基本操作可以组合以实现其他文件操作：<ul>
+<li>创建文件：包括在文件系统中为文件找到空间并分配、在文件目录中为新文件创建条目；</li>
+<li>写文件：系统要为文件维护一个写位置的指针，一旦发生写操作就需要更新写指针（写方式 <code>fopen</code> 返回值就是一个写指针）；</li>
+<li>读文件：系统也需要为文件维护读指针，一个进程通常只对一个文件读或写，故当前操作位置（读/写指针）可作为每个进程 <strong>当前文件位置指针（current-file-position pointer）</strong> ；</li>
+<li>文件内重定位（repositioning within a file）：修改文件位置指针的值（seek 操作，文件寻址），这不需要执行真正的 I/O；</li>
+<li>删除文件：需要在目录中搜索给定名称文件，释放其空间并删除文件目录中的条目；</li>
+<li>截短（truncating）：删除文件内容而保留属性，将文件长度设为 0 并释放空间。</li>
+</ul>
+</li>
+<li>操作系统维护一个 <strong>打开文件表（open-file table）</strong> ，当需要一个文件时，操作系统根据这个表的索引来指定文件，避免了每次文件操作都要搜索文件目录。有的系统会在首次引用文件时隐式地打开它，绝大多数操作系统要求程序员通过 <code>open()</code> 操作显示地打开文件，并将文件条目复制到打开文件表中。档文件不再使用时，进程可以 <em>关闭</em> 这个文件，操作系统会从打开文件表删除文件对应的条目。系统调用 <code>open()</code> 会返回一个 <strong>指向打开文件表中一个条目的指针</strong> ，所有 I/O 操作会通过使用该指针来进行。</li>
+<li>多个进程同时打开同一文件的情况下，操作系统通常采用 <strong>两级内部表</strong> ：单个进程的表和整个系统的表。其中单个进程的表追踪单个进程打开的所有文件（该进程对文件的使用信息，如该进程对该文件操作的指针位置、权限等），表中的每一个条目指向整个操作系统打开文件表中相对应的一项。而操作系统的打开文件表（整个系统的表）包含着与进程无关的文件信息（文件在磁盘的位置、大小等），一旦一个文件第一次被进程打开，操作系统会在打开文件表中增加相应的条目；而 <strong>一个已经被打开的文件再次被其它进程打开时，仅仅在进程的打开文件表中增加一个指向整个系统表的相应条目</strong> 。一般系统维护的打开文件表中，每个文件会有一个文件打开计数器，用来记录多少进程打开了该文件，当计数器降到 0 时标识文件不再使用，可以从打开文件表删除。</li>
+<li>以上，每个打开文件应当包括如下信息：<ul>
+<li>文件指针：这个属性对于每个进程都可能不同，因此它保存在进程各自的打开文件表中，每个进程都需要为自己打开的每个文件维护一个文件指针。</li>
+<li>文件打开计数器：此属性保存在操作系统的文件打开表中，操作系统等待所有进程均不在引用某文件（计数器为 0）后才会将其条目删除。</li>
+<li>文件磁盘位置：这一属性用于定位磁盘上的文件位置，保存在操作系统的打开文件表中。</li>
+<li>访问权限：此属性保存在进程各自的打开文件表中，操作系统根据进程各自的访问模式决定是否允许进程的 I/O 请求。</li>
+</ul>
+</li>
+<li>部分操作系统提供了 <strong>文件锁</strong> 以允许一个进程锁住文件，禁止其他进程访问。文件锁可以用于多个进程共享的文件（如多个进程访问、修改的系统日志）。其中， <strong>共享锁（shared lock）</strong> 类似 <a href="http://blog.forec.cn/2016/11/24/os-concepts-5/" target="_blank" rel="external">进程同步</a> 中读者-写者问题的读者锁，它允许多个进程并发获取； <strong>专用锁（exclusive lock）</strong> 类似写者锁，只有一个进程可以获取此锁。有的操作系统只提供专用锁。另外，操作系统可以提供 <strong>强制（mandatory）</strong> 或者 <strong>建议（advisory）</strong> 文件加锁机制，如果文件锁是强制的，那么操作系统会禁止其它进程访问一个已经加锁的文件；如果文件锁是建议的，则操作系统不会禁止。因此，对于建议加锁，程序开发者要确保进程适当的获取、释放锁。通常 Windows 系统采用强制加锁，而 UNIX 系统采用建议加锁。</li>
+</ul>
+<h2 id="类型和结构"><a href="#类型和结构" class="headerlink" title="类型和结构"></a>类型和结构</h2><ul>
+<li>不同的应用程序可以使用不同的扩展名来指明文件。UNIX 系统采用 <strong>幻数（magic number）</strong> 表明文件类型，这部分数据保存在文件的开始位置（不是所有的文件都具有幻数）。UNIX 也不记录文件创建程序的名称，但仍允许通过文件扩展名来确定文件内容类型。</li>
+<li>文件类型可用于表示文件的内部结构（例如源代码文件和目标文件都有一定的结构来适应对应处理程序的要求），这些文件必须符合操作系统要求的结构。随着操作系统支持文件结构种类的增加，操作系统也会增大。很多操作系统 <strong>支持最少数量的文件结构</strong> （包括 UNIX、MS-DOS），如 UNIX 认为每个文件是 8 位字节序列组成，操作系统不会去试着解释这些位。这样的方案提供了很高的灵活性（但是操作系统本身并不提供任何支持），应用程序必须通过自己的代码去解释输入的文件。当然操作系统必须至少支持可执行文件结构。</li>
+<li>磁盘系统通常有明确定义的块（由扇区大小决定），所有磁盘 I/O 均按块执行。因为物理块大小通常不会和文件操作的逻辑记录长度相同，因此文件系统将若干个逻辑记录 <strong>打包（packing）</strong> 成块再执行 I/O 操作。同样，由于磁盘空间按块划分，文件最后一块的部分空间通常会被浪费，产生内部碎片，块越大内部碎片也越大。</li>
+</ul>
+<h1 id="访问方法和文件系统挂载"><a href="#访问方法和文件系统挂载" class="headerlink" title="访问方法和文件系统挂载"></a>访问方法和文件系统挂载</h1><h2 id="访问方法"><a href="#访问方法" class="headerlink" title="访问方法"></a>访问方法</h2><ul>
+<li><strong>顺序访问（Sequential Access）</strong> ：文件信息按顺序处理。这种访问模式最常用，如编辑器、编译器等均按此种方式访问。大量文件操作都是读写操作，两种操作都会向某一方向移动文件指针。顺序访问基于文件的磁带模型（读写/倒回），对顺序访问设备和随机访问设备都适用。</li>
+<li><strong>直接访问（Direct Access）</strong> ：也称 <strong>相对访问（relative access）</strong> ，文件由固定长度的 <strong>逻辑记录（logical records）</strong> 组成，因此程序可以直接计算出文件所在的块并快速读写（磁盘允许对任意块进行随机读写）。数据库通常使用这种类型的文件。因为随机读写以块为目标，故文件操作要经过修改从而将块号作为参数。有两种方式：一是将 <em>读下一个字节</em> 变成 <em>读 n</em> ，将 <em>写下一个字节</em> 变成 <em>写 n</em> ；另一种则是仍使用 <em>读下一个</em> 和 <em>写下一个</em> ，但是增加了 <em>定位文件到 n</em> 的操作。用户向操作系统提交的块号是 <strong>相对块号（relative block number）</strong> ，是相对于文件开始的索引。</li>
+<li>不是所有的操作系统都支持顺序访问和直接访问，部分系统只允许顺序或随机访问，有的则再文件创建时指定文件是顺序还是随机访问。对于直接访问的文件，可以非常容易的模拟出顺序访问，而在顺序访问文件中模拟直接访问是非常低效的。</li>
+<li>其他访问方式通常建立在直接访问智商，涉及文件 <strong>索引（index）</strong> ，索引包含了各个块的指针。要查找文件记录，要先搜索索引，然后根据指针直接访问文件。</li>
+</ul>
+<h2 id="文件系统挂载"><a href="#文件系统挂载" class="headerlink" title="文件系统挂载"></a>文件系统挂载</h2><ul>
+<li>文件系统在使用前必须 <strong>挂载（mount）</strong> ，中文版翻译称为 <strong>安装</strong> 。操作系统需要知道设备名称，以及这个设备在文件系统中的挂载（安装）位置，这个位置称为挂载点（mount point），通常是一个空目录。</li>
+<li>操作系统会验证一个挂载（安装）的设备是否包含一个有效文件系统，验证流程如下：通过设备驱动程序读入设备目录，验证目录是否符合操作系统期待的格式。验证通过后操作系统会在目录结构中记录这个文件系统已经被安装在挂载点上。</li>
+</ul>
+<h1 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h1><ul>
+<li>磁盘（或其他大存储设备）可以当作整体运用在一个文件系统中，但有时需要在一个磁盘上安装多种文件系统。磁盘上各个部分称为 <strong>分区（partitions）</strong> 或 <strong>片（slices）</strong> ，或称为 <strong>小型磁盘（minidisk，IBM）</strong> 。每个磁盘分区可以创建一个文件系统，这些部分可以组合起来成为更大的结构 <strong>卷（volume）</strong> ，也可以在卷上创建文件系统。下面将 <strong>存储文件系统的一大块空间作为卷</strong> ，卷可以存放多个操作系统。包含文件系统的卷需要记录文件系统中的信息，这些信息保存在 <strong>设备目录（device directory）</strong> 或 <strong>卷表（volume table of contents）</strong> 中，它记录了卷上所有文件信息（名称、位置、大小、类型等）。</li>
+<li>目录可以视作符号表，将文件名称转换成目录条目。目录需要支持如下操作：<ul>
+<li>在目录中搜索文件</li>
+<li>创建文件</li>
+<li>删除文件</li>
+<li>遍历目录</li>
+<li>重命名文件</li>
+<li>跟踪文件系统：定期备份整个文件系统</li>
+</ul>
+</li>
+<li>组织目录结构的要求（补充）：<ul>
+<li>高效（能够快速定位文件）</li>
+<li>命名（用户要方便命名、不同用户可以有同名文件、同一文件可以有多个名称）</li>
+<li>成组（可以按照文件属性划分成组）</li>
+</ul>
+</li>
+<li><strong>单层结构目录（single-level directory）</strong> ：所有文件保存在同一目录中，便于理解和支持。但当文件类型增加或者系统需要为多个用户提供服务时，必须保证所有文件名称唯一。文件名称长度有限，MS-DOS 只允许 11 个字符，UNIX 允许 255 个字符。</li>
+<li><strong>双层结构目录（two-level）</strong> ：单层目录结构会在不同用户直接引起文件名混淆，双层结构目录中，每个用户有自己的 <strong>用户文件目录（user file directory，UFD）</strong> ，每个 UFD 都有相似的结构，但只包含所属用户的文件。用户作业执行/用户注册时，搜索主系统的 <strong>主文件目录（master file directory，MFD）</strong> 来检索到用户的 UFD，这允许多个用户拥有相同名称的文件。<ul>
+<li>双层结构目录能够有效地对用户隔离，但不利于用户之间的合作和文件共享。双层结构目录等价于一棵高度为 2 地倒置树。</li>
+<li>对于系统库等每个进程都需要的文件，双层结构目录必须将这些系统文件复制到每个 UFD 下，这导致大量空间浪费，解决方法是修改搜索步骤，在根目录下定义一个特殊的用户目录，目录中包含所有的系统文件。当进程在 UFD 查找不到需要的文件时会搜索这个特殊用户目录。给定一个文件，搜索的一系列目录称为 <strong>搜索路径（search path）</strong> 。</li>
+</ul>
+</li>
+<li><strong>树状目录结构（tree-structured directories）</strong> ：允许用户创建自己的子目录，系统内每个文件有唯一路径名。目录包括一组文件和子目录，目录实际也是一个按特殊方式访问的文件，文件系统中每个条目都需要一位定义其为文件（0）还是子目录（1），并且删除目录条目需要特殊的系统调用。<ul>
+<li>通常每个进程有一个当前目录， <strong>当前目录（current directory）</strong> 包括进程当前感兴趣的多数文件，引用文件时也会先搜索当前目录。</li>
+<li>路径名分 <strong>绝对路径名（absolute path name）</strong> 和 <strong>相对路径名（relative path name）</strong> 。绝对路径名从根开始给出路径上的目录名，一直到指定文件；相对路径名从进程的当前目录开始定义路径。</li>
+<li>删除目录：如果目录为空可以直接删除，若目录不为空，有的系统不允许删除不为空的目录（MS-DOS，要删除一个有内容的目录就必须先清空整个目录内的文件），有的系统则提供了选择（选择是否允许删除全部子目录和文件，这样更危险，比如 <code>rm /* -rf</code>）。</li>
+<li>用户除了可以访问自己的文件，还可以通过路径名访问其他用户文件。</li>
+</ul>
+</li>
+<li><strong>无环图目录（acyclic graph）</strong> ： <strong>树状结构禁止共享文件和目录</strong> ，无环图允许目录含有共享子目录和文件。无环图是树状结构目录的扩展。<ul>
+<li>共享目录不同于文件复制，共享情况下任何一个用户对文件做出的改动都对其它共享用户可见。</li>
+<li>实现 <strong>共享目录方法</strong> 1：创建一种称为 <strong>链接（link）</strong> 的新目录条目，链接实际是另一个文件/目录的指针，操作系统可以通过链接保存的路径名定位真实文件（这一行为称为 <strong>解析（resolve）</strong>  。</li>
+<li>实现共享目录方法 2：每个用户都有共享文件的副本，但这些副本时刻更新着所有被共享文件的信息。但这样做会使副本和原始的文件无法区分，并且一旦有用户修改了副本/原始文件，所有其它副本都需要修改以维护一致性。</li>
+<li>实现 <strong>共享目录问题</strong> 1：一个文件被共享，因此可能会有多个绝对路径指向了同一个文件，这时对于遍历文件系统/查找文件/统计文件数量/备份文件等操作，需要解决不重复计算的问题。</li>
+<li>实现共享目录问题 2：分配给共享文件的空间何时可以删除？若用户删除文件即删除，则会留下很多悬挂链接指向不存在的文件，如果删除部分的空间被其它文件使用，这样链接又会指向其他文件的某个部分。可以在文件删除时搜索并删除这些悬挂的链接，但相对耗时；或者直到某个进程使用了某个悬挂链接时再去清理（UNIX 和 Windows 系统均不会在删除文件时删除链接，而由用户意识到原来文件已经删除）</li>
+<li>实现共享目录问题 3：删除共享文件的另一种方式是保留文件直到所有指向该文件的引用都删除为止。这样需要为每个文件维护一个引用列表，这个引用列表可能很大。因此可以用一个计数器代替引用列表。UNIX 操作系统对 <strong>硬链接（hard links，非符号链接）</strong> 采用了这种方式。</li>
+</ul>
+</li>
+<li><strong>通用图目录（general graph）</strong> ：无环图结构必须确保没有环，而对于无环图的共享部分，如果搜索一个共享子目录没有找到文件，就应该避免通过其它链接再次搜索这个共享子目录（浪费时间）。如果目录中甚至有环存在（例如子目录又包含了到父目录的链接），就更要避免循环搜索。<ul>
+<li>避免循环搜索：限制搜索时访问目录的次数。</li>
+<li>删除文件：可能出现文件自我引用，这时需要垃圾收集机制确定什么时候可以删除引用。垃圾收集需要遍历整个文件系统并将所有能够访问到的空间标记，之后第二次遍历将第一遍没有标记的位置收集到空闲空间链表上。</li>
+<li>如何避免无环：仅允许链接到一个没有子目录的文件；垃圾回收；每次新链接加入都运行环检测算法判断。</li>
+</ul>
+</li>
+</ul>
+<h1 id="文件共享"><a href="#文件共享" class="headerlink" title="文件共享"></a>文件共享</h1><ul>
+<li>多用户操作系统必须控制文件共享。系统可以默认允许一个用户访问其他用户文件，也可以要求一个用户授予文件固定的访问权限。多用户系统需要比但用户系统维护更多的文件和目录属性，现在绝大多数系统采用了文件（目录） <strong>拥有者（owner，user）</strong> 和 <strong>组（group）</strong> 的概念，其中拥有者控制权最高，拥有者的 ID 会和文件属性一起保存。同一组的成员具有相同的权限，并只能执行拥有者具有权限的子集。</li>
+<li>远程文件系统的实现方式包括：<ul>
+<li>用户通过程序（ftp）在机器之间传输文件</li>
+<li><strong>分布式文件系统（Distributed Information System）</strong> ：远程目录可以从本机直接访问</li>
+<li>万维网（和 ftp 类似，基本是 ftp 的包装）：用浏览器下载文件</li>
+</ul>
+</li>
+<li>C/S模型（客户机-服务器模型）：服务器包含文件，客户机访问文件。服务器需要表明目录和卷的哪些文件可用，而客户机的身份需要通过网络名称/IP 或者其它标识符鉴别（这些可能被欺骗/模仿），因此客户机需要通过加密密钥向服务器进行安全验证，安全验证也会遇到很多问题，所以多数情况还是使用不太安全的验证。</li>
+<li><strong>故障模式（Failure Modes）</strong> ：本地文件系统可能因为某些原因出错，比如包含文件系统的磁盘老化，目录结构或者其它磁盘管理信息（统称为 <strong>元数据，metadata</strong> ）损坏等。用户或管理员的冒失也会导致文件丢失/整个目录删除等。远程文件系统因为网络因素，需要有更多的故障模式，客户机和服务器之间 <strong>需要对每一次远程请求记录信息</strong> 以在故障发生时能够恢复。类似 NFS 的协议对每个请求的信息都加以记录，因此能够很容易的从故障中恢复，但安全性较差。</li>
+<li><strong>一致性语义（Consistency Semantics）</strong> ：描述多用户同时访问共享文件时的语义，规定了一个用户修改的数据什么时候对另一个用户可见。<ul>
+<li>UNIX 语义（UFS）：用户对已经打开的文件进行写操作会立刻被其它同时打开这一文件的用户可见，还有一种共享模式会共享文件指针的位置，一个文件移动了文件指针会影响其他用户，文件有一个映像，这个映像允许来自不同用户的交替访问（映像是互斥资源）。</li>
+<li>AFS 文件系统：用户对打开文件的写操作不会立刻被其他用户可见，一旦文件关闭，对文件的修改只能被以后打开的会话所见，已经打开文件的用户无法看到这些修改。一个文件会有多个物理映像，用户允许对自己的映像进行不受限制的读写操作（没有互斥）。</li>
+<li>不可修改共享文件语义：文件不可修改，即只读（文件名不能重用、文件内容不可修改）。</li>
+</ul>
+</li>
+</ul>
+<h1 id="保护"><a href="#保护" class="headerlink" title="保护"></a>保护</h1><ul>
+<li>计算机系统中保存的信息必须能够免受物理损坏（可靠性）和非法访问（保护）。对于多用户系统尤其需要某些机制。</li>
+<li>访问类型：需要 <strong>控制访问（controlled access）</strong> 来限制可以进行的文件访问类型，访问类型包括：读、写、执行、添加、删除、列表清单（获取文件名称、属性等）。更多操作（重命名、编辑等）都是这些底层操作的组合，因此保护只需要在底层提供，高层操作涉及的底层操作如果不满足保护的要求就会被拒绝。</li>
+<li>访问控制：根据用户身份判断能否对某个文件访问。每个文件/目录都增加一个 <strong>访问控制列表（access-control list，ACL）</strong> 来指定每个用户对这个文件/目录具有的合法的访问类型。缺点是访问控制列表会较长，并且一般事先无法知道系统的用户列表，这将导致更复杂的空间管理。</li>
+<li>操作系统为每个文件提供了三种用户类型：拥有者、组（一组需要共享文件并且具有相同访问需求的用户集合）、其他用户。Linux 中每种类型的用户都有 <code>rwx</code> 三个位。</li>
+</ul>
+<hr>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2017/01/04/os-concepts-9/" target="_blank" rel="external">操作系统（九）：虚拟内存</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2017/01/05/os-concepts-11/" target="_blank" rel="external">操作系统（十一）：文件系统实现</a>        </p>
+<p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/01/05/os-concepts-10/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/01/05/os-concepts-10/" target="_blank" rel="external">http://blog.forec.cn/2017/01/05/os-concepts-10/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2017/01/05/os-concepts-10/" data-id="cixoiwrq1003kecewqhfby4fx" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2017/01/05/os-concepts-10/" data-title="操作系统（十）：文件系统接口" data-url="http://forec.github.io/2017/01/05/os-concepts-10/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/01/05/os-concepts-12/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            操作系统（十二）：大容量存储器结构
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2016/12/03/zenith-cloud-7/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">顶点云（应用）用户代理</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/06/os-concepts-13/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg)" alt="操作系统（十三）：I/O 输入系统" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/06/os-concepts-13/" class="title">操作系统（十三）：I/O 输入系统</a></p>
+                            <p class="item-date"><time datetime="2017-01-06T04:17:33.000Z" itemprop="datePublished">2017-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/05/os-concepts-12/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-12.jpg)" alt="操作系统（十二）：大容量存储器结构" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/05/os-concepts-12/" class="title">操作系统（十二）：大容量存储器结构</a></p>
+                            <p class="item-date"><time datetime="2017-01-05T15:23:30.000Z" itemprop="datePublished">2017-01-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/05/os-concepts-10/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-10.jpg)" alt="操作系统（十）：文件系统接口" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/05/os-concepts-10/" class="title">操作系统（十）：文件系统接口</a></p>
+                            <p class="item-date"><time datetime="2017-01-05T03:55:47.000Z" itemprop="datePublished">2017-01-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-7.png)" alt="顶点云（应用）用户代理" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/12/03/zenith-cloud-7/" class="title">顶点云（应用）用户代理</a></p>
+                            <p class="item-date"><time datetime="2016-12-03T13:44:07.000Z" itemprop="datePublished">2016-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/11/30/efficient-haskell-io/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/efficient-haskell-io.jpg)" alt="Haskell 中的高效 I/O" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Language/">Language</a></p>
+                            <p class="item-title"><a href="/2016/11/30/efficient-haskell-io/" class="title">Haskell 中的高效 I/O</a></p>
+                            <p class="item-date"><time datetime="2016-11-30T14:54:30.000Z" itemprop="datePublished">2016-11-30</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">16</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 11.82px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.36px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 10.91px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.64px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 12.73px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19.09px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10.91px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15.45px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.55px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 10.91px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 10.91px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.27px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 13.64px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>京ICP备16060806号-1 &copy; 2017 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>
