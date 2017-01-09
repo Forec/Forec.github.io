@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>操作系统（十一）：文件系统实现 | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="OS" />
+    
+    <meta name="description" content="整理《Operating System Concepts》 第七版第十一章文件系统实现部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统（十一）：文件系统实现">
+<meta property="og:url" content="http://forec.github.io/2017/01/05/os-concepts-11/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版第十一章文件系统实现部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-11.jpg">
+<meta property="og:updated_time" content="2017-01-05T15:37:01.809Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统（十一）：文件系统实现">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版第十一章文件系统实现部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/apis/index.html">API</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-os-concepts-11" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        操作系统（十一）：文件系统实现
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2017/01/05/os-concepts-11/" class="article-date">
+    <time datetime="2017-01-05T09:11:59.000Z" itemprop="datePublished">2017-01-05</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>整理《Operating System Concepts》 第七版第十一章文件系统实现部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="文件系统结构"><a href="#文件系统结构" class="headerlink" title="文件系统结构"></a>文件系统结构</h1><ul>
+<li>磁盘具有如下两个特点因而成为大容量多文件存储的方便介质：<ul>
+<li>可以原地重写</li>
+<li>可以直接访问磁盘上任意一块信息</li>
+</ul>
+</li>
+<li>内存和磁盘之间的 I/O 转移以 <strong>块</strong> 为单位而非字节。每块为一个或多个扇区，扇区大小从 32 ~ 4096B 不等，通常是 512B。</li>
+<li>文件系统包括多层，下图是一个分层的例子，每一层利用较低层的功能创建新功能以为更高层提供服务。<ul>
+<li><strong>I/O 控制</strong> 是最底层，由 <strong>设备驱动程序（device drivers）</strong> 组成。</li>
+<li><strong>基本文件系统（basic file system）</strong> 只需要向设备驱动程序发送一般指令就可以对磁盘上的物理块做读写，每个块由它的磁盘地址标识（驱动器 1，柱面 73，磁道 3，扇区 10）。</li>
+<li><strong>文件组织模块（file-organization module）</strong> 直到文件和它的逻辑块、物理块。因为文件组织模块知道文件类型和位置，因此可以将逻辑块地址转换成基本文件系统用的物理块地址。它也包括 <strong>空闲空间管理器</strong> 用来追踪未分配的块。</li>
+<li><strong>逻辑文件系统（logical file system）</strong> 管理元数据，元数据包括文件系统的全部结构数据而不包括文件的具体内容。逻辑文件系统为文件组织模块提供所需的信息，通过 <strong>文件控制块（file-control block，FCB）</strong> 来维护文件结构，同时也负责保护和安全。</li>
+</ul>
+</li>
+<li>目前多数操作系统都支持多个文件系统，UNIX 使用 UNIX文件系统（UFS），基于伯克利快速文件系统（FFS）。标准的 Linux 文件系统是 <strong>可扩展文件系统（extended file system）</strong> ，常见版本有 ext2 和 ext3。</li>
+</ul>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h2><ul>
+<li>磁盘上的文件系统涉及如下一些结构：<ul>
+<li><strong>（每个卷的）引导控制块（boot control block）</strong> ：从这个卷引导操作系统所需要的信息，如果这个卷没有安装操作系统则这一块内容为空。它通常是卷的第一块，UFS 称之为 <strong>引导块（boot block）</strong> ，NTFS 系统称之为 <strong>分区引导扇区（partition boot sector）</strong> 。</li>
+<li><strong>（每个卷的）卷控制块（volume control block）</strong> ：包括卷或分区的详细信息，如分区块数、块大小、空闲块数量和指针、空闲 FCB 的数量和指针等。UFS 称之为 <strong>超级块（superblock）</strong> ，在 NTFS 中存储在 <strong>主控文件表（Master File Table）</strong> 。主控文件表采用关系型数据库，每个文件占据一行。</li>
+<li>每个文件的 FCB 包含文件的详细信息（文件权限、拥有者、大小、位置）等，UFS 称之为 <strong>索引节点（inode）</strong> 。</li>
+<li>每个文件系统的目录结构，这些目录结构用于组织文件。UFS 中目录结构包括文件名和相关的索引节点号，NTFS 则保存在主控文件表中。</li>
+</ul>
+</li>
+<li>内存内信息用于文件系统管理，可以通过缓存来提高性能。这部分数据在文件系统挂载（安装）的时候被加在，文件系统卸载的时候丢弃，可能包括：<ul>
+<li>内存中的安装表，含有所有已安装卷的信息</li>
+<li>内存中的目录结构缓存，保存最近访问过的目录信息</li>
+<li><strong>系统范围内的打开文件表</strong> ，在 <a href="http://blog.forec.cn/2017/01/05/os-concepts-10/" target="_blank" rel="external">文件系统接口</a> 中介绍过，包括每个打开文件的 FCB 副本和其它信息</li>
+<li><strong>单个进程的打开文件表</strong> ，每个条目包括指向系统范围内打开文件表的条目的指针以及与进程相关的其它文件信息</li>
+</ul>
+</li>
+<li>打开文件表的索引有多种名称，UFS 称之为 <strong>文件描述符（file descriptor）</strong> ，Windows 称之为 <strong>文件句柄（file handle）</strong> ，只要文件没有关闭，所有对文件的操作都是通过打开文件表执行的。文件系统中用户进程读文件的操作形式如下图所示。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/in-memory-file-system-read.png" width="500px"></li>
+</ul>
+<h2 id="分区和挂载"><a href="#分区和挂载" class="headerlink" title="分区和挂载"></a>分区和挂载</h2><ul>
+<li>一个磁盘可以分成多个分区，一个卷也可能横跨多个磁盘上的多个分区（RAID 的一种形式）。</li>
+<li>没有文件系统的分区称作 <strong>生（raw）</strong> 磁盘，含有文件系统的分区称为 <strong>熟（cooked）</strong> 的。生磁盘通常用于没有合适的文件系统可以使用的地方，例如 UNIX 的交换空间，或者有的数据库使用生磁盘并将其格式化来满足自己的需求。</li>
+<li>引导信息可以包含在多个分区中，通常是一组有序块，并作为镜像文件读入内存。镜像文件会按照预先指定的位置开始执行，它除了可以启动一个特定的操作系统，还可以支持 <strong>双引导（dual-booted）</strong> ，即启动加载器知道有哪些操作系统、文件系统位于引导区，并可以引导磁盘上不同分区的不同类型的操作系统。</li>
+<li><strong>根分区（root partition）</strong> 包括操作系统内核以及其它系统文件，它们在引导时装载到内存中，其它卷会根据操作系统的设定，要么在引导时自动装入，要么通过用户手动装入。当有一个新设备挂载（安装）时，操作系统会验证设备上的文件系统是否有效，并根据需要自动/手动纠正。验证通过后，操作系统会在内存中的 <strong>挂载表/装入表（mount table）</strong> 中标注该文件系统已经装入，并且存储与此文件系统有关的信息。</li>
+<li><strong>虚拟文件系统（Virtual File System，VFS）</strong> 是文件系统接口和文件系统之间的一层，它的目的有：<ul>
+<li>定义一个 VFS 接口将文件系统的通用操作和具体实现划分，多个 VFS 接口的实现能够在同一台机器共存，因此它允许访问安装在本地的多种类型的文件系统；</li>
+<li>VFS 提供了在网络上唯一标识一个文件的机制。它基于 vnode 文件表示结构（包括一个唯一的数值标识符，它能够表明位于整个网络范围内的唯一文件，例如 UNIX 的索引节点 inode 在文件系统内是唯一的）。</li>
+</ul>
+</li>
+</ul>
+<h2 id="目录实现"><a href="#目录实现" class="headerlink" title="目录实现"></a>目录实现</h2><ul>
+<li><strong>线性列表（linear list）</strong> 是实现目录最简单的方法，运行非常低效。查找文件需要线性搜索，排序列表可以二分搜索，但排序的需求使文件创建/删除复杂化，它的优点在于可直接生成排序目录信息，可用 B 树实现。</li>
+<li><strong>哈希表（hash table）</strong> ：在线性列表存储目录之上使用哈希表，根据文件名哈希出一个指向线性列表中元素的指针，需要一些措施避免 <strong>冲突（collision）</strong> 。其困难在于，如果使用固定大小的哈希表，当条目超出哈希表容量时需要扩充哈希表大小，并且设计新的哈希函数将文件名映射到新的范围内。可以使用 <strong>chained-overflow</strong> 哈希表，使表中元素为一个链表而非单个记录。虽然冲突将使每个链表长度较大，查找可能变慢，但仍比线性搜索快得多。</li>
+</ul>
+<h1 id="分配方法"><a href="#分配方法" class="headerlink" title="分配方法"></a>分配方法</h1><h2 id="连续分配"><a href="#连续分配" class="headerlink" title="连续分配"></a>连续分配</h2><ul>
+<li><strong>连续分配（contiguous allocation）</strong> 要求每个文件在磁盘上占据连续的块。磁盘地址有一个线性序列，如果只有一个作业按照这个序列的顺序访问磁盘，在访问了块 b 后访问块 b+1 就无需移动磁头，即使需要移动磁头也只需要移动一个磁道（从一个柱面的最后扇区到下个柱面第一扇区）。因此， <strong>访问连续分配文件所需的寻道数最小，即使确实需要寻道，所花费的寻道时间也最小</strong> 。在文件连续分配中，一个文件的目录条目包括文件占有的第一个块的地址，以及该文件分配的块的数量（分配区域的长度）。</li>
+<li>连续分配文件访问非常容易，既可以顺序访问也可以随机访问。它也存在问题，例如如何为新文件寻找空间，这个问题可看作 <a href="http://blog.forec.cn/2017/01/03/os-concepts-8/" target="_blank" rel="external">内存管理</a> 中 <strong>动态存储分配</strong> 问题的一个具体应用，即如何从一个空闲的孔列表中寻找一个满足大小为 n 的空间，常用首次适应和最佳适应。</li>
+<li>连续分配方案的另一个问题是需要确定文件需要多少空间，这个知识是无法预知的。如果为一个文件分配的空间过小则文件可能无法原地扩展文件，这时要么终止用户程序并通知用户必须分配更多空间才能运行（这样用户就会过高的预估所需的磁盘空间造成浪费），要么找一个更大的孔，将文件复制到新空间，释放旧空间，但这比较耗时。</li>
+<li>修正的连续分配方案：开始时为文件分配一块连续空间，一旦空间不够，另一块称为 <strong>扩展（extent）</strong> 的 <strong>连续空间</strong> 就会被分配给文件。这种情况下，文件块的位置就需要通过开始块地址、块数、指向下一个扩展的指针三项来确定。如果扩展太大，内部碎片会变得严重；随着扩展的分配、删除，外部碎片也将变得严重。</li>
+</ul>
+<h2 id="链接分配"><a href="#链接分配" class="headerlink" title="链接分配"></a>链接分配</h2><ul>
+<li><strong>链接分配（linked allocation）</strong> 解决了连续分配的全部问题。链接分配中，每个文件由分布在磁盘上各个位置的多个磁盘块组成，文件目录条目记录了一个文件第一块的指针和最后一块的指针。每一块都会有一个指向下一块的指针，用户无法使用存储这些指针的空间（例如一块有 512B，磁盘地址为 4B，则用户只可用 508B）。</li>
+<li>链接分配对于创建/读/写文件的操作如下：<ul>
+<li>创建新文件时只要简单的在目录中增加一个新条目，条目中有指向文件第一块的指针，初始化为 <code>nil</code> 以表明这是空文件，大小字段也是 0。</li>
+<li>写文件时通过空闲空间管理器寻找一个空闲块，这个块会被写入数据、链接到文件最后一个块的尾部，同时要更新这个文件在目录中条目的记录值（大小、最后一个块的地址）。</li>
+<li>读文件通过条目中存储的第一个块的地址，逐个向后寻找。</li>
+</ul>
+</li>
+<li>链接分配的缺点在于：<ul>
+<li>只能用于文件的顺序访问，要找到文件的第 i 块必须要从第一块开始寻找，每次访问都需要读磁盘，这还需要涉及磁盘寻道的延迟。因此 <strong>链接分配无法有效支持文件直接访问</strong> 。</li>
+<li>指针需要空间，每一块都有一定空间被指针占用。这个问题的解决方法是将多个块组成 <strong>簇（cluster）</strong> ，按簇而不是块来分配（如一个簇有 4 块）。这样指针占用的磁盘空间百分比会下降，但增加了内部碎片。簇可以改善多数算法中的磁盘访问时间，因此在绝大多数操作系统中得到应用。</li>
+<li>可靠性：文件通过指针链接，一旦有一个指针丢失/损坏，整个文件都将崩溃。一个逃避性的解决方案是采用双向链表，或者给每个块存上文件名和相对块数（相对第一块是第几块），但这又增加了过多的额外开销。</li>
+</ul>
+</li>
+<li>链接分配方法的一个变种是 <strong>文件分配表（file-allocation table，FAT）</strong> ，它被应用于 MS-DOS 和 OS/2 操作系统。每个卷的开始部分存储文件分配表，卷内的每一块都在表中占有一项，这个表可以通过块号码索引， <strong>表中存储的值是这一块指向的下一块块号</strong> 。<ul>
+<li>文件在目录中的条目只含有文件第一块的块号，访问文件时按照 FAT 表中存储的链接关系一直向下寻找，直到最后一块（最后一块在 FAT 表中标记为一个特殊的文件结束值，可以根据这个值判断是否为最后一块）。</li>
+<li>要分配一个新的块，只需要在 FAT 表中找到第一个值为 0（值为 0 表示一个块没有被使用）的块，用新块的地址替换掉此前最后一块的文件结束值，并且用文件结束值替换 FAT 表中的 0。</li>
+<li>FAT 需要采用缓存才能提高效率，否则可能导致大量的磁头寻道时间：磁头要移动到卷的开头读入 FAT  以获得块的位置，然后才能移动到块本身。最坏情况下每块的读取都要移动两次。但它的优点在于改善了随机访问时间， <strong>因为 FAT 的存在，操作系统可以快速找到文件任意一块的位置</strong> 。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/file-allocation-table.png" width="400px"></li>
+</ul>
+</li>
+</ul>
+<h2 id="索引分配"><a href="#索引分配" class="headerlink" title="索引分配"></a>索引分配</h2><ul>
+<li>如果不采用 FAT，链接分配就无法有效支持直接访问，因为块指针散布在整个磁盘，必须顺序读取。 <strong>索引分配（indexed allocation）</strong> 把所有指针放到一起，通过 <strong>索引块（index block）</strong> 解决此问题。</li>
+<li>每个文件都有自己的索引块，它是一个磁盘块地址的数组。索引块的第 i 个条目代表文件的第 i 个块，条目中含有索引块的磁盘地址。要读取第 i 块只需要通过索引块第 i 个条目存储的指针来访问（类似第八章分页）。<ul>
+<li>创建文件：索引块中所有指针设为 nil。</li>
+<li>第一次写入第 i 块：从空闲空间管理器获取一个空闲块，将数据写入块，并将块地址写到索引块的第 i 个条目中</li>
+</ul>
+</li>
+<li><strong>索引分配支持直接访问且没有外部碎片问题，但索引分配会浪费空间</strong> ：如果一个文件只有两块长，链接分配只需要每块浪费一个指针，而索引分配需要为这个只有两块的文件创建一个完整的索引块，这个索引块里只有两个指针被使用到。</li>
+<li>索引块的大小需要经过仔细考量：每个文件都有一个索引块，索引块太大会造成浪费，太小又不足以满足大文件存储需求。针对这一问题的处理机制有如下几点：<ul>
+<li><strong>链接方案（Linked scheme）</strong> ：一个索引块就是一个磁盘块。它本身能够直接读写，当遇到大文件存储时可以将多个索引块链接。例如一个索引块可以包含一个头部（头部包含文件名）以及 100 个磁盘块的地址。索引块的最后一个存储单元存储着指向下一个索引块的地址如果是小文件则这个指针为 <code>nil</code>，如果是大文件则指向了另一个索引块。</li>
+<li><strong>多层索引（Multilevel index）</strong> ：设置两层索引块，第一层指向第二层，第二层指向文件块。根据最大文件大小的不同，可以继续到第三/四层。对于块大小为 4KB 的情况，可以在一个索引块里装入 1024 个 4B 指针，两层索引就可以容纳 1048 576 个数据块，即最大文件为 4GB。</li>
+<li><strong>组合方案（Combined scheme）</strong> ：在 UFS 中使用了这种方案。将索引块的前 15 个指针存在文件的 inode 里，这 15 个指针中：前 12 个直接指向了数据块，这样不超过 12 块的文件就不需要其它索引块；后 3 个指针分别是一级间接块、二级间接块、三级间接块指针。这种方法允许一个文件的块数超过 4B 文件指针能访问的空间。许多 UNIX 系统支持 64 位文件指针，这时允许文件/文件系统达到数 T 字节。UNIX 的inode 大致如下：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/unix-inode-indexed.jpg" width="500px"></li>
+</ul>
+</li>
+<li>索引分配方案和链接分配方案在性能上都有欠缺，虽然索引块能够缓存在内存里，但数据块会分布到整个分区中。</li>
+</ul>
+<h2 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h2><ul>
+<li>连续分配对于任意类型的访问都只需要访问一次，链接分配可以将下一块的地址放到内存中并能直接读取，但对于直接访问需要读多次磁盘。所以有些系统通过使用连续分配支持文件直接访问，通过链接分配支持顺序访问。这种系统在创建文件时就要指明文件的类型（顺序访问还是直接访问），如果是直接访问还必须说明最大文件大小。</li>
+<li>索引分配非常复杂。如果索引块已在内存中则可以直接访问，但将索引块保存在内存中需要非常大的空间。尤其是多级索引，对于一个大文件来说，如果要访问文件末尾部分的数据，可能需要将所有索引块读入内存才能读到需要的数据库。所以索引分配的性能依赖于索引结构、文件大小和所需要的块的位置。</li>
+<li>有的系统把连续分配和索引分配结合，对于小文件（3、4块大小的）采用连续分配，大文件切换到索引分配。因为文件系统中大多数文件较小，所以小文件连续分配效率较高，平均性能较好。</li>
+<li>由于 CPU 和磁盘速度不等，花费数千条 CPU 指令来节省一些磁头移动都是值得的，随着时间推移，这种不等程度还会增加。</li>
+</ul>
+<h1 id="空闲空间管理"><a href="#空闲空间管理" class="headerlink" title="空闲空间管理"></a>空闲空间管理</h1><ul>
+<li>系统需要维护 <strong>空闲空间链表（free-space list）</strong> 以记录空闲磁盘空间，创建文件时会从空闲空间链表分配，删除文件时磁盘空间会加回到空闲空间链表上（称之为链表但不一定表现为链表）。</li>
+</ul>
+<h2 id="位向量"><a href="#位向量" class="headerlink" title="位向量"></a>位向量</h2><ul>
+<li>将空闲空间用 <strong>位图（bit map）</strong> 或 <strong>位向量（bit vector）</strong> 表示，每块用一位说明是否为空闲，1 表示空闲，0 表示已经分配。</li>
+<li>此方式查找磁盘上第 1 个空闲块和 n 个连续空闲块时简单高效：<ul>
+<li>按顺序检查位图中的每个字是否为 0 即可确定对应的块是否已经全部分配，第一个非 0 的字中，第一个 1 位偏移旧对应着第一个空闲块；</li>
+<li>连续 n 个空闲块只需要判断是否有连续 <code>[n / 字的位数]</code> 个字均为最大值（如一个字就是一个字节时，只要连续有 <code>[n / 8]</code> 个字节全为 255 就说明这部分块都空闲）。</li>
+</ul>
+</li>
+<li>除非整个位向量都能保存在内存中，否则位向量的效率不高。对于小磁盘，位向量的大小可以接受，但对于大磁盘而言（如 40GB，每块 1KB）就需要超过 5MB 空间存储位图。</li>
+</ul>
+<h2 id="链表和组"><a href="#链表和组" class="headerlink" title="链表和组"></a>链表和组</h2><ul>
+<li>将所有空闲磁盘块用 <strong>链表（Linked List）</strong> 链接，将指向第一个空闲块的指针放在磁盘的一个特殊位置，同时也缓存到内存里。第一块空闲块中包含了指向下一个空闲磁盘块的指针。</li>
+<li>此方案效率不高，要遍历整个空闲块列表需要从磁盘读出每一块，这要耗费大量 I/O 时间。不过通常操作系统只需要获得一个空闲块以提供给文件，因此一般只需要分配空闲表的第一块。</li>
+<li><strong>组（grouping）</strong> 是对空闲链表的改进：将 n 个空闲块的地址存在第一个空闲块里，前 n-1 个地址都指向真正的空闲块， <strong>最后一个地址指向了另一个包含另外 n 个空闲块的块地址</strong> 。</li>
+</ul>
+<h2 id="计数"><a href="#计数" class="headerlink" title="计数"></a>计数</h2><ul>
+<li>通常会有多个连续的块需要同时分配、释放，尤其是采用了连续分配或簇的情况下。因此可以不记录 n 个空闲块地址，而是记录连续多块空闲块的第一块的地址，以及连续的空闲块的数量。这样空闲空间表的每个条目包含了第一个空闲块地址和连续空闲块数量，虽然每个条目占用的空间增长了，但表的总长度会缩短（连续空闲块的数量往往大于 1）。</li>
+</ul>
+<h2 id="UNIX-成组链接（补充）"><a href="#UNIX-成组链接（补充）" class="headerlink" title="UNIX 成组链接（补充）"></a>UNIX 成组链接（补充）</h2><ul>
+<li>将文件存储设备中的所有的空闲块 <strong>从后向前</strong> 按 50 块为一组进行划分，每组的第一块用于存放 <strong>前一组</strong> 的总块数和每块的块号，因为第一组前面已经没有其他组存在，所以第一组实际有 49 块。因为存储空间不一定正好是 50 的整数倍，所以最后一组可能不足 50 块。因为最后一组后面没有其他组，所以最后一组的总块数和每块块号的信息存放到管理文件存储设备的文件资源表中。如下图所示。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/unix-group-linked.png" width="500px"></li>
+<li>操作系统启动时将文件资源表复制到内存，此时文件资源表中包含了最后一组的空闲块总数以及空闲块的块号。操作系统还会设置一个用于空闲块分配、回收的堆栈，堆栈存储着空闲块的块号，栈指针 ptr 的初值等于最后一组的空闲块的总块数。</li>
+<li>成组链接分配方法：申请者请求获得 n 块空闲块，操作系统将按照先进先出的原则，将栈顶指向的块号分配给请求者，同时 ptr 自减。重复此操作直到 n 块分配完毕，或者堆栈中只剩下最后一个空闲块的块号（此块实际存储的是下一组的空闲块块数和各块块号）。当堆栈只剩下最后一个空闲块的块号时：<ul>
+<li>从堆栈中弹出该块的块号，系统启动 I/O 设备，将该块存放的内容读入内存（即将下一组空闲块号和总块数读入空闲资源表），并设置 ptr 为下一组的空闲块数</li>
+<li>文件存储设备的最后一个空闲块中设置有尾部标识，表示空闲块已经分配完毕</li>
+</ul>
+</li>
+<li>成组链接回收方法：用户删除某个文件时，ptr 自增并将空闲块号入栈。若 ptr 为 50 则表明当前已经凑足一组，该组回收结束。<ul>
+<li>如果还有空闲物理块 F 需要回收，则将块 F 回收，并且启动设备 I/O，把栈中记录的 50 个块号和块数（50）写入到块 F 中。设置 ptr 为 1，将块 F 的块号入栈，开始新的一组空闲块回收。</li>
+<li>对空闲块的分配和回收操作必须互斥进行（栈操作要互斥）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2017/01/05/os-concepts-10/" target="_blank" rel="external">操作系统（十）：文件系统接口</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2017/01/05/os-concepts-12/" target="_blank" rel="external">操作系统（十二）：大容量存储器结构</a>   </p>
+<p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/01/05/os-concepts-11/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/01/05/os-concepts-11/" target="_blank" rel="external">http://blog.forec.cn/2017/01/05/os-concepts-11/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2017/01/05/os-concepts-11/" data-id="cixpiiuat003km0ewyoawjwzt" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2017/01/05/os-concepts-11/" data-title="操作系统（十一）：文件系统实现" data-url="http://forec.github.io/2017/01/05/os-concepts-11/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/01/05/os-concepts-12/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            操作系统（十二）：大容量存储器结构
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2017/01/05/os-concepts-10/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">操作系统（十）：文件系统接口</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/06/os-concepts-13/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg)" alt="操作系统（十三）：I/O 输入系统" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/06/os-concepts-13/" class="title">操作系统（十三）：I/O 输入系统</a></p>
+                            <p class="item-date"><time datetime="2017-01-06T04:17:33.000Z" itemprop="datePublished">2017-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/05/os-concepts-12/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-12.jpg)" alt="操作系统（十二）：大容量存储器结构" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/05/os-concepts-12/" class="title">操作系统（十二）：大容量存储器结构</a></p>
+                            <p class="item-date"><time datetime="2017-01-05T15:23:30.000Z" itemprop="datePublished">2017-01-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/05/os-concepts-11/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-11.jpg)" alt="操作系统（十一）：文件系统实现" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/05/os-concepts-11/" class="title">操作系统（十一）：文件系统实现</a></p>
+                            <p class="item-date"><time datetime="2017-01-05T09:11:59.000Z" itemprop="datePublished">2017-01-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/05/os-concepts-10/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-10.jpg)" alt="操作系统（十）：文件系统接口" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/05/os-concepts-10/" class="title">操作系统（十）：文件系统接口</a></p>
+                            <p class="item-date"><time datetime="2017-01-05T03:55:47.000Z" itemprop="datePublished">2017-01-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-7.png)" alt="顶点云（应用）用户代理" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2016/12/03/zenith-cloud-7/" class="title">顶点云（应用）用户代理</a></p>
+                            <p class="item-date"><time datetime="2016-12-03T13:44:07.000Z" itemprop="datePublished">2016-12-03</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">17</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 11.82px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.36px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 10.91px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.64px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 12.73px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19.09px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10.91px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15.45px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.55px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 10.91px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 10.91px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.27px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 13.64px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>京ICP备16060806号-1 &copy; 2017 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>

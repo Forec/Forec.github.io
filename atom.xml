@@ -241,6 +241,169 @@
   </entry>
   
   <entry>
+    <title>操作系统（十一）：文件系统实现</title>
+    <link href="http://forec.github.io/2017/01/05/os-concepts-11/"/>
+    <id>http://forec.github.io/2017/01/05/os-concepts-11/</id>
+    <published>2017-01-05T09:11:59.000Z</published>
+    <updated>2017-01-05T15:37:01.809Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;整理《Operating System Concepts》 第七版第十一章文件系统实现部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h1 id=&quot;文件系统结构&quot;&gt;&lt;a href=&quot;#文件系统结构&quot; class=&quot;headerlink&quot; title=&quot;文件系统结构&quot;&gt;&lt;/a&gt;文件系统结构&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;磁盘具有如下两个特点因而成为大容量多文件存储的方便介质：&lt;ul&gt;
+&lt;li&gt;可以原地重写&lt;/li&gt;
+&lt;li&gt;可以直接访问磁盘上任意一块信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;内存和磁盘之间的 I/O 转移以 &lt;strong&gt;块&lt;/strong&gt; 为单位而非字节。每块为一个或多个扇区，扇区大小从 32 ~ 4096B 不等，通常是 512B。&lt;/li&gt;
+&lt;li&gt;文件系统包括多层，下图是一个分层的例子，每一层利用较低层的功能创建新功能以为更高层提供服务。&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;I/O 控制&lt;/strong&gt; 是最底层，由 &lt;strong&gt;设备驱动程序（device drivers）&lt;/strong&gt; 组成。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;基本文件系统（basic file system）&lt;/strong&gt; 只需要向设备驱动程序发送一般指令就可以对磁盘上的物理块做读写，每个块由它的磁盘地址标识（驱动器 1，柱面 73，磁道 3，扇区 10）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;文件组织模块（file-organization module）&lt;/strong&gt; 直到文件和它的逻辑块、物理块。因为文件组织模块知道文件类型和位置，因此可以将逻辑块地址转换成基本文件系统用的物理块地址。它也包括 &lt;strong&gt;空闲空间管理器&lt;/strong&gt; 用来追踪未分配的块。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;逻辑文件系统（logical file system）&lt;/strong&gt; 管理元数据，元数据包括文件系统的全部结构数据而不包括文件的具体内容。逻辑文件系统为文件组织模块提供所需的信息，通过 &lt;strong&gt;文件控制块（file-control block，FCB）&lt;/strong&gt; 来维护文件结构，同时也负责保护和安全。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;目前多数操作系统都支持多个文件系统，UNIX 使用 UNIX文件系统（UFS），基于伯克利快速文件系统（FFS）。标准的 Linux 文件系统是 &lt;strong&gt;可扩展文件系统（extended file system）&lt;/strong&gt; ，常见版本有 ext2 和 ext3。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;实现&quot;&gt;&lt;a href=&quot;#实现&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h1&gt;&lt;h2 id=&quot;基本结构&quot;&gt;&lt;a href=&quot;#基本结构&quot; class=&quot;headerlink&quot; title=&quot;基本结构&quot;&gt;&lt;/a&gt;基本结构&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;磁盘上的文件系统涉及如下一些结构：&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;（每个卷的）引导控制块（boot control block）&lt;/strong&gt; ：从这个卷引导操作系统所需要的信息，如果这个卷没有安装操作系统则这一块内容为空。它通常是卷的第一块，UFS 称之为 &lt;strong&gt;引导块（boot block）&lt;/strong&gt; ，NTFS 系统称之为 &lt;strong&gt;分区引导扇区（partition boot sector）&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;（每个卷的）卷控制块（volume control block）&lt;/strong&gt; ：包括卷或分区的详细信息，如分区块数、块大小、空闲块数量和指针、空闲 FCB 的数量和指针等。UFS 称之为 &lt;strong&gt;超级块（superblock）&lt;/strong&gt; ，在 NTFS 中存储在 &lt;strong&gt;主控文件表（Master File Table）&lt;/strong&gt; 。主控文件表采用关系型数据库，每个文件占据一行。&lt;/li&gt;
+&lt;li&gt;每个文件的 FCB 包含文件的详细信息（文件权限、拥有者、大小、位置）等，UFS 称之为 &lt;strong&gt;索引节点（inode）&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;每个文件系统的目录结构，这些目录结构用于组织文件。UFS 中目录结构包括文件名和相关的索引节点号，NTFS 则保存在主控文件表中。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;内存内信息用于文件系统管理，可以通过缓存来提高性能。这部分数据在文件系统挂载（安装）的时候被加在，文件系统卸载的时候丢弃，可能包括：&lt;ul&gt;
+&lt;li&gt;内存中的安装表，含有所有已安装卷的信息&lt;/li&gt;
+&lt;li&gt;内存中的目录结构缓存，保存最近访问过的目录信息&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;系统范围内的打开文件表&lt;/strong&gt; ，在 &lt;a href=&quot;http://blog.forec.cn/2017/01/05/os-concepts-10/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;文件系统接口&lt;/a&gt; 中介绍过，包括每个打开文件的 FCB 副本和其它信息&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;单个进程的打开文件表&lt;/strong&gt; ，每个条目包括指向系统范围内打开文件表的条目的指针以及与进程相关的其它文件信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;打开文件表的索引有多种名称，UFS 称之为 &lt;strong&gt;文件描述符（file descriptor）&lt;/strong&gt; ，Windows 称之为 &lt;strong&gt;文件句柄（file handle）&lt;/strong&gt; ，只要文件没有关闭，所有对文件的操作都是通过打开文件表执行的。文件系统中用户进程读文件的操作形式如下图所示。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/in-memory-file-system-read.png&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;分区和挂载&quot;&gt;&lt;a href=&quot;#分区和挂载&quot; class=&quot;headerlink&quot; title=&quot;分区和挂载&quot;&gt;&lt;/a&gt;分区和挂载&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;一个磁盘可以分成多个分区，一个卷也可能横跨多个磁盘上的多个分区（RAID 的一种形式）。&lt;/li&gt;
+&lt;li&gt;没有文件系统的分区称作 &lt;strong&gt;生（raw）&lt;/strong&gt; 磁盘，含有文件系统的分区称为 &lt;strong&gt;熟（cooked）&lt;/strong&gt; 的。生磁盘通常用于没有合适的文件系统可以使用的地方，例如 UNIX 的交换空间，或者有的数据库使用生磁盘并将其格式化来满足自己的需求。&lt;/li&gt;
+&lt;li&gt;引导信息可以包含在多个分区中，通常是一组有序块，并作为镜像文件读入内存。镜像文件会按照预先指定的位置开始执行，它除了可以启动一个特定的操作系统，还可以支持 &lt;strong&gt;双引导（dual-booted）&lt;/strong&gt; ，即启动加载器知道有哪些操作系统、文件系统位于引导区，并可以引导磁盘上不同分区的不同类型的操作系统。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;根分区（root partition）&lt;/strong&gt; 包括操作系统内核以及其它系统文件，它们在引导时装载到内存中，其它卷会根据操作系统的设定，要么在引导时自动装入，要么通过用户手动装入。当有一个新设备挂载（安装）时，操作系统会验证设备上的文件系统是否有效，并根据需要自动/手动纠正。验证通过后，操作系统会在内存中的 &lt;strong&gt;挂载表/装入表（mount table）&lt;/strong&gt; 中标注该文件系统已经装入，并且存储与此文件系统有关的信息。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;虚拟文件系统（Virtual File System，VFS）&lt;/strong&gt; 是文件系统接口和文件系统之间的一层，它的目的有：&lt;ul&gt;
+&lt;li&gt;定义一个 VFS 接口将文件系统的通用操作和具体实现划分，多个 VFS 接口的实现能够在同一台机器共存，因此它允许访问安装在本地的多种类型的文件系统；&lt;/li&gt;
+&lt;li&gt;VFS 提供了在网络上唯一标识一个文件的机制。它基于 vnode 文件表示结构（包括一个唯一的数值标识符，它能够表明位于整个网络范围内的唯一文件，例如 UNIX 的索引节点 inode 在文件系统内是唯一的）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;目录实现&quot;&gt;&lt;a href=&quot;#目录实现&quot; class=&quot;headerlink&quot; title=&quot;目录实现&quot;&gt;&lt;/a&gt;目录实现&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;线性列表（linear list）&lt;/strong&gt; 是实现目录最简单的方法，运行非常低效。查找文件需要线性搜索，排序列表可以二分搜索，但排序的需求使文件创建/删除复杂化，它的优点在于可直接生成排序目录信息，可用 B 树实现。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;哈希表（hash table）&lt;/strong&gt; ：在线性列表存储目录之上使用哈希表，根据文件名哈希出一个指向线性列表中元素的指针，需要一些措施避免 &lt;strong&gt;冲突（collision）&lt;/strong&gt; 。其困难在于，如果使用固定大小的哈希表，当条目超出哈希表容量时需要扩充哈希表大小，并且设计新的哈希函数将文件名映射到新的范围内。可以使用 &lt;strong&gt;chained-overflow&lt;/strong&gt; 哈希表，使表中元素为一个链表而非单个记录。虽然冲突将使每个链表长度较大，查找可能变慢，但仍比线性搜索快得多。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;分配方法&quot;&gt;&lt;a href=&quot;#分配方法&quot; class=&quot;headerlink&quot; title=&quot;分配方法&quot;&gt;&lt;/a&gt;分配方法&lt;/h1&gt;&lt;h2 id=&quot;连续分配&quot;&gt;&lt;a href=&quot;#连续分配&quot; class=&quot;headerlink&quot; title=&quot;连续分配&quot;&gt;&lt;/a&gt;连续分配&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;连续分配（contiguous allocation）&lt;/strong&gt; 要求每个文件在磁盘上占据连续的块。磁盘地址有一个线性序列，如果只有一个作业按照这个序列的顺序访问磁盘，在访问了块 b 后访问块 b+1 就无需移动磁头，即使需要移动磁头也只需要移动一个磁道（从一个柱面的最后扇区到下个柱面第一扇区）。因此， &lt;strong&gt;访问连续分配文件所需的寻道数最小，即使确实需要寻道，所花费的寻道时间也最小&lt;/strong&gt; 。在文件连续分配中，一个文件的目录条目包括文件占有的第一个块的地址，以及该文件分配的块的数量（分配区域的长度）。&lt;/li&gt;
+&lt;li&gt;连续分配文件访问非常容易，既可以顺序访问也可以随机访问。它也存在问题，例如如何为新文件寻找空间，这个问题可看作 &lt;a href=&quot;http://blog.forec.cn/2017/01/03/os-concepts-8/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;内存管理&lt;/a&gt; 中 &lt;strong&gt;动态存储分配&lt;/strong&gt; 问题的一个具体应用，即如何从一个空闲的孔列表中寻找一个满足大小为 n 的空间，常用首次适应和最佳适应。&lt;/li&gt;
+&lt;li&gt;连续分配方案的另一个问题是需要确定文件需要多少空间，这个知识是无法预知的。如果为一个文件分配的空间过小则文件可能无法原地扩展文件，这时要么终止用户程序并通知用户必须分配更多空间才能运行（这样用户就会过高的预估所需的磁盘空间造成浪费），要么找一个更大的孔，将文件复制到新空间，释放旧空间，但这比较耗时。&lt;/li&gt;
+&lt;li&gt;修正的连续分配方案：开始时为文件分配一块连续空间，一旦空间不够，另一块称为 &lt;strong&gt;扩展（extent）&lt;/strong&gt; 的 &lt;strong&gt;连续空间&lt;/strong&gt; 就会被分配给文件。这种情况下，文件块的位置就需要通过开始块地址、块数、指向下一个扩展的指针三项来确定。如果扩展太大，内部碎片会变得严重；随着扩展的分配、删除，外部碎片也将变得严重。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;链接分配&quot;&gt;&lt;a href=&quot;#链接分配&quot; class=&quot;headerlink&quot; title=&quot;链接分配&quot;&gt;&lt;/a&gt;链接分配&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;链接分配（linked allocation）&lt;/strong&gt; 解决了连续分配的全部问题。链接分配中，每个文件由分布在磁盘上各个位置的多个磁盘块组成，文件目录条目记录了一个文件第一块的指针和最后一块的指针。每一块都会有一个指向下一块的指针，用户无法使用存储这些指针的空间（例如一块有 512B，磁盘地址为 4B，则用户只可用 508B）。&lt;/li&gt;
+&lt;li&gt;链接分配对于创建/读/写文件的操作如下：&lt;ul&gt;
+&lt;li&gt;创建新文件时只要简单的在目录中增加一个新条目，条目中有指向文件第一块的指针，初始化为 &lt;code&gt;nil&lt;/code&gt; 以表明这是空文件，大小字段也是 0。&lt;/li&gt;
+&lt;li&gt;写文件时通过空闲空间管理器寻找一个空闲块，这个块会被写入数据、链接到文件最后一个块的尾部，同时要更新这个文件在目录中条目的记录值（大小、最后一个块的地址）。&lt;/li&gt;
+&lt;li&gt;读文件通过条目中存储的第一个块的地址，逐个向后寻找。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;链接分配的缺点在于：&lt;ul&gt;
+&lt;li&gt;只能用于文件的顺序访问，要找到文件的第 i 块必须要从第一块开始寻找，每次访问都需要读磁盘，这还需要涉及磁盘寻道的延迟。因此 &lt;strong&gt;链接分配无法有效支持文件直接访问&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;指针需要空间，每一块都有一定空间被指针占用。这个问题的解决方法是将多个块组成 &lt;strong&gt;簇（cluster）&lt;/strong&gt; ，按簇而不是块来分配（如一个簇有 4 块）。这样指针占用的磁盘空间百分比会下降，但增加了内部碎片。簇可以改善多数算法中的磁盘访问时间，因此在绝大多数操作系统中得到应用。&lt;/li&gt;
+&lt;li&gt;可靠性：文件通过指针链接，一旦有一个指针丢失/损坏，整个文件都将崩溃。一个逃避性的解决方案是采用双向链表，或者给每个块存上文件名和相对块数（相对第一块是第几块），但这又增加了过多的额外开销。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;链接分配方法的一个变种是 &lt;strong&gt;文件分配表（file-allocation table，FAT）&lt;/strong&gt; ，它被应用于 MS-DOS 和 OS/2 操作系统。每个卷的开始部分存储文件分配表，卷内的每一块都在表中占有一项，这个表可以通过块号码索引， &lt;strong&gt;表中存储的值是这一块指向的下一块块号&lt;/strong&gt; 。&lt;ul&gt;
+&lt;li&gt;文件在目录中的条目只含有文件第一块的块号，访问文件时按照 FAT 表中存储的链接关系一直向下寻找，直到最后一块（最后一块在 FAT 表中标记为一个特殊的文件结束值，可以根据这个值判断是否为最后一块）。&lt;/li&gt;
+&lt;li&gt;要分配一个新的块，只需要在 FAT 表中找到第一个值为 0（值为 0 表示一个块没有被使用）的块，用新块的地址替换掉此前最后一块的文件结束值，并且用文件结束值替换 FAT 表中的 0。&lt;/li&gt;
+&lt;li&gt;FAT 需要采用缓存才能提高效率，否则可能导致大量的磁头寻道时间：磁头要移动到卷的开头读入 FAT  以获得块的位置，然后才能移动到块本身。最坏情况下每块的读取都要移动两次。但它的优点在于改善了随机访问时间， &lt;strong&gt;因为 FAT 的存在，操作系统可以快速找到文件任意一块的位置&lt;/strong&gt; 。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/file-allocation-table.png&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;索引分配&quot;&gt;&lt;a href=&quot;#索引分配&quot; class=&quot;headerlink&quot; title=&quot;索引分配&quot;&gt;&lt;/a&gt;索引分配&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;如果不采用 FAT，链接分配就无法有效支持直接访问，因为块指针散布在整个磁盘，必须顺序读取。 &lt;strong&gt;索引分配（indexed allocation）&lt;/strong&gt; 把所有指针放到一起，通过 &lt;strong&gt;索引块（index block）&lt;/strong&gt; 解决此问题。&lt;/li&gt;
+&lt;li&gt;每个文件都有自己的索引块，它是一个磁盘块地址的数组。索引块的第 i 个条目代表文件的第 i 个块，条目中含有索引块的磁盘地址。要读取第 i 块只需要通过索引块第 i 个条目存储的指针来访问（类似第八章分页）。&lt;ul&gt;
+&lt;li&gt;创建文件：索引块中所有指针设为 nil。&lt;/li&gt;
+&lt;li&gt;第一次写入第 i 块：从空闲空间管理器获取一个空闲块，将数据写入块，并将块地址写到索引块的第 i 个条目中&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;索引分配支持直接访问且没有外部碎片问题，但索引分配会浪费空间&lt;/strong&gt; ：如果一个文件只有两块长，链接分配只需要每块浪费一个指针，而索引分配需要为这个只有两块的文件创建一个完整的索引块，这个索引块里只有两个指针被使用到。&lt;/li&gt;
+&lt;li&gt;索引块的大小需要经过仔细考量：每个文件都有一个索引块，索引块太大会造成浪费，太小又不足以满足大文件存储需求。针对这一问题的处理机制有如下几点：&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;链接方案（Linked scheme）&lt;/strong&gt; ：一个索引块就是一个磁盘块。它本身能够直接读写，当遇到大文件存储时可以将多个索引块链接。例如一个索引块可以包含一个头部（头部包含文件名）以及 100 个磁盘块的地址。索引块的最后一个存储单元存储着指向下一个索引块的地址如果是小文件则这个指针为 &lt;code&gt;nil&lt;/code&gt;，如果是大文件则指向了另一个索引块。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;多层索引（Multilevel index）&lt;/strong&gt; ：设置两层索引块，第一层指向第二层，第二层指向文件块。根据最大文件大小的不同，可以继续到第三/四层。对于块大小为 4KB 的情况，可以在一个索引块里装入 1024 个 4B 指针，两层索引就可以容纳 1048 576 个数据块，即最大文件为 4GB。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;组合方案（Combined scheme）&lt;/strong&gt; ：在 UFS 中使用了这种方案。将索引块的前 15 个指针存在文件的 inode 里，这 15 个指针中：前 12 个直接指向了数据块，这样不超过 12 块的文件就不需要其它索引块；后 3 个指针分别是一级间接块、二级间接块、三级间接块指针。这种方法允许一个文件的块数超过 4B 文件指针能访问的空间。许多 UNIX 系统支持 64 位文件指针，这时允许文件/文件系统达到数 T 字节。UNIX 的inode 大致如下：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/unix-inode-indexed.jpg&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;索引分配方案和链接分配方案在性能上都有欠缺，虽然索引块能够缓存在内存里，但数据块会分布到整个分区中。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;性能&quot;&gt;&lt;a href=&quot;#性能&quot; class=&quot;headerlink&quot; title=&quot;性能&quot;&gt;&lt;/a&gt;性能&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;连续分配对于任意类型的访问都只需要访问一次，链接分配可以将下一块的地址放到内存中并能直接读取，但对于直接访问需要读多次磁盘。所以有些系统通过使用连续分配支持文件直接访问，通过链接分配支持顺序访问。这种系统在创建文件时就要指明文件的类型（顺序访问还是直接访问），如果是直接访问还必须说明最大文件大小。&lt;/li&gt;
+&lt;li&gt;索引分配非常复杂。如果索引块已在内存中则可以直接访问，但将索引块保存在内存中需要非常大的空间。尤其是多级索引，对于一个大文件来说，如果要访问文件末尾部分的数据，可能需要将所有索引块读入内存才能读到需要的数据库。所以索引分配的性能依赖于索引结构、文件大小和所需要的块的位置。&lt;/li&gt;
+&lt;li&gt;有的系统把连续分配和索引分配结合，对于小文件（3、4块大小的）采用连续分配，大文件切换到索引分配。因为文件系统中大多数文件较小，所以小文件连续分配效率较高，平均性能较好。&lt;/li&gt;
+&lt;li&gt;由于 CPU 和磁盘速度不等，花费数千条 CPU 指令来节省一些磁头移动都是值得的，随着时间推移，这种不等程度还会增加。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;空闲空间管理&quot;&gt;&lt;a href=&quot;#空闲空间管理&quot; class=&quot;headerlink&quot; title=&quot;空闲空间管理&quot;&gt;&lt;/a&gt;空闲空间管理&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;系统需要维护 &lt;strong&gt;空闲空间链表（free-space list）&lt;/strong&gt; 以记录空闲磁盘空间，创建文件时会从空闲空间链表分配，删除文件时磁盘空间会加回到空闲空间链表上（称之为链表但不一定表现为链表）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;位向量&quot;&gt;&lt;a href=&quot;#位向量&quot; class=&quot;headerlink&quot; title=&quot;位向量&quot;&gt;&lt;/a&gt;位向量&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;将空闲空间用 &lt;strong&gt;位图（bit map）&lt;/strong&gt; 或 &lt;strong&gt;位向量（bit vector）&lt;/strong&gt; 表示，每块用一位说明是否为空闲，1 表示空闲，0 表示已经分配。&lt;/li&gt;
+&lt;li&gt;此方式查找磁盘上第 1 个空闲块和 n 个连续空闲块时简单高效：&lt;ul&gt;
+&lt;li&gt;按顺序检查位图中的每个字是否为 0 即可确定对应的块是否已经全部分配，第一个非 0 的字中，第一个 1 位偏移旧对应着第一个空闲块；&lt;/li&gt;
+&lt;li&gt;连续 n 个空闲块只需要判断是否有连续 &lt;code&gt;[n / 字的位数]&lt;/code&gt; 个字均为最大值（如一个字就是一个字节时，只要连续有 &lt;code&gt;[n / 8]&lt;/code&gt; 个字节全为 255 就说明这部分块都空闲）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;除非整个位向量都能保存在内存中，否则位向量的效率不高。对于小磁盘，位向量的大小可以接受，但对于大磁盘而言（如 40GB，每块 1KB）就需要超过 5MB 空间存储位图。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;链表和组&quot;&gt;&lt;a href=&quot;#链表和组&quot; class=&quot;headerlink&quot; title=&quot;链表和组&quot;&gt;&lt;/a&gt;链表和组&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;将所有空闲磁盘块用 &lt;strong&gt;链表（Linked List）&lt;/strong&gt; 链接，将指向第一个空闲块的指针放在磁盘的一个特殊位置，同时也缓存到内存里。第一块空闲块中包含了指向下一个空闲磁盘块的指针。&lt;/li&gt;
+&lt;li&gt;此方案效率不高，要遍历整个空闲块列表需要从磁盘读出每一块，这要耗费大量 I/O 时间。不过通常操作系统只需要获得一个空闲块以提供给文件，因此一般只需要分配空闲表的第一块。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;组（grouping）&lt;/strong&gt; 是对空闲链表的改进：将 n 个空闲块的地址存在第一个空闲块里，前 n-1 个地址都指向真正的空闲块， &lt;strong&gt;最后一个地址指向了另一个包含另外 n 个空闲块的块地址&lt;/strong&gt; 。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;计数&quot;&gt;&lt;a href=&quot;#计数&quot; class=&quot;headerlink&quot; title=&quot;计数&quot;&gt;&lt;/a&gt;计数&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;通常会有多个连续的块需要同时分配、释放，尤其是采用了连续分配或簇的情况下。因此可以不记录 n 个空闲块地址，而是记录连续多块空闲块的第一块的地址，以及连续的空闲块的数量。这样空闲空间表的每个条目包含了第一个空闲块地址和连续空闲块数量，虽然每个条目占用的空间增长了，但表的总长度会缩短（连续空闲块的数量往往大于 1）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;UNIX-成组链接（补充）&quot;&gt;&lt;a href=&quot;#UNIX-成组链接（补充）&quot; class=&quot;headerlink&quot; title=&quot;UNIX 成组链接（补充）&quot;&gt;&lt;/a&gt;UNIX 成组链接（补充）&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;将文件存储设备中的所有的空闲块 &lt;strong&gt;从后向前&lt;/strong&gt; 按 50 块为一组进行划分，每组的第一块用于存放 &lt;strong&gt;前一组&lt;/strong&gt; 的总块数和每块的块号，因为第一组前面已经没有其他组存在，所以第一组实际有 49 块。因为存储空间不一定正好是 50 的整数倍，所以最后一组可能不足 50 块。因为最后一组后面没有其他组，所以最后一组的总块数和每块块号的信息存放到管理文件存储设备的文件资源表中。如下图所示。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/unix-group-linked.png&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
+&lt;li&gt;操作系统启动时将文件资源表复制到内存，此时文件资源表中包含了最后一组的空闲块总数以及空闲块的块号。操作系统还会设置一个用于空闲块分配、回收的堆栈，堆栈存储着空闲块的块号，栈指针 ptr 的初值等于最后一组的空闲块的总块数。&lt;/li&gt;
+&lt;li&gt;成组链接分配方法：申请者请求获得 n 块空闲块，操作系统将按照先进先出的原则，将栈顶指向的块号分配给请求者，同时 ptr 自减。重复此操作直到 n 块分配完毕，或者堆栈中只剩下最后一个空闲块的块号（此块实际存储的是下一组的空闲块块数和各块块号）。当堆栈只剩下最后一个空闲块的块号时：&lt;ul&gt;
+&lt;li&gt;从堆栈中弹出该块的块号，系统启动 I/O 设备，将该块存放的内容读入内存（即将下一组空闲块号和总块数读入空闲资源表），并设置 ptr 为下一组的空闲块数&lt;/li&gt;
+&lt;li&gt;文件存储设备的最后一个空闲块中设置有尾部标识，表示空闲块已经分配完毕&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;成组链接回收方法：用户删除某个文件时，ptr 自增并将空闲块号入栈。若 ptr 为 50 则表明当前已经凑足一组，该组回收结束。&lt;ul&gt;
+&lt;li&gt;如果还有空闲物理块 F 需要回收，则将块 F 回收，并且启动设备 I/O，把栈中记录的 50 个块号和块数（50）写入到块 F 中。设置 ptr 为 1，将块 F 的块号入栈，开始新的一组空闲块回收。&lt;/li&gt;
+&lt;li&gt;对空闲块的分配和回收操作必须互斥进行（栈操作要互斥）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/05/os-concepts-10/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（十）：文件系统接口&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/05/os-concepts-12/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（十二）：大容量存储器结构&lt;/a&gt;   &lt;/p&gt;
+&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/01/05/os-concepts-11/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/01/05/os-concepts-11/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/01/05/os-concepts-11/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;整理《Operating System Concepts》 第七版第十一章文件系统实现部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
+    
+  </entry>
+  
+  <entry>
     <title>操作系统（十）：文件系统接口</title>
     <link href="http://forec.github.io/2017/01/05/os-concepts-10/"/>
     <id>http://forec.github.io/2017/01/05/os-concepts-10/</id>
@@ -1027,141 +1190,6 @@
     
       &lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>操作系统（三）：CPU 调度</title>
-    <link href="http://forec.github.io/2016/11/23/os-concepts-3/"/>
-    <id>http://forec.github.io/2016/11/23/os-concepts-3/</id>
-    <published>2016-11-23T13:49:05.000Z</published>
-    <updated>2017-01-06T11:38:52.584Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版第五章（CPU 进程调度），内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;概念&quot;&gt;&lt;a href=&quot;#概念&quot; class=&quot;headerlink&quot; title=&quot;概念&quot;&gt;&lt;/a&gt;概念&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;CPU 调度是多道程序操作系统的基础，在进程之间切换 CPU 可以提高计算机的吞吐率。&lt;/li&gt;
-&lt;li&gt;进程执行由 CPU 执行和 I/O 等待 &lt;strong&gt;周期（cycle）&lt;/strong&gt; 组成，进程在这两个状态之间切换。进程执行从 &lt;strong&gt;CPU区间（CPU burst）&lt;/strong&gt; 开始，之后在 CPU 区间和 &lt;strong&gt;I/O 区间&lt;/strong&gt; 交换。&lt;/li&gt;
-&lt;li&gt;CPU 区间的长度随进程和计算机的不同而变化，通常具有大量短 CPU 区间和少量长 CPU 区间。I/O &lt;strong&gt;约束（bound）&lt;/strong&gt; 程序具有很多短 CPU 区间，CPU 约束程序具有更多的长 CPU 区间。&lt;/li&gt;
-&lt;li&gt;每当 CPU 空闲时，操作系统必须从就绪队列中选择一个能够执行的进程并为之分配 CPU。进程选择由 &lt;strong&gt;短期调度程序&lt;/strong&gt; 或 CPU 调度程序执行。就绪队列不一定是先进先出（FIFO）队列，也可以被实现为优先队列、树、无序链表等。队列中的记录通常为进程控制块（PCB）。&lt;/li&gt;
-&lt;li&gt;在下面四种情况中，CPU 调度需要做出决策：&lt;ul&gt;
-&lt;li&gt;某个进程从运行状态切换到等待状态（如等待 I/O 或调用 wait 等待子进程）&lt;/li&gt;
-&lt;li&gt;某个进程终止&lt;/li&gt;
-&lt;li&gt;某个进程从运行状态切换到就绪状态（如出现中断）&lt;/li&gt;
-&lt;li&gt;某个进程从等待状态切换到就绪状态（如 I/O 完成）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;在上面四种情况中，如果调度程序只在前两种情况发生时运行，则调度方案是 &lt;strong&gt;非抢占（nonpreemptive）调度&lt;/strong&gt; ，否则该调度方案是 &lt;strong&gt;抢占（preemptive）调度&lt;/strong&gt; 。简单的说，非抢占调度指，一旦 CPU 被分配给一个进程，除非该进程终止或者切换到了等待状态，否则该进程不会释放分配的 CPU 资源，这部分 CPU 资源也无法被分配给其它进程；抢占调度指，分配给一个进程的 CPU 资源可能在该进程运行期间被重新分配给其他进程，此时这部分资源所属的原来的进程会被切换到就绪状态。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;分派程序（dispatcher）&lt;/strong&gt; 是一个用来将 CPU 控制权交付给由短期调度程序选择出的要执行的进程的模块。每次进程切换时都会调用分派程序，它应当尽可能快。分派程序停止一个进程并启动另一个要花费的时间称为 &lt;strong&gt;分派延迟（dispatch latency）&lt;/strong&gt; 。它的功能包括：&lt;ul&gt;
-&lt;li&gt;切换上下文&lt;/li&gt;
-&lt;li&gt;切换到用户模式&lt;/li&gt;
-&lt;li&gt;跳转到用户程序的合适位置，以重新启动程序&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;调度算法&quot;&gt;&lt;a href=&quot;#调度算法&quot; class=&quot;headerlink&quot; title=&quot;调度算法&quot;&gt;&lt;/a&gt;调度算法&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;不同的 CPU 调度算法依据不同的属性来选择进程，可通过以下准则衡量调度算法的特点和优势：&lt;ul&gt;
-&lt;li&gt;CPU 利用率（utilization）：调度算法应使 CPU 尽可能忙，40%（轻负荷）~90%（重负荷）&lt;/li&gt;
-&lt;li&gt;吞吐量（throughput）：一个时间单元内所完成的进程的数量，对于长、短进程，吞吐量也有所不同&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;周转时间（turnaround time）&lt;/strong&gt; ：一个特定进程 &lt;strong&gt;从进程提交到进程完成所需的时间&lt;/strong&gt; ，该时间为所有时间段之和，包括等待载入内存、在就绪队列中等待、在 CPU 上执行和 I/O 等待时间&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;等待时间（waiting time）&lt;/strong&gt; ：进程在 &lt;strong&gt;就绪队列&lt;/strong&gt; 中等待所花费的时间之和&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;响应时间（response time）&lt;/strong&gt; ：对交互系统而言需要考虑响应时间，该准则指的是从提交请求到产生第一响应的时间（开始响应所需要的时间，而不是输出响应所需要的时间）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;需要使 CPU 利用率和吞吐量最大化，而周转时间、等待时间和响应时间最小化。多数情况下需要优化平均值，少数情况需要优化最小值或最大值。例如对于分时系统，为保证所有用户得到更好服务，需要尽可能使最大响应时间最小。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;先到先服务&quot;&gt;&lt;a href=&quot;#先到先服务&quot; class=&quot;headerlink&quot; title=&quot;先到先服务&quot;&gt;&lt;/a&gt;先到先服务&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;最简单的 CPU 调度算法是 &lt;strong&gt;先到先服务（first-come，first-served，FCFS）&lt;/strong&gt; 调度算法：先请求 CPU 的进程先分配到 CPU，该算法可用 FIFO 队列实现，且平均等待时间通常较长。&lt;/li&gt;
-&lt;li&gt;当系统中存在一个 CPU 约束进程和多个 I/O 约束进程时，可能出现 CPU 约束进程占用 CPU，同时其他进程处理完 I/O 请求并在就绪队列中等待，此时 I/O 设备空闲。当 CPU 约束进程结束、转移到 I/O 区间后，这些 I/O 约束进程很快会执行完计算任务（仅有很短的 CPU 区间）并移回 I/O 区间，此时 CPU 空闲。之后该状态会反复，即多个进程等待一个长进程释放 CPU，此现象称为 &lt;strong&gt;护航效果（convoy effect）&lt;/strong&gt; 。这将导致 CPU 和设备利用率变得更低。&lt;/li&gt;
-&lt;li&gt;FCFS 调度是非抢占的，因此不适合分时系统，允许一个进程保持过长的 CPU 时间是非常严重的错误。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;最短作业优先&quot;&gt;&lt;a href=&quot;#最短作业优先&quot; class=&quot;headerlink&quot; title=&quot;最短作业优先&quot;&gt;&lt;/a&gt;最短作业优先&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;最短作业优先（shortest-job-first，SJF）&lt;/strong&gt; 调度算法：当 CPU 空闲时，调度程序选择需要 CPU 区间最短的进程执行，如果有多个进程的下一次 CPU 区间长度相同，则在这些进程间使用 FCFS。即，先比较需要的 CPU 区间长度，长度越短优先级越高，长度相同时，到达时间越早优先级越高。&lt;/li&gt;
-&lt;li&gt;SJF 调度算法可证明为 &lt;em&gt;最佳&lt;/em&gt; 的，对于给定的一组进程， &lt;strong&gt;SJF 算法的平均等待时间最小&lt;/strong&gt; 。这一点的证明可以考虑贪心算法。&lt;/li&gt;
-&lt;li&gt;因为无法获知进程下个 CPU 区间的长度，一种替代方法是近似 SJF 调度，即通过先验长度 &lt;em&gt;预测&lt;/em&gt; 下一个 CPU 区间长度。我们认为，下一个 CPU 区间长度与此前的相似，可视作此前 CPU 区间测量长度的 &lt;strong&gt;指数平均（exponential average）&lt;/strong&gt; ：设 &lt;code&gt;t_n&lt;/code&gt; 为某进程第 n 个 CPU 区间的长度，则该进程下一个 CPU 区间的预测值 &lt;code&gt;τ_n+1 = αt_n + (1-α)τ_n&lt;/code&gt;，这里 &lt;code&gt;0 ≤ α ≤ 1&lt;/code&gt;。&lt;code&gt;τ_n&lt;/code&gt;代表着过去的历史，而 &lt;code&gt;t_n&lt;/code&gt; 为最近的信息，参数 &lt;code&gt;α&lt;/code&gt; 控制了最近和过去历史在预测中的相对加权。&lt;/li&gt;
-&lt;li&gt;SJF 算法可能是抢占的或非抢占的。对于抢占 SJF 调度算法，当一个新进程到达就绪队列且当前正在执行的进程剩余时间比新进程所需 CPU 时间长，则新进程抢占 CPU。抢占 SJF 调度也称为 &lt;strong&gt;最短剩余时间优先（shortest-remaining-time-first）调度&lt;/strong&gt; ，与之相反的，新进程始终等待原有进程运行结束的 SJF 调度为非抢占 SJF 调度。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;优先级调度&quot;&gt;&lt;a href=&quot;#优先级调度&quot; class=&quot;headerlink&quot; title=&quot;优先级调度&quot;&gt;&lt;/a&gt;优先级调度&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;SJF 实际是通用 &lt;strong&gt;优先级（priority）调度算法&lt;/strong&gt; 的一个特例。每个进程与一个优先级关联，具有最高优先级的进程会被先分配，具有相同优先级的进程按 FCFS 顺序调度。SJF 算法属于简单优先级算法，其优先级为进程预测 CPU 区间的倒数，CPU 区间长度越大则优先级越小。&lt;/li&gt;
-&lt;li&gt;通常按照 &lt;em&gt;高&lt;/em&gt; 优先级和 &lt;em&gt;低&lt;/em&gt; 优先级讨论调度，优先级通常为某个固定区间的数字，如 0 ~ 7，对于不同的系统，0 可以是最高，也可以是最低优先级。&lt;/li&gt;
-&lt;li&gt;优先级调度算法可以是抢占的或者非抢占的，对于抢占的优先级调度算法，具有更高优先级的新到达进程会抢占 CPU。&lt;/li&gt;
-&lt;li&gt;主要问题： &lt;strong&gt;无穷阻塞（indefinite blocking）&lt;/strong&gt; 或 &lt;strong&gt;饥饿（starvation）&lt;/strong&gt; ，此调度算法会导致低优先级进程无穷等待 CPU。&lt;/li&gt;
-&lt;li&gt;解决饥饿： &lt;strong&gt;老化（aging）&lt;/strong&gt; 技术可以逐渐增加在系统中等待时间过长的进程的优先级，即每过一段时间递减等待进程的优先级的值，最终低优先级的进程会成为高优先级的进程并得以执行。&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;动态优先级例题&lt;/em&gt; ：假设某系统采用基于动态优先级的抢占式调度算法，且优先数越大的进程优先级越高，系统为所有新建进程赋予优先级值 0，当一个进程在就绪队列中等待 CPU 时，其优先级值变化速率为 α；当进程获得 CPU 并执行时，执行过程中优先级值变化速率为 β：&lt;ul&gt;
-&lt;li&gt;若 β &amp;gt; α &amp;gt; 0，则调度算法相当于：FCFS&lt;/li&gt;
-&lt;li&gt;若 α &amp;lt; β &amp;lt; 0，则调度算法相当于：FCLS&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;轮转法（RR）&quot;&gt;&lt;a href=&quot;#轮转法（RR）&quot; class=&quot;headerlink&quot; title=&quot;轮转法（RR）&quot;&gt;&lt;/a&gt;轮转法（RR）&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;轮转法（round-robin，RR）&lt;/strong&gt; 调度算法是 &lt;em&gt;专门为分时系统设计&lt;/em&gt; 的，类似 FCFS 调度，但强制通过抢占切换进程。该调度算法定义一个较小的 &lt;strong&gt;时间单元（time quantum）&lt;/strong&gt; 或时间切片，通常在 10 ~ 100 ms之间。就绪队列是环形的，并保持 FIFO 性质， &lt;strong&gt;新到达的进程会被添加到队列末尾&lt;/strong&gt; 。调度算法从就绪队列的头部移出进程 A，为其分配 CPU 并执行，同时也会设置一个定时器，当进程 A 执行时间到达一个时间单元时，如果进程 A 仍未结束，则将被就绪队列的下一个进程 B 抢占，进程 A 再次被加入就绪队列。注意，因为就绪队列为环形链表，队列头指针现在已经跳转到进程 B，所以进程 A 已成为整个队列的最后一个进程。&lt;/li&gt;
-&lt;li&gt;使用 RR 策略调度的平均等待时间通常比较长。&lt;/li&gt;
-&lt;li&gt;RR 算法的性能很大程度上依赖时间单元的大小。考虑极端情况：&lt;ul&gt;
-&lt;li&gt;时间单元（时间片）非常大，则 RR 算法等价于 FCFS 算法&lt;/li&gt;
-&lt;li&gt;时间单元非常小，则 RR 算法称为 &lt;strong&gt;处理器共享（processor sharing）&lt;/strong&gt; ，此时 n 个进程看起来就像运行在各自独立的 CPU 上，每个 CPU 的运行速度是真实 CPU 的 1/n。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;通常希望 &lt;em&gt;时间单元比上下文切换时间长&lt;/em&gt; ，例如上下文切换时间为时间片的 10%，则约有 10% 的 CPU 时间浪费在上下文切换上。现代操作系统时间片通常为 10 ~ 100ms，而上下文切换时间通常少于 10μs。&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;周转时间依赖于时间片大小&lt;/em&gt; ：若绝大多数进程能在一个时间单元内完成，则平均周转时间会改善。&lt;/li&gt;
-&lt;li&gt;根据经验，80% 的 CPU 区间应当小于时间片。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;多级队列调度&quot;&gt;&lt;a href=&quot;#多级队列调度&quot; class=&quot;headerlink&quot; title=&quot;多级队列调度&quot;&gt;&lt;/a&gt;多级队列调度&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;在进程容易分组的情况下（如划分为 &lt;strong&gt;前台（交互）&lt;/strong&gt; 进程和 &lt;strong&gt;后台（批处理）&lt;/strong&gt; 进程），可使用 &lt;strong&gt;多级队列（multilevel queue）调度算法&lt;/strong&gt; 。该算法将就绪队列划分为多个独立队列，进程按自身属性被 &lt;strong&gt;永久地&lt;/strong&gt; 分配到一个队列，每个队列使用自己的调度算法。例如，前台队列可能使用 RR 算法（分时系统），而后台队列使用 FCFS 算法。&lt;/li&gt;
-&lt;li&gt;队列之间必须存在调度，通常采用 &lt;em&gt;固定优先级抢占调度&lt;/em&gt; 。例如，前台队列要比后台队列具有绝对优先级。&lt;/li&gt;
-&lt;li&gt;举例：存在 4 个队列的多级队列调度算法，按优先级排列为：系统进程 &amp;gt; 交互进程 &amp;gt; 交互编辑进程 &amp;gt; 批处理进程。队列之间存在绝对优先级，只有系统进程、交互进程、交互编辑进程队列均为空时，批处理队列内的进程才可运行；在批处理队列有进程运行时，更高优先级队列进入新进程会抢占批处理进程。&lt;/li&gt;
-&lt;li&gt;队列之间可划分时间片，每个队列有一定的 CPU 时间用于调度进程，例如前台队列可以将 80% 的 CPU 时间用于进程间的 RR 调度，后台队列可以有 20% 的 CPU 时间采用 FCFS 算法调度。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;多级反馈队列调度&quot;&gt;&lt;a href=&quot;#多级反馈队列调度&quot; class=&quot;headerlink&quot; title=&quot;多级反馈队列调度&quot;&gt;&lt;/a&gt;多级反馈队列调度&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;多级反馈队列（multilevel feedback queue）调度算法&lt;/strong&gt; 允许进程在队列之间移动，根据不同 CPU 区间来区分进程。&lt;/li&gt;
-&lt;li&gt;如果进程使用过多 CPU 时间，则它会被转移到更低优先级队列。这种方法将 I/O 约束和交互进程留在更高优先级队列。&lt;/li&gt;
-&lt;li&gt;在较低优先级队列中等待时间过长的进程会被转移到更高优先级队列，这种老化阻止了饥饿的发生。&lt;/li&gt;
-&lt;li&gt;考虑如下的多级反馈队列调度程序，它包含三个队列（0~2），优先级从高到低，只有队列 0 空，队列 1、2 内的进程才可执行，到达队列 0 的进程可以抢占队列 1、2 的进程。进入就绪队列的进程被放入队列 0，队列 0 中每个进程有 8 ms 时间片，如果该进程不能在这个时间片内完成，则它将被移动到队列 1 的尾部；当队列 0 为空时，队列 1 的头部进程会得到一个 16 ms 的时间片，若该进程不能在此时间片内完成，则将被抢占并放置到队列 2 的尾部。&lt;/li&gt;
-&lt;li&gt;多级反馈队列调度程序由以下参数定义：&lt;ul&gt;
-&lt;li&gt;队列数量&lt;/li&gt;
-&lt;li&gt;每个队列各自的调度算法&lt;/li&gt;
-&lt;li&gt;何时升级到更高优先级队列&lt;/li&gt;
-&lt;li&gt;何时降级到更低优先级队列&lt;/li&gt;
-&lt;li&gt;进程在需要服务时应当进入哪个队列&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;多级反馈调度程序是最通用的 CPU 调度算法，但也最复杂。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;高响应比优先（补充）&quot;&gt;&lt;a href=&quot;#高响应比优先（补充）&quot; class=&quot;headerlink&quot; title=&quot;高响应比优先（补充）&quot;&gt;&lt;/a&gt;高响应比优先（补充）&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;高响应比优先（highest response-ratio next，HRRN）算法&lt;/strong&gt; ：非抢占调度，响应比定义为 &lt;code&gt;R = (W+T)/T = 1+W/T&lt;/code&gt;，其中 &lt;code&gt;W&lt;/code&gt; 是某个进程在就绪队列中的等待时间，&lt;code&gt;T&lt;/code&gt; 是该进程的 CPU 区间长度。&lt;/li&gt;
-&lt;li&gt;具有最高响应比的进程会被调度。HRRN 算法同时考虑了等待时间和 CPU 区间。&lt;/li&gt;
-&lt;li&gt;缺陷：为每个进程计算响应比需要消耗系统资源。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;多处理器调度&quot;&gt;&lt;a href=&quot;#多处理器调度&quot; class=&quot;headerlink&quot; title=&quot;多处理器调度&quot;&gt;&lt;/a&gt;多处理器调度&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;存在多个 CPU 使 &lt;strong&gt;负载分配（load sharing）&lt;/strong&gt; 成为可能，多处理器调度只考虑处理器同构的系统，并可以将任何处理器用于任何队列内的任何进程。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;非对称多处理（asymmetric multiprocessing）&lt;/strong&gt; ：使一个处理器（主服务器）处理所有的调度决定、I/O处理以及其他系统活动，其它处理器只执行用户代码&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;对称多处理（symmetric multiprocessing，SMP）&lt;/strong&gt; ：每个处理器自我调度，所有进程可能处于一个共同的就绪队列，或每个处理器拥有自己的私有就绪队列。调度通过每个处理器检查共同就绪队列并选择一个进程执行。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;处理器亲和性（processor affinity）&lt;/strong&gt; ：多数 SMP 系统试图避免将进程从一个处理器移动到另一个处理器，而是努力让一个进程在同一个处理器上运行。一个操作系统使用策略使一个进程保持在同一个处理器上运行，但不能做任何保证时，称为 &lt;strong&gt;软亲和性（soft affinity）&lt;/strong&gt; ；有的操作系统，如 Linux，提供一个支持 &lt;strong&gt;硬亲和性（hard affinity）&lt;/strong&gt; 的系统调用保证了进程无法转移到其它处理器。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;负载均衡（load balancing）&lt;/strong&gt; 保证了所有处理器的工作负载平衡以完全利用多处理器的优点，它仅在每个 CPU 有私有就绪队列的情况下才有必要。它和处理器的亲和性相悖。有两种方法可实现：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;推送迁移（push migration）&lt;/strong&gt; ：一个特定的进程间歇性的检查每个处理器的负载，假如当前负载不均衡，则将过载处理器上进程推送到空闲处理器。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;拉取迁移（pull migration）&lt;/strong&gt; ：一个空闲处理器从一个忙处理器拉取一个处于等待状态的进程。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/22/os-concepts-2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（二）：进程与线程&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-4/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（四）：进程互斥&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/11/23/os-concepts-3/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/11/23/os-concepts-3/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/23/os-concepts-3/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版第五章（CPU 进程调度），内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
