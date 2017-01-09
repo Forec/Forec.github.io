@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg">
-<meta property="og:updated_time" content="2017-01-06T09:27:31.970Z">
+<meta property="og:updated_time" content="2017-01-09T15:22:25.808Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（十三）：I/O 输入系统">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -172,13 +172,13 @@
 <p>整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
 </blockquote>
 <a id="more"></a>
-<p>注：只包含第 13 章内核 I/O 子系统之前的内容。</p>
+<p>注：整理只包含第 13 章内核 I/O 子系统之前的内容，考试涉及整章内容。</p>
 <h1 id="I-O-硬件"><a href="#I-O-硬件" class="headerlink" title="I/O 硬件"></a>I/O 硬件</h1><ul>
 <li><strong>设备驱动程序（device drivers）</strong> 为 I/O 子系统提供了统一设备的访问接口。</li>
 <li>设备和计算机的通信通过 <strong>端口（port）</strong> ，一组被一个/多个设备共同使用的线称为 <strong>总线（bus）</strong> 。总线是一组线和一组严格定义的描述在线上传输信息的协议。 <strong>链环（daisy chaine）</strong> 形容的是多个设备相连，最终设备通过端口连接到计算机上的模式。链环常常按总线方式工作，一个典型的 PC 总线结构如下图。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/typical-pc-bus.png" width="500px"></li>
 <li>上图中包含一个 <strong>PCI 总线</strong> （最常用的 PC 系统总线）用于连接 CPU 和内存子系统/快速设备， <strong>扩展总线（expansion bus）</strong> 用于连接串/并行端口和相对慢的设备（键盘）。</li>
 <li><strong>控制器（controller）</strong> 是用来操作端口、总线或者设备的一组电子器件，它的复杂程度和传输协议有关，如串行端口控制器比较简单，而 SCSI 总线控制器常实现为一个和计算机相连的独立的 <strong>主机适配器（host adapter）</strong> ，这个适配器会有处理器、微码以及一定的私有内存，从而能够处理 SCSI 协议信息。</li>
-<li>控制器有一个/多个用于数据和控制信号的寄存器， <strong>处理器通过读写这些寄存器来来实现与控制器的通信</strong> 。这种通信的可以通过特殊的 I/O 指令向指定的 I/O 端口地址传输一个字节/字，也可以通过 <strong>内存映射</strong> I/O 模式（在 <a href="http://blog.forec.cn/2017/01/04/os-concepts-9/" target="_blank" rel="external">虚拟内存</a> 中介绍过），处理器能够通过标准数据传输指令完成对控制器的读写。部分系统同时采用这两种方式，例如图像控制器有 I/O 端口来完成基本控制操作，还有一个较大的内存映射区域来支持屏幕内容的接收和生成。</li>
+<li>控制器有一个/多个用于数据和控制信号的寄存器， <strong>处理器通过读写这些寄存器来实现与控制器的通信</strong> 。这种通信的可以通过特殊的 I/O 指令向指定的 I/O 端口地址传输一个字节/字，也可以通过 <strong>内存映射</strong> I/O 模式（在 <a href="http://blog.forec.cn/2017/01/04/os-concepts-9/" target="_blank" rel="external">虚拟内存</a> 中介绍过），处理器能够通过标准数据传输指令完成对控制器的读写。部分系统同时采用这两种方式，例如图像控制器有 I/O 端口来完成基本控制操作，还有一个较大的内存映射区域来支持屏幕内容的接收和生成。</li>
 <li>I/O 端口通常有 4 种寄存器，寄存器通常为 1 ~ 4B：状态寄存器、控制寄存器、数据输入寄存器和数据输出寄存器。有的控制器有 FIFO 芯片从而可以保留多个输入/输出数据。上述四种寄存器的主要功能有：<ul>
 <li>主机从 <strong>数据输入寄存器</strong> 读出数据</li>
 <li>主机向 <strong>数据输出寄存器</strong> 写入数据</li>
@@ -229,7 +229,7 @@
 <li>DMA 和设备控制器之间的握手通过 <strong>DMA-request</strong> 和 <strong>DMA-acknowledge</strong> 线进行，设备有数据需要传输时，设备控制器就通过 DMA-request 线通知 DMA 控制器，DMA 控制器会发出申请中断 CPU，在从 CPU 获取所需要的地址后将地址放到内存地址总线上，并通过 DMA-acknowledge 线通知设备控制器。设备控制器收到这个信号，向内存地址总线上的地址写入数据。交互过程如下图。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/steps-dma-transfer.png" width="500px"></li>
 <li>DMA 控制总线传输期间 CPU 不能访问主存（仍可访问 L1、L2 缓存），这称为 <strong>周期挪用（cycle stealing）</strong> ，会放慢 CPU 计算，当往往能够改善系统总体性能。有的 DMA 使用物理内存地址，有的使用虚拟内存地址（这时候需要有一个虚拟到物理地址的转换），使用虚拟内存地址的 DMA 称为 <strong>直接虚拟内存访问（direct virtual-memory access，DVMA）</strong> 。DVMA 可以直接实现两个内存映射设备之间的传输而无需 CPU 干涉。</li>
 </ul>
-<h1 id="I-O-应用接口摘要"><a href="#I-O-应用接口摘要" class="headerlink" title="I/O 应用接口摘要"></a>I/O 应用接口摘要</h1><ul>
+<h1 id="I-O-应用接口及后面几节简单摘要"><a href="#I-O-应用接口及后面几节简单摘要" class="headerlink" title="I/O 应用接口及后面几节简单摘要"></a>I/O 应用接口及后面几节简单摘要</h1><ul>
 <li>设备在很多方面有很大差异：<ul>
 <li>字符流或块：字符流设备按字节传输，块设备以块为单位传输</li>
 <li>顺序访问或随机访问</li>
@@ -246,6 +246,22 @@
 <li><strong>异步系统调用（asynchronous system call）</strong> 不必等待 I/O 完成就可以立刻返回，应用程序继续执行。I/O 完成时会通知应用程序，比如设置程序空间里某个变量，或者触发信号/软件中断等。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/two-io-methods.png" width="400px"></li>
 </ul>
 </li>
+<li><strong>缓冲区（buffer）</strong> 是用来保存两个设备之间或者设备和应用程序之间传输数据的内存区域。采用缓冲的理由有：<ul>
+<li>处理数据流的生产者与消费者之间的速度差异</li>
+<li>协调传输数据大小不一致的设备</li>
+<li>支持程序 I/O 的复制语义</li>
+</ul>
+</li>
+<li><strong>I/O 内核子系统</strong> （kernel’s I/O subsystem）提供了很多和 I/O 有关的服务，包括：<ul>
+<li>调度（scheduling）</li>
+<li>缓冲（buffering）</li>
+<li>高速缓存（caching）</li>
+<li>假脱机（spooling）</li>
+<li>设备预留（device reservation）</li>
+<li>错误处理（error handling）</li>
+<li>名称转换（name translation）</li>
+</ul>
+</li>
 </ul>
 <hr>
 <p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2017/01/05/os-concepts-12/" target="_blank" rel="external">操作系统（十二）：大容量存储器结构</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2017/01/06/os-concepts-14/" target="_blank" rel="external">操作系统（专题）：信号量编程</a>    </p>
@@ -258,7 +274,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/01/06/os-concepts-13/" data-id="cixpiiuat003em0ew7f2pibf2" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/01/06/os-concepts-13/" data-id="cixqa25rk003hd8ew7xc8v91p" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -531,10 +547,10 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
+                            <a href="/2017/01/04/os-concepts-9/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-7.png)" alt="顶点云（应用）用户代理" class="thumbnail-image"></span>
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-9.jpg)" alt="操作系统（九）：虚拟内存" class="thumbnail-image"></span>
     
     
 </a>
@@ -542,9 +558,9 @@
                         </div>
                         
                         <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/12/03/zenith-cloud-7/" class="title">顶点云（应用）用户代理</a></p>
-                            <p class="item-date"><time datetime="2016-12-03T13:44:07.000Z" itemprop="datePublished">2016-12-03</time></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/04/os-concepts-9/" class="title">操作系统（九）：虚拟内存</a></p>
+                            <p class="item-date"><time datetime="2017-01-03T16:42:29.000Z" itemprop="datePublished">2017-01-04</time></p>
                         </div>
                     </li>
                 
@@ -557,7 +573,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">17</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">19</span></li></ul>
         </div>
     </div>
 

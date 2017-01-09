@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2017-01-06T09:27:31.970Z</updated>
+  <updated>2017-01-09T15:22:25.808Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -20,19 +20,19 @@
     <link href="http://forec.github.io/2017/01/06/os-concepts-13/"/>
     <id>http://forec.github.io/2017/01/06/os-concepts-13/</id>
     <published>2017-01-06T04:17:33.000Z</published>
-    <updated>2017-01-06T09:27:31.970Z</updated>
+    <updated>2017-01-09T15:22:25.808Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;p&gt;注：只包含第 13 章内核 I/O 子系统之前的内容。&lt;/p&gt;
+&lt;p&gt;注：整理只包含第 13 章内核 I/O 子系统之前的内容，考试涉及整章内容。&lt;/p&gt;
 &lt;h1 id=&quot;I-O-硬件&quot;&gt;&lt;a href=&quot;#I-O-硬件&quot; class=&quot;headerlink&quot; title=&quot;I/O 硬件&quot;&gt;&lt;/a&gt;I/O 硬件&lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;设备驱动程序（device drivers）&lt;/strong&gt; 为 I/O 子系统提供了统一设备的访问接口。&lt;/li&gt;
 &lt;li&gt;设备和计算机的通信通过 &lt;strong&gt;端口（port）&lt;/strong&gt; ，一组被一个/多个设备共同使用的线称为 &lt;strong&gt;总线（bus）&lt;/strong&gt; 。总线是一组线和一组严格定义的描述在线上传输信息的协议。 &lt;strong&gt;链环（daisy chaine）&lt;/strong&gt; 形容的是多个设备相连，最终设备通过端口连接到计算机上的模式。链环常常按总线方式工作，一个典型的 PC 总线结构如下图。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/typical-pc-bus.png&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
 &lt;li&gt;上图中包含一个 &lt;strong&gt;PCI 总线&lt;/strong&gt; （最常用的 PC 系统总线）用于连接 CPU 和内存子系统/快速设备， &lt;strong&gt;扩展总线（expansion bus）&lt;/strong&gt; 用于连接串/并行端口和相对慢的设备（键盘）。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;控制器（controller）&lt;/strong&gt; 是用来操作端口、总线或者设备的一组电子器件，它的复杂程度和传输协议有关，如串行端口控制器比较简单，而 SCSI 总线控制器常实现为一个和计算机相连的独立的 &lt;strong&gt;主机适配器（host adapter）&lt;/strong&gt; ，这个适配器会有处理器、微码以及一定的私有内存，从而能够处理 SCSI 协议信息。&lt;/li&gt;
-&lt;li&gt;控制器有一个/多个用于数据和控制信号的寄存器， &lt;strong&gt;处理器通过读写这些寄存器来来实现与控制器的通信&lt;/strong&gt; 。这种通信的可以通过特殊的 I/O 指令向指定的 I/O 端口地址传输一个字节/字，也可以通过 &lt;strong&gt;内存映射&lt;/strong&gt; I/O 模式（在 &lt;a href=&quot;http://blog.forec.cn/2017/01/04/os-concepts-9/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;虚拟内存&lt;/a&gt; 中介绍过），处理器能够通过标准数据传输指令完成对控制器的读写。部分系统同时采用这两种方式，例如图像控制器有 I/O 端口来完成基本控制操作，还有一个较大的内存映射区域来支持屏幕内容的接收和生成。&lt;/li&gt;
+&lt;li&gt;控制器有一个/多个用于数据和控制信号的寄存器， &lt;strong&gt;处理器通过读写这些寄存器来实现与控制器的通信&lt;/strong&gt; 。这种通信的可以通过特殊的 I/O 指令向指定的 I/O 端口地址传输一个字节/字，也可以通过 &lt;strong&gt;内存映射&lt;/strong&gt; I/O 模式（在 &lt;a href=&quot;http://blog.forec.cn/2017/01/04/os-concepts-9/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;虚拟内存&lt;/a&gt; 中介绍过），处理器能够通过标准数据传输指令完成对控制器的读写。部分系统同时采用这两种方式，例如图像控制器有 I/O 端口来完成基本控制操作，还有一个较大的内存映射区域来支持屏幕内容的接收和生成。&lt;/li&gt;
 &lt;li&gt;I/O 端口通常有 4 种寄存器，寄存器通常为 1 ~ 4B：状态寄存器、控制寄存器、数据输入寄存器和数据输出寄存器。有的控制器有 FIFO 芯片从而可以保留多个输入/输出数据。上述四种寄存器的主要功能有：&lt;ul&gt;
 &lt;li&gt;主机从 &lt;strong&gt;数据输入寄存器&lt;/strong&gt; 读出数据&lt;/li&gt;
 &lt;li&gt;主机向 &lt;strong&gt;数据输出寄存器&lt;/strong&gt; 写入数据&lt;/li&gt;
@@ -83,7 +83,7 @@
 &lt;li&gt;DMA 和设备控制器之间的握手通过 &lt;strong&gt;DMA-request&lt;/strong&gt; 和 &lt;strong&gt;DMA-acknowledge&lt;/strong&gt; 线进行，设备有数据需要传输时，设备控制器就通过 DMA-request 线通知 DMA 控制器，DMA 控制器会发出申请中断 CPU，在从 CPU 获取所需要的地址后将地址放到内存地址总线上，并通过 DMA-acknowledge 线通知设备控制器。设备控制器收到这个信号，向内存地址总线上的地址写入数据。交互过程如下图。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/steps-dma-transfer.png&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
 &lt;li&gt;DMA 控制总线传输期间 CPU 不能访问主存（仍可访问 L1、L2 缓存），这称为 &lt;strong&gt;周期挪用（cycle stealing）&lt;/strong&gt; ，会放慢 CPU 计算，当往往能够改善系统总体性能。有的 DMA 使用物理内存地址，有的使用虚拟内存地址（这时候需要有一个虚拟到物理地址的转换），使用虚拟内存地址的 DMA 称为 &lt;strong&gt;直接虚拟内存访问（direct virtual-memory access，DVMA）&lt;/strong&gt; 。DVMA 可以直接实现两个内存映射设备之间的传输而无需 CPU 干涉。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1 id=&quot;I-O-应用接口摘要&quot;&gt;&lt;a href=&quot;#I-O-应用接口摘要&quot; class=&quot;headerlink&quot; title=&quot;I/O 应用接口摘要&quot;&gt;&lt;/a&gt;I/O 应用接口摘要&lt;/h1&gt;&lt;ul&gt;
+&lt;h1 id=&quot;I-O-应用接口及后面几节简单摘要&quot;&gt;&lt;a href=&quot;#I-O-应用接口及后面几节简单摘要&quot; class=&quot;headerlink&quot; title=&quot;I/O 应用接口及后面几节简单摘要&quot;&gt;&lt;/a&gt;I/O 应用接口及后面几节简单摘要&lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;设备在很多方面有很大差异：&lt;ul&gt;
 &lt;li&gt;字符流或块：字符流设备按字节传输，块设备以块为单位传输&lt;/li&gt;
 &lt;li&gt;顺序访问或随机访问&lt;/li&gt;
@@ -98,6 +98,22 @@
 &lt;li&gt;应用程序发出 &lt;strong&gt;阻塞（blocking） I/O&lt;/strong&gt; 类型的系统调用时，应用程序就会被挂起，移动到进程等待队列中。因为阻塞式的 I/O 容易理解，并且 I/O 设备执行所需的时间是异步的，执行时间不可预估，因此绝大多数操作系统给应用程序预留的接口都是阻塞系统调用。&lt;/li&gt;
 &lt;li&gt;有的用户级进程需要 &lt;strong&gt;非阻塞（nonblocking） I/O&lt;/strong&gt; ，例如用户接口，它用来接收键盘/鼠标输入，同时还要在屏幕回显，又或者视频应用程序，他需要从磁盘读取帧并解码到显示器上。非阻塞 I/O 通常使用多线程实现，有的线程执行阻塞系统调用，其他线程继续执行。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;异步系统调用（asynchronous system call）&lt;/strong&gt; 不必等待 I/O 完成就可以立刻返回，应用程序继续执行。I/O 完成时会通知应用程序，比如设置程序空间里某个变量，或者触发信号/软件中断等。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/two-io-methods.png&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;缓冲区（buffer）&lt;/strong&gt; 是用来保存两个设备之间或者设备和应用程序之间传输数据的内存区域。采用缓冲的理由有：&lt;ul&gt;
+&lt;li&gt;处理数据流的生产者与消费者之间的速度差异&lt;/li&gt;
+&lt;li&gt;协调传输数据大小不一致的设备&lt;/li&gt;
+&lt;li&gt;支持程序 I/O 的复制语义&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;I/O 内核子系统&lt;/strong&gt; （kernel’s I/O subsystem）提供了很多和 I/O 有关的服务，包括：&lt;ul&gt;
+&lt;li&gt;调度（scheduling）&lt;/li&gt;
+&lt;li&gt;缓冲（buffering）&lt;/li&gt;
+&lt;li&gt;高速缓存（caching）&lt;/li&gt;
+&lt;li&gt;假脱机（spooling）&lt;/li&gt;
+&lt;li&gt;设备预留（device reservation）&lt;/li&gt;
+&lt;li&gt;错误处理（error handling）&lt;/li&gt;
+&lt;li&gt;名称转换（name translation）&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
@@ -127,7 +143,7 @@
     <link href="http://forec.github.io/2017/01/05/os-concepts-12/"/>
     <id>http://forec.github.io/2017/01/05/os-concepts-12/</id>
     <published>2017-01-05T15:23:30.000Z</published>
-    <updated>2017-01-06T04:23:51.029Z</updated>
+    <updated>2017-01-09T15:06:19.479Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第十二章大容量存储器结构部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
@@ -142,7 +158,7 @@
 &lt;li&gt;磁盘驱动器通过 &lt;strong&gt;I/O总线&lt;/strong&gt; 和计算机相连，可用的总线包括 &lt;strong&gt;EIDE（enhanced integrated drive electronics）&lt;/strong&gt; 、 &lt;strong&gt;ATA（advanced technology attachment）&lt;/strong&gt; 和 &lt;strong&gt;串行 ATA（serial ATA，SATA）&lt;/strong&gt; 、 &lt;strong&gt;USB（universal serial bus）&lt;/strong&gt; 、 &lt;strong&gt;FC（fiber channel）&lt;/strong&gt; 和 SCSI 总线。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;控制器（controller）&lt;/strong&gt; 是一个特殊处理器，用于执行总线上的数据传输。其中， &lt;strong&gt;主机（host）&lt;/strong&gt; 控制器是计算机上位于总线末端的控制器，而 &lt;strong&gt;磁盘（disk）&lt;/strong&gt; 控制器位于磁盘驱动器内。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;磁带（magnetic tape）&lt;/strong&gt; 是早期次级存储介质，但访问速度过慢。典型磁带可以存储 20~200GB。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;火线（FireWire）&lt;/strong&gt; 指一个接口，这个接口可以讲外部设备如磁盘驱动器、DVD 驱动器等连接到计算机系统。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;火线（FireWire）&lt;/strong&gt; 指一个接口，这个接口可以将外部设备如磁盘驱动器、DVD 驱动器等连接到计算机系统。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&quot;磁盘结构和附属&quot;&gt;&lt;a href=&quot;#磁盘结构和附属&quot; class=&quot;headerlink&quot; title=&quot;磁盘结构和附属&quot;&gt;&lt;/a&gt;磁盘结构和附属&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;现代磁盘驱动器可以看作一个一维的 &lt;strong&gt;逻辑块（logical blocks）&lt;/strong&gt; 数组，逻辑块是最小的传输单位，通常为 512B，部分磁盘可以通过 &lt;strong&gt;低级格式化（low-level formatted）&lt;/strong&gt; 来选择不同的逻辑块大小。&lt;/li&gt;
@@ -245,7 +261,7 @@
     <link href="http://forec.github.io/2017/01/05/os-concepts-11/"/>
     <id>http://forec.github.io/2017/01/05/os-concepts-11/</id>
     <published>2017-01-05T09:11:59.000Z</published>
-    <updated>2017-01-05T15:37:01.809Z</updated>
+    <updated>2017-01-09T14:43:48.280Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第十一章文件系统实现部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
@@ -275,7 +291,7 @@
 &lt;li&gt;每个文件系统的目录结构，这些目录结构用于组织文件。UFS 中目录结构包括文件名和相关的索引节点号，NTFS 则保存在主控文件表中。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;内存内信息用于文件系统管理，可以通过缓存来提高性能。这部分数据在文件系统挂载（安装）的时候被加在，文件系统卸载的时候丢弃，可能包括：&lt;ul&gt;
+&lt;li&gt;内存内信息用于文件系统管理，可以通过缓存来提高性能。这部分数据在文件系统挂载（安装）的时候被加载，文件系统卸载的时候丢弃，可能包括：&lt;ul&gt;
 &lt;li&gt;内存中的安装表，含有所有已安装卷的信息&lt;/li&gt;
 &lt;li&gt;内存中的目录结构缓存，保存最近访问过的目录信息&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;系统范围内的打开文件表&lt;/strong&gt; ，在 &lt;a href=&quot;http://blog.forec.cn/2017/01/05/os-concepts-10/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;文件系统接口&lt;/a&gt; 中介绍过，包括每个打开文件的 FCB 副本和其它信息&lt;/li&gt;
@@ -408,7 +424,7 @@
     <link href="http://forec.github.io/2017/01/05/os-concepts-10/"/>
     <id>http://forec.github.io/2017/01/05/os-concepts-10/</id>
     <published>2017-01-05T03:55:47.000Z</published>
-    <updated>2017-01-05T15:32:02.765Z</updated>
+    <updated>2017-01-09T14:30:36.537Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第十章文件系统接口部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
@@ -456,7 +472,7 @@
 &lt;li&gt;&lt;strong&gt;顺序访问（Sequential Access）&lt;/strong&gt; ：文件信息按顺序处理。这种访问模式最常用，如编辑器、编译器等均按此种方式访问。大量文件操作都是读写操作，两种操作都会向某一方向移动文件指针。顺序访问基于文件的磁带模型（读写/倒回），对顺序访问设备和随机访问设备都适用。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;直接访问（Direct Access）&lt;/strong&gt; ：也称 &lt;strong&gt;相对访问（relative access）&lt;/strong&gt; ，文件由固定长度的 &lt;strong&gt;逻辑记录（logical records）&lt;/strong&gt; 组成，因此程序可以直接计算出文件所在的块并快速读写（磁盘允许对任意块进行随机读写）。数据库通常使用这种类型的文件。因为随机读写以块为目标，故文件操作要经过修改从而将块号作为参数。有两种方式：一是将 &lt;em&gt;读下一个字节&lt;/em&gt; 变成 &lt;em&gt;读 n&lt;/em&gt; ，将 &lt;em&gt;写下一个字节&lt;/em&gt; 变成 &lt;em&gt;写 n&lt;/em&gt; ；另一种则是仍使用 &lt;em&gt;读下一个&lt;/em&gt; 和 &lt;em&gt;写下一个&lt;/em&gt; ，但是增加了 &lt;em&gt;定位文件到 n&lt;/em&gt; 的操作。用户向操作系统提交的块号是 &lt;strong&gt;相对块号（relative block number）&lt;/strong&gt; ，是相对于文件开始的索引。&lt;/li&gt;
 &lt;li&gt;不是所有的操作系统都支持顺序访问和直接访问，部分系统只允许顺序或随机访问，有的则再文件创建时指定文件是顺序还是随机访问。对于直接访问的文件，可以非常容易的模拟出顺序访问，而在顺序访问文件中模拟直接访问是非常低效的。&lt;/li&gt;
-&lt;li&gt;其他访问方式通常建立在直接访问智商，涉及文件 &lt;strong&gt;索引（index）&lt;/strong&gt; ，索引包含了各个块的指针。要查找文件记录，要先搜索索引，然后根据指针直接访问文件。&lt;/li&gt;
+&lt;li&gt;其他访问方式通常建立在直接访问之上，涉及文件 &lt;strong&gt;索引（index）&lt;/strong&gt; ，索引包含了各个块的指针。要查找文件记录，要先搜索索引，然后根据指针直接访问文件。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&quot;文件系统挂载&quot;&gt;&lt;a href=&quot;#文件系统挂载&quot; class=&quot;headerlink&quot; title=&quot;文件系统挂载&quot;&gt;&lt;/a&gt;文件系统挂载&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;文件系统在使用前必须 &lt;strong&gt;挂载（mount）&lt;/strong&gt; ，中文版翻译称为 &lt;strong&gt;安装&lt;/strong&gt; 。操作系统需要知道设备名称，以及这个设备在文件系统中的挂载（安装）位置，这个位置称为挂载点（mount point），通常是一个空目录。&lt;/li&gt;
@@ -541,6 +557,396 @@
     
       &lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第十章文件系统接口部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>操作系统（九）：虚拟内存</title>
+    <link href="http://forec.github.io/2017/01/04/os-concepts-9/"/>
+    <id>http://forec.github.io/2017/01/04/os-concepts-9/</id>
+    <published>2017-01-03T16:42:29.000Z</published>
+    <updated>2017-01-05T15:31:06.994Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;整理《Operating System Concepts》 第七版第九章虚拟内存部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;虚拟内存技术允许进程在执行时不完全加载入内存（动态加载也可以实现，但要求程序员做更多细致的工作），因此程序可以远大于物理内存。虚拟内存将内存抽象为一个 &lt;strong&gt;统一的&lt;/strong&gt; 巨大的统一存储数组，使用户看到的逻辑内存和物理内存分离，允许程序员不受内存存储限制。此外虚拟内存使进程共享文件/地址空间变得容易。&lt;/li&gt;
+&lt;li&gt;很多情况下不需要将整个程序加载到内存中，如：&lt;ul&gt;
+&lt;li&gt;程序执行过程中通常很少发生错误，处理异常错误的代码几乎不被执行&lt;/li&gt;
+&lt;li&gt;数组、链表、表等结构通常会被分配比实际需要的更大的内存&lt;/li&gt;
+&lt;li&gt;程序的一些功能/选项很少被使用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;只将程序的一部分加载入内存可以带来如下优势：&lt;ul&gt;
+&lt;li&gt;程序不再受物理内存空间限制，用户可以针对一个远超过物理内存大小的 &lt;strong&gt;虚拟地址空间（virtual address space）&lt;/strong&gt; 编写程序从而简化编程工作量；&lt;/li&gt;
+&lt;li&gt;更多的程序可以同时执行（每个程序使用了更少的物理内存），CPU 利用率也随之增加（响应时间/周转时间不随之增加）；&lt;/li&gt;
+&lt;li&gt;内存与备份存储之间换入患处的速度加快（程序实际占用物理内存变小）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;进程的虚拟地址空间即为进程在内存中存放的 &lt;strong&gt;逻辑&lt;/strong&gt; 视图，通常进程的的虚拟地址空间从某一个逻辑地址开始（比如 0）连续存放，如下图。随着动态内存分配，堆向上增长，子程序调用带来栈向下增长以及载入动态链接库时空白区域被填充。堆和栈之间的巨大的空白部分是虚拟地址的一部分，但只有在堆/栈生长时这部分虚拟地址才需要对应实际的物理帧。含有空白的虚拟地址空间称为 &lt;strong&gt;稀（sparse）&lt;/strong&gt; 地址空间。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/virtual-address-space.png&quot; width=&quot;150px&quot;&gt;&lt;/li&gt;
+&lt;li&gt;虚拟内存允许文件和内存通过共享页被多个进程共享，优势在于：&lt;ul&gt;
+&lt;li&gt;系统库可被多个进程共享&lt;/li&gt;
+&lt;li&gt;多个进程之间可以通过共享内存通信&lt;/li&gt;
+&lt;li&gt;允许系统调用 &lt;code&gt;fork()&lt;/code&gt; 创建进程之间的共享页从而加快进程创建。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;按需调页（Demand-Paging）&quot;&gt;&lt;a href=&quot;#按需调页（Demand-Paging）&quot; class=&quot;headerlink&quot; title=&quot;按需调页（Demand Paging）&quot;&gt;&lt;/a&gt;按需调页（Demand Paging）&lt;/h1&gt;&lt;h2 id=&quot;概念&quot;&gt;&lt;a href=&quot;#概念&quot; class=&quot;headerlink&quot; title=&quot;概念&quot;&gt;&lt;/a&gt;概念&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;当且仅当需要某页时才将该页调入内存的技术称为 &lt;strong&gt;按需调页（demand paging）&lt;/strong&gt; ，被虚拟内存系统采用。按需调页系统类似于使用交换的分页系统，进程驻留在二级存储器上（磁盘），进程执行时使用 &lt;strong&gt;懒惰交换（lazy swapper）&lt;/strong&gt; 换入内存。因为这种方式将进程视作一系列页而非巨大的连续空间，而 &lt;em&gt;交换程序（swapper）&lt;/em&gt; 是对整个进程进行操作，因此使用 &lt;strong&gt;调页程序（pager）&lt;/strong&gt; 对进程的单个页代替交换程序。&lt;/li&gt;
+&lt;li&gt;需要一定形式的硬件区分哪些页在内存中，第八章中的有效/无效位可用于此目的，当该位设为有效时表示对应的页既合法又在内存中，而该位设置为无效时表示相关的页无效（不属于进程的逻辑地址空间）或有效但尚未调入内存。对于尚未调入内存的页，其页表条目设置为无效或者包含了该页在磁盘上的地址。&lt;/li&gt;
+&lt;li&gt;进程试图访问尚未调入内存中的页会触发 &lt;strong&gt;页错误陷阱（page-fault trap）&lt;/strong&gt; ，操作系统会按如下流程 &lt;strong&gt;处理页错误&lt;/strong&gt; ：&lt;ul&gt;
+&lt;li&gt;检查进程的内部页表（进程维护的内部页表和 PCB 一起保存）来确定该引用是否为合法地址，若引用非法则终止进程，否则准备调入页面；&lt;/li&gt;
+&lt;li&gt;操作系统寻找一个空闲帧（如从空闲帧链表中选择一个元素）；&lt;/li&gt;
+&lt;li&gt;操作系统调度磁盘，将需要的页调入到上一步分配的空闲帧；&lt;/li&gt;
+&lt;li&gt;磁盘读操作完成后修改进程的内部页表和操作系统维护的页表以表示该页已经位于内存中；&lt;/li&gt;
+&lt;li&gt;重新读取因为页错误而终端的指令，进程可以访问此前无法访问的页。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;上述按需调页的一种极端情况是在不调入任何需要页的情况下就执行进程，因此进程执行过程中将不断出现页错误、调入页、继续执行。这种方案称为 &lt;strong&gt;纯粹按需调页（pure demand paging）&lt;/strong&gt; 。按需调页处理页错误的流程如下图所示。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/page-fault-steps.jpg&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
+&lt;li&gt;理论上单个指令可能触发多个页错误（例如一页用于获取指令，一页用于获取指令所需的数据），但此种情况较少见，正常执行程序满足 &lt;strong&gt;局部引用（locality of reference）&lt;/strong&gt; 特性，使按需调页的性能较好。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;按需调页与分页&quot;&gt;&lt;a href=&quot;#按需调页与分页&quot; class=&quot;headerlink&quot; title=&quot;按需调页与分页&quot;&gt;&lt;/a&gt;按需调页与分页&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;按需调页所需的硬件支持和分页、交换相同：&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;页表&lt;/strong&gt; ：通过有效/无效位保护进程地址空间&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;次级存储器&lt;/strong&gt; ：备份存储，保存不在内存中的页，通常为快速磁盘，用于和内存交换页的部分空间称为 &lt;strong&gt;交换空间（swap space）&lt;/strong&gt; 。Linux 系统所需的 &lt;code&gt;/swap&lt;/code&gt; 挂载点挂载的存储空间即为交换空间。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;虚拟技术的困难在于，分页是加在 CPU 和内存之间的，并且要对用户进程完全透明。人们通常假定分页能够应用到任何系统中，这个假定对于非按需调页的环境而言是正确的（缺页即为访问无效内存，产生致命错误），而在按需调页系统中，页错误意味着可能缺页、需要调入一个额外的页。 &lt;strong&gt;调入额外的页的过程很可能导致原始的指令在调页完成后重新执行不再正确&lt;/strong&gt; 。考虑下面的情况：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;MVC&lt;/code&gt; 指令可以将 256B 的块从一处移动到另一处（可能重叠），如果源块或者目的块中任何一块跨越了页边界，则移动操作执行（在执行前并没有意识到源块/目标块缺页）到一半可能会出现页错误；&lt;/li&gt;
+&lt;li&gt;在上述情况（跨页）的基础上，如果源块和目的块有重叠（overlap），则移动执行到一半时，源块可能已经被修改，这时调页进入内存后，不能简单地重启该指令。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;上述两类情况有两种不同解决方案：&lt;ul&gt;
+&lt;li&gt;微码计算并试图访问两块的两端，如果出现了页错误，则在指令 &lt;code&gt;MVC&lt;/code&gt; 执行前将缺页调入内存；&lt;/li&gt;
+&lt;li&gt;使用临时寄存器保存 &lt;code&gt;MVC&lt;/code&gt; 指令从执行到触发缺页之间被覆盖了的数据，如果发生了页错误，则临时寄存器中保存的值在处理页错误之前写回到内存，此时调页完成后指令可以重启，状态与之前相同。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;性能&quot;&gt;&lt;a href=&quot;#性能&quot; class=&quot;headerlink&quot; title=&quot;性能&quot;&gt;&lt;/a&gt;性能&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;按需调页内存的 &lt;strong&gt;有效访问时间（effective access time）&lt;/strong&gt; 计算为： &lt;code&gt;有效访问时间 = (1-p) x ma + p x 页错误时间)&lt;/code&gt;。其中 &lt;code&gt;ma&lt;/code&gt; 为计算机系统的内存访问时间，通常为 10 ~200ns； &lt;code&gt;p&lt;/code&gt; 为出现页错误的概率，&lt;code&gt;p&lt;/code&gt; 越接近于 0 则页错误发生越少。&lt;/li&gt;
+&lt;li&gt;进程 P 触发了页错误会导致下列动作：&lt;ol&gt;
+&lt;li&gt;触发硬件陷阱，操作系统中断进程 P&lt;/li&gt;
+&lt;li&gt;操作系统保存用户进程 P 的寄存器、进程状态&lt;/li&gt;
+&lt;li&gt;确定中断是否为页错误，若是则判断页引用是否合法，若合法则确定页所在磁盘位置&lt;/li&gt;
+&lt;li&gt;从磁盘读入页到某个空闲帧，这一步又包括：在该磁盘队列中等待直到处理完排在自己之前的请求，磁盘寻道/延迟以及磁盘传输的时间&lt;/li&gt;
+&lt;li&gt;磁盘等待过程中将 CPU 分配给其他进程 Q（CPU 调度）&lt;/li&gt;
+&lt;li&gt;从 I/O 子系统接收到中断&lt;/li&gt;
+&lt;li&gt;保存 Q 的寄存器和进程状态（如果执行了第 5 步）&lt;/li&gt;
+&lt;li&gt;确定中断是否来自于之前页错误触发的磁盘请求，若是则修正页表和其他表以更新页信息&lt;/li&gt;
+&lt;li&gt;等待 CPU 调度程序将 CPU 资源再次分配给进程 P&lt;/li&gt;
+&lt;li&gt;恢复进程 P 的用户寄存器、进程状态和新页表，重新执行被中断的指令&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;以上步骤不是全部必需的，例如第 5 步可以提高 CPU 使用率，但执行完 I/O 后也需要额外的时间保存现场。无论如何， &lt;strong&gt;缺页导致的页错误处理时间主要包括：处理页错误中断、读入页以及重新启动进程&lt;/strong&gt; 三部分，其中读入页除了磁盘设备本身的处理时间，还可能包括等待设备的时间。&lt;/li&gt;
+&lt;li&gt;交换空间的处理和使用对按需调页的性能也有很大影响，磁盘 I/O 操作到交换空间比到文件系统要快，因为 &lt;strong&gt;交换空间按照大块来分配&lt;/strong&gt; 。如果在进程开始时将整个文件镜像复制到交换空间，并从交换空间执行按页调度则可能获得更好的调页效果。另一种方式是进程执行开始时从文件系统按需调页，但当出现页置换时则将页写入交换空间，这样只有所需的页才会从文件系统调用，而一旦调用某页，此后的该页再次调度时会从交换空间读入。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;写时复制和页面置换&quot;&gt;&lt;a href=&quot;#写时复制和页面置换&quot; class=&quot;headerlink&quot; title=&quot;写时复制和页面置换&quot;&gt;&lt;/a&gt;写时复制和页面置换&lt;/h1&gt;&lt;h2 id=&quot;写时复制&quot;&gt;&lt;a href=&quot;#写时复制&quot; class=&quot;headerlink&quot; title=&quot;写时复制&quot;&gt;&lt;/a&gt;写时复制&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;系统调用 &lt;code&gt;fork()&lt;/code&gt; 是将子进程创建为父进程的副本，传统的 &lt;code&gt;fork()&lt;/code&gt; 会为子进程创建一个父进程地址空间的副本，将父进程的页复制，但由于很多子进程创建之后立刻执行系统调用 &lt;code&gt;exec()&lt;/code&gt;，因此复制父进程地址空间完全没有必要。 &lt;strong&gt;写时复制（copy-on-write）&lt;/strong&gt; 技术允许父进程和子进程开始时共享同一页面，这些页面标记为写时复制页，如果任何一个进程对某一个写时复制页进行了写操作，则为这个进程创建一个该页的副本。注意， &lt;strong&gt;只有可能被修改的页才会被标记为写时复制&lt;/strong&gt; ，对于不允许被修改的页面（如包含可执行代码的页）可以被父进程和子进程共享。&lt;/li&gt;
+&lt;li&gt;许多操作系统为分配空闲页请求提供了空闲缓冲 &lt;strong&gt;池（pool）&lt;/strong&gt; ，池中的空闲页在进程的栈/堆需要扩展时可用于分配，或者用于管理写时复制页。操作系统通常使用 &lt;strong&gt;按需填零（zero-fill-on-demand）&lt;/strong&gt; 技术分配这些页，这些页在分配之前被填入 0 覆盖，因此清除了之前的内容。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;虚拟内存 fork&lt;/strong&gt; 是有的 UNIX 版本提供的 &lt;code&gt;fork()&lt;/code&gt; 操作变种，&lt;code&gt;vfork()&lt;/code&gt; 将父进程挂起，自己成使用父进程的地址空间，并且不采用写时复制。因此子进程对父进程地址空间的任何修改都会在父进程重启时可见。&lt;code&gt;vfork()&lt;/code&gt; 主要用于子进程创建后立刻调用 &lt;code&gt;exec()&lt;/code&gt; 的情况，它不会导致页面的复制操作，有时用来 &lt;strong&gt;实现 shell 接口&lt;/strong&gt; 。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;页面置换概念&quot;&gt;&lt;a href=&quot;#页面置换概念&quot; class=&quot;headerlink&quot; title=&quot;页面置换概念&quot;&gt;&lt;/a&gt;页面置换概念&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;增加多道程序的程度会导致内存的 &lt;strong&gt;过度分配（over-allocating)&lt;/strong&gt; 。I/O 缓存也需要使用大量内存，缓存的使用会增加内存分配算法的压力，有的操作系统为 I/O 缓存分配了一定比例的内存，有的则允许用户进程和 I/O 子系统竞争全部系统内存。&lt;/li&gt;
+&lt;li&gt;内存的过度分配会导致某个进程触发了页错误而没有空闲帧可用，因为按需调页对用户而言透明，因此操作系统不应当直接终止进程（操作系统也可以交换出一个进程来降低多道程序的级别，这种选择有时是好的）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;页置换（page replacement）&lt;/strong&gt; 发生在需要调页而没有空闲帧的情况，流程如下：&lt;ul&gt;
+&lt;li&gt;查找所需页在磁盘上的位置&lt;/li&gt;
+&lt;li&gt;查找空闲帧，若有则使用，否则通过页置换算法选择一个 &lt;strong&gt;牺牲（victim）&lt;/strong&gt; 帧并将牺牲帧的内容写入备份存储（磁盘，交换空间），改变页表和帧表&lt;/li&gt;
+&lt;li&gt;将所需页写入到空闲帧，并改变页表和帧表&lt;/li&gt;
+&lt;li&gt;重启用户进程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;可以看出，在没有帧空闲，需要页置换的情况下，会有两个页传输（一页换出，一页换入），这加倍了页错误处理时间。这一点可以通过在页表的每个条目中增加 &lt;strong&gt;修改位（modify bit）&lt;/strong&gt; 或 &lt;strong&gt;脏位（dirty bit）&lt;/strong&gt; 来降低额外开销，如果被置换出的页对应的修改位没有被设置，则说明此页从被调入内存后没有被修改，因此不必被写入回磁盘。&lt;/li&gt;
+&lt;li&gt;按需调页需要开发 &lt;strong&gt;帧分配算法（frame-allocation algorithm）&lt;/strong&gt; 和 &lt;strong&gt;页置换算法（page-replacement algorithm）&lt;/strong&gt; 。页置换算法的好坏可以计算页错误率评估：对于一个特定的内存地址引用序列，运行置换算法，计算出页错误的数量。这个引用序列称为 &lt;strong&gt;引用串（reference string）&lt;/strong&gt; ，可以人工产生也可以跟踪一个真实的系统并记录其访问内存地址。利用两个事实可以降低引用串的数据量：只考虑内存引用的页码而不考虑完整地址；如果有对页 p 的引用，则紧跟着对页 p 的引用绝不会产生页错误。&lt;/li&gt;
+&lt;li&gt;理论上来说，我们期待增加可用帧（增加物理内存大小就会增加可用帧数量）的数量能够使页错误的数量相对应减少。 &lt;strong&gt;Belady 异常（Belady’s anomaly）&lt;/strong&gt; 指违背这一期待的现象：对于有的页置换算法，页错误率甚至可能随着分配的物理帧数增加而增加，例如下面的 FIFO 算法。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;页面置换算法&quot;&gt;&lt;a href=&quot;#页面置换算法&quot; class=&quot;headerlink&quot; title=&quot;页面置换算法&quot;&gt;&lt;/a&gt;页面置换算法&lt;/h2&gt;&lt;h3 id=&quot;基本页置换算法&quot;&gt;&lt;a href=&quot;#基本页置换算法&quot; class=&quot;headerlink&quot; title=&quot;基本页置换算法&quot;&gt;&lt;/a&gt;基本页置换算法&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;FIFO页置换&lt;/strong&gt; ：最简单的页置换算法，操作系统记录每个页被调入内存的时间，当必需置换掉某页时，选择最旧的页换出。实际操作中不需要真的记录调入时间，可以通过一个 FIFO 队列管理内存中的页，置换算法从队列的头部取出换出的页，将换入的页加入到队列尾部。FIFO 页置换算法的性能并不总是很好，它置换出的页可能是一个很久以前现在已经不再使用的页（符合我们的期望），也可能是一个进程创建时初始化的变量，而这个变量仍然在不停地被使用，此时被调出的这页很快就会再次导致页错误。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;最优置换（optimal page-replacement）&lt;/strong&gt; 是所有页置换算法中页错误率最低的，但它需要引用串的先验知识，因此无法被实现。它会将内存中的页 P 置换掉，页 P 满足：从现在开始到未来某刻再次需要页 P，这段时间最长。也就是 OPT 算法会 &lt;strong&gt;置换掉未来最久不被使用的页&lt;/strong&gt; 。OPT 算法通常用于比较研究，衡量其他页置换算法的效果。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;最近最少使用算法（least-recently-used algorithm）&lt;/strong&gt; 简称 LRU，它置换掉到目前时刻最久未被使用的页。这一算法可以视作 OPT 的倒转，LRU 和 OPT 算法都属于 &lt;strong&gt;栈算法（stack algorithm）&lt;/strong&gt; ，它们绝不会产生 Bleady 异常。一个有意思的地方在于，对于引用串 S，LRU 算法计算 S 和 &lt;code&gt;S^R&lt;/code&gt; 的错误率时相同的（&lt;code&gt;S^R&lt;/code&gt; 是引用串 S 的逆序），这一特性对 OPT 算法也满足。LRU 策略可能需要一定得硬件支持，因为它需要为页帧按上次使用时间确定一个排序序列。两种实现方式：&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;计数器（counters）&lt;/strong&gt; ：每个页表的条目关联一个时间域，CPU 增加一个计数器，每次内存引用发生时，计数器增加，并且将引用的页在页表中对应的条目的时间域更新为计数器的内容。这样 LRU 需要搜索页表置换具有最小时间域的页。这种方式每次内存访问都要写入内存，页表改变（因为 CPU 调度）的时候还需要保持时间，还需要考虑时钟溢出问题。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;栈（stack）&lt;/strong&gt; ：采用页码栈维护，每当引用了一个页就将该页从栈中删除并放置到顶部，这样栈顶总是最近使用的页，栈底则为 LRU 需要替换的页。因为要从栈中删除某项，所以可实现为带有头指针和尾指针的双向链表，从栈中删除一页并放置到栈顶最坏情况下需要修改 6 个指针，但这种实现方式不需要搜索整个表。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;近似-LRU-页置换算法&quot;&gt;&lt;a href=&quot;#近似-LRU-页置换算法&quot; class=&quot;headerlink&quot; title=&quot;近似 LRU 页置换算法&quot;&gt;&lt;/a&gt;近似 LRU 页置换算法&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;近似 LRU 页置换算法（LRU-Approximation Page Replacement）&lt;/strong&gt; ：很少有系统能够提供足够的硬件支持真正的标准 LRU 页置换，通常通过引用位的方式提供支持实现近似的 LRU 算法。页表的每一个条目都关联着一个 &lt;strong&gt;引用位（reference bit）&lt;/strong&gt; ，每当引用了一个页（无论读写），都将该页在页表中对应条目的引用位置位，检查引用位就可以确定哪些页使用过：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;附加引用位（Additional-Reference-Bits）&lt;/strong&gt; 算法：位于内存中的每页对应的条目保留一个字节（8位），这个字节的 8 位说明了这一页在过去 8 个时间周期内的使用情况。每过一段规定的时间间隔（如 100 ms），时钟定时器产生中断并将控制转交给操作系统，操作系统将页表每个条目的引用位右移，最低位舍弃，最高位设置为引用位，并将引用位清零。具有最小值的页即为 LRU 替换的页。这里历史位共 8 位，长度可以调整，极端情况下可以为 0 位（此时仅剩下引用位本身）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;二次机会（Second-Chance）&lt;/strong&gt; 算法：该算法基本算法是 FIFO 置换。每当准备置换出一页时检查其引用位，如果引用位为 0 则直接置换该页，否则将引用位清零并给该页第二次机会，之后准备换出下一个 FIFO 页。如果一个页总是被使用，则其引用位经常被设置，所以不会被置换出内存。这种算法的实现采用循环队列，用一个指针表示下次置换队列中的哪一页，找到牺牲页时就将新页插入到牺牲页的位置。最坏情况下所有页都已经被设置，此时需要遍历整个循环队列，性质等价于 FIFO 置换，而所需时间比 FIFO 更长。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;增强型二次机会（Enhanced Second-Chance）&lt;/strong&gt; 算法：将引用位和修改位作为一对考虑以改进二次机会算法，这两个位可能有四种类型：&lt;code&gt;(0, 0)&lt;/code&gt; 表示最近没有使用也没有修改（最佳置换页）；&lt;code&gt;(0, 1)&lt;/code&gt; 表示最近没有使用但已修改（若置换则需要写入到磁盘）；&lt;code&gt;(1, 0)&lt;/code&gt; 表示最近使用但尚未修改（此页可能很快会被使用）；&lt;code&gt;(1, 1)&lt;/code&gt; 表示最近使用且已经被修改（此页可能很快会被使用并且如果置换需要写入磁盘）。这种方法给已经修改过的页更高的级别，降低了 I/O 操作数量。但找到要置换的页之前，可能需要搜索循环队列多次，每次将级别升高一级并寻找满足的页面。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;基于计数的页置换算法&quot;&gt;&lt;a href=&quot;#基于计数的页置换算法&quot; class=&quot;headerlink&quot; title=&quot;基于计数的页置换算法&quot;&gt;&lt;/a&gt;基于计数的页置换算法&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;基于计数（Counting-Based）&lt;/strong&gt; 的页置换通过为每页的条目保留一个引用次数的计数器来选择换出页，包括 LFU 和 MFU，这两种置换方式都很费时并且效果很差：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;最不经常使用（least frequently used，LFU）&lt;/strong&gt; 页置换算法：置换计数最小的页，理由是活动页通常有更大的引用次数。但带来问题是一个被使用多次的页可能已经很久不在使用，但仍然保留在内存中。一种解决方式是定期将次数寄存器右移一位来使使用次数指数衰减。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;最常使用页（most frequently used，MFU）&lt;/strong&gt; 置换算法：置换计数最大的页，理由是最小次数的页可能刚刚被调入且尚未使用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;页缓冲算法&quot;&gt;&lt;a href=&quot;#页缓冲算法&quot; class=&quot;headerlink&quot; title=&quot;页缓冲算法&quot;&gt;&lt;/a&gt;页缓冲算法&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;系统保留一个空闲帧缓冲池，出现页错误时仍然选择一个牺牲帧，但牺牲帧写出前就将所需要的页写入到缓冲池的某一个空闲帧中，写入完成的空闲帧就可以直接被使用，这样无需等待牺牲帧的写出。牺牲帧写出到交换空间后，又会被添加到空闲帧缓冲池中。&lt;/li&gt;
+&lt;li&gt;此种方式的扩展之一是维护一个已经修改过的页面列表，当调页设备空闲时，就将一个修改过的页面写回到磁盘并重新设置其修改位，这样在真正需要置换时，牺牲页需要写入到磁盘的概率会降低。&lt;/li&gt;
+&lt;li&gt;另一种修改是保留一个空闲帧池（需要记录哪些页对应哪些帧），当页错误发生时先检查所需页是否在空闲帧池中，若在则无需 I/O，若不在则选择一个空闲帧并从硬盘读入所需页。这种技术通常和 FIFO 算法一起用于 VAX/VMX 系统，当 FIFO 错误置换了常用页时，被换出的页仍能够很快从空闲帧池中调出。很多 UNIX 系统也将这种方法和二次机会算法一起使用，降低因错误选择牺牲页引起的开销。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;针对应用程序选择页置换&quot;&gt;&lt;a href=&quot;#针对应用程序选择页置换&quot; class=&quot;headerlink&quot; title=&quot;针对应用程序选择页置换&quot;&gt;&lt;/a&gt;针对应用程序选择页置换&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;有些情况下操作系统提供的虚拟内存会让部分应用程序性能下降。例如数据库提供了自己的内存管理和 I/O 缓冲，若操作系统同时也提供了 I/O 缓冲，则用于 I/O 的资源加倍。此外，对于一个执行大量顺序磁盘读操作的行为，LRU 算法删除旧页保持新页，而应用程序可能更需要旧页，此时 MFU 比 LRU 更高效。&lt;/li&gt;
+&lt;li&gt;有些操作系统允许特殊程序绕过文件系统的数据结构，将磁盘视作逻辑块数组使用。这种数组称为 &lt;strong&gt;生磁盘（raw disk）&lt;/strong&gt; ，针对这样的数组的 I/O 称为生 I/O。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;缺段中断和处理（补充）&quot;&gt;&lt;a href=&quot;#缺段中断和处理（补充）&quot; class=&quot;headerlink&quot; title=&quot;缺段中断和处理（补充）&quot;&gt;&lt;/a&gt;缺段中断和处理（补充）&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;使用分段内存管理时，CPU 要访问的指令/数据不在内存中会产生 &lt;strong&gt;缺段中断&lt;/strong&gt; ，操作系统会通过如下流程处理缺少段 X 的事件：&lt;ol&gt;
+&lt;li&gt;考察内存中是否存在不小于 X 段长的空闲区，若存在则从该空闲区中为段 X 分配内存，转 4；&lt;/li&gt;
+&lt;li&gt;若不存在，则考察内存中所有空闲区的总和是否小于 X 的段长，若总和大于 X 的段长则合并空闲区形成一个足够大的空闲区，并使用新空闲区为 X 分配内存，转 4；&lt;/li&gt;
+&lt;li&gt;若空闲区总和仍小于 X 的段长，则按 FIFO 或 LRU 算法反复淘汰老段，形成一个长度不小于 X 段长的空闲区；&lt;/li&gt;
+&lt;li&gt;将 X 段调入内存并修改段表&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;帧分配与系统颠簸&quot;&gt;&lt;a href=&quot;#帧分配与系统颠簸&quot; class=&quot;headerlink&quot; title=&quot;帧分配与系统颠簸&quot;&gt;&lt;/a&gt;帧分配与系统颠簸&lt;/h1&gt;&lt;h2 id=&quot;最少需要帧数&quot;&gt;&lt;a href=&quot;#最少需要帧数&quot; class=&quot;headerlink&quot; title=&quot;最少需要帧数&quot;&gt;&lt;/a&gt;最少需要帧数&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;分配的帧不能超过可用帧的数量（除非存在页共享），但也不能少于满足进程继续运行的帧数（minimum number of frames）。分配帧数不能过少的原因包括：&lt;ul&gt;
+&lt;li&gt;性能：当分配给每个进程的帧数量减少时，页错误会增加从而减缓进程执行。&lt;/li&gt;
+&lt;li&gt;页错误会导致指令重启：必须由足够的帧来容纳单条指令执行所需要的全部页。例如某台机器的机器指令都只有一个内存地址作为参数，此时至少需要一帧用于存储指令所在的页空间，还需要分配一帧用于存储指令引用的数据所在的页。如果此时允许一级间接引用（地址间接引用），则进程至少需要三个帧才能完成指令的执行，如果仅两帧可用，则进程将陷入无穷尽的页错误中。这种问题的最坏情况出现在允许多层间接引用的计算机中，对于多级引用，必须等到所有所需页都位于内存中指令才能执行，这种困难的解决方案是限制指令的间接引用级数，超出引用级数时触发陷阱。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;分配算法&quot;&gt;&lt;a href=&quot;#分配算法&quot; class=&quot;headerlink&quot; title=&quot;分配算法&quot;&gt;&lt;/a&gt;分配算法&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;平均分配（equal allocation）&lt;/strong&gt; ：给每个进程一个平均值，剩余的帧放置在空闲帧缓冲池中； &lt;strong&gt;比例分配（proportional allocation）&lt;/strong&gt; ：根据进程大小按比例分配内存。这两种分配方式，每个进程分配的数量都会随多道程序的级别而变化，当多道程序程度增加时，每个进程都需要失去一定数量的帧来提供给新进程，同理，多道程序程度降低时离开进程占有的帧可以分配给剩余的进程。&lt;/li&gt;
+&lt;li&gt;比例分配可以根据进程的优先级（或者是优先级和大小的结合）而不是进程的大小来分配，这样可以给高优先级的进程更多的内存以加速执行。&lt;/li&gt;
+&lt;li&gt;多个进程竞争帧时，可将页置换算法分为 &lt;strong&gt;全局置换（global replacement）&lt;/strong&gt; 和 &lt;strong&gt;局部置换（local replacement）&lt;/strong&gt; 。全局置换允许进程从所有帧的集合（包括其他进程持有的帧）中选择置换帧，这将导致某个进程所获得的帧的数量可能改变（从其他进程处选择了一个帧置换）；而局部置换只能允许进程选择分配给自己的某个帧，此时分配给每个进程的帧数量保持不变。&lt;/li&gt;
+&lt;li&gt;全局置换算法的一个问题在于进程不能控制自己的页错误率，进程位于内存的页集合会受到其他进程调页行为的影响。此外，相同进程执行所需的时间在不同环境下可能有很大差异。但由于局部置换不能使用其他进程不常用的内存，所以全局置换有更好的系统吞吐量，因此更为常用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;系统颠簸&quot;&gt;&lt;a href=&quot;#系统颠簸&quot; class=&quot;headerlink&quot; title=&quot;系统颠簸&quot;&gt;&lt;/a&gt;系统颠簸&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;当低优先级进程分配的帧数量少于体系结构所需的最少数量时，进程应当暂停执行并且换出分配的剩余帧，以使其他进程能够使用这部分帧空间。&lt;/li&gt;
+&lt;li&gt;对于分配帧数不足的进程，当进程缺少所需的页时触发页错误，此时必须置换某个页。如果当前所有页对于这个进程而言都是需要使用的页，则它置换出一个页后，又立刻需要这个页，因此它将频繁产生页错误并触发页调度行为。这称为 &lt;strong&gt;点播（thrashing）&lt;/strong&gt; ： &lt;strong&gt;如果一个进程在换页上用的时间多于执行时间，则这个进程在颠簸&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;系统颠簸的原因在于：操作系统监控 CPU 使用率，CPU 利用率过低时会引入新进程来增加多道程序程度。然而，采用全局置换算法时，一个进程会置换任意进程的帧，这可能导致被换出页所属的进程也触发页错误，它们会再从其他进程中获取帧。 &lt;strong&gt;这些链式反应带来的页调度行为将使进程排队等待换页设备，就绪队列变空，CPU 使用率降低，导致 CPU 调度程序随之增加多道程序程度，新进程将引发更多的页错误，CPU 使用率进一步降低&lt;/strong&gt; 。系统颠簸现象如下图。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/system-thrashing.png&quot; width=&quot;250px&quot;&gt;&lt;/li&gt;
+&lt;li&gt;随着多道程序程度增加，CPU 使用率增加直到最大值，之后开始系统颠簸，此时必须降低多道程序程度才能增加 CPU 使用率并降低系统颠簸。 &lt;strong&gt;局部置换算法（local replacement algorithm）&lt;/strong&gt; ，也称 &lt;strong&gt;优先置换算法（priority replacement）&lt;/strong&gt; 可以限制系统颠簸：如果一个进程开始颠簸，则它不能从其它进程获得帧，但问题未得到彻底解决，一个进程颠簸时会花费大量时间等待调页设备，这将导致调页设备的平均等待队列变长，页错误的平均等待时间增加，此时其它未颠簸进程的有效访问时间也会增加。&lt;/li&gt;
+&lt;li&gt;要 &lt;strong&gt;防止颠簸&lt;/strong&gt; ，必须给进程提供足够多的帧。 &lt;strong&gt;局部模型（locality model）&lt;/strong&gt; 可以帮助确定进程实际正在使用多少帧，该模型说明，进程执行时在局部之间移动。 &lt;strong&gt;局部是进程经常使用的页的集合，进程由多个不同局部组成且局部之间可能重叠&lt;/strong&gt; 。如果进程分配的帧数小于现有局部的大小，则进程会颠簸，因为它无法把所有常用页都放置在内存中。例如，进程调用了一个子程序，则其进入新的局部，这个新局部中的内存引用包括子程序的指令、局部变量以及子程序使用到的部分全局变量；当子程序退出时，进程从该局部返回主程序的局部（也可能在之后再次调用子程序进入该局部）。因此，局部是由程序和数据结构定义的，它是缓存的基础（cache、LRU 置换算法其实也都是基于局部性原理，在访问序列完全随机的情况下性能甚至不如 FIFO 算法），如果对任意数据访问完全随机而没有局部性原理，则缓存完全无用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;工作集合模型&quot;&gt;&lt;a href=&quot;#工作集合模型&quot; class=&quot;headerlink&quot; title=&quot;工作集合模型&quot;&gt;&lt;/a&gt;工作集合模型&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;工作集合模型（working-set model）&lt;/strong&gt; 基于局部性假设，使用参数 Δ 定义 &lt;strong&gt;工作集合窗口（working-set window）&lt;/strong&gt; ，其思想是检查最近 Δ 个页的引用，这最近 Δ 个引用页的集合称为工作集合。工作集合是程序局部的近似：一个正在使用的页位于工作集合中，一旦它已经 Δ 个时间单位未被使用，则会从工作集合中删除。&lt;/li&gt;
+&lt;li&gt;工作集合的精确度和 Δ 有关，Δ 太小则无法包含整个局部，过大则可能包含多个局部。工作集合最重要的属性是它的大小，系统内每个进程的工作集合大小 &lt;code&gt;WSSi&lt;/code&gt; 之和 &lt;code&gt;D&lt;/code&gt; 就是所有进程总的帧需求量，每个进程都会经常使用位于其工作集合内的页。当 &lt;code&gt;D &amp;gt; m&lt;/code&gt; （&lt;code&gt;m&lt;/code&gt; 是系统最大可用帧数量）时，就会有进程得不到足够的帧从而出现颠簸。&lt;/li&gt;
+&lt;li&gt;使用工作集合模型的内存分配过程如下：操作系统跟踪每个进程的工作集合，并给每个进程分配大于其工作集合大小的帧数。如果尚有空闲帧则可加入新进程；如果需要分配的帧数大于可用帧数，则操作系统选择、暂停一个进程，这个进程的所有页写出到备份存储，其已经占有的帧会被分配给其他进程。&lt;/li&gt;
+&lt;li&gt;工作集合模型的难点在于 &lt;strong&gt;跟踪&lt;/strong&gt; ，每次内存引用都会增加新引用并丢弃老引用。 &lt;strong&gt;固定定时中断和引用位可以近似模拟工作集合模型&lt;/strong&gt; 。例如 &lt;code&gt;Δ = 10000&lt;/code&gt; 时，每 5000 个引用就产生一次定时中断，中断触发时将所有页的引用位复制，复制完成后清除。当发生页错误，系统检查当前的引用位和位于内存中的两个位（每次中断复制一位，10000 次引用中断 2 次因此复制了两个位）从而确定这一页是否在过去的 10000~15000 个引用中出现过（只要有至少一位为 1 就说明使用过，否则都为 0），若出现则认为该页在工作集合中。这种模拟并不很准确，因为无法准确获取该页究竟在 5000 个引用中的具体哪个位置出现，增加中断频率和历史位的位数可以提高准确性，但相应的也会增加中断处理时间。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;页错误频率&quot;&gt;&lt;a href=&quot;#页错误频率&quot; class=&quot;headerlink&quot; title=&quot;页错误频率&quot;&gt;&lt;/a&gt;页错误频率&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;工作集合模型更适合用于预先调页，将其应用于控制颠簸有些不太灵活。 &lt;strong&gt;页错误频率（page-fault frequency，PFF）&lt;/strong&gt; 策略能够通过测量、控制页错误率来更好的防止颠簸：颠簸有较高的页错误率，较高的页错误率说明进程需要更多帧，过低的页错误率说明进程可能分配了太多的帧。可以为页错误率设置上限和下限，超过上限就为进程分配更多帧，低于下限则移走帧。当页错误率过高而没有可用帧时，仍需要暂停一个进程并将其占有的帧释放、分配给具有过高页错误率的进程。&lt;/li&gt;
+&lt;li&gt;进程的工作集合和页错误率之间有直接关系，当进程从一个局部迁移到另一个局部时，工作集合改变，页错误率会进入波峰，随着需要调入的页逐步调入内存，页错误率又会下降。一个波峰的开始到下一个波峰的开始显示了工作集合的迁移。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;其它&quot;&gt;&lt;a href=&quot;#其它&quot; class=&quot;headerlink&quot; title=&quot;其它&quot;&gt;&lt;/a&gt;其它&lt;/h1&gt;&lt;h2 id=&quot;内存映射文件&quot;&gt;&lt;a href=&quot;#内存映射文件&quot; class=&quot;headerlink&quot; title=&quot;内存映射文件&quot;&gt;&lt;/a&gt;内存映射文件&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;通过虚拟内存技术将文件 I/O 作为普通内存访问的方法称为文件的 &lt;strong&gt;内存映射（memory mapping）&lt;/strong&gt; 。文件的内存映射将一个磁盘块映射成内存的一页（或多页），开始时文件访问和普通的请求界面调度相同，并且产生页错误，这样一页大小的部分文件就会从文件系统读入到物理内存中（部分系统一次会读入多页大小内容）。通过内存操作文件而不是系统调用 &lt;code&gt;read()&lt;/code&gt; 和 &lt;code&gt;write()&lt;/code&gt; 能够简化文件访问和使用。&lt;/li&gt;
+&lt;li&gt;对映射到内存中的文件做写操作可能不会立刻写回到磁盘文件中。有的操作系统定期检查文件在内存中的映射是否被修改，并据此决定是否需要将内存的数据更新到磁盘上。关闭文件必然会导致内存映射的数据写回磁盘，同时从进程的虚拟内存中删除。&lt;/li&gt;
+&lt;li&gt;部分操作系统只能通过特定的系统调用提供内存映射，通过标准的系统调用处理所有其它的文件 I/O 请求；有的操作系统则一律将文件 I/O 视作内存映射，例如 Solaris 系统会将标明为内存映射的文件映射到进程的地址空间中，而对于采用普通系统调用（&lt;code&gt;read&lt;/code&gt;、&lt;code&gt;open&lt;/code&gt; 以及 &lt;code&gt;write&lt;/code&gt;）访问的文件，Solaris 也会做内存映射，不过目标是内核地址空间。&lt;/li&gt;
+&lt;li&gt;一个文件可以同时映射到多个进程的虚拟地址空间中以实现 &lt;strong&gt;数据共享&lt;/strong&gt; ：任何一个进程对共享虚拟内存中数据的修改都会被那些同样映射了这部分文件的进程看见（注意这里是为了实现数据共享，因此才允许多个进程修改同一页）。每个共享进程的虚拟内存表指向了物理内存的同一页。内存映射也支持写时复制，进程可以共享只读模式的文件，对于需要改动的数据，进程需要维护各自独立的副本。&lt;/li&gt;
+&lt;li&gt;其他设备的 I/O 操作也可以通过内存映射的方式：操作系统将一组内存地址专门映射到设备寄存器，对这些内存地址的读写等同于对设备寄存器的读写，即 I/O 端口。CPU 和设备之间传递数据可以通过轮询或中断。轮询方式指 CPU 不断查询控制位判断接收设备是否准备就绪；中断驱动则由接收设备通知 CPU 数据已经就绪。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;内核内存分配&quot;&gt;&lt;a href=&quot;#内核内存分配&quot; class=&quot;headerlink&quot; title=&quot;内核内存分配&quot;&gt;&lt;/a&gt;内核内存分配&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;普通用户进程获取额外内存时是从内核维护的空闲页帧链表中获取，该链表由页替换算法更新，这些页帧往往分散在物理内存中。&lt;/li&gt;
+&lt;li&gt;内核内存的分配通常从空闲内存池获取而非从普通用户进程的内存链表获取，原因：&lt;ul&gt;
+&lt;li&gt;内核腰围不同大小的数据结构分配内存，有些数据结构远不到一页的大小。很多操作系统的内核代码并不受分页系统控制，内核可以也必须谨慎分配内存并尽量降低碎片浪费。&lt;/li&gt;
+&lt;li&gt;用户进程分配的页不一定非要在连续的物理内存中，但操作系统需要和硬件交流，需要内存常驻在连续的物理内存帧中。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Buddy 系统（Buddy system）&lt;/strong&gt; 将物理上连续并且大小固定的段划分成 2 的幂（4KB、8KB、16KB等），如果请求大小不为 2 的幂，实际分配的内存大小也会是 2 的幂。例如请求 11KB 将会得到 16KB。Buddy 系统的分配通过不断切割实现，例如内存段大小 256 KB，申请 21 KB，则将内存段不断划分成两半，最终得到一个 32KB 的小段满足 21KB 请求。其优缺点如下：&lt;ul&gt;
+&lt;li&gt;优点：可通过合并快速形成更大的段，例如上面分配的 32KB 内存释放后可以立刻得到原始的 256KB 段&lt;/li&gt;
+&lt;li&gt;缺点：碎片，可能有 50% 的内存因为碎片而浪费&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;slab 分配&lt;/strong&gt; ：slab 由一个或多个 &lt;strong&gt;物理上&lt;/strong&gt; 连续的页组成，高速缓存 &lt;strong&gt;含有&lt;/strong&gt; 一个或多个 slab。每个内核数据结构都有一个 cache （如进程描述符 cache 只存储进程描述符对象、文件对象和信号量等以此类推），每个 cache &lt;strong&gt;包含&lt;/strong&gt; 内核数据结构的 &lt;strong&gt;对象实例&lt;/strong&gt; 。 slab 算法用 cache 存储内核对象，cache 创建之初会初始化一系列空闲的内核对象，这些对象的数量和 slab 的大小有关（例如 12KB 的 slab 可存储 4 个 3KB 大小的内核对象）。一旦操作系统需要内核结构的对象，就可以直接从 cache 上获取一个空闲的并将其标注为 &lt;strong&gt;已使用（used）&lt;/strong&gt; 。下面这张图需要注意的地方有，物理内存连续分配，实线（带箭头）表示包含关系，每个 cache 都存储了一类内核数据结构对象：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/cache-slab-objects.png&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
+&lt;li&gt;Linux 下的 slab 有三种状态：满的（slab 中所有对象都标记为使用），空的（均为空闲）以及部分。slab 分配的分配流程如下：首先从部分空闲的 slab 分配，若没有则从空的 slab 分配，如果仍没有则从 &lt;strong&gt;物理连续页&lt;/strong&gt; 上分配新的 slab 并将其交付给一个 cache，并从新 slab 分配空间。其优点主要有：&lt;ul&gt;
+&lt;li&gt;没有因为碎片引起的内存浪费。每个内核数据结构都有与自己的结构相对应的 cache，而每个 cache 由若干个 slab 组成， &lt;strong&gt;每个 slab 又可分为若干个和对象大小相等的部分&lt;/strong&gt; ，所以内核请求对象所获得的内存刚好和对象大小一致；&lt;/li&gt;
+&lt;li&gt;slab 中的对象预先创建，可以直接从 cache 快速分配。因为操作系统经常分配、释放内存，使用 slab 分配能够更快地使内存请求得到响应，用完对象释放时也只需要将内核对象标记为空闲并返回给  cache。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;更多方面的考虑&quot;&gt;&lt;a href=&quot;#更多方面的考虑&quot; class=&quot;headerlink&quot; title=&quot;更多方面的考虑&quot;&gt;&lt;/a&gt;更多方面的考虑&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;预调页（prepaging）&lt;/strong&gt; ：当进程开始时，所有页都在磁盘上，每个页都需要通过页错误来调入内存。预调页同时将所需要的所有页一起调入内存，从而阻止了大量的页错误。部分操作系统如 Solaris 对小文件就采取预调页调度。实际应用中，例如对于采用工作集合模型的系统，可以为每个进程维护一个当前工作集合中的页的列表，如果进程在暂停之后需要重启时，根据这个列表使用预调页将所有工作集合中的页一次性调入内存。预调页有时效果比较好，但成本不一定小于不使用预调页时发生页错误的成本，有很多预调页调入内存的页可能没有被使用。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;页大小（page size）&lt;/strong&gt; ：许多因素会影响页面大小，不存在单一的最佳页大小。页面大小总为 2 的幂，通常在 &lt;code&gt;2^12&lt;/code&gt; 到 &lt;code&gt;2^22&lt;/code&gt; 字节之间（4KB ~ 4MB）。页面大小的考虑主要涉及如下几点，现代操作系统倾向于使用更大的页面：&lt;ul&gt;
+&lt;li&gt;更大的页面大小能够减少页数量，从而减小页表大小；&lt;/li&gt;
+&lt;li&gt;更小的页面大小能够更好的利用内存，减少碎片；&lt;/li&gt;
+&lt;li&gt;页读写所需要的时间：传输时间和传输量（页大小）成正比，看起来似乎小页面更好，但实际上磁盘的寻道、延迟时间远超过传输时间，因此为了最小化 I/O 时间，需要采用较大的页；&lt;/li&gt;
+&lt;li&gt;局部性：采用较小的页能够更精准的定位程序局部，从而降低总的 I/O 量；&lt;/li&gt;
+&lt;li&gt;页错误数量：页面大小过小时，页错误会触发的更加频繁，页错误会带来大量的额外开销（处理中断、保存寄存器、置换页、排队等待调页设备、更新表），为了减少页错误数量，需要较大的页。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;TLB 范围（reach）&lt;/strong&gt; ：指通过 TLB 可访问的内存量，即 TLB 能够存储的条数和页面大小的乘积。理想情况下一个进程的全部工作集合都位于 TLB 中才能够减少地址转换、查页表浪费的时间，但是对于需要使用大量内存的应用程序，TLB 大小不足以存储全部局部。增加 TLB 范围可以通过增加 TLB 条数，也可以通过增加页面大小。增加页大小会带来更大的碎片，另一种选择是使用不同大小的页（如 UltraSPARC 支持 8、64、512KB 和 4MB 的不同大小的页面），对于绝大多数程序而言 8KB 的页足够，部分其它应用程序如数据库可以利用 4MB 大小的页。注意，现代操作系统趋势是不同大小的页由操作系统而不是硬件来管理，软件管理必然也会影响性能（PowerPC 和 Pentium 用硬件管理 TLB）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;程序结构&lt;/strong&gt; ：用户应当对按需调页足够了解，以使程序结构更好的适应系统，例如一个页大小为 128B 的系统按行存储数组，则下面的两类代码中，上面的代码会触发 &lt;code&gt;128 x 128 = 16384&lt;/code&gt; 次页错误，而下面的代码只会触发 128 次。程序设计语言的特性对调页也会有影响，例如 C 和 C++ 经常使用指针，指针趋向于使内存访问随机，从而导致进程的局部性变差。此外， &lt;strong&gt;OOP 思想设计的程序引用的局部性也较差&lt;/strong&gt; 。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; data[&lt;span class=&quot;number&quot;&gt;128&lt;/span&gt;][&lt;span class=&quot;number&quot;&gt;128&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; i &amp;lt; &lt;span class=&quot;number&quot;&gt;128&lt;/span&gt;; i++)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; j =&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; j &amp;lt; &lt;span class=&quot;number&quot;&gt;128&lt;/span&gt;; j++)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        data[j][i] = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;    &lt;span class=&quot;comment&quot;&gt;// 每个字节都会触发一次，共 16384 次&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; i = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; i &amp;lt; &lt;span class=&quot;number&quot;&gt;128&lt;/span&gt;; i++)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; j =&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; j &amp;lt; &lt;span class=&quot;number&quot;&gt;128&lt;/span&gt;; j++)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        data[i][j] = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;    &lt;span class=&quot;comment&quot;&gt;// 每行触发一次，共128 次&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h2 id=&quot;实验&quot;&gt;&lt;a href=&quot;#实验&quot; class=&quot;headerlink&quot; title=&quot;实验&quot;&gt;&lt;/a&gt;实验&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;设计程序模拟 FIFO 和 LRU 页置换算法。我对此问题编写的代码可在 &lt;a href=&quot;https://github.com/Forec/course-design/tree/master/operating-system/%E6%8D%A2%E9%A1%B5%E7%AE%97%E6%B3%95&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;此处&lt;/a&gt; 获取，其中包括一个基类 &lt;code&gt;BASIC&lt;/code&gt; 和两个子类 &lt;code&gt;FIFO&lt;/code&gt;、&lt;code&gt;LRU&lt;/code&gt;。其它类型换页算法可以通过继承 &lt;code&gt;BASIC&lt;/code&gt; 并重写 &lt;code&gt;swapIn()&lt;/code&gt; 方法完成。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/03/os-concepts-8/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（八）：内存管理&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/05/os-concepts-10/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（十）：文件系统接口&lt;/a&gt;    &lt;/p&gt;
+&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/01/04/os-concepts-9/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/01/04/os-concepts-9/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/01/04/os-concepts-9/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;整理《Operating System Concepts》 第七版第九章虚拟内存部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>操作系统（八）：内存管理</title>
+    <link href="http://forec.github.io/2017/01/03/os-concepts-8/"/>
+    <id>http://forec.github.io/2017/01/03/os-concepts-8/</id>
+    <published>2017-01-03T02:27:12.000Z</published>
+    <updated>2017-01-06T12:00:16.611Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;整理《Operating System Concepts》 第七版第八章内存管理部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;h2 id=&quot;基本硬件&quot;&gt;&lt;a href=&quot;#基本硬件&quot; class=&quot;headerlink&quot; title=&quot;基本硬件&quot;&gt;&lt;/a&gt;基本硬件&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;CPU 通常在一个 CPU 时钟周期内完成对内置寄存器的访问，对内存的访问需多个 CPU 时钟周期，在缺少数据来完成正在执行的指令时，CPU 需要 &lt;strong&gt;暂停（stall）&lt;/strong&gt; ，通常在 CPU 和内存之间添加高速缓存（cache）以协调速度差异。&lt;/li&gt;
+&lt;li&gt;要确保操作系统不被用户进程访问、用户进程不被其他用户进程访问，需要每个进程拥有独立的地址空间。通过 &lt;strong&gt;基地址寄存器（base register）&lt;/strong&gt; 和 &lt;strong&gt;界限地址寄存器（limit register）&lt;/strong&gt; 可对进程内存加以保护，基地址寄存器存储进程可访问的最低合法 &lt;em&gt;物理&lt;/em&gt; 内存地址，界限地址寄存器决定从该地址开始的，可访问的内存范围大小。CPU 硬件对 &lt;strong&gt;用户模式&lt;/strong&gt; 下产生的 &lt;strong&gt;每一个&lt;/strong&gt; 地址和寄存器指明的地址区间比较，用户模式下的程序试图访问操作系统/其他用户进程内存的行为会触发陷阱（trap），操作系统会将其视为致命错误处理。&lt;/li&gt;
+&lt;li&gt;基地址寄存器和界限地址寄存器能且仅能由操作系统的特权指令加载，因为仅有操作系统在内核模式下执行，故避免了用户程序修改这两个寄存器。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;地址绑定&quot;&gt;&lt;a href=&quot;#地址绑定&quot; class=&quot;headerlink&quot; title=&quot;地址绑定&quot;&gt;&lt;/a&gt;地址绑定&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;程序执行前需将所需部分二进制数据调入内存并置于进程空间内，执行过程中根据操作系统采用的内存管理方案可能还会有内存/硬盘之间的换入换出移动。在磁盘上等待调入内存的进程构成了 &lt;strong&gt;输入队列（input queue）&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;多数系统允许用户进程存放在物理内存任意位置，原程序中的地址通常用符号来表示， &lt;em&gt;编译器&lt;/em&gt; 会将这些符号地址 &lt;strong&gt;绑定（bind）&lt;/strong&gt; 到可重定位的地址， &lt;em&gt;链接程序&lt;/em&gt; 或 &lt;em&gt;加载程序&lt;/em&gt; 再将这些可重定位的地址绑定成绝对地址。绑定是从一个地址空间到另一个地址空间的映射。将指令和数据绑定到内存地址可能有如下几种情况：&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;编译时（compile time）&lt;/strong&gt; ：在编译时已经知道进程将在物理内存中的驻留地址，则可生成 &lt;strong&gt;绝对代码（absolute code）&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;加载时（load time）&lt;/strong&gt; ：若编译时尚不了解进程将位于物理内存中具体哪个位置，则编译器需生成 &lt;strong&gt;可重定位代码（relocatable code）&lt;/strong&gt; ，如 “从这个模块开始的第 14 个字节”。此时，最后绑定延迟到加载时进行。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;执行时（execution）&lt;/strong&gt; ：若进程在执行时可在内存段间移动，则绑定需要在执行时进行，此种方案需要特定硬件，绝大多数通用操作系统采用这种方式。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;从源码到二进制内存镜像的过程如下图所示，图片截取自李文生老师《操作系统概念》PPT。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/multistep-processing-of-user-program.jpg&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;逻辑地址和物理地址&quot;&gt;&lt;a href=&quot;#逻辑地址和物理地址&quot; class=&quot;headerlink&quot; title=&quot;逻辑地址和物理地址&quot;&gt;&lt;/a&gt;逻辑地址和物理地址&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;CPU 生成的地址为 &lt;strong&gt;逻辑地址（logical address）&lt;/strong&gt; ，加载到 &lt;strong&gt;内存地址寄存器（memory-address register）&lt;/strong&gt; 中的地址为 &lt;strong&gt;物理地址（physical address）&lt;/strong&gt; 。编译时和加载时的地址绑定方法生成的逻辑地址和物理地址相同，执行时的地址绑定方案生成的逻辑地址和物理地址不同。通常称逻辑地址为 &lt;strong&gt;虚拟地址（virtual address）&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;逻辑地址空间（logical address space）&lt;/strong&gt; 为由程序所生成的所有逻辑地址的集合， &lt;strong&gt;物理地址空间（physical address space）&lt;/strong&gt; 为与这些逻辑地址对应的物理地址集合。&lt;/li&gt;
+&lt;li&gt;运行时从虚拟地址到物理地址的映射由硬件设备 &lt;strong&gt;内存管理单元（memory-management unit，MMU）&lt;/strong&gt; 完成。一个最简单的 MMU 方案是将用户进程产生的地址加上 &lt;strong&gt;重定位寄存器（relocation register）&lt;/strong&gt; 的值作为最终的物理内存地址。&lt;/li&gt;
+&lt;li&gt;用户进程绝不会看到真正的物理地址，一个地址在内存中比较、使用均基于虚拟地址，只有该地址作为内存地址，如执行加载/存储时才需要做到物理空间的地址映射。总而言之，用户进程只产生逻辑地址，且认为地址空间从 0 开始，而使用对应内存地址前必须由 MMU 做物理地址映射。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;动态加载、链接与共享库&quot;&gt;&lt;a href=&quot;#动态加载、链接与共享库&quot; class=&quot;headerlink&quot; title=&quot;动态加载、链接与共享库&quot;&gt;&lt;/a&gt;动态加载、链接与共享库&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;动态加载（dynamic loading）&lt;/strong&gt; ：所有子程序均以可重定位的方式保存在磁盘上，仅主程序装入内存并执行，当且仅当某个子程序被需要时才会装载进内存。此种方法设计程序主要是用户程序开发者的责任。其优势在于不被使用的子程序绝不会加载，若程序中有较多代码用于处理异常，动态加载会特别有效。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;动态链接库（dynamically linked library）&lt;/strong&gt; ：部分操作系统只支持 &lt;strong&gt;静态链接（static linking）&lt;/strong&gt; ，即加载程序将操作系统提供的语言库与其他目标模块一起合并到最终的二进制程序镜像中，所有程序均有一份所需系统库的副本；而动态链接将系统库的加载延迟到运行时，用户程序对系统库的引用留有 &lt;strong&gt;存根（stub）&lt;/strong&gt; ，存根指用于定位内存驻留库程序的一小段代码。当执行存根时，若所需的系统库已经驻留在内存中，则存根使用已有的系统库，否则将系统库装入内存。最终存根均会将系统库地址替换自身并执行系统库，此时所有使用某个库的进程只需要一个库代码副本。&lt;/li&gt;
+&lt;li&gt;动态链接为库更新带来方便，库版本更新后，引用该库的程序会自动使用新版本而无需重新链接。多个版本的库也可以同时装入内存，程序根据自己所需的版本信息确定使用哪个副本。此类系统也称为 &lt;strong&gt;共享库（shared libraried）&lt;/strong&gt; 。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;交换&quot;&gt;&lt;a href=&quot;#交换&quot; class=&quot;headerlink&quot; title=&quot;交换&quot;&gt;&lt;/a&gt;交换&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;内存中的进程可暂时从内存中 &lt;strong&gt;交换（swap）&lt;/strong&gt; 到 &lt;strong&gt;备份存储（backing store）&lt;/strong&gt; 上，等到再次需要执行时调回。有时称为 &lt;strong&gt;滚出（roll out）&lt;/strong&gt; 和 &lt;strong&gt;滚入（roll in）&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;备份存储通常为足够大的快速磁盘，以容纳所有用户程序的内存镜像副本、并提供对内存镜像的直接访问。交换系统上下文切换时间较长，为有效使用 CPU，通常使每个进程每次执行获取的时间片比交换时间长。&lt;/li&gt;
+&lt;li&gt;为了 &lt;strong&gt;只交换用户进程真正使用的内存空间&lt;/strong&gt; （如一个用户进程当前可能只使用了 10MB，但其最多可能使用 200 MB），用户进程需要告诉系统其内存需求情况以减少交换时间。&lt;/li&gt;
+&lt;li&gt;换出进程时，进程必须完全处于空闲状态。考虑如下场景：一个正在等待 I/O 操作的进程 P 即将被换出，若 I/O 操作异步访问 P 进程内存中的缓冲区，或是 I/O 设备正忙，I/O 操作在排队等待，此时换出进程 P，换入进程 P’ 会导致 I/O 操作已经属于 P’ 的内存。解决方案：&lt;ul&gt;
+&lt;li&gt;不能换出有待处理 I/O 的进程&lt;/li&gt;
+&lt;li&gt;I/O 操作只能使用操作系统缓冲区，仅当进程在内存中执行时才发生操作系统缓冲和进程内存缓冲之间的数据转移&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;上述标准交换在目前的操作系统中使用不广泛，交换需要很长时间并且只能提供很少的执行时间。对上述交换方式的一种修正在很多 UNIX 系统中得到使用：当且仅当系统负荷过高，内存吃紧时进行交换。早期缺乏高级硬件的个人计算机通过此种交换可同时运行多个进程，如 MS Windows 3.1，该系统内存不足时将老进程交换到磁盘上，当且仅当用户再次选择执行该进程时才再次换入。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;覆盖（补充）&quot;&gt;&lt;a href=&quot;#覆盖（补充）&quot; class=&quot;headerlink&quot; title=&quot;覆盖（补充）&quot;&gt;&lt;/a&gt;覆盖（补充）&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;多道程序设计环境下可通过 &lt;strong&gt;覆盖（Overlays）&lt;/strong&gt; 技术扩充内存。由程序员实现，不需要操作系统的特殊支持。其思想为：将程序划分为若干个功能上相对独立的程序段，按程序逻辑结构让不会同时执行的程序段共享所有程序段均会使用到的内存。&lt;/li&gt;
+&lt;li&gt;覆盖方式的内存管理仅始终保留一个程序 &lt;em&gt;在任何时候&lt;/em&gt; 都需要的数据。&lt;/li&gt;
+&lt;li&gt;与交换的区别：&lt;ul&gt;
+&lt;li&gt;覆盖对程序员要求较高，程序员必须十分清楚程序的逻辑结构，明确规定各程序段的执行和覆盖顺序以及设计实现覆盖驱动模块，而交换技术对用户透明&lt;/li&gt;
+&lt;li&gt;覆盖在同一进程/作业内进行，而交换在进程与进程之间进行。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;连续内存分配&quot;&gt;&lt;a href=&quot;#连续内存分配&quot; class=&quot;headerlink&quot; title=&quot;连续内存分配&quot;&gt;&lt;/a&gt;连续内存分配&lt;/h1&gt;&lt;h2 id=&quot;内存保护&quot;&gt;&lt;a href=&quot;#内存保护&quot; class=&quot;headerlink&quot; title=&quot;内存保护&quot;&gt;&lt;/a&gt;内存保护&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;内存分为操作系统驻留区域和用户进程驻留区域，操作系统通常位于低内存（因为中断向量通常位于低内存）。 &lt;strong&gt;连续内存分配（contiguous memory allocation）&lt;/strong&gt; 可使内存中每个进程占有连续的内存区域。&lt;/li&gt;
+&lt;li&gt;通过重定位寄存器和界限地址寄存器可实现内存保护，重定位寄存器含有最低 &lt;em&gt;物理地址&lt;/em&gt; 值，界限地址寄存器含有 &lt;em&gt;逻辑地址&lt;/em&gt; 的范围值。重定位寄存器机制也允许操作系统动态改变，若某操作系统服务（如某个驱动程序）不常使用，则内存中不必保留其代码和数据，这类代码称为 &lt;strong&gt;暂时（transient）&lt;/strong&gt; 操作系统代码，它们根据需要调入/调出，可在程序执行时动态改变操作系统大小。重定位寄存器和界限地址寄存器的硬件支持如下图所示。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/hardware-support-for-relocation-limit-registers.jpg&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;内存分配&quot;&gt;&lt;a href=&quot;#内存分配&quot; class=&quot;headerlink&quot; title=&quot;内存分配&quot;&gt;&lt;/a&gt;内存分配&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;最简单的内存分配方法：将内存分为多个 &lt;strong&gt;固定&lt;/strong&gt; 大小的 &lt;strong&gt;分区（partition）&lt;/strong&gt; ，每个分区只能容纳一个进程，多道程序的程度受分区数限制。当一个分区空闲时可以从输入队列选择一个进程调入空闲分区，进程终止时释放该分区。此种方式最初被 MFT（F：Fixed，IBM OS/360）使用，目前已被淘汰。&lt;/li&gt;
+&lt;li&gt;对 MFT 的推广是 MVT（V:Variable），即 &lt;strong&gt;可变分区（variable partition）&lt;/strong&gt; 方案。操作系统维护一个表以记录哪些内存可用和哪些内存已被占用。初始时所有内存均可用于用户进程，可视作一大块可用内存，称为 &lt;strong&gt;孔（hole）&lt;/strong&gt; 。新进程到来时需要查找足够大的孔，并从该孔为进程分配所需内存，孔内剩余内存可分配给其他进程。随着进程的到来和离开，内存中会分散着大小不同的孔。进程终止时释放的内存会形成新孔，若新孔和其他孔相邻，则这些相邻的孔可以合并为一个大孔。此时系统可以检查是否有进程在等待分配内存空间，以及新合并的内存空间是否满足该进程的需求。&lt;/li&gt;
+&lt;li&gt;上述 MVT 方法是通用 &lt;strong&gt;动态存储分配问题（dynamic storage allocation problem）&lt;/strong&gt; 的一种情况，从内存中的一组孔中选择一个空闲孔有如下三种常用方法，其中执行时间、空间利用方面最差适应方法最差，空间利用方面首次适应和最佳适应相近，但首次适应更快：&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;首次适应（First fit）&lt;/strong&gt; ：分配寻找到的第一个足够大的孔，查找可以从任何位置（如内存开始位置或上次首次适应结束的位置）开始，一旦找到足够大的空闲孔就停止；&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;最佳适应（Best fit）&lt;/strong&gt; ：分配 &lt;em&gt;最小&lt;/em&gt; 的足够大的孔，此方式必须查找整个表（若表内孔位置记录按孔的大小排序则不需要查找整个表）；&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;最差适应（Worst fit）&lt;/strong&gt; ：分配 &lt;em&gt;最大&lt;/em&gt; 的孔，同样需要查找整个表，产生的孔比最佳适应方法产生的孔价值更大。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;碎片&quot;&gt;&lt;a href=&quot;#碎片&quot; class=&quot;headerlink&quot; title=&quot;碎片&quot;&gt;&lt;/a&gt;碎片&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;随着进程装入和移出内存，空闲内存空间被分为散落的小段，产生 &lt;strong&gt;外部碎片问题（external fragmentation）&lt;/strong&gt; ：所有可用内存空间之和满足一个/多个进程的请求，但这些可用内存并不连续。上述首次适应和最佳适应两种不同方法导致的碎片的数量也不同，对于不同的系统两者各有优劣，分配方向（从空闲块的顶端还是模块开始分配内存）也会对碎片数量产生影响。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;50% 规则&lt;/strong&gt; ：对采用首次适应方法的统计表明，假定有 N 个块已被分配，无论采用什么优化，都可能有 0.5N 个块为外部碎片，即 1/3 的内存无法被使用。&lt;/li&gt;
+&lt;li&gt;维护一个小孔的开销比小孔本身可能更大，例如一个需要 2046B 空间的进程被分配了大小为 2048B 的孔，剩余的 2B 小孔维护的开销比 2B 大得多。因此通常采用 &lt;em&gt;固定大小的块&lt;/em&gt; 而不是字节作为分配单元。此时进程被分配的空间通常大于所需空间，分配给进程的块中使用不到的空间被称为 &lt;strong&gt;内部碎片（internal fragmentation）&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;解决外部碎片问题的方法：&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;紧缩（compaction）&lt;/strong&gt; ：移动内存内容使所有空闲空间合并为一整块。紧缩仅可在重定位是动态的、且在运行时重定位的情况下可用。紧缩根据采用的合并算法不同，需要的开销大小也不同，最简单的合并算法将所有进程移动到内存的一端，空闲的孔移动到内存另一端以生成大孔，其开销较大；&lt;/li&gt;
+&lt;li&gt;允许一个进程占有的内存地址空间非连续，只要有物理内存就可以为进程分配：分页、分段、分段+分页。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;分页&quot;&gt;&lt;a href=&quot;#分页&quot; class=&quot;headerlink&quot; title=&quot;分页&quot;&gt;&lt;/a&gt;分页&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;分页（Paging）&lt;/strong&gt; 允许进程物理地址空间非连续，内存和备份存储均按页划分，页大小相同。在前述连续内存分配中，内存中的数据换入/换出到备份存储时，备份存储中也会存在类似的碎片问题，而分页避免了这一点。传统的分页由硬件处理，最近的设计（64位机）结合了硬件和操作系统。 &lt;strong&gt;在第八章中，需要假定自己尚未了解第九章的内容，并且进程在执行前已经把所需要的全部数据分页加载到内存中&lt;/strong&gt; 。&lt;/p&gt;
+&lt;h2 id=&quot;分页方法&quot;&gt;&lt;a href=&quot;#分页方法&quot; class=&quot;headerlink&quot; title=&quot;分页方法&quot;&gt;&lt;/a&gt;分页方法&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;将物理内存分为固定大小的块，称为 &lt;strong&gt;帧（frame）&lt;/strong&gt; ，将逻辑内存分配同样大小的块，称为 &lt;strong&gt;页（page）&lt;/strong&gt; 。备份存储页分为同样固定大小的块，进程执行时将执行所需的页从备份存储中调入可用的内存帧中。其硬件支持如下图所示。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/hardware-support-for-pages.jpg&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
+&lt;li&gt;CPU 生成的每个逻辑地址分为两部分： &lt;strong&gt;页号（page number）&lt;/strong&gt; 和 &lt;strong&gt;页偏移（page offset）&lt;/strong&gt; ，记为 &lt;code&gt;p&lt;/code&gt; 和 &lt;code&gt;d&lt;/code&gt; 。页号为 &lt;strong&gt;页表（page table）&lt;/strong&gt; 的索引，页表包含每页位于物理内存的基地址，页 &lt;code&gt;p&lt;/code&gt; 在页表中对应的基地址加上页偏移量 &lt;code&gt;d&lt;/code&gt; 即为该逻辑地址映射的物理地址。&lt;/li&gt;
+&lt;li&gt;页大小由硬件决定，通常为 2 的次幂，根据计算机结构不同，每页大小从 512B ~ 16MB 不等。页大小为 2 的幂可直接将逻辑地址的 2 进制表示划分为 &lt;code&gt;p&lt;/code&gt; 和 &lt;code&gt;d&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;分页也是一种动态重定位，每个逻辑地址由分页硬件绑定为对应的物理地址。采用分页技术不会产生外部碎片，但可能有内部碎片（进程所需内存不足一页，或要求的内存大小不是页的整数倍则最后一帧有内存空闲）。&lt;/li&gt;
+&lt;li&gt;目前页大小通常为 4 ~ 8KB，有的系统支持更大页，有的 CPU 内核支持多种页大小。页的大小受如下因素制约：&lt;ul&gt;
+&lt;li&gt;在进程大小和页大小无关的前提下，可以假设每个进程平均有半页内部碎片，因此更小的页会带来更少的内部碎片；&lt;/li&gt;
+&lt;li&gt;页表对于页和物理内存中的帧的对应关系记录需要一定开销，并且该开销随着页大小的增大而减小，页表中每个条目通常占 4B（可变）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;分页的重要特点是 &lt;em&gt;用户视角内存&lt;/em&gt; 和 &lt;em&gt;实际物理内存&lt;/em&gt; 的分离，通过地址转换硬件将用户视角下的逻辑地址转换为物理地址。用户程序将内存作为一整块处理，而实际物理内存中进程可能分布在各个独立的帧中。用户进程无法访问其页表规定之外的内存，进程可见的页表仅包含进程拥有的页面记录。&lt;/li&gt;
+&lt;li&gt;操作系统使用 &lt;strong&gt;帧表（frame table）&lt;/strong&gt; 维护物理内存的分配细节（已被占用的帧、可用帧等），帧表的每个条目对应一帧，并标明该帧是否空闲，若占用则被哪个（些）进程的哪个页占用等。操作系统同时 &lt;strong&gt;为每个进程维护一个页表的副本&lt;/strong&gt; ，当一个进程可被分配 CPU 时，CPU 调度程序可根据该副本定义硬件页表（用户进程运行在用户模式，若进行系统调用，操作系统需要使用进程的页表副本来获取进程逻辑地址映射的物理地址）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;硬件支持&quot;&gt;&lt;a href=&quot;#硬件支持&quot; class=&quot;headerlink&quot; title=&quot;硬件支持&quot;&gt;&lt;/a&gt;硬件支持&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;最简单的页表硬件实现方法将页表作为一组专用寄存器。&lt;/li&gt;
+&lt;li&gt;当代计算机允许页表非常大，因此页表放置在内存中，并设置 &lt;strong&gt;页表基寄存器（page-table base register，PTBR）&lt;/strong&gt; 指向页表，改变页表的位置仅需要修改此寄存器。此种做法的缺陷在于访问一个字节需要两次内存访问（一次用于在内存的页表中查找页号对应的条目，一次用于获取目标字节）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;转换表缓冲区（translation look-aside buffer，TLB）&lt;/strong&gt; 是针对上述问题的专用快速硬件缓冲（关联存储器），其条目由键和值组成。TLB 查找速度快且造价昂贵，通常仅有 64 ~ 1024 个条目。TLB 和页表一起使用时，TLB 仅包含最近使用过的页表条目，查询流程如下：&lt;ul&gt;
+&lt;li&gt;CPU 产生逻辑地址，从逻辑地址提取出页号交付 TLB，TLB 将页号和存储的键比对，若寻找到相同键则结束流程；&lt;/li&gt;
+&lt;li&gt;请求的页码不在 TLB 中，即 &lt;strong&gt;TLB 失效（TLB miss）&lt;/strong&gt; ，此时需要在页表中查询。在页表中查询到与页号对应的帧号后，将页号和帧号增加到 TLB 中。若 TLB 中条目已满，则操作系统使用某种策略替换掉已有的一个条目，例如 &lt;em&gt;最近最少使用替换（LRU）&lt;/em&gt; 或随机替换等。TLB 中有的条目是永久驻留的（不允许从 TLB 中被替换），通常内核代码在 TLB 中的条目固定。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;有的 TLB 在每个 TLB 条目中存储了 &lt;strong&gt;地址空间标识符（address-space identifier，ASID）&lt;/strong&gt; ，该项用于唯一标识进程，为进程提供地址空间保护。TLB 解析虚拟页号时必须确保当前运行进程的 ASID 和 TLB 中条目对应的 ASID 匹配，否则视作 TLB 失效。除了内存空间保护，ASID 还使 TLB 能够同时包含多个不同进程的记录。如果 TLB 不支持每个条目有独立的 ASID，那么一旦有新页表被选择（例如进程的换入/换出），TLB 就需要被全部 &lt;strong&gt;刷新（flushed）&lt;/strong&gt; 或删除，防止 TLB 中存在无效的条目（页号地址无效的条目，如上一个进程留下来的无效物理地址）导致被换入的进程使用错误的地址转换。&lt;/li&gt;
+&lt;li&gt;页号在 TLB 中被查找到的百分比为 &lt;strong&gt;命中率（hit ratio）&lt;/strong&gt; ， &lt;strong&gt;有效内存访问时间（effective memory-access time）&lt;/strong&gt; 的计算需要根据 TLB 的命中率加权。例如查找 TLB 需要 20ns，内存访问需要 100ns，命中率 80%，则有效内存访问时间为 &lt;code&gt;0.8 x 120 + 0.2 x 220 = 140ns&lt;/code&gt; 。需要注意的是， &lt;strong&gt;TLB 查询早于内存中页表的查询，只有 TLB 查询结束并且没有查询到帧号时才会开始在页表中的查询&lt;/strong&gt; ，此前计算机组成原理中讲过的 TLB 有错误。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;保护和共享&quot;&gt;&lt;a href=&quot;#保护和共享&quot; class=&quot;headerlink&quot; title=&quot;保护和共享&quot;&gt;&lt;/a&gt;保护和共享&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;分页情况下内存保护通过每个帧对应的保护位实现，这些保护位通常保存在页表中。常见类型的位有：&lt;ul&gt;
+&lt;li&gt;可读写/只读位：产生地址引用时除了在页表中查找对应的帧码，还需要检查保护位验证是否有对只读页进行了写操作，若有则向操作系统产生硬件陷阱。扩展这种方法可提供更细致的保护。&lt;/li&gt;
+&lt;li&gt;有效/无效位：该位有效表示与之相关的页属于当前进程的逻辑地址空间，为合法页，否则与之相关的页不属于当前进程的逻辑地址空间。使用该位可以捕获到非法地址，操作系统通过对该位的设置可允许/禁止进程对某页的访问。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;一个进程很少会使用到所有分配的地址空间，页表为地址范围内的所有页都建立一个条目是浪费的行为（并且每个进程有一个页表副本），表中的多数条目不会被使用，而这些条目却占据可用地址空间。有些系统提供了 &lt;strong&gt;页表长度寄存器（page-table length register，PTLR）&lt;/strong&gt; 表示页的大小，该寄存器的值可用于验证逻辑地址是否处于进程的有效范围内。&lt;/li&gt;
+&lt;li&gt;分页存储可以 &lt;strong&gt;共享&lt;/strong&gt; 公共代码，这对于分时系统非常重要。例如一个多用户系统，每个用户均执行一个文本编辑器，若代码不支持共享，则每个用户需要维护一个文本编辑器的副本；若代码是 &lt;strong&gt;可重入代码（reentrant code）&lt;/strong&gt; 或 &lt;strong&gt;纯代码（pure code）&lt;/strong&gt; ，则这部分代码可以被共享。可重入代码是不能自我修改的代码，它们在执行期间从不改变因此多个进程可以同时执行这部分代码。当然，除了共享的代码，每个进程还有自己的寄存器副本和数据存储。要实现共享，代码必须能够重入，并且可重入代码的只读性需要操作系统强制实现。（如果你了解 Haskell，可重入代码和 Haskell 里的 pure code 有类似的特性，后者不会对环境产生副作用，每次执行仅根据参数确定结果）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;页表结构&quot;&gt;&lt;a href=&quot;#页表结构&quot; class=&quot;headerlink&quot; title=&quot;页表结构&quot;&gt;&lt;/a&gt;页表结构&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;层次页表（Hierarchical Paging）&lt;/strong&gt; ：当代计算机支持非常大的逻辑地址空间，此时页表本身将非常大。例如 32 位逻辑地址空间的计算机系统，若页大小为 4KB，则页表需要包含 &lt;code&gt;2^20&lt;/code&gt; 个条目，即使每个条目在页表中仅需要 4B 存储，整个页表也需要 4MB 物理地址空间存储（每个进程还需要独立维护一个副本）。因为内存采取分页管理，页表的大小超过了一个页面的大小，因此需要将页表划分到足够小以便一页能够容纳。一种可行的方式是二级分页算法：例如上述 32 位逻辑地址系统，可将 20 位页号划分为 10 位的外部页表页码 &lt;code&gt;p1&lt;/code&gt; 和 10 位的页表偏移量 &lt;code&gt;p2&lt;/code&gt;，其具体的映射方式如下图所示。此种方案也称为 &lt;strong&gt;向前映射页表（forward-mapped page table）&lt;/strong&gt; 。对于 64 位体系结构，层次结构并不合适，例如 64 位 UltraSPARC 体系结构使用 7 级分页，几乎已经是内存访问极限。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/hierarchical-paging.jpg&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;哈希页表（Hashed Page）&lt;/strong&gt; 以虚拟页码作为哈希值，每个条目包括一个链表用于处理碰撞。链表中的每个元素包含三个域：虚拟页码，对应帧号以及指向链表中下一个元素的指针。此种方式的地址映射过程如下：将虚拟页号哈希到表中某个条目，若该条目对应的链表存在元素，则按顺序比较直到找到对应的元素。哈希页表的一个变种是 &lt;strong&gt;群集页表（clustered page table）&lt;/strong&gt; ，它的每个条目包括多页信息，因此一个条目存储了多个物理页帧的映射，这对于 &lt;strong&gt;稀疏（sparse）&lt;/strong&gt; 地址空间非常有效，稀疏地址空间种的地址引用通常不连续并且散布在整个地址空间。 &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;反向页表（inverted page table）&lt;/strong&gt; ：每个进程均维护一个相关页表，这个进程使用到的每个页在其持有的页表里有一项，或者每个虚拟地址在页表里都有一项而不论这个虚拟地址是否有效，此时每个页表会有很多项，这些表会消耗大量的内存，而其目的仅仅是追踪物理内存如何使用。反向页表中，每个真实的内存页/帧存在一个条目，该条目包括引用该物理帧的虚拟页号以及拥有该页的进程信息。所以整个系统只有一个页表，每个物理内存帧仅有一条相应的条目。&lt;/li&gt;
+&lt;li&gt;一种简化的反向页表实现（IBM RT 采用）：系统每个虚拟地址对应一个三元组 &lt;code&gt;&amp;lt;pid | page numbe r | offset&amp;gt;&lt;/code&gt;，反向表中每个条目为 &lt;code&gt;&amp;lt;pid | page number&amp;gt;&lt;/code&gt;，需要内存引用时，操作系统查找反向页表寻找匹配，若匹配找到则产生物理地址，否则认为产生了非法地址访问。这种方案减少了存储每个页表所需的内存空间，但增加了查找页表所需要的时间。反向页表按照物理地址排序，而查找依据虚拟地址，所以可能需要查找整个表来寻找匹配。可以使用 &lt;em&gt;哈希页表&lt;/em&gt; 限制页表条目或加入 TLB 来改善。此外，采用反向页表的系统很难共享内存，因为每个物理帧只对应一个虚拟页条目。对于这种情况，可以允许页表的没一个条目仅包含一个虚拟地址到共享内存地址的映射，这时对未被映射虚拟地址的引用会导致页错误（page fault）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;分段&quot;&gt;&lt;a href=&quot;#分段&quot; class=&quot;headerlink&quot; title=&quot;分段&quot;&gt;&lt;/a&gt;分段&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;采用分页管理导致用户视角的内存和实际物理地址内存分离，对于装载/写入操作必须将虚拟内存映射到实际的物理内存。 &lt;strong&gt;分段（segmentation）&lt;/strong&gt; 支持另一种用户视角，其逻辑地址空间由一些段组成，每个段有自己的编号和长度，用户通过段号和段内偏移（与分页的区别在于，分页管理中用户只指定一个虚拟地址，由硬件将虚拟地址拆分为页码和偏移，这些工作对程序员透明）来指定地址。&lt;/li&gt;
+&lt;li&gt;编译用户程序时，编译器会自动根据输入的程序源码构造段（代码段、静态区、堆、栈等），编译时链接的库可能被分配不同的段，加载程序时装入这些段并分配段号。&lt;/li&gt;
+&lt;li&gt;用户可以通过二维地址（段号、偏移）来引用存储单元，但实际物理内存仍然为一维的序列。操作系统通过 &lt;strong&gt;段表（segment table）&lt;/strong&gt; 实现将二维用户定义地址映射到一维物理地址，段表的每个条目对应一个段，存储着该段的段号、段基地址（段在内存中开始的物理地址）和段界限（段的长度），对于某段超出段长的地址引用访问会导致硬件陷阱的触发。&lt;/li&gt;
+&lt;li&gt;段表在内存中的位置由 &lt;strong&gt;段基址寄存器（segment table base register，STBR）&lt;/strong&gt; 和 &lt;strong&gt;段长度寄存器（segment table length register，STLR）&lt;/strong&gt; 指定，当段号 s 满足 &lt;code&gt;s &amp;lt; STLR&lt;/code&gt; 时该段合法。&lt;/li&gt;
+&lt;li&gt;分段会导致不连续的空闲内存空间以及外部碎片，从空闲内存为进程分配段也存在类似 &lt;em&gt;连续内存分配&lt;/em&gt; 中的问题，有首次适应和最佳适应两种分配方式。&lt;/li&gt;
+&lt;li&gt;段可以被共享，多个进程可以通过相同段号共享同一个段。段的保护可通过类似页表中的保护位实现，段表中的每一条条目有一个合法位（为 0 表示不合法），同时也可以支持读/写/执行权限。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;实例：Intel-Pentium&quot;&gt;&lt;a href=&quot;#实例：Intel-Pentium&quot; class=&quot;headerlink&quot; title=&quot;实例：Intel Pentium&quot;&gt;&lt;/a&gt;实例：Intel Pentium&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;奔腾结构允许一个段的大小最大为 4GB，每个进程最多可持有 16K 个段。进程逻辑地址空间分为两部分，第一部分最多由 8K 个段组成，此部分私有；第二部分最多由 8K 个段组成，此部分可以被所有进程共享。第一部分的信息保存在 &lt;strong&gt;本地描述符表（local descriptor table，LDT）&lt;/strong&gt; 中，第二部分信息保存在 &lt;strong&gt;全局描述符表（global descriptor table，GDT）&lt;/strong&gt; 中，这两个表中每个条目占 8B 空间，包括一个段的详细信息（段基址、段界限）。&lt;/li&gt;
+&lt;li&gt;逻辑地址格式： &lt;code&gt;&amp;lt;selector | offset&amp;gt;&lt;/code&gt;，其中选择器（selector）是一个 16 位的数，前 13 位表示段号，第 14 位表示该段在 GDT 还是 LDT 中，最后两位表示保护信息，支持四级保护。偏移量（offset）是 32 位的数，表示段内偏移量。奔腾 CPU 中有 6 个段寄存器，允许一个进程同时访问 6 个段，同时还有 6 个 8B 微程序寄存器保存相应的来自于 LDT 或 GDT 的描述符，它们使奔腾不必在每次内存引用时从内存读取描述符。&lt;/li&gt;
+&lt;li&gt;奔腾结构允许页的大小为 4KB 或 4MB，对于 4KB 的页，奔腾使用二级分页方案，32 位线性地址划分为 10、10、12 三块，类似前述的二级分页的例子。最高 10 位引用 &lt;strong&gt;页目录（page directory）&lt;/strong&gt; 的条目，中间 10 位指向内部页表，最后 12 位为 4KB 页面内的偏移。页目录中每个条目有一个 PageSize 标志，若该标识被设置则代表页帧大小 4MB，此时跳过中间 10 位对内层页表的查询，直接使用后 22 位指向 4MB 页帧内偏移。奔腾的页表还可以交换到磁盘上，通过页目录条目的无效位表示该条目对应的页表位于内存还是磁盘。若页表在磁盘上，则可使用条目中剩下的 31 位标明页表在磁盘的具体位置以调入内存。&lt;/li&gt;
+&lt;li&gt;奔腾体系结构上运行的 Linux 系统使用 6 个段（内核代码段、内核数据段、用户代码段、用户数据段、任务状态段 TSS 以及默认的 LDT 段）。Linux 中默认的 LDT 段被所有进程共享，如果一个进程需要自己的 LDT ，则它可以生成一个新的 LDT 来代替默认值。此外，每个进程有自己的 TSS 以存储上下文切换中的硬件上下文，每个进程也有自己的页表。&lt;/li&gt;
+&lt;li&gt;奔腾体系结构上运行的 Linux 仅使用了四级保护中的两种，用于区分内核模式和用户模式。Linux 采用三级分页方案（全局目录-中间目录-页表-偏移），而奔腾采用二级分页模式，此时 Linux 的 “中间目录” 大小为 0，因此等价于奔腾的二级分页。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-7/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（七）：死锁&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/04/os-concepts-9/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（九）：虚拟内存&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/01/03/os-concepts-8/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/01/03/os-concepts-8/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/01/03/os-concepts-8/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;整理《Operating System Concepts》 第七版第八章内存管理部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
@@ -922,274 +1328,6 @@
     
       &lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第六章 Monitor 部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>操作系统（五）：进程同步</title>
-    <link href="http://forec.github.io/2016/11/24/os-concepts-5/"/>
-    <id>http://forec.github.io/2016/11/24/os-concepts-5/</id>
-    <published>2016-11-24T10:41:33.000Z</published>
-    <updated>2017-01-05T04:56:48.082Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版第六章进程同步部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;信号量&quot;&gt;&lt;a href=&quot;#信号量&quot; class=&quot;headerlink&quot; title=&quot;信号量&quot;&gt;&lt;/a&gt;信号量&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;基于硬件的 &lt;code&gt;TestAndSet()&lt;/code&gt; 和 &lt;code&gt;Swap()&lt;/code&gt; 对应用程序员而言相对复杂，可使用 &lt;strong&gt;信号量（semaphore）&lt;/strong&gt; 作为同步工具。信号量 S 是整数变量，除初始化外只能通过两个原子操作访问：&lt;code&gt;wait()&lt;/code&gt; 和 &lt;code&gt;signal()&lt;/code&gt;，在有些地方使用 &lt;code&gt;P&lt;/code&gt;（测试） 和 &lt;code&gt;V&lt;/code&gt;（增加）表示。所有关于信号量的讨论均已具备以下前提：在这两个原子访问操作中，对信号量整型值的测试和修改都是不可分的，也就是说，当一个进程修改某个信号量时，其他进程都不能同时操作该信号量。&lt;/li&gt;
-&lt;li&gt;信号量按值域可分为&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;计数信号量（counting semaphore）&lt;/strong&gt; ：信号量值域不受限制。此类信号量用于控制访问具有若干个实例的某类资源，初始化信号量为可用资源的数量，进程通过调用 &lt;code&gt;wait()&lt;/code&gt; 操作获取资源（此时信号量计数也随之减少），进程使用资源后通过 &lt;code&gt;signal()&lt;/code&gt; 操作释放资源（信号量计数随之增加）。当信号量的值小于等于 0 时，所有调用 &lt;code&gt;wait()&lt;/code&gt; 操作的进程会被阻塞，直到某个进程调用了 &lt;code&gt;signal()&lt;/code&gt; 释放了可用资源。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;二进制信号量（binary semaphore）&lt;/strong&gt; ：信号量的值只能为 0 或者 1，该类信号量也称为 &lt;strong&gt;互斥锁（mutex locks）&lt;/strong&gt; ，可提供互斥操作。对于多进程的临界区问题，可以使所有进程共享一个二进制信号量 mutex，每个进程进入临界区之前调用 &lt;code&gt;waiting(mutex)&lt;/code&gt; ，离开临界区之前调用 &lt;code&gt;signal(mutex)&lt;/code&gt;。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;信号量按功能可分：&lt;ul&gt;
-&lt;li&gt;公有（互斥）信号量：多个进程均需要同一个信号量所代表的资源，信号量起到了互斥的作用&lt;/li&gt;
-&lt;li&gt;私有（同步）信号量：部分进程向信号量释放资源，其他进程向信号量请求资源，信号量起到了同步的作用，保证了进程之间执行的先后顺序&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;实现&quot;&gt;&lt;a href=&quot;#实现&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;信号量的主要缺点是 &lt;strong&gt;忙等待（busy waiting）&lt;/strong&gt; ，当一个进程位于临界区内时，其它试图进入临界区的进程都陷入循环检查的状态。这样的信号量也称为 &lt;strong&gt;旋转锁（spinlock）&lt;/strong&gt; ，它也具有优点：进程在等待锁时不会进行上下文切换（上下文切换可能会花费很长的时间），因此如果等待锁的时间较短则旋转锁更有效。旋转锁通常用于多处理器系统，一个线程在某个处理器旋转时，另一个线程在另一个处理器的临界区内执行。&lt;/li&gt;
-&lt;li&gt;修改 &lt;code&gt;wait()&lt;/code&gt; 和 &lt;code&gt;signal()&lt;/code&gt;：&lt;ul&gt;
-&lt;li&gt;进程执行 &lt;code&gt;wait()&lt;/code&gt; 时若信号量值不为正则调用 &lt;code&gt;block()&lt;/code&gt; 操作将其阻塞，阻塞操作包括：将该进程状态切换为等待，将该进程放到信号量内部的一个等待队列中。之后 CPU 调度程序选择另一个进程执行。&lt;/li&gt;
-&lt;li&gt;进程执行 &lt;code&gt;signal()&lt;/code&gt; 操作后，信号量值会增加。同时若存在进程阻塞在信号量上，则操作系统从信号量内部等待队列中选取一个进程，调用 &lt;code&gt;wakeup()&lt;/code&gt; 操作将其唤醒，唤醒操作包括：将该进程从等待状态切换到就绪状态、放入就绪队列中（根据 CPU 调度算法，CPU 不一定会选择这个线程立刻执行）。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;信号量的 &lt;code&gt;wait()&lt;/code&gt; 和 &lt;code&gt;signal()&lt;/code&gt; 操作可定义如下，每个信号量包括一个整型值和一个 PCB 链表指针，使用 FIFO 队列可确保有限等待，但一般来说链表可以使用任何排队策略，信号量的使用方式和链表排队策略无关：&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;struct&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; value;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;struct&lt;/span&gt; process *&lt;span class=&quot;built_in&quot;&gt;list&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// PCB 块链表指针&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; semaphore;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;wait&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(semaphore *S)&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    S-&amp;gt;value--;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (S-&amp;gt;value &amp;lt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 无可用资源，将进程加入信号量等待列表&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        block();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;signal&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(semaphore *S)&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    S-&amp;gt;value++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (S-&amp;gt;value &amp;lt;= &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 从信号量等待列表中选取一个进程唤醒&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        wakeup(P);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;信号量的 &lt;em&gt;关键在于它们的执行具有原子性&lt;/em&gt; 。在单处理器上，可在调用 &lt;code&gt;wait()&lt;/code&gt; 和 &lt;code&gt;signal()&lt;/code&gt; 时禁止中断，而在多处理器系统上，仍需要使用其它加锁计数（如旋转锁）来确保信号量的原子性，因此信号量本身的实现还是没有完全取消忙等，仅仅是 &lt;em&gt;把忙等的状态从等待进入临界区转移到了临界区执行时&lt;/em&gt; ，因为经过合理设计的临界区通常比较短，因此比简单的忙等效率高一些。但在临界区很长的情况下，因为采用了忙等，导致信号量极为低效。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;死锁和饥饿&quot;&gt;&lt;a href=&quot;#死锁和饥饿&quot; class=&quot;headerlink&quot; title=&quot;死锁和饥饿&quot;&gt;&lt;/a&gt;死锁和饥饿&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;当两个或多个进程无限等待一个事件，而该事件只能由等待该事件的某个进程来触发（执行 signal 操作），这种情况下，这些进程称为 &lt;strong&gt;死锁（deadlocked）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;链表的出入顺序对信号量有影响，如果采用 LIFO 顺序增加、取出进程，则可能导致 &lt;strong&gt;无穷阻塞（indefinite blocking）&lt;/strong&gt; 或 &lt;strong&gt;饥饿（starvation）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;经典同步问题&quot;&gt;&lt;a href=&quot;#经典同步问题&quot; class=&quot;headerlink&quot; title=&quot;经典同步问题&quot;&gt;&lt;/a&gt;经典同步问题&lt;/h1&gt;&lt;h2 id=&quot;有限缓冲问题&quot;&gt;&lt;a href=&quot;#有限缓冲问题&quot; class=&quot;headerlink&quot; title=&quot;有限缓冲问题&quot;&gt;&lt;/a&gt;有限缓冲问题&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-4/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;进程互斥&lt;/a&gt;&lt;/strong&gt; 中的生产者-消费者问题可以通过三个信号量解决：&lt;ul&gt;
-&lt;li&gt;二进制信号量 &lt;code&gt;mutex&lt;/code&gt; 保证了对缓冲池访问的互斥&lt;/li&gt;
-&lt;li&gt;计数信号量 &lt;code&gt;empty&lt;/code&gt; 和 &lt;code&gt;full&lt;/code&gt; 表示缓冲区中空余数量和已有数据数量&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;生产者和消费者进程使用如下架构保证互斥和同步：&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// producer&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// produce an item&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(empty);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// put item into buffer&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(full);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TRUE);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// consumer&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(full);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// remove an item from buffer&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(empty);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TRUE);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h2 id=&quot;读者-写者问题&quot;&gt;&lt;a href=&quot;#读者-写者问题&quot; class=&quot;headerlink&quot; title=&quot;读者-写者问题&quot;&gt;&lt;/a&gt;读者-写者问题&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;一个数据库可以被多个并发进程共享，有的进程只需要读数据库，而有的进程需要读或写数据库。将只需要读权限的进程称为 &lt;strong&gt;读者（Reader）&lt;/strong&gt; ，需要写权限的进程称为 &lt;strong&gt;写者（Writer）&lt;/strong&gt; 。如果一个写者和其它进程（无论读写）同时访问共享对象，则可能导致混乱。&lt;/li&gt;
-&lt;li&gt;有多种优先级方案：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;第一读者-写者问题&lt;/strong&gt; ：读者优先，如果当前获得数据库权限的是读者进程，则其它读者进程无需等待，读者进程只有在当前操作数据库的进程是写者的情况下才需要阻塞。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;第二读者-写者问题&lt;/strong&gt; ：写者优先，任何在等待获取数据库权限的写者进程都将比其它正在等待的读者进程先获得权限。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;第三读者-写者问题&lt;/strong&gt; ：前两种策略都会导致写者或者读者的饥饿，此策略将保证没有任何进程会被无限阻塞。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;读者-写者问题在以下情况非常有效：&lt;ul&gt;
-&lt;li&gt;当进程可以按照对共享对象所需的读写权限划分时&lt;/li&gt;
-&lt;li&gt;当读者进程数比写者进程数多时：因为读写锁的建立开销比信号量或互斥锁要大，此开销可通过允许多个读者并发来弥补&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&quot;第一读者-写者问题&quot;&gt;&lt;a href=&quot;#第一读者-写者问题&quot; class=&quot;headerlink&quot; title=&quot;第一读者-写者问题&quot;&gt;&lt;/a&gt;第一读者-写者问题&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;读优先，只要当前有读者在操作对象，所有读者都可以加入操作而不必等待。&lt;/li&gt;
-&lt;li&gt;进程共享如下数据：&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;semaphore mutex, wrt&lt;/code&gt;：二者均初始化为 1，信号量 &lt;code&gt;wrt&lt;/code&gt; 用作读写进程的互斥锁，信号量 &lt;code&gt;mutex&lt;/code&gt; 则用于确保更新变量 &lt;code&gt;readcount&lt;/code&gt; 时互斥。&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;int readcount&lt;/code&gt;：跟踪当前有多少个进程正在读对象，初始化为 0。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;写者-读者进程结构如下，代码来自原书（英文版）第 206 页。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 写者&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(wrt);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 执行写操作&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(wrt);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TRUE);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 读者&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    readcount++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (readcount == &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 若此读进程为等待的第一个读者，则需要先获取对象的权限&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        wait(wrt);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 执行读操作&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    readcount--;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (readcount == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 若此读进程为最后一个离开的读者，则需要释放对象权限&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(wrt);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TRUE);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h3 id=&quot;第二读者-写者问题&quot;&gt;&lt;a href=&quot;#第二读者-写者问题&quot; class=&quot;headerlink&quot; title=&quot;第二读者-写者问题&quot;&gt;&lt;/a&gt;第二读者-写者问题&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;写优先，只要当前有写者在操作对象，所有写者都将排队等待，中间不允许读者插入。只有所有写者完成处理后，读者才有机会访问。&lt;/li&gt;
-&lt;li&gt;进程之间共享如下数据：&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;int readcount, writecount&lt;/code&gt;：&lt;code&gt;readcount&lt;/code&gt; 记录当前正在等待读对象的读者数量，&lt;code&gt;writecount&lt;/code&gt; 记录当前正在等待写对象的写者数量，均初始化为 0。&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;semaphore rmutex, wmutex&lt;/code&gt;：确保更新变量 &lt;code&gt;readcount&lt;/code&gt; 和 &lt;code&gt;writecount&lt;/code&gt; 时的互斥，均初始化为 1。&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;semaphore readTry&lt;/code&gt;：&lt;code&gt;readTry&lt;/code&gt; 信号量用于声明有读者加入等待队列，确保读者和写者之间的互斥，初始化为 1。&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;semaphore resource&lt;/code&gt;：&lt;code&gt;resource&lt;/code&gt; 信号量用于确保写者和写者之间的互斥，初始化为 1。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;读者-写者结构如下，基本算法来自维基百科。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;41&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 读者&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(readTry);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 读者必须在当前没有写者在操作对象时才可进入等待&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 保证了写优先&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(rmutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    readcount++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (readcount == &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 第一个读者需要获取资源权限&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        wait(resource);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(rmutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(readTry);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(rmutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    readcount--;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (readcount == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 最后一个离开的读者需要释放资源权限&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(resource);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(rmutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TRUE);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 写者&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(wmutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    writecount++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (writecount == &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 第一个写者需要禁止其他读者进入等待&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        wait(readTry);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(wmutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 进入临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(resource);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 写操作&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(resource);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 离开临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(wmutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    writecount--;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (writecount == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 最后一个离开的写者需要释放资源权限&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(readTry);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(wmutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TRUE);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h3 id=&quot;第三读者-写者问题&quot;&gt;&lt;a href=&quot;#第三读者-写者问题&quot; class=&quot;headerlink&quot; title=&quot;第三读者-写者问题&quot;&gt;&lt;/a&gt;第三读者-写者问题&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;保证读者和写者均不会出现饥饿现象。&lt;/li&gt;
-&lt;li&gt;进程之间共享的信号量有：&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;int readCount&lt;/code&gt;：当前正在访问对象的读者数量&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Semaphore resourceAccess&lt;/code&gt;：资源的控制权限，使读者、写者互斥，初始化为 1&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Semaphore readCountAccess&lt;/code&gt;：保证对 &lt;code&gt;readCount&lt;/code&gt; 操作的互斥，初始化为 1&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Semaphore serviceQueue&lt;/code&gt;：保持请求的顺序，维护先进先出特性，初始化为 1&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;读者-写者结构如下，基本算法来自维基百科。可能有多个进程在服务队列中等待，当前进入临界区的进程离开后，等待的进程就会接替离开的进程。当 &lt;code&gt;serviceQueue&lt;/code&gt; 中阻塞了多个进程时，选择进程唤醒的顺序取决于信号量的链表，因此 &lt;strong&gt;&lt;code&gt;serviceQueue&lt;/code&gt; 的链表必须维持 FIFO 特性才能保证不会导致饥饿&lt;/strong&gt; 。因此，解决饥饿问题实际是由链表的 FIFO 带来的。另一个值得注意的地方是，无论写者还是读者，获得了服务队列的权限后，在获取资源控制权前都将禁止其他任何进程接受服务，而因为只有紧随写者进程的读者才需要获取资源权限，所以在此算法中读者可以同时并发访问。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 读者&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(serviceQueue);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 在服务队列中等待&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(readCountAccess);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (readCount == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 第一个读者要从写者手中接管资源&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        wait(resourceAccess);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    readCount++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(serviceQueue);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 允许下一个进程进入服务队列等待&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(readCountAccess);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(readCountAccess);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    readCount--;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (readCount == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 最后一个离开的读者要释放资源权限&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(resourceAccess);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(readCountAccess);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TRUE);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 写者&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(serviceQueue);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(resourceAccess);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(serviceQueue);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(resourceAccess);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TRUE);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h2 id=&quot;哲学家进餐问题&quot;&gt;&lt;a href=&quot;#哲学家进餐问题&quot; class=&quot;headerlink&quot; title=&quot;哲学家进餐问题&quot;&gt;&lt;/a&gt;哲学家进餐问题&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;问题描述：假设有 5 个哲学家共用一个圆桌，每人左右两边各有一根筷子，哲学家之间不互相交流。当哲学家感到饥饿时会依次拿起自己身边的筷子（一次只能拿起一根筷子、不能从其它哲学家手中拿筷子），当哲学家同时拥有两根筷子时可以开始进餐，否则将等待空闲的筷子（且并不放下已握在手中的筷子），吃完后他将放下两只筷子。&lt;/li&gt;
-&lt;li&gt;一种简单方法是每根筷子使用一个信号量，哲学家通过 &lt;code&gt;wait()&lt;/code&gt; 请求相应的筷子，通过 &lt;code&gt;signal()&lt;/code&gt; 释放相应的筷子。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(chopstick[i]);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(chopstick[(i+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;]);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 进餐&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(chopstick[i]);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(chopstick[(i+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)%&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;]);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TRUE);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;上面的算法解决了筷子的互斥问题，但可能导致死锁。若五个哲学家同时拿起同一边的筷子，则所有人都将永远等待。可行的解决方法有：&lt;ul&gt;
-&lt;li&gt;最多只允许四个哲学家同时坐在桌上&lt;/li&gt;
-&lt;li&gt;只有两只筷子都可用时才允许一个哲学家拿起筷子，且拿起两只筷子的操作在临界区内进行&lt;/li&gt;
-&lt;li&gt;编号为奇数的哲学家先拿起左边的筷子再拿起右边的筷子，编号为偶数的哲学家先拿起右边的筷子再拿起左边的筷子&lt;/li&gt;
-&lt;li&gt;Dijkstra解法：每个哲学家都先拿起身边编号较小的筷子，再拿起编号较高的筷子&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;使用 Dijkstra 解法的哲学家就餐问题解法如下，伪代码根据维基百科的算法描述编写。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;philosopher&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    leftChopstickIndex = index;    &lt;span class=&quot;comment&quot;&gt;// 左侧筷子编号为哲学家编号&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    rightChopstickIndex = (index + &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) % Philosophers;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    firstIndex = min(leftChopstickIndex, rightChopstickIndex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    secondIndex = max(leftChopstickIndex, rightChopstickIndex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        wait(chopstick[firstIndex]);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        wait(chopstick[secondIndex]);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 进餐&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(chopstick[firstIndex]);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(chopstick[secondIndex]);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 释放资源的顺序可随意&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TRUE);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-4/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（四）：进程互斥&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-6/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（六）：管程（Monitor）&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-5/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-5/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/24/os-concepts-5/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版第六章进程同步部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>操作系统（四）：进程互斥</title>
-    <link href="http://forec.github.io/2016/11/24/os-concepts-4/"/>
-    <id>http://forec.github.io/2016/11/24/os-concepts-4/</id>
-    <published>2016-11-24T07:29:44.000Z</published>
-    <updated>2017-01-06T11:58:33.867Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;生产者-消费者冲突模型&quot;&gt;&lt;a href=&quot;#生产者-消费者冲突模型&quot; class=&quot;headerlink&quot; title=&quot;生产者-消费者冲突模型&quot;&gt;&lt;/a&gt;生产者-消费者冲突模型&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;生产者-消费者（producer-consumer）&lt;/strong&gt; 问题：生产者进程产生用来被消费者进程消耗的数据，例如一个编译器产生汇编代码，此代码交由汇编器生成对象。生产者、消费者进程之间可通过共享内存来传递数据，可分为：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;无限缓冲（unbounded buffer）&lt;/strong&gt; ：共享内存大小没有限制，当缓冲区为空时，消费者进程需要等待；生产者进程在任何时候都可以直接向缓冲区中投放数据而无需等待&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;有限缓冲（bounded buffer）&lt;/strong&gt; ：内存共享的缓冲区域大小固定，若缓冲区为空则消费者进程需要等待；若缓冲区已满则生产者进程需要等待。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;雏形&quot;&gt;&lt;a href=&quot;#雏形&quot; class=&quot;headerlink&quot; title=&quot;雏形&quot;&gt;&lt;/a&gt;雏形&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;采用共享内存、有限缓冲的生产者消费者代码如下（原书 99 页第三章初次介绍共享内存模型时的代码）。共享缓冲通过循环数组和两个逻辑指针 &lt;code&gt;in&lt;/code&gt;、&lt;code&gt;out&lt;/code&gt; 实现，变量 &lt;code&gt;in&lt;/code&gt; 指向缓冲中下一个空位，&lt;code&gt;out&lt;/code&gt; 指向缓冲中的下一个待取走的数据位，&lt;code&gt;(in+1)%BUFFER_SIZE == out&lt;/code&gt; 时缓冲区满。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;preprocessor&quot;&gt;#&lt;span class=&quot;keyword&quot;&gt;define&lt;/span&gt; BUFFER_SIZE &lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;struct&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    ...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; item;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;item buffer[BUFFER_SIZE];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; in = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; out = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// producer&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;item nextProduced;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (&lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (((in + &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) % BUFFER_SIZE) == out) ;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    buffer[in] = nextProduced;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    in = (in + &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) % BUFFER_SIZE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// consumer&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;item nextConsumed;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (&lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (in == out) ;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    nextConsumed = buffer[out];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    out = (out+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) % BUFFER_SIZE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;上面的代码存在缺陷，生产者、消费者进程能够使用的最大缓冲区为 BUFFER_SIZE - 1，并且代码也没有解决生产者、消费者进程同时访问共享内存的问题。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;改进&quot;&gt;&lt;a href=&quot;#改进&quot; class=&quot;headerlink&quot; title=&quot;改进&quot;&gt;&lt;/a&gt;改进&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;为使进程能够使用全部缓冲区，使用一个初始化为 0 的整数变量 &lt;code&gt;counter&lt;/code&gt; 记录当前缓冲区中的元素数量；每当生产者向缓冲区投放数据，&lt;code&gt;counter&lt;/code&gt; 递增；当消费者从缓冲区取走数据，&lt;code&gt;counter&lt;/code&gt; 递减。可修改上面代码如下：&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// producer&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (&lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (counter == BUFFER_SIZE) ;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    buffer[in] = nextProduced;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    in = (in+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) % BUFFER_SIZE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    counter ++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// consumer&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (&lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (counter == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;) ;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    nextConsumed = buffuer[out];&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    out = (out+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) % BUFFER_SIZE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    counter --;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;以上代码可使用全部缓冲区资源，但当消费者进程和生产者进程并发执行时，涉及修改 &lt;code&gt;counter&lt;/code&gt; 的语句执行顺序将由操作系统设定。由于 C 语言中 &lt;code&gt;counter++&lt;/code&gt; 将被拆分为 &lt;code&gt;mov register, counter&lt;/code&gt;、&lt;code&gt;inc register&lt;/code&gt; 和 &lt;code&gt;mov counter, register&lt;/code&gt; 三句汇编指令，假设由于操作系统的调度，当前消费者进程和生产者进程分别执行到 &lt;code&gt;counter++&lt;/code&gt; 和 &lt;code&gt;counter--&lt;/code&gt; 的最后一条汇编指令处，则 &lt;code&gt;counter&lt;/code&gt; 的值将不正确。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;竞争条件（race condition）&lt;/strong&gt; ：多个进程同时访问和操作一个相同的数据，且执行结果和访问的特定顺序有关。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;进程同步（process synchronization）&lt;/strong&gt; 和 &lt;strong&gt;协调（coordination）&lt;/strong&gt; ：确保系统不同部分操作资源不会互相影响。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;临界区&quot;&gt;&lt;a href=&quot;#临界区&quot; class=&quot;headerlink&quot; title=&quot;临界区&quot;&gt;&lt;/a&gt;临界区&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;系统中有 n 个进程&lt;code&gt;{P0, P1, ..., Pn-1}&lt;/code&gt;，每个进程有一个代码段称为 &lt;strong&gt;临界区（critical section）&lt;/strong&gt; ，在该区域中，不同的进程可能会改变相同的数据。临界区中应当最多同时存在一个进程。&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;临界区问题&lt;/em&gt; 指设计一个使进程协作的协议：&lt;ul&gt;
-&lt;li&gt;每个进程需先请求进入临界区（请求的代码称为 &lt;strong&gt;进入区，entry section&lt;/strong&gt; ）；&lt;/li&gt;
-&lt;li&gt;获得允许，进入临界区执行&lt;/li&gt;
-&lt;li&gt;退出临界区（ &lt;strong&gt;退出区，exit section&lt;/strong&gt; ）&lt;/li&gt;
-&lt;li&gt;执行剩余代码（ &lt;strong&gt;剩余区，remainder section&lt;/strong&gt; ）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;临界区问题的解决必须满足如下三个要求：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;互斥（mutual exclusion）&lt;/strong&gt; ：若进程 Pi 正在其临界区内，则其他进程都不能在临界区中执行&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;发展（前进，progress）&lt;/strong&gt; ：如果当前没有进程在临界区内，并且有一些进程在请求进入临界区，则只有不处在剩余区的进程可以参与到选择（选择哪个进程进入临界区）中。这个选择不能被无限期推迟，即必须立刻作出决定。简单的说， &lt;strong&gt;进入临界区请求的选择不应当受当前在剩余区执行进程的影响&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;有限等待（bounded waiting）&lt;/strong&gt; ：从一个进程发出进入临界区请求，到该请求被允许，这期间只能有有限的其它进程进入临界区。即保证了每个进程都有机会进入临界区而不会饥饿。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;假定每个进程的执行速度都不为 0，但是不能对 n 个进程的 &lt;strong&gt;相对速度（relative speed）&lt;/strong&gt; 做任何假设。&lt;/li&gt;
-&lt;li&gt;操作系统内部的临界区问题：操作系统内同一时刻可能有多个处于内核模式的活动进程，有两种方法解决。&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;抢占内核（preemptive kernel）&lt;/strong&gt; ：允许处于内核模式的进程被抢占。此模式可能导致竞争条件，在对称多处理器体系中，此模式更难设计。但此模式适合实时编程，响应更快（Linux 2.6之后内核和 Solaris、IRIX 均为抢占内核）。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;非抢占内核（nonpreemptive kernel）&lt;/strong&gt; ：不允许处于内核模式的进程被抢占，处于内核模式的进程会一直运行，直到其退出内核模式、阻塞或者自动释放对 CPU 的控制。这种方式根本不会导致竞争条件的产生。Windows XP、Windows 2000 和传统 UNIX 均为非抢占内核。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;Peterson-算法&quot;&gt;&lt;a href=&quot;#Peterson-算法&quot; class=&quot;headerlink&quot; title=&quot;Peterson 算法&quot;&gt;&lt;/a&gt;Peterson 算法&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Peterson 算法&lt;/strong&gt; 是对基于软件的临界区问题的经典解答，但由于现代计算机体系结构执行基本语言指令的不同方式，该算法在此类机器上不能正确执行。&lt;/li&gt;
-&lt;li&gt;Peterson 算法仅适用于两个进程（P0和P1），它们都在临界区和剩余区间交替执行。以下当使用 Pi 表示一个进程时，使用 Pj 表示另一个（j == 1-i）。&lt;/li&gt;
-&lt;li&gt;Peterson 算法需要在进程间共享两个数据项：&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;int turn&lt;/code&gt;：指定哪个进程可以进入临界区，若 turn == i，则 Pi 被允许&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;boolean flag[2]&lt;/code&gt;：&lt;code&gt;flag[i]&lt;/code&gt; 表示进程 i 已发出进入临界区请求&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Peterson 算法中进程 Pi 的结构如下&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    flag[i] = TRUE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    turn = j;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (flag[j] &amp;amp;&amp;amp; turn == j);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    flag[i] = FALSE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 剩余区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (TRUE);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;Peterson 算法正确性的证明：&lt;ul&gt;
-&lt;li&gt;互斥：只有当 &lt;code&gt;flag[j] == FALSE&lt;/code&gt; 或 &lt;code&gt;turn == i&lt;/code&gt; 时 Pi 才进入临界区。假设 Pi 和 Pj 同时进入临界区，则 &lt;code&gt;flag[0] == flag[1] == TRUE&lt;/code&gt;，因为 turn 只能为 0 或 1，所以只有一个进程（假设 &lt;code&gt;turn == i&lt;/code&gt;）Pi 能够跳出 While 语句。此外，只要 Pi 在临界区内，&lt;code&gt;flag[i] == TRUE &amp;amp;&amp;amp; turn == i&lt;/code&gt; 就始终成立，所以 Pi 在临界区执行期间，Pj 将始终等待或执行剩余区内容。&lt;/li&gt;
-&lt;li&gt;发展和有限等待：进程 Pi 仅在 &lt;code&gt;flag[j] == True&lt;/code&gt; 且 &lt;code&gt;turn == j&lt;/code&gt; 的情况下才会被阻塞，若 Pj 不准备进入临界区，则 &lt;code&gt;flag[j] == False&lt;/code&gt;，此时 Pi 可以进入；若 Pj 当前也在请求进入临界区，则 &lt;code&gt;flag[j] == True&lt;/code&gt;，此时由 turn 决定哪个进程进入临界区。假设此时 Pj 进入临界区，当 Pj 退出临界区时会设置 &lt;code&gt;flag[j]&lt;/code&gt; 为 False 使 Pi 进入临界区；如果 Pj 剩余区执行速度非常快，又重新申请进入临界区，此时 Pj 设置 &lt;code&gt;flag[j]&lt;/code&gt; 为 TRUE，同时 turn 被设置为 i。因此 Pi 一定会进入临界区（发展），并且最多需要等待一次。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;Bakery-算法（补充）&quot;&gt;&lt;a href=&quot;#Bakery-算法（补充）&quot; class=&quot;headerlink&quot; title=&quot;Bakery 算法（补充）&quot;&gt;&lt;/a&gt;Bakery 算法（补充）&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;Bakery 算法适用于 n 个进程的临界区问题。&lt;/li&gt;
-&lt;li&gt;在进入临界区之前，进程需要申请一个号码，拥有最小号码的进程会被允许进入临界区。如果两个进程 Pi 和 Pj 申请到的号码相同（申请号码不是临界区，因此可能获得相同号码），则比较进程编号 i 和 j，编号小的先执行。&lt;/li&gt;
-&lt;li&gt;进程可申请到的号码始终是递增的。定义元组比较为 &lt;code&gt;(a, b) &amp;lt; (c, d) if a &amp;lt; c || a == c &amp;amp;&amp;amp; b &amp;lt; d&lt;/code&gt;，定义最大值函数 &lt;code&gt;max(a0, a1, ..., an-1)&lt;/code&gt; 为 a0 ~ an-1 中的最大值。&lt;/li&gt;
-&lt;li&gt;Bakery 算法使用的共享数据有：&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;boolean choosing[n]&lt;/code&gt;：&lt;code&gt;choosing[i] == TRUE&lt;/code&gt; 表明进程 Pi 当前正在申请进入临界区或者正在临界区中执行&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;int number[n]&lt;/code&gt;：&lt;code&gt;number[i]&lt;/code&gt; 为进程 Pi 当前申请到的号码&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Bakery 算法流程如下&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    choosing[i] = &lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    number[i] = max(number[&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;], number[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;], ..., number[n-&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;])+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    choosing[i] = &lt;span class=&quot;literal&quot;&gt;false&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (j = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; j &amp;lt; n; j++)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 此循环保证所有比当前进程持更高优先级的进程已离开临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (chossing[j]);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (number[j] != &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt; &amp;amp;&amp;amp; (number[j], j) &amp;lt; (number[i], i));&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    number[i] = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 剩余区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;Bakery 算法正确性证明：&lt;ul&gt;
-&lt;li&gt;首先，元组的大小比较和取号规则（只增）保证了全部进程都可维持一个严格递增的顺序，而不会出现两个进程地位相等的情况。&lt;/li&gt;
-&lt;li&gt;互斥：假设进程 Pi 已进入临界区，则 for 循环保证了，当前所有进程，号码比 Pi 的号码小的进程均已不在临界区，而号码比 Pi 大的进程将因为 &lt;code&gt;number[i] != 0&lt;/code&gt; 而被阻塞在它们自己的 for 循环中，因此仅有 Pi 可进入临界区。互斥条件满足。&lt;/li&gt;
-&lt;li&gt;发展：假设一个进程 Pj 执行完临界区，则其进入剩余区之前将使 &lt;code&gt;number[j] == 0&lt;/code&gt;，此时所有在等待进入临界区的进程中，按元组比较最小的那个进程将因为 &lt;code&gt;number[j] == 0&lt;/code&gt; 而跳出 while 循环，此后它将跳过剩余的 for 循环（因为其它进程的元组均大于它）并进入临界区，而其它进程都将继续等待。因此在剩余区的进程（Pj）不会影响到进入临界区申请的选择。&lt;/li&gt;
-&lt;li&gt;有限等待：假设一个进程 Pi 已经申请到号码 &lt;code&gt;number[i]&lt;/code&gt;，此时所有后申请进入临界区的进程 Pj 都会有 &lt;code&gt;number[j] &amp;gt; number[i]&lt;/code&gt;，且在 Pi 执行完临界区之前，Pj 都会因为 &lt;code&gt;number[i] != 0&lt;/code&gt; 且 &lt;code&gt;number[i] &amp;lt; number[j]&lt;/code&gt; 而阻塞。因此进程 Pi 至多等待 n-1 个进程即可进入临界区。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;硬件同步&quot;&gt;&lt;a href=&quot;#硬件同步&quot; class=&quot;headerlink&quot; title=&quot;硬件同步&quot;&gt;&lt;/a&gt;硬件同步&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;无论软硬件方式，解决临界区问题都需要 &lt;strong&gt;锁（lock）&lt;/strong&gt; ，所有解决方案都基于锁，且锁的设计可能非常复杂。进程在进入临界区之前获得锁，退出临界区时释放锁。&lt;/li&gt;
-&lt;li&gt;硬件特性可以简化编程并提高效率。现代计算机系统提供了特殊硬件指令以允许程序 &lt;strong&gt;原子（atomically）&lt;/strong&gt; 检查和修改字地内容或交换两个字地内容。以下的 &lt;code&gt;TestAndSet()&lt;/code&gt; 和 &lt;code&gt;Swap()&lt;/code&gt; 函数均为原子操作，即硬件保证了它们作为一个完整过程执行而不会被抢占。它们的定义如下：&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;boolean &lt;span class=&quot;title&quot;&gt;TestAndSet&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(boolean *target)&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    boolean rv = *target;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    *target = TRUE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; rv;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Swap&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(boolean *a, boolean *b)&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    boolean temp = *a;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    *a = *b;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    *b = temp;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;仅使用 &lt;code&gt;TestAndSet()&lt;/code&gt; 或仅使用 &lt;code&gt;Swap()&lt;/code&gt; 都可以解决互斥问题。以下是单独使用这二者实现的互斥，但均未满足有限等待的要求：&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight sqf&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// TestAndSet Lock&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TestAndSetLock(&amp;amp;&lt;span class=&quot;built_in&quot;&gt;lock&lt;/span&gt;));&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;lock&lt;/span&gt; = &lt;span class=&quot;literal&quot;&gt;FALSE&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 剩余区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(&lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// Swap Lock&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    key = &lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(key == &lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        Swap(&amp;amp;&lt;span class=&quot;built_in&quot;&gt;lock&lt;/span&gt;, &amp;amp;key);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;lock&lt;/span&gt; = &lt;span class=&quot;literal&quot;&gt;FALSE&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 剩余区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(&lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;使用 &lt;code&gt;TestAndSet()&lt;/code&gt; 或 &lt;code&gt;Swap()&lt;/code&gt; 也可以解决有限等待问题，以下是使用 &lt;code&gt;TestAndSet()&lt;/code&gt; 实现的有限等待互斥，代码为进程 Pi 的结构，来自原书（英文版）第 199 页。可以看出，剩余区前的 while 循环保证一个进程 Pi 强制拉取了排在其后的进程 Pj 进入临界区（如果有的话），这保证了有限等待。使用到的共享数据有：&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;boolean waiting[n]&lt;/code&gt;：&lt;code&gt;waiting[i] == TRUE&lt;/code&gt; 表明进程 i 已申请进入临界区并正在等待选择&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;boolean lock&lt;/code&gt;：lock 是进程间共享的锁&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    waiting[i] = TRUE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    key = TRUE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (waiting[i] &amp;amp;&amp;amp; key)    &lt;span class=&quot;comment&quot;&gt;// 进程排队&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        key = TestAndSet(&amp;amp;lock);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    waiting[i] = FALSE;          &lt;span class=&quot;comment&quot;&gt;// 进程标注自己已进入临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    j = (i+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) % n;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; ((j != i) &amp;amp;&amp;amp; !waiting[j])&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        j = (j+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) % n;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (j == i)                  &lt;span class=&quot;comment&quot;&gt;// 当前无其他进程排队则释放锁&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        lock = FALSE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        waiting[j] = FALSE;      &lt;span class=&quot;comment&quot;&gt;// 强制拉取后一个进程进入临界区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 剩余区&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125; &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt;(TRUE);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/23/os-concepts-3/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（三）：CPU 调度&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-5/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（五）：进程同步&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-4/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-4/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/11/24/os-concepts-4/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>

@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>操作系统（九）：虚拟内存 | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="OS" />
+    
+    <meta name="description" content="整理《Operating System Concepts》 第七版第九章虚拟内存部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统（九）：虚拟内存">
+<meta property="og:url" content="http://forec.github.io/2017/01/04/os-concepts-9/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="整理《Operating System Concepts》 第七版第九章虚拟内存部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-9.jpg">
+<meta property="og:updated_time" content="2017-01-05T15:31:06.994Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统（九）：虚拟内存">
+<meta name="twitter:description" content="整理《Operating System Concepts》 第七版第九章虚拟内存部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/apis/index.html">API</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-os-concepts-9" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        操作系统（九）：虚拟内存
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2017/01/04/os-concepts-9/" class="article-date">
+    <time datetime="2017-01-03T16:42:29.000Z" itemprop="datePublished">2017-01-04</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>整理《Operating System Concepts》 第七版第九章虚拟内存部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 <strong>按个人理解简化、翻译为中文，可能存在一些不准确之处</strong> 。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><ul>
+<li>虚拟内存技术允许进程在执行时不完全加载入内存（动态加载也可以实现，但要求程序员做更多细致的工作），因此程序可以远大于物理内存。虚拟内存将内存抽象为一个 <strong>统一的</strong> 巨大的统一存储数组，使用户看到的逻辑内存和物理内存分离，允许程序员不受内存存储限制。此外虚拟内存使进程共享文件/地址空间变得容易。</li>
+<li>很多情况下不需要将整个程序加载到内存中，如：<ul>
+<li>程序执行过程中通常很少发生错误，处理异常错误的代码几乎不被执行</li>
+<li>数组、链表、表等结构通常会被分配比实际需要的更大的内存</li>
+<li>程序的一些功能/选项很少被使用</li>
+</ul>
+</li>
+<li>只将程序的一部分加载入内存可以带来如下优势：<ul>
+<li>程序不再受物理内存空间限制，用户可以针对一个远超过物理内存大小的 <strong>虚拟地址空间（virtual address space）</strong> 编写程序从而简化编程工作量；</li>
+<li>更多的程序可以同时执行（每个程序使用了更少的物理内存），CPU 利用率也随之增加（响应时间/周转时间不随之增加）；</li>
+<li>内存与备份存储之间换入患处的速度加快（程序实际占用物理内存变小）。</li>
+</ul>
+</li>
+<li>进程的虚拟地址空间即为进程在内存中存放的 <strong>逻辑</strong> 视图，通常进程的的虚拟地址空间从某一个逻辑地址开始（比如 0）连续存放，如下图。随着动态内存分配，堆向上增长，子程序调用带来栈向下增长以及载入动态链接库时空白区域被填充。堆和栈之间的巨大的空白部分是虚拟地址的一部分，但只有在堆/栈生长时这部分虚拟地址才需要对应实际的物理帧。含有空白的虚拟地址空间称为 <strong>稀（sparse）</strong> 地址空间。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/virtual-address-space.png" width="150px"></li>
+<li>虚拟内存允许文件和内存通过共享页被多个进程共享，优势在于：<ul>
+<li>系统库可被多个进程共享</li>
+<li>多个进程之间可以通过共享内存通信</li>
+<li>允许系统调用 <code>fork()</code> 创建进程之间的共享页从而加快进程创建。</li>
+</ul>
+</li>
+</ul>
+<h1 id="按需调页（Demand-Paging）"><a href="#按需调页（Demand-Paging）" class="headerlink" title="按需调页（Demand Paging）"></a>按需调页（Demand Paging）</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><ul>
+<li>当且仅当需要某页时才将该页调入内存的技术称为 <strong>按需调页（demand paging）</strong> ，被虚拟内存系统采用。按需调页系统类似于使用交换的分页系统，进程驻留在二级存储器上（磁盘），进程执行时使用 <strong>懒惰交换（lazy swapper）</strong> 换入内存。因为这种方式将进程视作一系列页而非巨大的连续空间，而 <em>交换程序（swapper）</em> 是对整个进程进行操作，因此使用 <strong>调页程序（pager）</strong> 对进程的单个页代替交换程序。</li>
+<li>需要一定形式的硬件区分哪些页在内存中，第八章中的有效/无效位可用于此目的，当该位设为有效时表示对应的页既合法又在内存中，而该位设置为无效时表示相关的页无效（不属于进程的逻辑地址空间）或有效但尚未调入内存。对于尚未调入内存的页，其页表条目设置为无效或者包含了该页在磁盘上的地址。</li>
+<li>进程试图访问尚未调入内存中的页会触发 <strong>页错误陷阱（page-fault trap）</strong> ，操作系统会按如下流程 <strong>处理页错误</strong> ：<ul>
+<li>检查进程的内部页表（进程维护的内部页表和 PCB 一起保存）来确定该引用是否为合法地址，若引用非法则终止进程，否则准备调入页面；</li>
+<li>操作系统寻找一个空闲帧（如从空闲帧链表中选择一个元素）；</li>
+<li>操作系统调度磁盘，将需要的页调入到上一步分配的空闲帧；</li>
+<li>磁盘读操作完成后修改进程的内部页表和操作系统维护的页表以表示该页已经位于内存中；</li>
+<li>重新读取因为页错误而终端的指令，进程可以访问此前无法访问的页。</li>
+</ul>
+</li>
+<li>上述按需调页的一种极端情况是在不调入任何需要页的情况下就执行进程，因此进程执行过程中将不断出现页错误、调入页、继续执行。这种方案称为 <strong>纯粹按需调页（pure demand paging）</strong> 。按需调页处理页错误的流程如下图所示。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/page-fault-steps.jpg" width="400px"></li>
+<li>理论上单个指令可能触发多个页错误（例如一页用于获取指令，一页用于获取指令所需的数据），但此种情况较少见，正常执行程序满足 <strong>局部引用（locality of reference）</strong> 特性，使按需调页的性能较好。</li>
+</ul>
+<h2 id="按需调页与分页"><a href="#按需调页与分页" class="headerlink" title="按需调页与分页"></a>按需调页与分页</h2><ul>
+<li>按需调页所需的硬件支持和分页、交换相同：<ul>
+<li><strong>页表</strong> ：通过有效/无效位保护进程地址空间</li>
+<li><strong>次级存储器</strong> ：备份存储，保存不在内存中的页，通常为快速磁盘，用于和内存交换页的部分空间称为 <strong>交换空间（swap space）</strong> 。Linux 系统所需的 <code>/swap</code> 挂载点挂载的存储空间即为交换空间。</li>
+</ul>
+</li>
+<li>虚拟技术的困难在于，分页是加在 CPU 和内存之间的，并且要对用户进程完全透明。人们通常假定分页能够应用到任何系统中，这个假定对于非按需调页的环境而言是正确的（缺页即为访问无效内存，产生致命错误），而在按需调页系统中，页错误意味着可能缺页、需要调入一个额外的页。 <strong>调入额外的页的过程很可能导致原始的指令在调页完成后重新执行不再正确</strong> 。考虑下面的情况：<ul>
+<li><code>MVC</code> 指令可以将 256B 的块从一处移动到另一处（可能重叠），如果源块或者目的块中任何一块跨越了页边界，则移动操作执行（在执行前并没有意识到源块/目标块缺页）到一半可能会出现页错误；</li>
+<li>在上述情况（跨页）的基础上，如果源块和目的块有重叠（overlap），则移动执行到一半时，源块可能已经被修改，这时调页进入内存后，不能简单地重启该指令。</li>
+</ul>
+</li>
+<li>上述两类情况有两种不同解决方案：<ul>
+<li>微码计算并试图访问两块的两端，如果出现了页错误，则在指令 <code>MVC</code> 执行前将缺页调入内存；</li>
+<li>使用临时寄存器保存 <code>MVC</code> 指令从执行到触发缺页之间被覆盖了的数据，如果发生了页错误，则临时寄存器中保存的值在处理页错误之前写回到内存，此时调页完成后指令可以重启，状态与之前相同。</li>
+</ul>
+</li>
+</ul>
+<h2 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h2><ul>
+<li>按需调页内存的 <strong>有效访问时间（effective access time）</strong> 计算为： <code>有效访问时间 = (1-p) x ma + p x 页错误时间)</code>。其中 <code>ma</code> 为计算机系统的内存访问时间，通常为 10 ~200ns； <code>p</code> 为出现页错误的概率，<code>p</code> 越接近于 0 则页错误发生越少。</li>
+<li>进程 P 触发了页错误会导致下列动作：<ol>
+<li>触发硬件陷阱，操作系统中断进程 P</li>
+<li>操作系统保存用户进程 P 的寄存器、进程状态</li>
+<li>确定中断是否为页错误，若是则判断页引用是否合法，若合法则确定页所在磁盘位置</li>
+<li>从磁盘读入页到某个空闲帧，这一步又包括：在该磁盘队列中等待直到处理完排在自己之前的请求，磁盘寻道/延迟以及磁盘传输的时间</li>
+<li>磁盘等待过程中将 CPU 分配给其他进程 Q（CPU 调度）</li>
+<li>从 I/O 子系统接收到中断</li>
+<li>保存 Q 的寄存器和进程状态（如果执行了第 5 步）</li>
+<li>确定中断是否来自于之前页错误触发的磁盘请求，若是则修正页表和其他表以更新页信息</li>
+<li>等待 CPU 调度程序将 CPU 资源再次分配给进程 P</li>
+<li>恢复进程 P 的用户寄存器、进程状态和新页表，重新执行被中断的指令</li>
+</ol>
+</li>
+<li>以上步骤不是全部必需的，例如第 5 步可以提高 CPU 使用率，但执行完 I/O 后也需要额外的时间保存现场。无论如何， <strong>缺页导致的页错误处理时间主要包括：处理页错误中断、读入页以及重新启动进程</strong> 三部分，其中读入页除了磁盘设备本身的处理时间，还可能包括等待设备的时间。</li>
+<li>交换空间的处理和使用对按需调页的性能也有很大影响，磁盘 I/O 操作到交换空间比到文件系统要快，因为 <strong>交换空间按照大块来分配</strong> 。如果在进程开始时将整个文件镜像复制到交换空间，并从交换空间执行按页调度则可能获得更好的调页效果。另一种方式是进程执行开始时从文件系统按需调页，但当出现页置换时则将页写入交换空间，这样只有所需的页才会从文件系统调用，而一旦调用某页，此后的该页再次调度时会从交换空间读入。</li>
+</ul>
+<h1 id="写时复制和页面置换"><a href="#写时复制和页面置换" class="headerlink" title="写时复制和页面置换"></a>写时复制和页面置换</h1><h2 id="写时复制"><a href="#写时复制" class="headerlink" title="写时复制"></a>写时复制</h2><ul>
+<li>系统调用 <code>fork()</code> 是将子进程创建为父进程的副本，传统的 <code>fork()</code> 会为子进程创建一个父进程地址空间的副本，将父进程的页复制，但由于很多子进程创建之后立刻执行系统调用 <code>exec()</code>，因此复制父进程地址空间完全没有必要。 <strong>写时复制（copy-on-write）</strong> 技术允许父进程和子进程开始时共享同一页面，这些页面标记为写时复制页，如果任何一个进程对某一个写时复制页进行了写操作，则为这个进程创建一个该页的副本。注意， <strong>只有可能被修改的页才会被标记为写时复制</strong> ，对于不允许被修改的页面（如包含可执行代码的页）可以被父进程和子进程共享。</li>
+<li>许多操作系统为分配空闲页请求提供了空闲缓冲 <strong>池（pool）</strong> ，池中的空闲页在进程的栈/堆需要扩展时可用于分配，或者用于管理写时复制页。操作系统通常使用 <strong>按需填零（zero-fill-on-demand）</strong> 技术分配这些页，这些页在分配之前被填入 0 覆盖，因此清除了之前的内容。</li>
+<li><strong>虚拟内存 fork</strong> 是有的 UNIX 版本提供的 <code>fork()</code> 操作变种，<code>vfork()</code> 将父进程挂起，自己成使用父进程的地址空间，并且不采用写时复制。因此子进程对父进程地址空间的任何修改都会在父进程重启时可见。<code>vfork()</code> 主要用于子进程创建后立刻调用 <code>exec()</code> 的情况，它不会导致页面的复制操作，有时用来 <strong>实现 shell 接口</strong> 。</li>
+</ul>
+<h2 id="页面置换概念"><a href="#页面置换概念" class="headerlink" title="页面置换概念"></a>页面置换概念</h2><ul>
+<li>增加多道程序的程度会导致内存的 <strong>过度分配（over-allocating)</strong> 。I/O 缓存也需要使用大量内存，缓存的使用会增加内存分配算法的压力，有的操作系统为 I/O 缓存分配了一定比例的内存，有的则允许用户进程和 I/O 子系统竞争全部系统内存。</li>
+<li>内存的过度分配会导致某个进程触发了页错误而没有空闲帧可用，因为按需调页对用户而言透明，因此操作系统不应当直接终止进程（操作系统也可以交换出一个进程来降低多道程序的级别，这种选择有时是好的）。</li>
+<li><strong>页置换（page replacement）</strong> 发生在需要调页而没有空闲帧的情况，流程如下：<ul>
+<li>查找所需页在磁盘上的位置</li>
+<li>查找空闲帧，若有则使用，否则通过页置换算法选择一个 <strong>牺牲（victim）</strong> 帧并将牺牲帧的内容写入备份存储（磁盘，交换空间），改变页表和帧表</li>
+<li>将所需页写入到空闲帧，并改变页表和帧表</li>
+<li>重启用户进程</li>
+</ul>
+</li>
+<li>可以看出，在没有帧空闲，需要页置换的情况下，会有两个页传输（一页换出，一页换入），这加倍了页错误处理时间。这一点可以通过在页表的每个条目中增加 <strong>修改位（modify bit）</strong> 或 <strong>脏位（dirty bit）</strong> 来降低额外开销，如果被置换出的页对应的修改位没有被设置，则说明此页从被调入内存后没有被修改，因此不必被写入回磁盘。</li>
+<li>按需调页需要开发 <strong>帧分配算法（frame-allocation algorithm）</strong> 和 <strong>页置换算法（page-replacement algorithm）</strong> 。页置换算法的好坏可以计算页错误率评估：对于一个特定的内存地址引用序列，运行置换算法，计算出页错误的数量。这个引用序列称为 <strong>引用串（reference string）</strong> ，可以人工产生也可以跟踪一个真实的系统并记录其访问内存地址。利用两个事实可以降低引用串的数据量：只考虑内存引用的页码而不考虑完整地址；如果有对页 p 的引用，则紧跟着对页 p 的引用绝不会产生页错误。</li>
+<li>理论上来说，我们期待增加可用帧（增加物理内存大小就会增加可用帧数量）的数量能够使页错误的数量相对应减少。 <strong>Belady 异常（Belady’s anomaly）</strong> 指违背这一期待的现象：对于有的页置换算法，页错误率甚至可能随着分配的物理帧数增加而增加，例如下面的 FIFO 算法。</li>
+</ul>
+<h2 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h2><h3 id="基本页置换算法"><a href="#基本页置换算法" class="headerlink" title="基本页置换算法"></a>基本页置换算法</h3><ul>
+<li><strong>FIFO页置换</strong> ：最简单的页置换算法，操作系统记录每个页被调入内存的时间，当必需置换掉某页时，选择最旧的页换出。实际操作中不需要真的记录调入时间，可以通过一个 FIFO 队列管理内存中的页，置换算法从队列的头部取出换出的页，将换入的页加入到队列尾部。FIFO 页置换算法的性能并不总是很好，它置换出的页可能是一个很久以前现在已经不再使用的页（符合我们的期望），也可能是一个进程创建时初始化的变量，而这个变量仍然在不停地被使用，此时被调出的这页很快就会再次导致页错误。</li>
+<li><strong>最优置换（optimal page-replacement）</strong> 是所有页置换算法中页错误率最低的，但它需要引用串的先验知识，因此无法被实现。它会将内存中的页 P 置换掉，页 P 满足：从现在开始到未来某刻再次需要页 P，这段时间最长。也就是 OPT 算法会 <strong>置换掉未来最久不被使用的页</strong> 。OPT 算法通常用于比较研究，衡量其他页置换算法的效果。</li>
+<li><strong>最近最少使用算法（least-recently-used algorithm）</strong> 简称 LRU，它置换掉到目前时刻最久未被使用的页。这一算法可以视作 OPT 的倒转，LRU 和 OPT 算法都属于 <strong>栈算法（stack algorithm）</strong> ，它们绝不会产生 Bleady 异常。一个有意思的地方在于，对于引用串 S，LRU 算法计算 S 和 <code>S^R</code> 的错误率时相同的（<code>S^R</code> 是引用串 S 的逆序），这一特性对 OPT 算法也满足。LRU 策略可能需要一定得硬件支持，因为它需要为页帧按上次使用时间确定一个排序序列。两种实现方式：<ul>
+<li><strong>计数器（counters）</strong> ：每个页表的条目关联一个时间域，CPU 增加一个计数器，每次内存引用发生时，计数器增加，并且将引用的页在页表中对应的条目的时间域更新为计数器的内容。这样 LRU 需要搜索页表置换具有最小时间域的页。这种方式每次内存访问都要写入内存，页表改变（因为 CPU 调度）的时候还需要保持时间，还需要考虑时钟溢出问题。</li>
+<li><strong>栈（stack）</strong> ：采用页码栈维护，每当引用了一个页就将该页从栈中删除并放置到顶部，这样栈顶总是最近使用的页，栈底则为 LRU 需要替换的页。因为要从栈中删除某项，所以可实现为带有头指针和尾指针的双向链表，从栈中删除一页并放置到栈顶最坏情况下需要修改 6 个指针，但这种实现方式不需要搜索整个表。</li>
+</ul>
+</li>
+</ul>
+<h3 id="近似-LRU-页置换算法"><a href="#近似-LRU-页置换算法" class="headerlink" title="近似 LRU 页置换算法"></a>近似 LRU 页置换算法</h3><p><strong>近似 LRU 页置换算法（LRU-Approximation Page Replacement）</strong> ：很少有系统能够提供足够的硬件支持真正的标准 LRU 页置换，通常通过引用位的方式提供支持实现近似的 LRU 算法。页表的每一个条目都关联着一个 <strong>引用位（reference bit）</strong> ，每当引用了一个页（无论读写），都将该页在页表中对应条目的引用位置位，检查引用位就可以确定哪些页使用过：</p>
+<ul>
+<li><strong>附加引用位（Additional-Reference-Bits）</strong> 算法：位于内存中的每页对应的条目保留一个字节（8位），这个字节的 8 位说明了这一页在过去 8 个时间周期内的使用情况。每过一段规定的时间间隔（如 100 ms），时钟定时器产生中断并将控制转交给操作系统，操作系统将页表每个条目的引用位右移，最低位舍弃，最高位设置为引用位，并将引用位清零。具有最小值的页即为 LRU 替换的页。这里历史位共 8 位，长度可以调整，极端情况下可以为 0 位（此时仅剩下引用位本身）。</li>
+<li><strong>二次机会（Second-Chance）</strong> 算法：该算法基本算法是 FIFO 置换。每当准备置换出一页时检查其引用位，如果引用位为 0 则直接置换该页，否则将引用位清零并给该页第二次机会，之后准备换出下一个 FIFO 页。如果一个页总是被使用，则其引用位经常被设置，所以不会被置换出内存。这种算法的实现采用循环队列，用一个指针表示下次置换队列中的哪一页，找到牺牲页时就将新页插入到牺牲页的位置。最坏情况下所有页都已经被设置，此时需要遍历整个循环队列，性质等价于 FIFO 置换，而所需时间比 FIFO 更长。</li>
+<li><strong>增强型二次机会（Enhanced Second-Chance）</strong> 算法：将引用位和修改位作为一对考虑以改进二次机会算法，这两个位可能有四种类型：<code>(0, 0)</code> 表示最近没有使用也没有修改（最佳置换页）；<code>(0, 1)</code> 表示最近没有使用但已修改（若置换则需要写入到磁盘）；<code>(1, 0)</code> 表示最近使用但尚未修改（此页可能很快会被使用）；<code>(1, 1)</code> 表示最近使用且已经被修改（此页可能很快会被使用并且如果置换需要写入磁盘）。这种方法给已经修改过的页更高的级别，降低了 I/O 操作数量。但找到要置换的页之前，可能需要搜索循环队列多次，每次将级别升高一级并寻找满足的页面。</li>
+</ul>
+<h3 id="基于计数的页置换算法"><a href="#基于计数的页置换算法" class="headerlink" title="基于计数的页置换算法"></a>基于计数的页置换算法</h3><p><strong>基于计数（Counting-Based）</strong> 的页置换通过为每页的条目保留一个引用次数的计数器来选择换出页，包括 LFU 和 MFU，这两种置换方式都很费时并且效果很差：</p>
+<ul>
+<li><strong>最不经常使用（least frequently used，LFU）</strong> 页置换算法：置换计数最小的页，理由是活动页通常有更大的引用次数。但带来问题是一个被使用多次的页可能已经很久不在使用，但仍然保留在内存中。一种解决方式是定期将次数寄存器右移一位来使使用次数指数衰减。</li>
+<li><strong>最常使用页（most frequently used，MFU）</strong> 置换算法：置换计数最大的页，理由是最小次数的页可能刚刚被调入且尚未使用。</li>
+</ul>
+<h3 id="页缓冲算法"><a href="#页缓冲算法" class="headerlink" title="页缓冲算法"></a>页缓冲算法</h3><ul>
+<li>系统保留一个空闲帧缓冲池，出现页错误时仍然选择一个牺牲帧，但牺牲帧写出前就将所需要的页写入到缓冲池的某一个空闲帧中，写入完成的空闲帧就可以直接被使用，这样无需等待牺牲帧的写出。牺牲帧写出到交换空间后，又会被添加到空闲帧缓冲池中。</li>
+<li>此种方式的扩展之一是维护一个已经修改过的页面列表，当调页设备空闲时，就将一个修改过的页面写回到磁盘并重新设置其修改位，这样在真正需要置换时，牺牲页需要写入到磁盘的概率会降低。</li>
+<li>另一种修改是保留一个空闲帧池（需要记录哪些页对应哪些帧），当页错误发生时先检查所需页是否在空闲帧池中，若在则无需 I/O，若不在则选择一个空闲帧并从硬盘读入所需页。这种技术通常和 FIFO 算法一起用于 VAX/VMX 系统，当 FIFO 错误置换了常用页时，被换出的页仍能够很快从空闲帧池中调出。很多 UNIX 系统也将这种方法和二次机会算法一起使用，降低因错误选择牺牲页引起的开销。</li>
+</ul>
+<h3 id="针对应用程序选择页置换"><a href="#针对应用程序选择页置换" class="headerlink" title="针对应用程序选择页置换"></a>针对应用程序选择页置换</h3><ul>
+<li>有些情况下操作系统提供的虚拟内存会让部分应用程序性能下降。例如数据库提供了自己的内存管理和 I/O 缓冲，若操作系统同时也提供了 I/O 缓冲，则用于 I/O 的资源加倍。此外，对于一个执行大量顺序磁盘读操作的行为，LRU 算法删除旧页保持新页，而应用程序可能更需要旧页，此时 MFU 比 LRU 更高效。</li>
+<li>有些操作系统允许特殊程序绕过文件系统的数据结构，将磁盘视作逻辑块数组使用。这种数组称为 <strong>生磁盘（raw disk）</strong> ，针对这样的数组的 I/O 称为生 I/O。</li>
+</ul>
+<h2 id="缺段中断和处理（补充）"><a href="#缺段中断和处理（补充）" class="headerlink" title="缺段中断和处理（补充）"></a>缺段中断和处理（补充）</h2><ul>
+<li>使用分段内存管理时，CPU 要访问的指令/数据不在内存中会产生 <strong>缺段中断</strong> ，操作系统会通过如下流程处理缺少段 X 的事件：<ol>
+<li>考察内存中是否存在不小于 X 段长的空闲区，若存在则从该空闲区中为段 X 分配内存，转 4；</li>
+<li>若不存在，则考察内存中所有空闲区的总和是否小于 X 的段长，若总和大于 X 的段长则合并空闲区形成一个足够大的空闲区，并使用新空闲区为 X 分配内存，转 4；</li>
+<li>若空闲区总和仍小于 X 的段长，则按 FIFO 或 LRU 算法反复淘汰老段，形成一个长度不小于 X 段长的空闲区；</li>
+<li>将 X 段调入内存并修改段表</li>
+</ol>
+</li>
+</ul>
+<h1 id="帧分配与系统颠簸"><a href="#帧分配与系统颠簸" class="headerlink" title="帧分配与系统颠簸"></a>帧分配与系统颠簸</h1><h2 id="最少需要帧数"><a href="#最少需要帧数" class="headerlink" title="最少需要帧数"></a>最少需要帧数</h2><ul>
+<li>分配的帧不能超过可用帧的数量（除非存在页共享），但也不能少于满足进程继续运行的帧数（minimum number of frames）。分配帧数不能过少的原因包括：<ul>
+<li>性能：当分配给每个进程的帧数量减少时，页错误会增加从而减缓进程执行。</li>
+<li>页错误会导致指令重启：必须由足够的帧来容纳单条指令执行所需要的全部页。例如某台机器的机器指令都只有一个内存地址作为参数，此时至少需要一帧用于存储指令所在的页空间，还需要分配一帧用于存储指令引用的数据所在的页。如果此时允许一级间接引用（地址间接引用），则进程至少需要三个帧才能完成指令的执行，如果仅两帧可用，则进程将陷入无穷尽的页错误中。这种问题的最坏情况出现在允许多层间接引用的计算机中，对于多级引用，必须等到所有所需页都位于内存中指令才能执行，这种困难的解决方案是限制指令的间接引用级数，超出引用级数时触发陷阱。</li>
+</ul>
+</li>
+</ul>
+<h2 id="分配算法"><a href="#分配算法" class="headerlink" title="分配算法"></a>分配算法</h2><ul>
+<li><strong>平均分配（equal allocation）</strong> ：给每个进程一个平均值，剩余的帧放置在空闲帧缓冲池中； <strong>比例分配（proportional allocation）</strong> ：根据进程大小按比例分配内存。这两种分配方式，每个进程分配的数量都会随多道程序的级别而变化，当多道程序程度增加时，每个进程都需要失去一定数量的帧来提供给新进程，同理，多道程序程度降低时离开进程占有的帧可以分配给剩余的进程。</li>
+<li>比例分配可以根据进程的优先级（或者是优先级和大小的结合）而不是进程的大小来分配，这样可以给高优先级的进程更多的内存以加速执行。</li>
+<li>多个进程竞争帧时，可将页置换算法分为 <strong>全局置换（global replacement）</strong> 和 <strong>局部置换（local replacement）</strong> 。全局置换允许进程从所有帧的集合（包括其他进程持有的帧）中选择置换帧，这将导致某个进程所获得的帧的数量可能改变（从其他进程处选择了一个帧置换）；而局部置换只能允许进程选择分配给自己的某个帧，此时分配给每个进程的帧数量保持不变。</li>
+<li>全局置换算法的一个问题在于进程不能控制自己的页错误率，进程位于内存的页集合会受到其他进程调页行为的影响。此外，相同进程执行所需的时间在不同环境下可能有很大差异。但由于局部置换不能使用其他进程不常用的内存，所以全局置换有更好的系统吞吐量，因此更为常用。</li>
+</ul>
+<h2 id="系统颠簸"><a href="#系统颠簸" class="headerlink" title="系统颠簸"></a>系统颠簸</h2><ul>
+<li>当低优先级进程分配的帧数量少于体系结构所需的最少数量时，进程应当暂停执行并且换出分配的剩余帧，以使其他进程能够使用这部分帧空间。</li>
+<li>对于分配帧数不足的进程，当进程缺少所需的页时触发页错误，此时必须置换某个页。如果当前所有页对于这个进程而言都是需要使用的页，则它置换出一个页后，又立刻需要这个页，因此它将频繁产生页错误并触发页调度行为。这称为 <strong>点播（thrashing）</strong> ： <strong>如果一个进程在换页上用的时间多于执行时间，则这个进程在颠簸</strong> 。</li>
+<li>系统颠簸的原因在于：操作系统监控 CPU 使用率，CPU 利用率过低时会引入新进程来增加多道程序程度。然而，采用全局置换算法时，一个进程会置换任意进程的帧，这可能导致被换出页所属的进程也触发页错误，它们会再从其他进程中获取帧。 <strong>这些链式反应带来的页调度行为将使进程排队等待换页设备，就绪队列变空，CPU 使用率降低，导致 CPU 调度程序随之增加多道程序程度，新进程将引发更多的页错误，CPU 使用率进一步降低</strong> 。系统颠簸现象如下图。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/system-thrashing.png" width="250px"></li>
+<li>随着多道程序程度增加，CPU 使用率增加直到最大值，之后开始系统颠簸，此时必须降低多道程序程度才能增加 CPU 使用率并降低系统颠簸。 <strong>局部置换算法（local replacement algorithm）</strong> ，也称 <strong>优先置换算法（priority replacement）</strong> 可以限制系统颠簸：如果一个进程开始颠簸，则它不能从其它进程获得帧，但问题未得到彻底解决，一个进程颠簸时会花费大量时间等待调页设备，这将导致调页设备的平均等待队列变长，页错误的平均等待时间增加，此时其它未颠簸进程的有效访问时间也会增加。</li>
+<li>要 <strong>防止颠簸</strong> ，必须给进程提供足够多的帧。 <strong>局部模型（locality model）</strong> 可以帮助确定进程实际正在使用多少帧，该模型说明，进程执行时在局部之间移动。 <strong>局部是进程经常使用的页的集合，进程由多个不同局部组成且局部之间可能重叠</strong> 。如果进程分配的帧数小于现有局部的大小，则进程会颠簸，因为它无法把所有常用页都放置在内存中。例如，进程调用了一个子程序，则其进入新的局部，这个新局部中的内存引用包括子程序的指令、局部变量以及子程序使用到的部分全局变量；当子程序退出时，进程从该局部返回主程序的局部（也可能在之后再次调用子程序进入该局部）。因此，局部是由程序和数据结构定义的，它是缓存的基础（cache、LRU 置换算法其实也都是基于局部性原理，在访问序列完全随机的情况下性能甚至不如 FIFO 算法），如果对任意数据访问完全随机而没有局部性原理，则缓存完全无用。</li>
+</ul>
+<h2 id="工作集合模型"><a href="#工作集合模型" class="headerlink" title="工作集合模型"></a>工作集合模型</h2><ul>
+<li><strong>工作集合模型（working-set model）</strong> 基于局部性假设，使用参数 Δ 定义 <strong>工作集合窗口（working-set window）</strong> ，其思想是检查最近 Δ 个页的引用，这最近 Δ 个引用页的集合称为工作集合。工作集合是程序局部的近似：一个正在使用的页位于工作集合中，一旦它已经 Δ 个时间单位未被使用，则会从工作集合中删除。</li>
+<li>工作集合的精确度和 Δ 有关，Δ 太小则无法包含整个局部，过大则可能包含多个局部。工作集合最重要的属性是它的大小，系统内每个进程的工作集合大小 <code>WSSi</code> 之和 <code>D</code> 就是所有进程总的帧需求量，每个进程都会经常使用位于其工作集合内的页。当 <code>D &gt; m</code> （<code>m</code> 是系统最大可用帧数量）时，就会有进程得不到足够的帧从而出现颠簸。</li>
+<li>使用工作集合模型的内存分配过程如下：操作系统跟踪每个进程的工作集合，并给每个进程分配大于其工作集合大小的帧数。如果尚有空闲帧则可加入新进程；如果需要分配的帧数大于可用帧数，则操作系统选择、暂停一个进程，这个进程的所有页写出到备份存储，其已经占有的帧会被分配给其他进程。</li>
+<li>工作集合模型的难点在于 <strong>跟踪</strong> ，每次内存引用都会增加新引用并丢弃老引用。 <strong>固定定时中断和引用位可以近似模拟工作集合模型</strong> 。例如 <code>Δ = 10000</code> 时，每 5000 个引用就产生一次定时中断，中断触发时将所有页的引用位复制，复制完成后清除。当发生页错误，系统检查当前的引用位和位于内存中的两个位（每次中断复制一位，10000 次引用中断 2 次因此复制了两个位）从而确定这一页是否在过去的 10000~15000 个引用中出现过（只要有至少一位为 1 就说明使用过，否则都为 0），若出现则认为该页在工作集合中。这种模拟并不很准确，因为无法准确获取该页究竟在 5000 个引用中的具体哪个位置出现，增加中断频率和历史位的位数可以提高准确性，但相应的也会增加中断处理时间。</li>
+</ul>
+<h2 id="页错误频率"><a href="#页错误频率" class="headerlink" title="页错误频率"></a>页错误频率</h2><ul>
+<li>工作集合模型更适合用于预先调页，将其应用于控制颠簸有些不太灵活。 <strong>页错误频率（page-fault frequency，PFF）</strong> 策略能够通过测量、控制页错误率来更好的防止颠簸：颠簸有较高的页错误率，较高的页错误率说明进程需要更多帧，过低的页错误率说明进程可能分配了太多的帧。可以为页错误率设置上限和下限，超过上限就为进程分配更多帧，低于下限则移走帧。当页错误率过高而没有可用帧时，仍需要暂停一个进程并将其占有的帧释放、分配给具有过高页错误率的进程。</li>
+<li>进程的工作集合和页错误率之间有直接关系，当进程从一个局部迁移到另一个局部时，工作集合改变，页错误率会进入波峰，随着需要调入的页逐步调入内存，页错误率又会下降。一个波峰的开始到下一个波峰的开始显示了工作集合的迁移。</li>
+</ul>
+<h1 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h1><h2 id="内存映射文件"><a href="#内存映射文件" class="headerlink" title="内存映射文件"></a>内存映射文件</h2><ul>
+<li>通过虚拟内存技术将文件 I/O 作为普通内存访问的方法称为文件的 <strong>内存映射（memory mapping）</strong> 。文件的内存映射将一个磁盘块映射成内存的一页（或多页），开始时文件访问和普通的请求界面调度相同，并且产生页错误，这样一页大小的部分文件就会从文件系统读入到物理内存中（部分系统一次会读入多页大小内容）。通过内存操作文件而不是系统调用 <code>read()</code> 和 <code>write()</code> 能够简化文件访问和使用。</li>
+<li>对映射到内存中的文件做写操作可能不会立刻写回到磁盘文件中。有的操作系统定期检查文件在内存中的映射是否被修改，并据此决定是否需要将内存的数据更新到磁盘上。关闭文件必然会导致内存映射的数据写回磁盘，同时从进程的虚拟内存中删除。</li>
+<li>部分操作系统只能通过特定的系统调用提供内存映射，通过标准的系统调用处理所有其它的文件 I/O 请求；有的操作系统则一律将文件 I/O 视作内存映射，例如 Solaris 系统会将标明为内存映射的文件映射到进程的地址空间中，而对于采用普通系统调用（<code>read</code>、<code>open</code> 以及 <code>write</code>）访问的文件，Solaris 也会做内存映射，不过目标是内核地址空间。</li>
+<li>一个文件可以同时映射到多个进程的虚拟地址空间中以实现 <strong>数据共享</strong> ：任何一个进程对共享虚拟内存中数据的修改都会被那些同样映射了这部分文件的进程看见（注意这里是为了实现数据共享，因此才允许多个进程修改同一页）。每个共享进程的虚拟内存表指向了物理内存的同一页。内存映射也支持写时复制，进程可以共享只读模式的文件，对于需要改动的数据，进程需要维护各自独立的副本。</li>
+<li>其他设备的 I/O 操作也可以通过内存映射的方式：操作系统将一组内存地址专门映射到设备寄存器，对这些内存地址的读写等同于对设备寄存器的读写，即 I/O 端口。CPU 和设备之间传递数据可以通过轮询或中断。轮询方式指 CPU 不断查询控制位判断接收设备是否准备就绪；中断驱动则由接收设备通知 CPU 数据已经就绪。</li>
+</ul>
+<h2 id="内核内存分配"><a href="#内核内存分配" class="headerlink" title="内核内存分配"></a>内核内存分配</h2><ul>
+<li>普通用户进程获取额外内存时是从内核维护的空闲页帧链表中获取，该链表由页替换算法更新，这些页帧往往分散在物理内存中。</li>
+<li>内核内存的分配通常从空闲内存池获取而非从普通用户进程的内存链表获取，原因：<ul>
+<li>内核腰围不同大小的数据结构分配内存，有些数据结构远不到一页的大小。很多操作系统的内核代码并不受分页系统控制，内核可以也必须谨慎分配内存并尽量降低碎片浪费。</li>
+<li>用户进程分配的页不一定非要在连续的物理内存中，但操作系统需要和硬件交流，需要内存常驻在连续的物理内存帧中。</li>
+</ul>
+</li>
+<li><strong>Buddy 系统（Buddy system）</strong> 将物理上连续并且大小固定的段划分成 2 的幂（4KB、8KB、16KB等），如果请求大小不为 2 的幂，实际分配的内存大小也会是 2 的幂。例如请求 11KB 将会得到 16KB。Buddy 系统的分配通过不断切割实现，例如内存段大小 256 KB，申请 21 KB，则将内存段不断划分成两半，最终得到一个 32KB 的小段满足 21KB 请求。其优缺点如下：<ul>
+<li>优点：可通过合并快速形成更大的段，例如上面分配的 32KB 内存释放后可以立刻得到原始的 256KB 段</li>
+<li>缺点：碎片，可能有 50% 的内存因为碎片而浪费</li>
+</ul>
+</li>
+<li><strong>slab 分配</strong> ：slab 由一个或多个 <strong>物理上</strong> 连续的页组成，高速缓存 <strong>含有</strong> 一个或多个 slab。每个内核数据结构都有一个 cache （如进程描述符 cache 只存储进程描述符对象、文件对象和信号量等以此类推），每个 cache <strong>包含</strong> 内核数据结构的 <strong>对象实例</strong> 。 slab 算法用 cache 存储内核对象，cache 创建之初会初始化一系列空闲的内核对象，这些对象的数量和 slab 的大小有关（例如 12KB 的 slab 可存储 4 个 3KB 大小的内核对象）。一旦操作系统需要内核结构的对象，就可以直接从 cache 上获取一个空闲的并将其标注为 <strong>已使用（used）</strong> 。下面这张图需要注意的地方有，物理内存连续分配，实线（带箭头）表示包含关系，每个 cache 都存储了一类内核数据结构对象：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/cache-slab-objects.png" width="400px"></li>
+<li>Linux 下的 slab 有三种状态：满的（slab 中所有对象都标记为使用），空的（均为空闲）以及部分。slab 分配的分配流程如下：首先从部分空闲的 slab 分配，若没有则从空的 slab 分配，如果仍没有则从 <strong>物理连续页</strong> 上分配新的 slab 并将其交付给一个 cache，并从新 slab 分配空间。其优点主要有：<ul>
+<li>没有因为碎片引起的内存浪费。每个内核数据结构都有与自己的结构相对应的 cache，而每个 cache 由若干个 slab 组成， <strong>每个 slab 又可分为若干个和对象大小相等的部分</strong> ，所以内核请求对象所获得的内存刚好和对象大小一致；</li>
+<li>slab 中的对象预先创建，可以直接从 cache 快速分配。因为操作系统经常分配、释放内存，使用 slab 分配能够更快地使内存请求得到响应，用完对象释放时也只需要将内核对象标记为空闲并返回给  cache。</li>
+</ul>
+</li>
+</ul>
+<h2 id="更多方面的考虑"><a href="#更多方面的考虑" class="headerlink" title="更多方面的考虑"></a>更多方面的考虑</h2><ul>
+<li><strong>预调页（prepaging）</strong> ：当进程开始时，所有页都在磁盘上，每个页都需要通过页错误来调入内存。预调页同时将所需要的所有页一起调入内存，从而阻止了大量的页错误。部分操作系统如 Solaris 对小文件就采取预调页调度。实际应用中，例如对于采用工作集合模型的系统，可以为每个进程维护一个当前工作集合中的页的列表，如果进程在暂停之后需要重启时，根据这个列表使用预调页将所有工作集合中的页一次性调入内存。预调页有时效果比较好，但成本不一定小于不使用预调页时发生页错误的成本，有很多预调页调入内存的页可能没有被使用。</li>
+<li><strong>页大小（page size）</strong> ：许多因素会影响页面大小，不存在单一的最佳页大小。页面大小总为 2 的幂，通常在 <code>2^12</code> 到 <code>2^22</code> 字节之间（4KB ~ 4MB）。页面大小的考虑主要涉及如下几点，现代操作系统倾向于使用更大的页面：<ul>
+<li>更大的页面大小能够减少页数量，从而减小页表大小；</li>
+<li>更小的页面大小能够更好的利用内存，减少碎片；</li>
+<li>页读写所需要的时间：传输时间和传输量（页大小）成正比，看起来似乎小页面更好，但实际上磁盘的寻道、延迟时间远超过传输时间，因此为了最小化 I/O 时间，需要采用较大的页；</li>
+<li>局部性：采用较小的页能够更精准的定位程序局部，从而降低总的 I/O 量；</li>
+<li>页错误数量：页面大小过小时，页错误会触发的更加频繁，页错误会带来大量的额外开销（处理中断、保存寄存器、置换页、排队等待调页设备、更新表），为了减少页错误数量，需要较大的页。</li>
+</ul>
+</li>
+<li><strong>TLB 范围（reach）</strong> ：指通过 TLB 可访问的内存量，即 TLB 能够存储的条数和页面大小的乘积。理想情况下一个进程的全部工作集合都位于 TLB 中才能够减少地址转换、查页表浪费的时间，但是对于需要使用大量内存的应用程序，TLB 大小不足以存储全部局部。增加 TLB 范围可以通过增加 TLB 条数，也可以通过增加页面大小。增加页大小会带来更大的碎片，另一种选择是使用不同大小的页（如 UltraSPARC 支持 8、64、512KB 和 4MB 的不同大小的页面），对于绝大多数程序而言 8KB 的页足够，部分其它应用程序如数据库可以利用 4MB 大小的页。注意，现代操作系统趋势是不同大小的页由操作系统而不是硬件来管理，软件管理必然也会影响性能（PowerPC 和 Pentium 用硬件管理 TLB）。</li>
+<li><strong>程序结构</strong> ：用户应当对按需调页足够了解，以使程序结构更好的适应系统，例如一个页大小为 128B 的系统按行存储数组，则下面的两类代码中，上面的代码会触发 <code>128 x 128 = 16384</code> 次页错误，而下面的代码只会触发 128 次。程序设计语言的特性对调页也会有影响，例如 C 和 C++ 经常使用指针，指针趋向于使内存访问随机，从而导致进程的局部性变差。此外， <strong>OOP 思想设计的程序引用的局部性也较差</strong> 。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> data[<span class="number">128</span>][<span class="number">128</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">128</span>; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j =<span class="number">0</span>; j &lt; <span class="number">128</span>; j++)</span><br><span class="line">        data[j][i] = <span class="number">0</span>;    <span class="comment">// 每个字节都会触发一次，共 16384 次</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">128</span>; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j =<span class="number">0</span>; j &lt; <span class="number">128</span>; j++)</span><br><span class="line">        data[i][j] = <span class="number">0</span>;    <span class="comment">// 每行触发一次，共128 次</span></span><br></pre></td></tr></table></figure>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><ul>
+<li>设计程序模拟 FIFO 和 LRU 页置换算法。我对此问题编写的代码可在 <a href="https://github.com/Forec/course-design/tree/master/operating-system/%E6%8D%A2%E9%A1%B5%E7%AE%97%E6%B3%95" target="_blank" rel="external">此处</a> 获取，其中包括一个基类 <code>BASIC</code> 和两个子类 <code>FIFO</code>、<code>LRU</code>。其它类型换页算法可以通过继承 <code>BASIC</code> 并重写 <code>swapIn()</code> 方法完成。</li>
+</ul>
+<hr>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2017/01/03/os-concepts-8/" target="_blank" rel="external">操作系统（八）：内存管理</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2017/01/05/os-concepts-10/" target="_blank" rel="external">操作系统（十）：文件系统接口</a>    </p>
+<p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/01/04/os-concepts-9/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/01/04/os-concepts-9/" target="_blank" rel="external">http://blog.forec.cn/2017/01/04/os-concepts-9/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2017/01/04/os-concepts-9/" data-id="cixqa3m700000b4ewna33k1au" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2017/01/04/os-concepts-9/" data-title="操作系统（九）：虚拟内存" data-url="http://forec.github.io/2017/01/04/os-concepts-9/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/01/05/os-concepts-10/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            操作系统（十）：文件系统接口
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2017/01/03/os-concepts-8/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">操作系统（八）：内存管理</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/06/os-concepts-13/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg)" alt="操作系统（十三）：I/O 输入系统" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/06/os-concepts-13/" class="title">操作系统（十三）：I/O 输入系统</a></p>
+                            <p class="item-date"><time datetime="2017-01-06T04:17:33.000Z" itemprop="datePublished">2017-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/05/os-concepts-12/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-12.jpg)" alt="操作系统（十二）：大容量存储器结构" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/05/os-concepts-12/" class="title">操作系统（十二）：大容量存储器结构</a></p>
+                            <p class="item-date"><time datetime="2017-01-05T15:23:30.000Z" itemprop="datePublished">2017-01-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/05/os-concepts-11/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-11.jpg)" alt="操作系统（十一）：文件系统实现" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/05/os-concepts-11/" class="title">操作系统（十一）：文件系统实现</a></p>
+                            <p class="item-date"><time datetime="2017-01-05T09:11:59.000Z" itemprop="datePublished">2017-01-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/05/os-concepts-10/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-10.jpg)" alt="操作系统（十）：文件系统接口" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/05/os-concepts-10/" class="title">操作系统（十）：文件系统接口</a></p>
+                            <p class="item-date"><time datetime="2017-01-05T03:55:47.000Z" itemprop="datePublished">2017-01-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/04/os-concepts-9/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-9.jpg)" alt="操作系统（九）：虚拟内存" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/04/os-concepts-9/" class="title">操作系统（九）：虚拟内存</a></p>
+                            <p class="item-date"><time datetime="2017-01-03T16:42:29.000Z" itemprop="datePublished">2017-01-04</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">19</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 11.82px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.36px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 10.91px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.64px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 12.73px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19.09px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10.91px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15.45px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.55px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 10.91px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 10.91px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.27px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 13.64px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>京ICP备16060806号-1 &copy; 2017 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>

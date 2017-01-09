@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第十一章文件系统实现部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-11.jpg">
-<meta property="og:updated_time" content="2017-01-05T15:37:01.809Z">
+<meta property="og:updated_time" content="2017-01-09T14:43:48.280Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（十一）：文件系统实现">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第十一章文件系统实现部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -196,7 +196,7 @@
 <li>每个文件系统的目录结构，这些目录结构用于组织文件。UFS 中目录结构包括文件名和相关的索引节点号，NTFS 则保存在主控文件表中。</li>
 </ul>
 </li>
-<li>内存内信息用于文件系统管理，可以通过缓存来提高性能。这部分数据在文件系统挂载（安装）的时候被加在，文件系统卸载的时候丢弃，可能包括：<ul>
+<li>内存内信息用于文件系统管理，可以通过缓存来提高性能。这部分数据在文件系统挂载（安装）的时候被加载，文件系统卸载的时候丢弃，可能包括：<ul>
 <li>内存中的安装表，含有所有已安装卷的信息</li>
 <li>内存中的目录结构缓存，保存最近访问过的目录信息</li>
 <li><strong>系统范围内的打开文件表</strong> ，在 <a href="http://blog.forec.cn/2017/01/05/os-concepts-10/" target="_blank" rel="external">文件系统接口</a> 中介绍过，包括每个打开文件的 FCB 副本和其它信息</li>
@@ -314,7 +314,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/01/05/os-concepts-11/" data-id="cixpiiuat003km0ewyoawjwzt" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/01/05/os-concepts-11/" data-id="cixqa25rp003nd8ewr2i5edeo" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -597,10 +597,10 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2016/12/03/zenith-cloud-7/" class="thumbnail">
+                            <a href="/2017/01/04/os-concepts-9/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/zenith-cloud-7.png)" alt="顶点云（应用）用户代理" class="thumbnail-image"></span>
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-9.jpg)" alt="操作系统（九）：虚拟内存" class="thumbnail-image"></span>
     
     
 </a>
@@ -608,9 +608,9 @@
                         </div>
                         
                         <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2016/12/03/zenith-cloud-7/" class="title">顶点云（应用）用户代理</a></p>
-                            <p class="item-date"><time datetime="2016-12-03T13:44:07.000Z" itemprop="datePublished">2016-12-03</time></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/04/os-concepts-9/" class="title">操作系统（九）：虚拟内存</a></p>
+                            <p class="item-date"><time datetime="2017-01-03T16:42:29.000Z" itemprop="datePublished">2017-01-04</time></p>
                         </div>
                     </li>
                 
@@ -623,7 +623,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">17</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">19</span></li></ul>
         </div>
     </div>
 
