@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>操作系统（专题）：信号量编程（上） | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="OS" />
+    
+    <meta name="description" content="此部分主要包括原书第六章（进程同步）和第七章（死锁）的部分习题（有些不属于考试范围），以及一些简单信号量编程习题（低于考试难度）的分析。这部分习题的解答均根据我个人理解编写或翻译， 不保证提供的答案绝对正确或最优 。稍微复杂一些的信号量编程在 《信号量编程（下）》。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统（专题）：信号量编程（上）">
+<meta property="og:url" content="http://forec.github.io/2017/01/06/os-concetps-14/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="此部分主要包括原书第六章（进程同步）和第七章（死锁）的部分习题（有些不属于考试范围），以及一些简单信号量编程习题（低于考试难度）的分析。这部分习题的解答均根据我个人理解编写或翻译， 不保证提供的答案绝对正确或最优 。稍微复杂一些的信号量编程在 《信号量编程（下）》。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-14-r.jpg">
+<meta property="og:updated_time" content="2017-01-10T18:21:45.579Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统（专题）：信号量编程（上）">
+<meta name="twitter:description" content="此部分主要包括原书第六章（进程同步）和第七章（死锁）的部分习题（有些不属于考试范围），以及一些简单信号量编程习题（低于考试难度）的分析。这部分习题的解答均根据我个人理解编写或翻译， 不保证提供的答案绝对正确或最优 。稍微复杂一些的信号量编程在 《信号量编程（下）》。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/apis/index.html">API</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-os-concetps-14" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        操作系统（专题）：信号量编程（上）
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2017/01/06/os-concetps-14/" class="article-date">
+    <time datetime="2017-01-06T09:21:43.000Z" itemprop="datePublished">2017-01-06</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>此部分主要包括原书第六章（进程同步）和第七章（死锁）的部分习题（有些不属于考试范围），以及一些简单信号量编程习题（低于考试难度）的分析。这部分习题的解答均根据我个人理解编写或翻译， <strong>不保证提供的答案绝对正确或最优</strong> 。稍微复杂一些的信号量编程在 《<a href="http://blog.forec.cn/2017/01/08/os-concepts-15/" target="_blank" rel="external">信号量编程（下）</a>》。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="原书选题"><a href="#原书选题" class="headerlink" title="原书选题"></a>原书选题</h1><p>课后习题的解答主要是我对原书答案的翻译和解释。此外：</p>
+<ul>
+<li><strong>“进程同步”中，第 6 题之后（含第 6 题）超出考试范围</strong> </li>
+<li><strong>“死锁”中，第 5 题超出考试范围</strong> </li>
+</ul>
+<h2 id="进程同步"><a href="#进程同步" class="headerlink" title="进程同步"></a>进程同步</h2><ol>
+<li>证明 <a href="http://blog.forec.cn/2016/11/24/os-concepts-4/" target="_blank" rel="external">进程互斥</a> 中介绍的 <strong>Peterson 算法</strong> 满足临界区的三个要求。<ul>
+<li>参考 <a href="http://blog.forec.cn/2016/11/24/os-concepts-4/#Peterson 算法" target="_blank" rel="external">进程互斥 - Peterson 算法</a> 。</li>
+</ul>
+</li>
+<li>什么是 <strong>忙等待（busy waiting）</strong> ？操作系统中还有哪些等待方式？忙等待可以被完全避免吗？<ul>
+<li>忙等待意味着进程在等待一个条件被满足，并且进程在等待的过程中仍然不放弃对 CPU 的控制（如通过 <code>while</code> 循环不断判断条件是否被满足）。</li>
+<li>操作系统可以在一个进程等待某条件时将 CPU 控制权限交给其他进程，而等待的进程可以在将来某个合适的、条件满足的情况下被唤醒。</li>
+<li>忙等待可以被避免，但需要在进程的调度上花费更多的资源。等待进程需要被挂起，等到进程等待的条件满足时再唤醒。</li>
+</ul>
+</li>
+<li>试解释为什么 <strong>自旋锁（旋转锁，spinlock）</strong> 不适合单处理器系统，但在多处理器系统中很常用。<ul>
+<li>对于单处理器系统：一个进程使用自旋锁等待条件时仍然占据着唯一的 CPU，其他进程得不到执行，而占据 CPU 的进程等待的条件需要其它进程的执行才能得到满足。</li>
+<li>对于多处理器系统：进程使用自旋锁时占据着一个 CPU 资源，而其他进程可以在剩余的 CPU 上运转，并且改变某些数据从而使停滞在旋转锁的进程的等待条件得到满足。</li>
+</ul>
+</li>
+<li>试解释为什么在单处理器系统的用户进程中通过屏蔽中断来实现同步是不合理的。<ul>
+<li>如果用户进程具有屏蔽中断的权限，那么它可以同样屏蔽计时器中断，没有时钟中断则分派程序无法运行，进程会无限执行。</li>
+</ul>
+</li>
+<li>试解释为什么在多处理器系统系统中无法通过屏蔽中断来实现同步。<ul>
+<li>屏蔽中断仅仅阻止其他进程在被屏蔽了中断的处理器上运行，其他进程可能在其它处理器上运行。</li>
+</ul>
+</li>
+<li><p>试在多处理器环境下通过 <code>TestAndSet()</code> 指令实现 <code>wait()</code> 和 <code>signal()</code> 信号量操作。</p>
+<ul>
+<li>初始定义 <code>int semaphore_value = 0</code> 表示当前信号量剩余资源，定义 <code>bool guard = TRUE</code> 保证对 <code>semaphore_value</code> 的互斥修改。<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">void wait()&#123;</span><br><span class="line">    while (TestAndSet(&amp;guard) == TRUE);</span><br><span class="line">    if (semaphore_value == 0)&#123;</span><br><span class="line">        // 暂时没有资源可用，将进程挂起到信号量队列中</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        semaphore_value --;</span><br><span class="line">    &#125;</span><br><span class="line">    guard = FALSE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void signal()&#123;</span><br><span class="line">    while (TestAndSet(&amp;guard) == TRUE);</span><br><span class="line">    if (semaphore_value == 0 &amp;&amp;</span><br><span class="line">        there's a process waiting in the queue)&#123;</span><br><span class="line">        // 信号量资源数为 0 并且有进程挂起在信号量中</span><br><span class="line">        // 唤醒该进程</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        semaphore_value ++;</span><br><span class="line">    &#125;</span><br><span class="line">    guard = FALSE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>证明 <strong>管程（monitor）</strong> 和信号量可以互相实现。</p>
+<ul>
+<li><a href="http://blog.forec.cn/2016/11/24/os-concepts-6/#使用信号量实现管程" target="_blank" rel="external">操作系统（六）：管程 - 使用信号量实现管程</a></li>
+<li>使用管程实现信号量：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">monitor semaphore &#123;</span><br><span class="line">    <span class="keyword">int</span> value = <span class="number">0</span>;</span><br><span class="line">    condition c;</span><br><span class="line">    </span><br><span class="line">    signal() &#123;</span><br><span class="line">        value ++;</span><br><span class="line">        c.signal();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    wait() &#123;</span><br><span class="line">        <span class="keyword">while</span> (value == <span class="number">0</span>)</span><br><span class="line">            c.wait();    <span class="comment">// 注意体会此处 while 而非 if 的意义</span></span><br><span class="line">        value --;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>使用管程实现有限缓冲的生产者 - 消费者模型。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">monitor bounded_buffer &#123;</span><br><span class="line">    <span class="keyword">int</span> items[MAX_ITEMS];    <span class="comment">// 生产的资源缓冲区</span></span><br><span class="line">    <span class="keyword">int</span> numItems = <span class="number">0</span>;        <span class="comment">// 缓冲区内当前资源数目</span></span><br><span class="line">    condition full, empty;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">produce</span><span class="params">(<span class="keyword">int</span> v)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (numItems == MAX_ITEMS)</span><br><span class="line">            full.wait();     <span class="comment">// 缓冲区满时将生产者挂起到条件变量 full</span></span><br><span class="line">        items[numItems++] = v;</span><br><span class="line">        empty.signal();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">consume</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> retVal;          <span class="comment">// 临时变量保存返回值</span></span><br><span class="line">        <span class="keyword">while</span> (numItems == <span class="number">0</span>)</span><br><span class="line">            empty.wait();    <span class="comment">// 缓冲区为空将消费者挂起到条件变量 empty</span></span><br><span class="line">        retVal = items[--numItems];</span><br><span class="line">        full.signal();</span><br><span class="line">        <span class="keyword">return</span> retVal;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>试提出一种解决读者-写者问题中饥饿现象的方法。</p>
+<ul>
+<li>第 3 类读者-写者问题的一种解答：<a href="http://blog.forec.cn/2016/11/24/os-concepts-5/#第三读者-写者问题" target="_blank" rel="external">操作系统（五）：进程同步 - 第三读者-写者问题</a></li>
+<li>另一种方案：每个读者/写者都保留开始等待时刻的时间戳，当一个写者完成写任务后，会唤醒等待时间最长的进程。当有读者正在临界区内而有新读者到来时，新读者必须在没有写者在等待的情况下才能也进入临界区。</li>
+</ul>
+</li>
+<li>信号量的 <code>signal()</code> 和管程中条件变量 <code>signal</code> 操作的区别。<ul>
+<li>如 <a href="http://blog.forec.cn/2016/11/24/os-concepts-6/" target="_blank" rel="external">操作系统（六）：管程</a> 所讲，管程模式下的 <code>x.signal()</code> 和信号量的 <code>signal()</code> 区别在于： <strong>信号量操作 <code>signal()</code> 会影响信号量的状态</strong> ，而管程下的 <code>x.signal()</code> 在 x 不存在挂起进程的情况下没有任何影响。</li>
+</ul>
+</li>
+<li>一个系统包含 n 个进程 P1~n，每个进程都有唯一的优先级编号，共有 3 台打印机供这 n 个进程使用。试通过管程实现按优先级调度的资源分配。<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">monitor printers &#123;</span><br><span class="line">    <span class="keyword">int</span> num_avail = <span class="number">3</span>;    <span class="comment">// 可用资源数量</span></span><br><span class="line">    <span class="keyword">int</span> num_waiting;      <span class="comment">// 等待进程数量</span></span><br><span class="line">    <span class="keyword">int</span> waiting_processes[MAX_PROCS];    <span class="comment">// 等待进程列表</span></span><br><span class="line">    condition c;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">request_printer</span><span class="params">(<span class="keyword">int</span> proc_number)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (num_avail &gt; <span class="number">0</span>) &#123;        <span class="comment">// 有资源可分配则进程直接获得</span></span><br><span class="line">            num_avail --;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        waiting_processes[num_waiting] = proc_number;</span><br><span class="line">        num_waiting++;</span><br><span class="line">        sort(waiting_processes);</span><br><span class="line">        <span class="keyword">while</span> (num_avail == <span class="number">0</span> &amp;&amp; </span><br><span class="line">            waiting_processes[<span class="number">0</span>] != proc_number)</span><br><span class="line">            <span class="comment">// 当可用资源数量为 0 并且当前进程不处于等待队列的第一位</span></span><br><span class="line">            c.wait();</span><br><span class="line">        waiting_processes[<span class="number">0</span>] = waiting_processes[--num_waiting];</span><br><span class="line">        sort(waiting_processes);</span><br><span class="line">        num_avail--;    <span class="comment">// 使用一个资源</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">release_printer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        num_avail ++;</span><br><span class="line">        c.signal();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h2><ol>
+<li>考虑教材 7.1 描述的交通死锁问题（如下图所示），试说明死锁发生的四个必要条件在这个问题中均得到满足，并简述在这个问题中避免死锁的方案。（原书 7.1）<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/deadlock-traffic.jpg" width="400px"><ul>
+<li>死锁发生的四个必要条件分别是：互斥、占有并等待、非抢占和循环等待。因为只有一条道路的每个位置上只能由一辆车占据，故满足资源互斥；当一辆车占据道路上某个位置时，它必须等待前面的车移动（获取新位置）才可以移动，，即占有并等待；一辆车不能被移开，故此系统为非抢占；每个车都在等待前面的车移动，每个十字路口的车辆则循环等待下一个十字路口的车辆移动，故循环等待。</li>
+<li>一个简单的方案是：当十字路口已存在车辆时，新到来的车辆不能进入十字路口。</li>
+</ul>
+</li>
+<li>在真实计算机系统中，无论是可用资源还是进程对资源的需求都会随着时间的推移而改变。假设现在系统处于安全状态（通过银行家算法计算出），那么对于下面的几种改变，哪些改变执行之后一定能维持系统的安全状态？（原书 7.5）<ul>
+<li>增加可用资源：维持安全状态</li>
+<li>减少可用资源：可能导致死锁，因为银行家算法计算出的安全状态是基于改变前的资源数量</li>
+<li>增加某个进程所需要的最大资源数量：可能导致死锁，理由同上</li>
+<li>减少某个进程所需要的最大资源数量：维持安全状态</li>
+<li>增加进程数量：可能导致死锁，理由同上</li>
+<li>减少进程数量：维持安全状态，进程退出竞争必然使可用资源增加或保持不变</li>
+</ul>
+</li>
+<li>一个系统有四个相同类型的资源，它们被三个进程同时共享，每个进程最多需要两个资源。试证明这个系统不会发生死锁。（原书 7.6）<ul>
+<li>假设系统发生死锁，则必然满足占有并等待和循环等待的条件。故每个进程都持有一个资源（若持有两个则已经满足要求，可以运行结束并释放），并且每个进程都在等待下一个资源。根据狄利克雷抽屉原理，四个资源分配给三个进程，必然有一个进程获得两个资源，这个进程必然可以执行完毕，然后释放持有的全部资源以使其它进程得以执行。</li>
+</ul>
+</li>
+<li>一个系统有 m 个相同类型的资源，它们被 n 个进程同时共享。在每个时刻，进程只能至多申请或者释放一个资源。假设系统满足以下两个条件：每个进程所需的最大资源数量在 1~m 个之间、所有进程的最大资源需求数量之和小于 m+n 个，试证明这个系统不会发生死锁。（原书 7.7）<ul>
+<li>解答 1：每个进程尚需的资源向量 <code>Need[i,] = Max[i,] - Allocation[i,]</code>。假设存在死锁，则必有 <code>Σ(i = 1 to n) Allocation[i,] = m</code> ，即所有资源都已经分配，没有资源空闲。</li>
+<li>因为进程所需的资源总和不超过 m+n·，故 <code>Σ Need[i,] + Σ Allocation[i,] = Σ Max[i,] &lt; m + n</code> ，和上式结合化简即为 <code>Σ Need[i,] &lt; n</code> 。</li>
+<li>因为 n 个进程所需的资源总数小于 n，意味着至少有一个进程 P 还需要 0 个资源，所以进程 P 能够执行到结束。又每个进程所需的最大资源数量不少于 1 个，故 P 执行结束后会释放至少一个资源。因此系统不会产生死锁。</li>
+<li>解答 2：假设系统正在发生死锁，则当前状态下的 m 个资源已经全部被 n 个进程所占用，而这 n 个进程还需要更多的资源才能继续运行，也就是说每个进程还需要至少一个资源。因此，系统内 n 个进程正常运行所需要的资源总和大于或等于 m+n，与题意矛盾。故系统不可能发生死锁。</li>
+</ul>
+</li>
+<li>一座桥连接了南北两个村庄，两个村庄的居民可以从桥上通过，但桥上不能同时承载两个人（无论同方向还是相向，这里原题中只要求不能同时相向行走）。使用信号量保证死锁和饥饿都不会发生。（原书 7.16）<ul>
+<li>注 1：如果将此题的限制改为两个方向的人依次行走，即南向北过桥后，下一次应当是北向南，则此问题等同于缓冲区大小为 1 的生产者-消费者问题。</li>
+<li>注 2：此题要求不会产生饥饿现象，则需要考虑两个方面，既要保证不能有一方一直持有过桥的权利，还要保证某一方过桥后，任何一方再次过桥不会依赖已过桥的居民影响（临界区问题的“发展”要求）。</li>
+<li><strong>注 3：此题是原书课后习题，课后的 7.15 和 7.16 是递进关系。《<a href="http://blog.forec.cn/2017/01/08/os-concepts-15/" target="_blank" rel="external">信号量编程（下）</a>》中北京大学 1992 年入学考试题（单向行驶问题）也与此题类似。我对该题又做了新的改动，本题的信号量解法以及改动后题目的相关分析均记录在 《<a href="http://blog.forec.cn/2017/01/08/os-concepts-16/" target="_blank" rel="external">互斥读者-读者问题</a>》，如果你有兴趣，欢迎与我讨论改动后题目的解法</strong> 。</li>
+<li>原书答案给出了管程解法，对其做了一定修改如下：</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">monitor bridge &#123;</span><br><span class="line">    <span class="keyword">int</span> num_waiting_north = <span class="number">0</span>;   <span class="comment">// 北方村庄等待过桥人数</span></span><br><span class="line">    <span class="keyword">int</span> num_waiting_south = <span class="number">0</span>;   <span class="comment">// 南方村庄等待过桥人数</span></span><br><span class="line">    <span class="keyword">int</span> prev = <span class="number">0</span>;                </span><br><span class="line">        <span class="comment">// prev 为 0 表示上一次上桥的人是北方居民，否则为南方居民</span></span><br><span class="line">    <span class="keyword">bool</span> on_bridge = FALSE;      <span class="comment">// 桥上是否有人</span></span><br><span class="line">    condition ok_to_cross;       <span class="comment">// 条件变量</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">enter_bridge_north</span><span class="params">()</span> </span>&#123;  <span class="comment">// 北方村庄居民试图过桥</span></span><br><span class="line">        num_waiting_north++;</span><br><span class="line">        <span class="keyword">while</span> (on_bridge ||      <span class="comment">// 桥上有人</span></span><br><span class="line">              (prev == <span class="number">0</span> &amp;&amp; num_waiting_south &gt; <span class="number">0</span>))</span><br><span class="line">               <span class="comment">// 或者上一次是北方居民过桥，且当前还有南方村庄居民在等待</span></span><br><span class="line">            ok_to_cross.wait();</span><br><span class="line">        num_waiting_north --;    <span class="comment">// 已上桥，北方村庄等待人数减少</span></span><br><span class="line">        prev = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">enter_bridge_south</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        num_waiting_south ++;</span><br><span class="line">        <span class="keyword">while</span> (on_bridge ||</span><br><span class="line">               prev == <span class="number">1</span> &amp;&amp; num_waiting_north &gt; <span class="number">0</span>))</span><br><span class="line">            ok_to_cross.wait();</span><br><span class="line">        num_waiting_south --;</span><br><span class="line">        prev = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">exit_bridge</span><span class="params">()</span> </span>&#123;         <span class="comment">// 南北居民离开后都调用此函数</span></span><br><span class="line">        on_bridge = FALSE;</span><br><span class="line">        ok_to_cross.signal();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="简单信号量编程"><a href="#简单信号量编程" class="headerlink" title="简单信号量编程"></a>简单信号量编程</h1><blockquote>
+<p>此部分习题选自 2000 年左右各高校的研究生入学考试题，题目均比较简单。</p>
+</blockquote>
+<h2 id="双车间零件装配"><a href="#双车间零件装配" class="headerlink" title="双车间零件装配"></a>双车间零件装配</h2><ul>
+<li>某工厂有两个生产车间和一个装配车间，两个生产车间分别生产 A，B 两种零件，装配车间的任务是把 A，B 两种零件组装成产品。每个车间生产完一个零件后都要把零件送到装配车间的货架 F1、F2 上，F1 存放零件 A，F2 存放零件 B，两个货架均可分别容纳 10 个零件。装配工人每次从货架上取出一个 A 零件和一个 B 零件然后组装成产品。请用信号量进行正确管理。</li>
+<li>此问题是生产者-消费者问题的变形，可以认为一个消费者（装配工人）和两个生产者（A，B车间）互斥使用两个缓冲区（F1、F2）。令 <code>mutex1</code> 和 <code>mutex2</code> 这两个互斥信号量控制对缓冲区的互斥操作，另外还需要 <code>empty1</code>、<code>empty2</code>、<code>full1</code>、<code>full2</code> 用来同步。</li>
+<li>代码如下</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 车间 A</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(empty1);</span><br><span class="line">    wait(mutex1);</span><br><span class="line">    <span class="comment">// 生产零件 A 并放入 F1</span></span><br><span class="line">    signal(mutex1);</span><br><span class="line">    signal(full);</span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 车间 B 和车间 A 对称</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 装配工人</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(full1);</span><br><span class="line">    wait(full2);</span><br><span class="line">    wait(mutex1);</span><br><span class="line">    wait(mutex2);</span><br><span class="line">    <span class="comment">// 取出零件 A 和 B</span></span><br><span class="line">    signal(mutex1);</span><br><span class="line">    signal(mutex2);</span><br><span class="line">    signal(empty1);</span><br><span class="line">    signal(empty2);</span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br></pre></td></tr></table></figure>
+<h2 id="和尚挑水问题"><a href="#和尚挑水问题" class="headerlink" title="和尚挑水问题"></a>和尚挑水问题</h2><ul>
+<li>（北京邮电大学 1998 年）某寺庙有老、小和尚若干，仅有一个水缸和一个水井。小和尚负责将水从井中挑到缸中以供老和尚引用。水缸可以容纳最多 10 桶水，水井口非常窄，每次只能容纳一个水桶取水。水桶总数有 3 各，每次小和尚挑水、倒入缸内只能使用一个桶，且不可以同时进行。请使用信号量给出从缸中取水和向缸中倒水的算法描述。</li>
+<li>分析：需要将问题分解为数个过程。从井中取水到向缸中倒水应该是一个连续的动作，算作一个进程；老和尚用桶从缸中取水算作一个进程。题中互斥资源包括水井和水缸，分别需要一个信号量来保证互斥。题中同步问题涉及水桶，抢不到水桶的进程需要等待，水缸满时小和尚需要等待，水缸空时老和尚需要等待，这需要生产者-消费者问题的经典信号量控制满和空。</li>
+<li>定义信号量如下：<ul>
+<li><code>mutex1 = mutex2 = 1</code> ：水井和水缸两个资源各自的互斥访问</li>
+<li><code>empty = 10</code> ：初始水缸为空，可容纳至多 10 桶水</li>
+<li><code>full = 0</code> ：初始水缸为空</li>
+<li><code>count = 3</code> ：水桶数量为 3</li>
+</ul>
+</li>
+<li>代码如下</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 小和尚</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(empty);</span><br><span class="line">    wait(count);   <span class="comment">// 争夺水桶</span></span><br><span class="line">    wait(mutex1);</span><br><span class="line">    <span class="comment">// 从井中打水</span></span><br><span class="line">    signal(mutex1);</span><br><span class="line">    wait(mutex2);</span><br><span class="line">    <span class="comment">// 倒水入水缸</span></span><br><span class="line">    signal(mutex2);</span><br><span class="line">    signal(count); <span class="comment">// 归还水桶</span></span><br><span class="line">    signal(full);  <span class="comment">// 通知老和尚水缸有水</span></span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 老和尚</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(full);</span><br><span class="line">    wait(count);</span><br><span class="line">    wait(mutex2);</span><br><span class="line">    <span class="comment">// 从水缸中打水</span></span><br><span class="line">    signal(mutex2);</span><br><span class="line">    signal(count);</span><br><span class="line">    signal(empty);</span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br></pre></td></tr></table></figure>
+<h2 id="阅览室登记问题"><a href="#阅览室登记问题" class="headerlink" title="阅览室登记问题"></a>阅览室登记问题</h2><ul>
+<li>（北方交通大学 1999 年）阅览室有 100 个座位，读者进入阅览室需要先在一张登记表上登记，每个座位有一个条目，读者离开阅览室需要注销自己的登记信息。请使用信号量描述同步算法。约定：<ul>
+<li>语句 <code>I = getflag(0)</code> 可以搜索到一个空座位 i，通过语句 <code>i.flag = 0 或 1</code> 可以标识座位 i 为空闲（0）或者占用（1）；</li>
+<li>语句 <code>i = getname(readername)</code> 可以搜索到读者登记的座位号 i，通过 <code>i.name = 0</code> 可以将座位原本的读者姓名清除，通过 <code>i.name = readername</code> 可以将读者名称关联到座位 i 上；</li>
+<li>计数信号量用 <code>count</code>，互斥信号量用 <code>mutex</code>。</li>
+</ul>
+</li>
+<li>分析：约定部分仅仅为代码编写提供一定现成的符号，问题中仅有读者一个对象，因此只需要考虑读者之间是等价的，只需要考虑一个读者的行为。读者进入阅览室应当先检查是否有空闲座位，若存在则登记否则离开。座位显然需要信号量 <code>count</code> 控制。读者离去时需要注销登记信息并释放座位，无论何时对登记簿的修改都需要互斥，如题中约定使用 <code>mutex</code> 。</li>
+<li>代码如下，对原题做一定修改，使读者进入阅览室时如果人满则离开，因此需要一个 <code>int</code> 型变量 <code>seats</code> 记录空闲座位数量，而原本的 <code>count</code> 同步信号量可以丢弃。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> seats = <span class="number">100</span>;</span><br><span class="line"><span class="comment">// 读者进程</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="comment">// 进入阅览室</span></span><br><span class="line">    wait(mutex);</span><br><span class="line">    <span class="keyword">if</span> (seats &lt;= <span class="number">0</span>) &#123; </span><br><span class="line">        signal(mutex);</span><br><span class="line">        <span class="keyword">continue</span>;    <span class="comment">// 无空闲座位，离开阅览室</span></span><br><span class="line">    &#125;</span><br><span class="line">    seats --;</span><br><span class="line">    i = getflag(<span class="number">0</span>);</span><br><span class="line">    i.flag = <span class="number">1</span>;</span><br><span class="line">    i.name = readername;    <span class="comment">// 获取空闲座位、登记</span></span><br><span class="line">    signal(mutex);</span><br><span class="line">    <span class="comment">// 看书</span></span><br><span class="line">    wait(mutex);</span><br><span class="line">    seats ++;</span><br><span class="line">    i = getname(readername);</span><br><span class="line">    i.flag = i.name = <span class="number">0</span>;    <span class="comment">// 注销登录信息</span></span><br><span class="line">    signal(mutex);</span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br></pre></td></tr></table></figure>
+<h2 id="4-乘-100-米接力"><a href="#4-乘-100-米接力" class="headerlink" title="4 乘 100 米接力"></a>4 乘 100 米接力</h2><ul>
+<li>用信号量描述 4 × 100 米接力问题。</li>
+<li>分析：四个选手之间需要保持链式同步关系，因此设置三个信号量分别表示第 i 棒选手和第 i-1 棒选手之间的同步（0 &lt; i &lt; 5）。</li>
+<li>代码如下</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">semaphore s1 = <span class="number">0</span>, s2 = <span class="number">0</span>, s3 = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 第一棒起跑并前进 100 米</span></span><br><span class="line">signal(s1);</span><br><span class="line"><span class="comment">// 第二棒</span></span><br><span class="line">wait(s1);</span><br><span class="line"><span class="comment">// 第二棒起跑并前进 100 米</span></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="comment">// 第四棒</span></span><br><span class="line">wait(s3);</span><br><span class="line"><span class="comment">// 第四棒起跑并前进 100 米到达终点</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2017/01/06/os-concepts-13/" target="_blank" rel="external">操作系统（十三）：I/O 输入系统</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2017/01/08/os-concepts-15/" target="_blank" rel="external">操作系统（专题）：信号量编程（下）</a></p>
+<p>参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/01/06/os-concepts-14/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/01/06/os-concepts-14/" target="_blank" rel="external">http://blog.forec.cn/2017/01/06/os-concepts-14/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2017/01/06/os-concetps-14/" data-id="cixrudhql002vu8ewut02973y" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2017/01/06/os-concetps-14/" data-title="操作系统（专题）：信号量编程（上）" data-url="http://forec.github.io/2017/01/06/os-concetps-14/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/01/08/os-concepts-15/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            操作系统（专题）：信号量编程（下）
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2017/01/06/os-concepts-13/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">操作系统（十三）：I/O 输入系统</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/08/os-concepts-16/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-16.jpg)" alt="互斥读者-读者问题" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/08/os-concepts-16/" class="title">互斥读者-读者问题</a></p>
+                            <p class="item-date"><time datetime="2017-01-08T09:52:59.000Z" itemprop="datePublished">2017-01-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/08/os-concepts-15/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-15.jpg)" alt="操作系统（专题）：信号量编程（下）" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/08/os-concepts-15/" class="title">操作系统（专题）：信号量编程（下）</a></p>
+                            <p class="item-date"><time datetime="2017-01-08T03:53:13.000Z" itemprop="datePublished">2017-01-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/06/os-concetps-14/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-14-r.jpg)" alt="操作系统（专题）：信号量编程（上）" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/06/os-concetps-14/" class="title">操作系统（专题）：信号量编程（上）</a></p>
+                            <p class="item-date"><time datetime="2017-01-06T09:21:43.000Z" itemprop="datePublished">2017-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/06/os-concepts-13/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg)" alt="操作系统（十三）：I/O 输入系统" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/06/os-concepts-13/" class="title">操作系统（十三）：I/O 输入系统</a></p>
+                            <p class="item-date"><time datetime="2017-01-06T04:17:33.000Z" itemprop="datePublished">2017-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/01/05/os-concepts-12/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-12.jpg)" alt="操作系统（十二）：大容量存储器结构" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/01/05/os-concepts-12/" class="title">操作系统（十二）：大容量存储器结构</a></p>
+                            <p class="item-date"><time datetime="2017-01-05T15:23:30.000Z" itemprop="datePublished">2017-01-05</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">22</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 11.82px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16.36px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 10.91px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 13.64px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 12.73px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19.09px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10.91px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15.45px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 14.55px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 10.91px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 10.91px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.27px;">线程</a> <a href="/tags/计组与体系结构/" style="font-size: 13.64px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec的官方网站</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>京ICP备16060806号-1 &copy; 2017 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>
