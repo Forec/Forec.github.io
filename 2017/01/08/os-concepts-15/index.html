@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="此部分包括一些和 《信号量编程（上）》 相比稍难的信号量编程习题，可能有一小部分超出了考试范畴。这部分习题的解答均根据我个人理解编写， 不保证提供的答案绝对正确或最优 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-15.jpg">
-<meta property="og:updated_time" content="2017-01-10T18:13:27.742Z">
+<meta property="og:updated_time" content="2017-01-11T01:21:06.575Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（专题）：信号量编程（下）">
 <meta name="twitter:description" content="此部分包括一些和 《信号量编程（上）》 相比稍难的信号量编程习题，可能有一小部分超出了考试范畴。这部分习题的解答均根据我个人理解编写， 不保证提供的答案绝对正确或最优 。">
@@ -252,7 +252,7 @@
 <li>代码如下</li>
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> smoker1, smoker2, smoker3;   <span class="comment">// 分别表示 1、2、3 吸烟者是否发出请求</span></span><br><span class="line">semaphore a = b = c = <span class="number">0</span>;          </span><br><span class="line"><span class="comment">// 初始供应的三种材料数量，1、2、3 号吸烟者分别持有 a、b、c类型材料</span></span><br><span class="line">semaphore smoker_request = <span class="number">1</span>;     <span class="comment">// 吸烟者发出请求权限</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 供应商</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (smoker1 == TRUE) &#123;   <span class="comment">// 吸烟者 1 有请求</span></span><br><span class="line">        signal(b);</span><br><span class="line">        signal(c);</span><br><span class="line">    &#125; </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (smoker2 == TRUE) &#123;   <span class="comment">// 吸烟者 2 有请求</span></span><br><span class="line">        signal(a);</span><br><span class="line">        signal(c);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (smoker3 == TRUE) &#123;   <span class="comment">// 吸烟者 3 有请求</span></span><br><span class="line">        signal(b);</span><br><span class="line">        signal(a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">while</span>(TRUE);</span><br><span class="line"></span><br><span class="line"><span class="comment">//吸烟者 1</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(smoker_mutex);</span><br><span class="line">    smoker1 = TRUE;</span><br><span class="line">    wait(b);</span><br><span class="line">    wait(c);</span><br><span class="line">    signal(smoker_mutex);</span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br></pre></td></tr></table></figure>
-<h2 id="苹果-橘子-老虎与猪"><a href="#苹果-橘子-老虎与猪" class="headerlink" title="苹果-橘子/老虎与猪"></a>苹果-橘子/老虎与猪</h2><ul>
+<h2 id="苹果-橘子或老虎与猪"><a href="#苹果-橘子或老虎与猪" class="headerlink" title="苹果-橘子或老虎与猪"></a>苹果-橘子或老虎与猪</h2><ul>
 <li>两类问题本质一样，描述不同，在期中考试已经出现过。老虎与猪的描述如下：有一个笼子可以容纳一只老虎或者两只猪，如果笼子中已经有猪，则老虎不能被放入。猎人 A 每次向笼子中放入一只老虎，猎人 B 每次向笼子中放入一只猪。饲养员每次会从笼子中取出一只老虎，厨师每次会从笼子中取出一只猪。对笼子的操作是互斥的。试用信号量描述此过程。</li>
 <li>分析：此题的关键在于笼子中允许有两只猪，而当笼子中有猪时就无法放入老虎，因此需要维护猪的数量。猎人 A 需要和饲养员维持同步关系，猎人 B 需要和厨师维持同步关系。本题其实也可以看作生产者-消费者问题和第一类读者-写者问题的结合，但限制了读者的数量。</li>
 <li>变量和信号量定义：<ul>
@@ -268,13 +268,11 @@
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 猎人 A</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="comment">// 抓到一只老虎</span></span><br><span class="line">    wait(coop);</span><br><span class="line">    <span class="comment">// 将老虎放入笼子</span></span><br><span class="line">    signal(tiger);</span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 饲养员</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(tiger);</span><br><span class="line">    <span class="comment">// 从笼子中取出老虎</span></span><br><span class="line">    signal(coop);</span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 猎人 B</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="comment">// 抓到一只猪</span></span><br><span class="line">    wait(pig_space);</span><br><span class="line">    wait(pig_count_mutex);</span><br><span class="line">    pig_count ++;</span><br><span class="line">    <span class="keyword">if</span> (pig_count == <span class="number">1</span>)</span><br><span class="line">        wait(coop);    <span class="comment">// 笼子中没有猪的情况下要等待笼子权限</span></span><br><span class="line">    signal(pig_count_mutex);</span><br><span class="line">    <span class="comment">// 将猪放入笼子</span></span><br><span class="line">    signal(pig);</span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 厨师</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(pig);</span><br><span class="line">    <span class="comment">// 从笼子中取出一只猪</span></span><br><span class="line">    wait(pig_count_mutex);</span><br><span class="line">    pig_count --;</span><br><span class="line">    <span class="keyword">if</span> (pig_count == <span class="number">0</span>)</span><br><span class="line">        signal(coop);</span><br><span class="line">    signal(pig_count_mutex);</span><br><span class="line">    signal(pig_space);</span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br></pre></td></tr></table></figure>
 <h2 id="信号量编程测试"><a href="#信号量编程测试" class="headerlink" title="信号量编程测试"></a>信号量编程测试</h2><ul>
-<li>我编写了一点简单的测试代码（Windows 下）来辅助测试信号量算法能否工作成功。你可以在 <a href="https://github.com/Forec/semaphore-test" target="_blank" rel="external">这里</a> 查看这些代码。</li>
+<li>我编写了一点简单的测试代码（Windows 下）来辅助测试信号量算法能否工作成功。你可以在 <a href="https://github.com/Forec/semaphore-test" target="_blank" rel="external">这里</a> 获取这些代码。</li>
 <li>代码包括一个基类 <code>WorkStation</code>（包含在 <code>base.hpp</code> 中） 和两个可以用来做参考的测试文件。其中 <code>bridge1.cpp</code> 用来验证 <a href="http://blog.forec.cn/2017/01/06/os-concepts-14/" target="_blank" rel="external">信号量编程（上）</a> 中习题 7.16， <code>bridge2.cpp</code> 用来验证 <a href="http://blog.forec.cn/2017/01/08/os-concepts-16/" target="_blank" rel="external">互斥读者-读者问题</a> 中我针对修改后问题给出的自己的解答。你可以仿照这两个文件，继承 <code>WorkStation</code> 类来测试自己的信号量程序。</li>
-<li>测试举例：以上面的老虎与猪问题为例，定义一个类 <code>Coop</code> 继承 <code>WorkStation</code>。<ul>
+<li>测试举例：以上面的老虎与猪问题为例，定义一个类 <code>Coop</code> 继承 <code>WorkStation</code>。</li>
 <li>将所需变量添加到子类中，并实现虚方法 <code>init()</code>，该方法对你需要用到的信号量/变量做初始化。注意 <code>init()</code> 函数中需要设置 <code>thread_type</code>，这个变量表示有多少不同类型的进程，此问题有 4 种（猎人 A、B，厨师、饲养员），故 <code>thread_type</code> 应当为 4。</li>
 <li>定义自己的参数结构体，对于上面老虎与猪问题而言需要将所用到的所有变量/信号量的地址放置到一个结构体中，对于此问题为：</li>
-</ul>
-</li>
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> Param&#123;</span><br><span class="line">    <span class="keyword">int</span> *pig_count;</span><br><span class="line">    HANDLE *coop, *tiger, *pig;</span><br><span class="line">    HANDLE *pig_space, *pig_count_mutex;</span><br></pre></td></tr></table></figure>
 <ul>
@@ -303,7 +301,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/01/08/os-concepts-15/" data-id="cixrule3v003qusewnbycbs40" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/01/08/os-concepts-15/" data-id="cixs9d5b4003njoew0yzowu94" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -485,7 +483,7 @@
     </a>
     
     
-        <a href="/2017/01/06/os-concetps-14/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2017/01/06/os-concepts-14/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
         <p class="article-nav-title">操作系统（专题）：信号量编程（上）</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
@@ -546,7 +544,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2017/01/06/os-concetps-14/" class="thumbnail">
+                            <a href="/2017/01/06/os-concepts-14/" class="thumbnail">
     
     
         <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-14-r.jpg)" alt="操作系统（专题）：信号量编程（上）" class="thumbnail-image"></span>
@@ -558,7 +556,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
-                            <p class="item-title"><a href="/2017/01/06/os-concetps-14/" class="title">操作系统（专题）：信号量编程（上）</a></p>
+                            <p class="item-title"><a href="/2017/01/06/os-concepts-14/" class="title">操作系统（专题）：信号量编程（上）</a></p>
                             <p class="item-date"><time datetime="2017-01-06T09:21:43.000Z" itemprop="datePublished">2017-01-06</time></p>
                         </div>
                     </li>
