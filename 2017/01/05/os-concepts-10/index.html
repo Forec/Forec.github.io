@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第十章文件系统接口部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-10.jpg">
-<meta property="og:updated_time" content="2017-01-09T14:30:36.537Z">
+<meta property="og:updated_time" content="2017-01-11T13:55:32.263Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（十）：文件系统接口">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第十章文件系统接口部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -194,7 +194,7 @@
 <li>截短（truncating）：删除文件内容而保留属性，将文件长度设为 0 并释放空间。</li>
 </ul>
 </li>
-<li>操作系统维护一个 <strong>打开文件表（open-file table）</strong> ，当需要一个文件时，操作系统根据这个表的索引来指定文件，避免了每次文件操作都要搜索文件目录。有的系统会在首次引用文件时隐式地打开它，绝大多数操作系统要求程序员通过 <code>open()</code> 操作显示地打开文件，并将文件条目复制到打开文件表中。档文件不再使用时，进程可以 <em>关闭</em> 这个文件，操作系统会从打开文件表删除文件对应的条目。系统调用 <code>open()</code> 会返回一个 <strong>指向打开文件表中一个条目的指针</strong> ，所有 I/O 操作会通过使用该指针来进行。</li>
+<li>操作系统维护一个 <strong>打开文件表（open-file table）</strong> ，当需要一个文件时，操作系统根据这个表的索引来指定文件，避免了每次文件操作都要搜索文件目录。有的系统会在首次引用文件时隐式地打开它，绝大多数操作系统要求程序员通过 <code>open()</code> 操作显示地打开文件，并将文件条目复制到打开文件表中。当文件不再使用时，进程可以 <em>关闭</em> 这个文件，操作系统会从打开文件表删除文件对应的条目。系统调用 <code>open()</code> 会返回一个 <strong>指向打开文件表中一个条目的指针</strong> ，所有 I/O 操作会通过使用该指针来进行。</li>
 <li>多个进程同时打开同一文件的情况下，操作系统通常采用 <strong>两级内部表</strong> ：单个进程的表和整个系统的表。其中单个进程的表追踪单个进程打开的所有文件（该进程对文件的使用信息，如该进程对该文件操作的指针位置、权限等），表中的每一个条目指向整个操作系统打开文件表中相对应的一项。而操作系统的打开文件表（整个系统的表）包含着与进程无关的文件信息（文件在磁盘的位置、大小等），一旦一个文件第一次被进程打开，操作系统会在打开文件表中增加相应的条目；而 <strong>一个已经被打开的文件再次被其它进程打开时，仅仅在进程的打开文件表中增加一个指向整个系统表的相应条目</strong> 。一般系统维护的打开文件表中，每个文件会有一个文件打开计数器，用来记录多少进程打开了该文件，当计数器降到 0 时标识文件不再使用，可以从打开文件表删除。</li>
 <li>以上，每个打开文件应当包括如下信息：<ul>
 <li>文件指针：这个属性对于每个进程都可能不同，因此它保存在进程各自的打开文件表中，每个进程都需要为自己打开的每个文件维护一个文件指针。</li>
@@ -239,7 +239,7 @@
 </li>
 <li><strong>单层结构目录（single-level directory）</strong> ：所有文件保存在同一目录中，便于理解和支持。但当文件类型增加或者系统需要为多个用户提供服务时，必须保证所有文件名称唯一。文件名称长度有限，MS-DOS 只允许 11 个字符，UNIX 允许 255 个字符。</li>
 <li><strong>双层结构目录（two-level）</strong> ：单层目录结构会在不同用户直接引起文件名混淆，双层结构目录中，每个用户有自己的 <strong>用户文件目录（user file directory，UFD）</strong> ，每个 UFD 都有相似的结构，但只包含所属用户的文件。用户作业执行/用户注册时，搜索主系统的 <strong>主文件目录（master file directory，MFD）</strong> 来检索到用户的 UFD，这允许多个用户拥有相同名称的文件。<ul>
-<li>双层结构目录能够有效地对用户隔离，但不利于用户之间的合作和文件共享。双层结构目录等价于一棵高度为 2 地倒置树。</li>
+<li>双层结构目录能够有效地对用户隔离，但不利于用户之间的合作和文件共享。双层结构目录等价于一棵高度为 2 的倒置树。</li>
 <li>对于系统库等每个进程都需要的文件，双层结构目录必须将这些系统文件复制到每个 UFD 下，这导致大量空间浪费，解决方法是修改搜索步骤，在根目录下定义一个特殊的用户目录，目录中包含所有的系统文件。当进程在 UFD 查找不到需要的文件时会搜索这个特殊用户目录。给定一个文件，搜索的一系列目录称为 <strong>搜索路径（search path）</strong> 。</li>
 </ul>
 </li>
@@ -300,7 +300,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/01/05/os-concepts-10/" data-id="cixstroyq0042ywewpmnctoub" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/01/05/os-concepts-10/" data-id="cixt2br3o0042i4ewqv3pdiia" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

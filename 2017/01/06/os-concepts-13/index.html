@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg">
-<meta property="og:updated_time" content="2017-01-09T15:22:25.808Z">
+<meta property="og:updated_time" content="2017-01-11T14:27:00.661Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（十三）：I/O 输入系统">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -209,7 +209,7 @@
 <li>CPU 和 <strong>中断控制器（interrupt-controller）</strong> 硬件提供了以下三个特性：<ul>
 <li>在 CPU 执行关键指令时可以延迟对中断的处理</li>
 <li>能够将中断快速转发给适当的中断处理程序，而不必检查所有设备以确定是哪个设备引发了中断</li>
-<li>支持多级中断，可以根据紧迫性来相应中断</li>
+<li>支持多级中断，可以根据紧迫性来响应中断</li>
 </ul>
 </li>
 <li>多数 CPU 有两个中断请求线： <strong>非屏蔽中断（nonmaskable）</strong> 用于处理非常严重的，不可以恢复的内存错误等问题， <strong>可屏蔽中断（maskable）</strong> 可被设备控制器用来请求服务，如果 CPU 正在执行关键、不可中断指令，则可以屏蔽这一类中断线上的请求。</li>
@@ -227,7 +227,7 @@
 <li>使用通用处理器不断监听设备控制器的寄存器并按字节传输（ <strong>程序控制 I/O</strong> ，Programmed I/O，PIO）是对计算资源的非常过分的浪费。计算机为了避免 PIO 增加 CPU 负担，将一部分数据传输任务交付 <strong>直接内存访问（direct-memory access，DMA）</strong> 控制器。</li>
 <li>开始 DMA 传输时，主机向内存写入 DMA 命令块，块中包含传输的源、目的地址指针以及传输的字节数。 <strong>CPU 将该命令块的地址写到 DMA 控制器中</strong> 并继续其他工作，DMA 控制器会根据命令块直接操作内存总线完成传输（这段时间 CPU 无法使用总线）。传输完成后 DMA 控制器会中断 CPU 并交还给  CPU 总线控制权。</li>
 <li>DMA 和设备控制器之间的握手通过 <strong>DMA-request</strong> 和 <strong>DMA-acknowledge</strong> 线进行，设备有数据需要传输时，设备控制器就通过 DMA-request 线通知 DMA 控制器，DMA 控制器会发出申请中断 CPU，在从 CPU 获取所需要的地址后将地址放到内存地址总线上，并通过 DMA-acknowledge 线通知设备控制器。设备控制器收到这个信号，向内存地址总线上的地址写入数据。交互过程如下图。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/steps-dma-transfer.png" width="500px"></li>
-<li>DMA 控制总线传输期间 CPU 不能访问主存（仍可访问 L1、L2 缓存），这称为 <strong>周期挪用（cycle stealing）</strong> ，会放慢 CPU 计算，当往往能够改善系统总体性能。有的 DMA 使用物理内存地址，有的使用虚拟内存地址（这时候需要有一个虚拟到物理地址的转换），使用虚拟内存地址的 DMA 称为 <strong>直接虚拟内存访问（direct virtual-memory access，DVMA）</strong> 。DVMA 可以直接实现两个内存映射设备之间的传输而无需 CPU 干涉。</li>
+<li>DMA 控制总线传输期间 CPU 不能访问主存（仍可访问 L1、L2 缓存），这称为 <strong>周期挪用（cycle stealing）</strong> ，会放慢 CPU 计算，但往往能够改善系统总体性能。有的 DMA 使用物理内存地址，有的使用虚拟内存地址（这时候需要有一个虚拟到物理地址的转换），使用虚拟内存地址的 DMA 称为 <strong>直接虚拟内存访问（direct virtual-memory access，DVMA）</strong> 。DVMA 可以直接实现两个内存映射设备之间的传输而无需 CPU 干涉。</li>
 </ul>
 <h1 id="I-O-应用接口及后面几节简单摘要"><a href="#I-O-应用接口及后面几节简单摘要" class="headerlink" title="I/O 应用接口及后面几节简单摘要"></a>I/O 应用接口及后面几节简单摘要</h1><ul>
 <li>设备在很多方面有很大差异：<ul>
@@ -242,7 +242,7 @@
 <li><strong>块设备（block-device）</strong> 接口规定了访问磁盘驱动器以及其它块设备所需的各个方面。操作系统本身和特殊的应用程序（如数据库）倾向于将块设备当作简单的线性块数组访问，这种访问方式称为 <strong>原始（raw） I/O</strong> 。</li>
 <li><strong>阻塞和非阻塞 I/O</strong> ：<ul>
 <li>应用程序发出 <strong>阻塞（blocking） I/O</strong> 类型的系统调用时，应用程序就会被挂起，移动到进程等待队列中。因为阻塞式的 I/O 容易理解，并且 I/O 设备执行所需的时间是异步的，执行时间不可预估，因此绝大多数操作系统给应用程序预留的接口都是阻塞系统调用。</li>
-<li>有的用户级进程需要 <strong>非阻塞（nonblocking） I/O</strong> ，例如用户接口，它用来接收键盘/鼠标输入，同时还要在屏幕回显，又或者视频应用程序，他需要从磁盘读取帧并解码到显示器上。非阻塞 I/O 通常使用多线程实现，有的线程执行阻塞系统调用，其他线程继续执行。</li>
+<li>有的用户级进程需要 <strong>非阻塞（nonblocking） I/O</strong> ，例如用户接口，它用来接收键盘/鼠标输入，同时还要在屏幕回显。又或者视频应用程序，它需要从磁盘读取帧并解码到显示器上。非阻塞 I/O 通常使用多线程实现，有的线程执行阻塞系统调用，其他线程继续执行。</li>
 <li><strong>异步系统调用（asynchronous system call）</strong> 不必等待 I/O 完成就可以立刻返回，应用程序继续执行。I/O 完成时会通知应用程序，比如设置程序空间里某个变量，或者触发信号/软件中断等。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/two-io-methods.png" width="400px"></li>
 </ul>
 </li>
@@ -274,7 +274,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/01/06/os-concepts-13/" data-id="cixstroyq003tywewn3tzq1r2" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/01/06/os-concepts-13/" data-id="cixt2br39003ti4ewcw0959cg" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

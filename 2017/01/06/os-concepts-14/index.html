@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="此部分主要包括原书第六章（进程同步）和第七章（死锁）的部分习题（有些不属于考试范围），以及一些简单信号量编程习题（低于考试难度）的分析。这部分习题的解答均根据我个人理解编写或翻译， 不保证提供的答案绝对正确或最优 。稍微复杂一些的信号量编程在 《信号量编程（下）》。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-14-r.jpg">
-<meta property="og:updated_time" content="2017-01-10T18:21:45.579Z">
+<meta property="og:updated_time" content="2017-01-11T15:16:21.061Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（专题）：信号量编程（上）">
 <meta name="twitter:description" content="此部分主要包括原书第六章（进程同步）和第七章（死锁）的部分习题（有些不属于考试范围），以及一些简单信号量编程习题（低于考试难度）的分析。这部分习题的解答均根据我个人理解编写或翻译， 不保证提供的答案绝对正确或最优 。稍微复杂一些的信号量编程在 《信号量编程（下）》。">
@@ -275,7 +275,7 @@
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 车间 A</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(empty1);</span><br><span class="line">    wait(mutex1);</span><br><span class="line">    <span class="comment">// 生产零件 A 并放入 F1</span></span><br><span class="line">    signal(mutex1);</span><br><span class="line">    signal(full);</span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 车间 B 和车间 A 对称</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 装配工人</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(full1);</span><br><span class="line">    wait(full2);</span><br><span class="line">    wait(mutex1);</span><br><span class="line">    wait(mutex2);</span><br><span class="line">    <span class="comment">// 取出零件 A 和 B</span></span><br><span class="line">    signal(mutex1);</span><br><span class="line">    signal(mutex2);</span><br><span class="line">    signal(empty1);</span><br><span class="line">    signal(empty2);</span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);</span><br></pre></td></tr></table></figure>
 <h2 id="和尚挑水问题"><a href="#和尚挑水问题" class="headerlink" title="和尚挑水问题"></a>和尚挑水问题</h2><ul>
-<li>（北京邮电大学 1998 年）某寺庙有老、小和尚若干，仅有一个水缸和一个水井。小和尚负责将水从井中挑到缸中以供老和尚引用。水缸可以容纳最多 10 桶水，水井口非常窄，每次只能容纳一个水桶取水。水桶总数有 3 各，每次小和尚挑水、倒入缸内只能使用一个桶，且不可以同时进行。请使用信号量给出从缸中取水和向缸中倒水的算法描述。</li>
+<li>（北京邮电大学 1998 年）某寺庙有老、小和尚若干，仅有一个水缸和一个水井。小和尚负责将水从井中挑到缸中以供老和尚饮用。水缸可以容纳最多 10 桶水，水井口非常窄，每次只能容纳一个水桶取水。水桶总数有 3 各，每次小和尚挑水、倒入缸内只能使用一个桶，且不可以同时进行。请使用信号量给出从缸中取水和向缸中倒水的算法描述。</li>
 <li>分析：需要将问题分解为数个过程。从井中取水到向缸中倒水应该是一个连续的动作，算作一个进程；老和尚用桶从缸中取水算作一个进程。题中互斥资源包括水井和水缸，分别需要一个信号量来保证互斥。题中同步问题涉及水桶，抢不到水桶的进程需要等待，水缸满时小和尚需要等待，水缸空时老和尚需要等待，这需要生产者-消费者问题的经典信号量控制满和空。</li>
 <li>定义信号量如下：<ul>
 <li><code>mutex1 = mutex2 = 1</code> ：水井和水缸两个资源各自的互斥访问</li>
@@ -315,7 +315,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/01/06/os-concepts-14/" data-id="cixstroya003qywewrw438g26" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/01/06/os-concepts-14/" data-id="cixt2br39003qi4ewa1h2lk5h" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
