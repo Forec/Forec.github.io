@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2017-01-11T14:47:38.752Z</updated>
+  <updated>2017-01-31T12:26:01.000Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -14,6 +14,90 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>VS Code 配置记录</title>
+    <link href="http://forec.github.io/2017/01/31/vscode-configuration/"/>
+    <id>http://forec.github.io/2017/01/31/vscode-configuration/</id>
+    <published>2017-01-31T07:38:13.000Z</published>
+    <updated>2017-01-31T12:26:01.000Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;VS Code 的配置记录。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h2 id=&quot;全局配置&quot;&gt;&lt;a href=&quot;#全局配置&quot; class=&quot;headerlink&quot; title=&quot;全局配置&quot;&gt;&lt;/a&gt;全局配置&lt;/h2&gt;&lt;h3 id=&quot;编辑器配置&quot;&gt;&lt;a href=&quot;#编辑器配置&quot; class=&quot;headerlink&quot; title=&quot;编辑器配置&quot;&gt;&lt;/a&gt;编辑器配置&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;参考 &lt;a href=&quot;https://fallenwood.github.io/2016/05/24/configuring-visual-studio-code/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Fallendwood 的 Blog&lt;/a&gt;，我个人修改后配置如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight json&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;&lt;span class=&quot;attribute&quot;&gt;window.reopenFolders&lt;/span&gt;&quot;: &lt;span class=&quot;value&quot;&gt;&lt;span class=&quot;string&quot;&gt;&quot;all&quot;&lt;/span&gt;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;&lt;span class=&quot;attribute&quot;&gt;editor.fontSize&lt;/span&gt;&quot;: &lt;span class=&quot;value&quot;&gt;&lt;span class=&quot;number&quot;&gt;15&lt;/span&gt;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;&lt;span class=&quot;attribute&quot;&gt;editor.tabSize&lt;/span&gt;&quot;: &lt;span class=&quot;value&quot;&gt;&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;&lt;span class=&quot;attribute&quot;&gt;editor.formatOnType&lt;/span&gt;&quot;: &lt;span class=&quot;value&quot;&gt;&lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;&lt;span class=&quot;attribute&quot;&gt;extensions.autoUpdate&lt;/span&gt;&quot;: &lt;span class=&quot;value&quot;&gt;&lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;git&quot;&gt;&lt;a href=&quot;#git&quot; class=&quot;headerlink&quot; title=&quot;git&quot;&gt;&lt;/a&gt;git&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;git 扩展默认开启，修改 &lt;code&gt;git.path&lt;/code&gt; 和 &lt;code&gt;git.autofetch&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;终端集成&quot;&gt;&lt;a href=&quot;#终端集成&quot; class=&quot;headerlink&quot; title=&quot;终端集成&quot;&gt;&lt;/a&gt;终端集成&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;配置 &lt;code&gt;&amp;quot;terminal.integrated.shell.windows&amp;quot;: &amp;quot;C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe&amp;quot;&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;C-C&quot;&gt;&lt;a href=&quot;#C-C&quot; class=&quot;headerlink&quot; title=&quot;C/C++&quot;&gt;&lt;/a&gt;C/C++&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;安装 &lt;code&gt;c/c++&lt;/code&gt;，&lt;code&gt;c/c++ clang&lt;/code&gt; 和 &lt;code&gt;clang-format&lt;/code&gt; 插件。&lt;/li&gt;
+&lt;li&gt;安装 &lt;code&gt;Native Debug&lt;/code&gt; 插件。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;launch.json&lt;/code&gt; 用来配置启动任务，修改 &lt;code&gt;launch.json&lt;/code&gt; 来配置调试：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;version&quot;: &quot;0.2.0&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;configurations&quot;: [&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;name&quot;: &quot;C++ Launch (GDB)&quot;,                 // 配置名称，将会在启动配置的下拉菜单中显示&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;type&quot;: &quot;cppdbg&quot;,                           // 配置类型，这里只能为cppdbg&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;request&quot;: &quot;launch&quot;,                        // 请求配置类型，可以为launch（启动）或attach（附加）&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;launchOptionType&quot;: &quot;Local&quot;,                // 调试器启动类型，这里只能为Local&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;targetArchitecture&quot;: &quot;x86&quot;,                // 生成目标架构，一般为x86或x64，可以为x86, arm, arm64, mips, x64, amd64, x86_64&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;program&quot;: &quot;$&amp;#123;file&amp;#125;.exe&quot;,                   // 将要进行调试的程序的路径&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;miDebuggerPath&quot;:&quot;path/to/gdb.exe&quot;, &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                                        // miDebugger的路径，注意这里要与MinGw的路径对应&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;args&quot;: [&quot;blackkitty&quot;,  &quot;1221&quot;, &quot;# #&quot;],     // 程序调试时传递给程序的命令行参数，一般设为空即可&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;stopAtEntry&quot;: false,                       // 设为true时程序将暂停在程序入口处，一般设置为false&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;cwd&quot;: &quot;$&amp;#123;workspaceRoot&amp;#125;&quot;,                  // 调试程序时的工作目录，一般为$&amp;#123;workspaceRoot&amp;#125;即代码所在目录&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;externalConsole&quot;: true,                    // 调试时是否显示控制台窗口，一般设置为true显示控制台&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;preLaunchTask&quot;: &quot;g++&quot;　　                  // 调试会话开始前执行的任务，一般为编译程序，c++为g++, c为gcc&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    ]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Ctrl + Shift + P&lt;/code&gt;，输入 &lt;code&gt;Run Build Tasks&lt;/code&gt;，配置 &lt;code&gt;tasks.json&lt;/code&gt;：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;version&quot;: &quot;0.1.0&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;command&quot;: &quot;g++&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;args&quot;: [&quot;-g&quot;,&quot;$&amp;#123;file&amp;#125;&quot;,&quot;-o&quot;,&quot;$&amp;#123;file&amp;#125;.exe&quot;],    // 编译命令参数&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;problemMatcher&quot;: &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &quot;owner&quot;: &quot;cpp&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &quot;fileLocation&quot;: [&quot;relative&quot;, &quot;$&amp;#123;workspaceRoot&amp;#125;&quot;],&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &quot;pattern&quot;: &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;regexp&quot;: &quot;^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;file&quot;: 1,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;line&quot;: 2,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;column&quot;: 3,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;severity&quot;: 4,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &quot;message&quot;: 5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;自动补全：&lt;code&gt;Ctrl + Shift + P&lt;/code&gt; 输入 &lt;code&gt;settings&lt;/code&gt; 打开用户设置，配置 &lt;code&gt;clang.executable&lt;/code&gt;、&lt;code&gt;clang.cflags&lt;/code&gt; 和 &lt;code&gt;clang.cxxflags&lt;/code&gt;：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&quot;clang.cxxflags&quot;: [&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-std=c++1y&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-Wall&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-I/mingw64/include&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-I/mingw64/x86_64-w64-mingw32/include&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-I/mingw64/lib/gcc/x86_64-w64-mingw32/6.3.0/include&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-I$&amp;#123;workspaceRoot&amp;#125;/include&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-I$&amp;#123;cwd&amp;#125;&quot;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;],&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&quot;clang.cflags&quot;: [&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-std=c99&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-Wall&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-I/mingw64/include&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-I/mingw64/x86_64-w64-mingw32/include&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-I/mingw64/lib/gcc/x86_64-w64-mingw32/6.3.0/include&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-I$&amp;#123;workspaceRoot&amp;#125;/include&quot;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &quot;-I$&amp;#123;cwd&amp;#125;&quot;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;],&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&quot;clang.executable&quot;: &quot;/mingw64/bin/clang.exe&quot;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;配置 &lt;code&gt;cpptools&lt;/code&gt; 的 &lt;code&gt;c_cpp_properties.json&lt;/code&gt;，将对应系统的 &lt;code&gt;include&lt;/code&gt; 项修改为 &lt;code&gt;settings.json&lt;/code&gt; 中相同的几个路径。&lt;/li&gt;
+&lt;li&gt;按 &lt;code&gt;F8&lt;/code&gt; 可生成目标文件和可执行文件，按 &lt;code&gt;F5&lt;/code&gt; 启动调试。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;HTML&quot;&gt;&lt;a href=&quot;#HTML&quot; class=&quot;headerlink&quot; title=&quot;HTML&quot;&gt;&lt;/a&gt;HTML&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;标签自动关闭可安装插件 &lt;code&gt;Auto Close Tag&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;根据开始标签自动修改关闭标签可安装插件 &lt;code&gt;Auto Rename Tag&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;Go&quot;&gt;&lt;a href=&quot;#Go&quot; class=&quot;headerlink&quot; title=&quot;Go&quot;&gt;&lt;/a&gt;Go&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Go 语言有唯一的插件可以安装。需要手动 &lt;code&gt;go get&lt;/code&gt; 所需的工具。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;Python&quot;&gt;&lt;a href=&quot;#Python&quot; class=&quot;headerlink&quot; title=&quot;Python&quot;&gt;&lt;/a&gt;Python&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;安装 &lt;code&gt;Python&lt;/code&gt; 插件，配置一下 &lt;code&gt;python.pythonPath&lt;/code&gt; 就可以使用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;主题、配色&quot;&gt;&lt;a href=&quot;#主题、配色&quot; class=&quot;headerlink&quot; title=&quot;主题、配色&quot;&gt;&lt;/a&gt;主题、配色&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Ctrl + Shift + P&lt;/code&gt; 输入 &lt;code&gt;File Icon Theme&lt;/code&gt; 可以修改图标主题。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Code Runner&lt;/code&gt; 可以选中一行/几行代码并右击运行，功能非常强大，用处比较大。&lt;/li&gt;
+&lt;li&gt;需要在文件头部加上固定内容可以使用插件 &lt;code&gt;vscode-file-header-comment-helper&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;改背景图 &lt;code&gt;Background&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;彩虹括号 &lt;code&gt;Rainbow Brackets&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Project Manager&lt;/code&gt; 可在多个 git 项目之间切换。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;File Peeker&lt;/code&gt; 可点击编辑内容中的文件名并打开文件。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Path Intellisense&lt;/code&gt; 可自动补全路径。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;参考资料：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://fallenwood.github.io/2016/05/24/configuring-visual-studio-code/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Fallendwood 的配置介绍&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.csdn.net/c_duoduo/article/details/51615381&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Windows下VSCode编译调试c/c++ - 黑猫崽儿的 CSDN 博客&lt;/a&gt;    &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/30269449/how-do-i-set-up-vscode-to-compile-c-code&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;How do I set up VSCode to compile C++ code? - StackOverFlow&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.cnblogs.com/eric-z/p/5217530.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;windows下用visual studio code 调试go代码&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.cnblogs.com/huyong/p/4573041.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Visual Studio Code 介绍&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/01/31/vscode-configuration/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/01/31/vscode-configuration/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/01/31/vscode-configuration/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;VS Code 的配置记录。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="Configuration" scheme="http://forec.github.io/categories/Configuration/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>互斥读者-读者问题</title>
@@ -1321,41 +1405,6 @@
     
     
       <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>顶点云（应用）用户代理</title>
-    <link href="http://forec.github.io/2016/12/03/zenith-cloud-7/"/>
-    <id>http://forec.github.io/2016/12/03/zenith-cloud-7/</id>
-    <published>2016-12-03T13:44:07.000Z</published>
-    <updated>2016-12-23T17:28:14.844Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;设计用户代理，实现 &lt;code&gt;DealWithRequests()&lt;/code&gt; 中的几种简单逻辑指令，如文件列表获取、文件拷贝、Fork操作等。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/zenith-cloud.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;顶点云（应用）设计与实现&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/23/zenith-cloud-6/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;顶点云（应用）服务器逻辑实现&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：TODO  &lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2016/12/03/zenith-cloud-7/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2016/12/03/zenith-cloud-7/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2016/12/03/zenith-cloud-7/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;设计用户代理，实现 &lt;code&gt;DealWithRequests()&lt;/code&gt; 中的几种简单逻辑指令，如文件列表获取、文件拷贝、Fork操作等。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="Code" scheme="http://forec.github.io/categories/Code/"/>
-    
-    
-      <category term="Golang" scheme="http://forec.github.io/tags/Golang/"/>
-    
-      <category term="云存储" scheme="http://forec.github.io/tags/%E4%BA%91%E5%AD%98%E5%82%A8/"/>
-    
-      <category term="线程" scheme="http://forec.github.io/tags/%E7%BA%BF%E7%A8%8B/"/>
     
   </entry>
   

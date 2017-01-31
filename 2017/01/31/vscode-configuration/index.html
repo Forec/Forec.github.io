@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Network Mining Based On Co-occurrence | Forec&#39;s Notes</title>
+    <title>VS Code 配置记录 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="Algorithms,图分割,机器学习" />
+        <meta name="keywords" content="" />
     
-    <meta name="description" content="Generate network based on co-occurrence was proposed several decades ago, however, it still occupies most of papers talking about network discovering. Here I want to give a simple introduction for net">
+    <meta name="description" content="VS Code 的配置记录。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Network Mining Based On Co-occurrence">
-<meta property="og:url" content="http://forec.github.io/2016/10/03/co-occurrence-structure-capture/index.html">
+<meta property="og:title" content="VS Code 配置记录">
+<meta property="og:url" content="http://forec.github.io/2017/01/31/vscode-configuration/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="Generate network based on co-occurrence was proposed several decades ago, however, it still occupies most of papers talking about network discovering. Here I want to give a simple introduction for net">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/cooccurrence-network.jpg">
-<meta property="og:updated_time" content="2016-11-07T16:34:51.056Z">
+<meta property="og:description" content="VS Code 的配置记录。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/vscode-configuration.jpg">
+<meta property="og:updated_time" content="2017-01-31T12:26:01.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Network Mining Based On Co-occurrence">
-<meta name="twitter:description" content="Generate network based on co-occurrence was proposed several decades ago, however, it still occupies most of papers talking about network discovering. Here I want to give a simple introduction for net">
+<meta name="twitter:title" content="VS Code 配置记录">
+<meta name="twitter:description" content="VS Code 的配置记录。">
     
 
     
@@ -139,18 +139,18 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <a class="page-title-link" href="/categories/大数据/">大数据</a>
+    <a class="page-title-link" href="/categories/Configuration/">Configuration</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-co-occurrence-structure-capture" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-vscode-configuration" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        Network Mining Based On Co-occurrence
+        VS Code 配置记录
         </h1>
     
 
@@ -158,43 +158,76 @@
         
         
             <div class="article-subtitle">
-                <a href="/2016/10/03/co-occurrence-structure-capture/" class="article-date">
-    <time datetime="2016-10-03T14:16:16.000Z" itemprop="datePublished">2016-10-03</time>
+                <a href="/2017/01/31/vscode-configuration/" class="article-date">
+    <time datetime="2017-01-31T07:38:13.000Z" itemprop="datePublished">2017-01-31</time>
 </a>
                 
-    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithms/">Algorithms</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/图分割/">图分割</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li></ul>
-
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>Generate network based on co-occurrence was proposed several decades ago, however, it still occupies most of papers talking about network discovering. Here I want to give a simple introduction for network capture by conventional co-occurrence methods. The following contents are slightly related with the basis of my current work, they are out of date but still useful sometimes.</p>
+<p>VS Code 的配置记录。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="General-Introduction"><a href="#General-Introduction" class="headerlink" title="General Introduction"></a>General Introduction</h1><ul>
-<li>This article is just an introduction for several methods capturing useful structured data from unstructured data sets. It only talks about the basic implementation of co-occurrence in text data. After reading this short article, you will know how to generate a graph as follows from a paragraph of text, a set of Internet data captured from spiders or even a video.</li>
-<li>An example, the following picture is generated from a part of the script of 《Train to Busan》. I copied the script from Internet, and it’s easy to be analyzed by code. The picture was cut a little part when I published it.<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/train-to-fusan.svg" width="400px"></li>
+<h2 id="全局配置"><a href="#全局配置" class="headerlink" title="全局配置"></a>全局配置</h2><h3 id="编辑器配置"><a href="#编辑器配置" class="headerlink" title="编辑器配置"></a>编辑器配置</h3><ul>
+<li>参考 <a href="https://fallenwood.github.io/2016/05/24/configuring-visual-studio-code/" target="_blank" rel="external">Fallendwood 的 Blog</a>，我个人修改后配置如下：</li>
 </ul>
-<h1 id="Entity-Identification"><a href="#Entity-Identification" class="headerlink" title="Entity Identification"></a>Entity Identification</h1><ul>
-<li>A network is composed of a set of nodes and a set of edges. We name the set of nodes <code>V</code>, and edges <code>E</code>. The first problem we face is where can we get <code>V</code>. Entity identification needs to be considered here. </li>
-<li>Some simple methods such as regress( for binary classification ), SVM can be used if you know the characteristics for nodes. However, in most conditions we even can’t describe what the nodes exactly like. In these conditions, deep learning algorithms such as Convolutional Neural Network could be considered. You can give some nodes you already know, then ask your model to learn what the nodes like. That may be a little complex, so we left them behind. Here we just consider the best condition.</li>
-<li>Here we make a hypothesis, you already have the set of all the nodes. That means, you have the <code>V</code> and the data set, what you need to do is just generating a network for the <code>V</code> from the given data set. Sounds simple? However this is indeed the case. In some few cases, for example, generating network from a movie like the example above, very few main entities appear in a movie, so we can get their identifications (here is name) from web or just make them yourself. </li>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">window.reopenFolders</span>": <span class="value"><span class="string">"all"</span></span>,</span><br><span class="line">    "<span class="attribute">editor.fontSize</span>": <span class="value"><span class="number">15</span></span>,</span><br><span class="line">    "<span class="attribute">editor.tabSize</span>": <span class="value"><span class="number">2</span></span>,</span><br><span class="line">    "<span class="attribute">editor.formatOnType</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">    "<span class="attribute">extensions.autoUpdate</span>": <span class="value"><span class="literal">true</span></span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="git"><a href="#git" class="headerlink" title="git"></a>git</h3><ul>
+<li>git 扩展默认开启，修改 <code>git.path</code> 和 <code>git.autofetch</code>。</li>
 </ul>
-<h1 id="Relationship-Identification"><a href="#Relationship-Identification" class="headerlink" title="Relationship Identification"></a>Relationship Identification</h1><ul>
-<li>Here we come across the second question, how to get <code>E</code>? I will only introduce one simple method here, that’s what I metioned  above, the conventional co-occurrence method. I will introduce some more methods after my current job finished. </li>
-<li>The co-occurrence network, is just like what its name suggests, use the information that two entities occurred together. For example, in my analysis for 《Train to Busan》, I simply build an edge for two nodes if they occur in a same paragraph. If there always been an edge for two nodes, the weight of that edge will be increased. Once the data set is big enough, the main line of the data set will appear. You can choose building directed edges or undirected edges, and choose complete graph or not.</li>
-<li>The co-occurrence network is only useful for data sets that have obvious centralization, edges with low weight are always redundant. Also, many nodes will have no sense of presence because they are just playing samll roles. The co-occurrence will make every node connect with the center node, that’s unreasonable. Since we just introduce the very simple condition here, I will present two common ways for reducing the redundancy <del>ans</del> and [thanks for a kind reader, he pointed out the mistake here] fixing the network.</li>
-<li>The first way is filter. Easy to understand, just filter out those edges with low weight. The threshold can be adjusted manually or learned by specific models.</li>
-<li>The second way is segmenting your network. This needs clustering first, and find the community centers. Cut these edges connecting with center nodes but has low weights. The effect is hard to be estimated according to what your network structure likes.</li>
+<h3 id="终端集成"><a href="#终端集成" class="headerlink" title="终端集成"></a>终端集成</h3><ul>
+<li>配置 <code>&quot;terminal.integrated.shell.windows&quot;: &quot;C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe&quot;</code>。</li>
 </ul>
-<h1 id="Applicable-Scope"><a href="#Applicable-Scope" class="headerlink" title="Applicable Scope"></a>Applicable Scope</h1><ul>
-<li>Many fields can be applied with co-occurrence method. For example, capturing people relationships from videos, recodings, pictures, etc. I will show how to generate a network from a video later. That will cost a long time since many frame needs to be considered, which is a very time-consuming job.</li>
+<h2 id="C-C"><a href="#C-C" class="headerlink" title="C/C++"></a>C/C++</h2><ul>
+<li>安装 <code>c/c++</code>，<code>c/c++ clang</code> 和 <code>clang-format</code> 插件。</li>
+<li>安装 <code>Native Debug</code> 插件。</li>
+<li><code>launch.json</code> 用来配置启动任务，修改 <code>launch.json</code> 来配置调试：</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "version": "0.2.0",</span><br><span class="line">    "configurations": [</span><br><span class="line">        &#123;</span><br><span class="line">            "name": "C++ Launch (GDB)",                 // 配置名称，将会在启动配置的下拉菜单中显示</span><br><span class="line">            "type": "cppdbg",                           // 配置类型，这里只能为cppdbg</span><br><span class="line">            "request": "launch",                        // 请求配置类型，可以为launch（启动）或attach（附加）</span><br><span class="line">            "launchOptionType": "Local",                // 调试器启动类型，这里只能为Local</span><br><span class="line">            "targetArchitecture": "x86",                // 生成目标架构，一般为x86或x64，可以为x86, arm, arm64, mips, x64, amd64, x86_64</span><br><span class="line">            "program": "$&#123;file&#125;.exe",                   // 将要进行调试的程序的路径</span><br><span class="line">            "miDebuggerPath":"path/to/gdb.exe", </span><br><span class="line">                                                        // miDebugger的路径，注意这里要与MinGw的路径对应</span><br><span class="line">            "args": ["blackkitty",  "1221", "# #"],     // 程序调试时传递给程序的命令行参数，一般设为空即可</span><br><span class="line">            "stopAtEntry": false,                       // 设为true时程序将暂停在程序入口处，一般设置为false</span><br><span class="line">            "cwd": "$&#123;workspaceRoot&#125;",                  // 调试程序时的工作目录，一般为$&#123;workspaceRoot&#125;即代码所在目录</span><br><span class="line">            "externalConsole": true,                    // 调试时是否显示控制台窗口，一般设置为true显示控制台</span><br><span class="line">            "preLaunchTask": "g++"　　                  // 调试会话开始前执行的任务，一般为编译程序，c++为g++, c为gcc</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>Ctrl + Shift + P</code>，输入 <code>Run Build Tasks</code>，配置 <code>tasks.json</code>：</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "version": "0.1.0",</span><br><span class="line">    "command": "g++",</span><br><span class="line">    "args": ["-g","$&#123;file&#125;","-o","$&#123;file&#125;.exe"],    // 编译命令参数</span><br><span class="line">    "problemMatcher": &#123;</span><br><span class="line">        "owner": "cpp",</span><br><span class="line">        "fileLocation": ["relative", "$&#123;workspaceRoot&#125;"],</span><br><span class="line">        "pattern": &#123;</span><br><span class="line">            "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",</span><br><span class="line">            "file": 1,</span><br><span class="line">            "line": 2,</span><br><span class="line">            "column": 3,</span><br><span class="line">            "severity": 4,</span><br><span class="line">            "message": 5</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>自动补全：<code>Ctrl + Shift + P</code> 输入 <code>settings</code> 打开用户设置，配置 <code>clang.executable</code>、<code>clang.cflags</code> 和 <code>clang.cxxflags</code>：</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">"clang.cxxflags": [</span><br><span class="line">    "-std=c++1y",</span><br><span class="line">    "-Wall",</span><br><span class="line">    "-I/mingw64/include",</span><br><span class="line">    "-I/mingw64/x86_64-w64-mingw32/include",</span><br><span class="line">    "-I/mingw64/lib/gcc/x86_64-w64-mingw32/6.3.0/include",</span><br><span class="line">    "-I$&#123;workspaceRoot&#125;/include",</span><br><span class="line">    "-I$&#123;cwd&#125;"</span><br><span class="line">],</span><br><span class="line">"clang.cflags": [</span><br><span class="line">    "-std=c99",</span><br><span class="line">    "-Wall",</span><br><span class="line">    "-I/mingw64/include",</span><br><span class="line">    "-I/mingw64/x86_64-w64-mingw32/include",</span><br><span class="line">    "-I/mingw64/lib/gcc/x86_64-w64-mingw32/6.3.0/include",</span><br><span class="line">    "-I$&#123;workspaceRoot&#125;/include",</span><br><span class="line">    "-I$&#123;cwd&#125;"</span><br><span class="line">],</span><br><span class="line">"clang.executable": "/mingw64/bin/clang.exe"</span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置 <code>cpptools</code> 的 <code>c_cpp_properties.json</code>，将对应系统的 <code>include</code> 项修改为 <code>settings.json</code> 中相同的几个路径。</li>
+<li>按 <code>F8</code> 可生成目标文件和可执行文件，按 <code>F5</code> 启动调试。</li>
+</ul>
+<h2 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h2><ul>
+<li>标签自动关闭可安装插件 <code>Auto Close Tag</code>。</li>
+<li>根据开始标签自动修改关闭标签可安装插件 <code>Auto Rename Tag</code>。</li>
+</ul>
+<h2 id="Go"><a href="#Go" class="headerlink" title="Go"></a>Go</h2><ul>
+<li>Go 语言有唯一的插件可以安装。需要手动 <code>go get</code> 所需的工具。</li>
+</ul>
+<h2 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h2><ul>
+<li>安装 <code>Python</code> 插件，配置一下 <code>python.pythonPath</code> 就可以使用。</li>
+</ul>
+<h2 id="主题、配色"><a href="#主题、配色" class="headerlink" title="主题、配色"></a>主题、配色</h2><ul>
+<li><code>Ctrl + Shift + P</code> 输入 <code>File Icon Theme</code> 可以修改图标主题。</li>
+<li><code>Code Runner</code> 可以选中一行/几行代码并右击运行，功能非常强大，用处比较大。</li>
+<li>需要在文件头部加上固定内容可以使用插件 <code>vscode-file-header-comment-helper</code>。</li>
+<li>改背景图 <code>Background</code>。</li>
+<li>彩虹括号 <code>Rainbow Brackets</code>。</li>
+<li><code>Project Manager</code> 可在多个 git 项目之间切换。</li>
+<li><code>File Peeker</code> 可点击编辑内容中的文件名并打开文件。</li>
+<li><code>Path Intellisense</code> 可自动补全路径。</li>
 </ul>
 <hr>
-<p>I hope this article could give you some help. If this article has any error, or you have some problems/suggestions, please <a href="mailto:forec@bupt.edu.cn" target="_blank" rel="external">e-mail me</a>. I am glad to learn from each other.</p>
-<p>Related Data Download Link： <a href="http://7xktmz.com1.z0.glb.clouddn.com/Train%20to%20Busan.txt" target="_blank" rel="external">Script for 《Train to Busan》</a></p>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/10/03/co-occurrence-structure-capture/">原始出处</a>(<a href="https://forec.github.io/2016/10/03/co-occurrence-structure-capture/">https://forec.github.io/2016/10/03/co-occurrence-structure-capture/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
+<p>参考资料：</p>
+<ul>
+<li><a href="https://fallenwood.github.io/2016/05/24/configuring-visual-studio-code/" target="_blank" rel="external">Fallendwood 的配置介绍</a></li>
+<li><a href="http://blog.csdn.net/c_duoduo/article/details/51615381" target="_blank" rel="external">Windows下VSCode编译调试c/c++ - 黑猫崽儿的 CSDN 博客</a>    </li>
+<li><a href="http://stackoverflow.com/questions/30269449/how-do-i-set-up-vscode-to-compile-c-code" target="_blank" rel="external">How do I set up VSCode to compile C++ code? - StackOverFlow</a></li>
+<li><a href="http://www.cnblogs.com/eric-z/p/5217530.html" target="_blank" rel="external">windows下用visual studio code 调试go代码</a></li>
+<li><a href="http://www.cnblogs.com/huyong/p/4573041.html" target="_blank" rel="external">Visual Studio Code 介绍</a></li>
+</ul>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/01/31/vscode-configuration/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/01/31/vscode-configuration/" target="_blank" rel="external">http://blog.forec.cn/2017/01/31/vscode-configuration/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -202,7 +235,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/10/03/co-occurrence-structure-capture/" data-id="ciylhu6sf007agoewtnyhefn2" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/01/31/vscode-configuration/" data-id="ciylhu6n8001xgoewjzp6f7px" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -269,7 +302,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2016/10/03/co-occurrence-structure-capture/" data-title="Network Mining Based On Co-occurrence" data-url="http://forec.github.io/2016/10/03/co-occurrence-structure-capture/"></div>
+    <div class="ds-thread" data-thread-key="2017/01/31/vscode-configuration/" data-title="VS Code 配置记录" data-url="http://forec.github.io/2017/01/31/vscode-configuration/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -373,20 +406,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2016/10/08/haskell-fixit/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            Fix in Haskell
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2016/09/27/duplicate-cantor/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2017/01/08/os-concepts-16/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">Cantor Expansion With Duplicate Elements</p>
+        <p class="article-nav-title">互斥读者-读者问题</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
