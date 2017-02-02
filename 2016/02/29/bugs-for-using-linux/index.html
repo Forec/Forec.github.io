@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="不定期整理在使用各类linux发行版和Emacs时的配置，以及遇到的各类问题的解决方案。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/bug-linux.jpg">
-<meta property="og:updated_time" content="2016-11-05T09:51:49.946Z">
+<meta property="og:updated_time" content="2017-02-02T14:59:23.541Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux各发行版及Emacs配置备忘">
 <meta name="twitter:description" content="不定期整理在使用各类linux发行版和Emacs时的配置，以及遇到的各类问题的解决方案。">
@@ -280,7 +280,7 @@
 <li>将文件<code>$GOPATH/github.com/nsf/gocode/emacs/go-autocomplete.el</code>拷贝到$load-path目录下</li>
 <li>修改<code>.emacs</code></li>
 </ul>
-<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="list">(<span class="keyword">require</span> <span class="quoted">'go-autocomplete</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">require</span> <span class="quoted">'auto-complete-config</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">ac-config-default</span>)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(require &#39;go-autocomplete)&#10;(require &#39;auto-complete-config)&#10;(ac-config-default)</span><br></pre></td></tr></table></figure>
 <ul>
 <li>修改<code>.emacs</code>，使保存文件时gofmt：<code>(add-hook &#39;before-save-hook #&#39;gofmt-before-save)</code></li>
 </ul>
@@ -294,6 +294,22 @@
 <li>设置后缀关联</li>
 </ul>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="list">(<span class="keyword">autoload</span> <span class="quoted">'markdown-mode</span> <span class="string">"markdown-mode"</span></span><br><span class="line">   <span class="string">"Major mode for editing Markdown files"</span> <span class="literal">t</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">add-to-list</span> <span class="quoted">'auto-mode-alist</span> <span class="quoted">'(<span class="string">"\\.markdown\\'"</span> . markdown-mode)</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">add-to-list</span> <span class="quoted">'auto-mode-alist</span> <span class="quoted">'(<span class="string">"\\.md\\'"</span> . markdown-mode)</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="list">(<span class="keyword">autoload</span> <span class="quoted">'gfm-mode</span> <span class="string">"gfm-mode"</span></span><br><span class="line">   <span class="string">"Major mode for editing GitHub Flavored Markdown files"</span> <span class="literal">t</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">add-to-list</span> <span class="quoted">'auto-mode-alist</span> <span class="quoted">'(<span class="string">"README\\.md\\'"</span> . gfm-mode)</span>)</span></span><br></pre></td></tr></table></figure>
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><ul>
+<li><code>C-x * c</code> 启动计算器（逆波兰），<code>C-x * t</code> 打开计算器帮助。</li>
+</ul>
+<h2 id="Spacemacs-配置"><a href="#Spacemacs-配置" class="headerlink" title="Spacemacs 配置"></a>Spacemacs 配置</h2><ul>
+<li><code>Spacemacs</code> 的配置多在 <code>.spacemacs</code> 文件中，其中 <code>dotspacemacs-configuration-layers</code> 中代表启动时加载的 <code>layer</code>，例如 <code>c++</code> 则添加 <code>c-c++</code>。</li>
+<li><code>user-init</code> 中加载个人在 EMACS 启动前需要的配置项。</li>
+</ul>
+<h3 id="个人启动项配置"><a href="#个人启动项配置" class="headerlink" title="个人启动项配置"></a>个人启动项配置</h3><ul>
+<li><code>(global-linum-mode 1)</code>：始终开启行号，如果当前 EMACS 较卡，则可 <code>M-x linum-mode</code> 关闭行号，会略加快速度。</li>
+<li>启动 <code>c++</code> layer：</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(setq-default dotspacemacs-configuration-layers&#10;     &#39;((c-c++ :variables&#10;           c-c++-default-mode-for-headers &#39;c++-mode)))&#10;(setq-default dotspacemacs-configuration-layers&#10;     &#39;((c-c++ :variables c-c++-enable-clang-support t)))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>解决 <code>Flyspell</code> 模式报错（需先在 <code>msys2</code> 中安装 <code>aspell</code> 和 <code>aspell-en</code> 字典，但尽量从官网下载 Win32 版本的 <code>aspell</code> 和字典，<code>msys2</code> 安装的 <code>aspell</code> 有时会卡死）：</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(setq-default ispell-program-name &#34;aspell&#34;)&#10;(ispell-change-dictionary &#34;american&#34; t)</span><br></pre></td></tr></table></figure>
 <hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/02/29/bugs-for-using-linux/">原始出处</a>(<a href="https://forec.github.io/2016/02/29/bugs-for-using-linux/">https://forec.github.io/2016/02/29/bugs-for-using-linux/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
 
@@ -303,7 +319,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/02/29/bugs-for-using-linux/" data-id="ciylmuc6q007ps0ew37prwd1z" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/02/29/bugs-for-using-linux/" data-id="ciyoid99k007p24ewemu4mv28" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
