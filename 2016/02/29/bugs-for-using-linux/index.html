@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="不定期整理在使用各类linux发行版和Emacs时的配置，以及遇到的各类问题的解决方案。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/bug-linux.jpg">
-<meta property="og:updated_time" content="2017-02-02T14:59:23.541Z">
+<meta property="og:updated_time" content="2017-02-03T13:19:56.438Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux各发行版及Emacs配置备忘">
 <meta name="twitter:description" content="不定期整理在使用各类linux发行版和Emacs时的配置，以及遇到的各类问题的解决方案。">
@@ -294,6 +294,25 @@
 <li>设置后缀关联</li>
 </ul>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="list">(<span class="keyword">autoload</span> <span class="quoted">'markdown-mode</span> <span class="string">"markdown-mode"</span></span><br><span class="line">   <span class="string">"Major mode for editing Markdown files"</span> <span class="literal">t</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">add-to-list</span> <span class="quoted">'auto-mode-alist</span> <span class="quoted">'(<span class="string">"\\.markdown\\'"</span> . markdown-mode)</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">add-to-list</span> <span class="quoted">'auto-mode-alist</span> <span class="quoted">'(<span class="string">"\\.md\\'"</span> . markdown-mode)</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="list">(<span class="keyword">autoload</span> <span class="quoted">'gfm-mode</span> <span class="string">"gfm-mode"</span></span><br><span class="line">   <span class="string">"Major mode for editing GitHub Flavored Markdown files"</span> <span class="literal">t</span>)</span></span><br><span class="line"><span class="list">(<span class="keyword">add-to-list</span> <span class="quoted">'auto-mode-alist</span> <span class="quoted">'(<span class="string">"README\\.md\\'"</span> . gfm-mode)</span>)</span></span><br></pre></td></tr></table></figure>
+<h2 id="拼写检查"><a href="#拼写检查" class="headerlink" title="拼写检查"></a>拼写检查</h2><ul>
+<li><a href="http://www.ibm.com/developerworks/cn/linux/l-cn-emacs-spllchk/index.html" target="_blank" rel="external">参考</a></li>
+<li><code>flyspell</code> 和 <code>flycheck</code> 是 Emacs 用于拼写检查的前端，配合 <code>Aspell</code>、<code>ispell</code> 或者 <code>hunspell</code> 工作。</li>
+<li>Linux 下可下载 Aspell 的源码，直接 make 并 install 即可。安装后需安装所需的 <a href="ftp://ftp.gnu.org/gnu/aspell/dict/0index.html" target="_blank" rel="external">词典</a>。</li>
+<li>Windows 下需使用二进制版本安装（msys2安装的aspell 会占用大量 CPU 并卡住）。当前（2017.2）最新的 Aspell <a href="http://ftp.gnu.org/gnu/aspell/w32/Aspell-0-50-3-3-Setup.exe" target="_blank" rel="external">Win32 版本</a>，安装 Aspell 后再安装对应词典，词典会默认装载到 Aspell 安装目录下。</li>
+<li><code>Flyspell</code> 认为拼写检查程序为 <code>ispell</code>，需向 <code>.emacs</code> 或 <code>.spacemacs</code> 的 <code>user-init</code> 中添加 <code>(setq-default ispell-program-name &quot;aspell&quot;)</code>。重启后可用 <code>M-x flyspell-mode</code> 启动。</li>
+<li>实时检查会拖慢 Emacs 的速度，最好在平时关闭 flyspell，等到待检查部分完成后，将该部分 mark 起来，并使用 <code>M-x ispell-region</code>。要对整篇文章进行检查，可使用 <code>M-x ispell-buffer</code> 进行人机交互的单词检查。人机交互时常用的命令包括：<ul>
+<li><code>&lt;SPC&gt;</code>：跳过当前单词（在 Spacemacs 中也是单纯的空格而非 <code>M-m</code>。</li>
+<li><code>r new &lt;RET&gt;</code>：拥新输入的单词替换拼写错误的单词。</li>
+<li><code>R new &lt;RET&gt;</code>：拥新输入的单词替换拼写错误的单词，并且 flyspell 会询问是否替换掉文章中其他地方出现的类似错误。</li>
+<li><code>a</code>：在当前区域中将提示的拼写错误作为正确的拼写。</li>
+<li><code>A</code>：在当前 buffer 中将提示的拼写错误作为正确的拼写。</li>
+<li><code>i</code>：将当前单词插入个人字典中，此后 <code>Aspell</code> 会将其当作正确的单词对待。</li>
+<li><code>u</code>：插入当前单词的小写形式到字典中。</li>
+<li><code>x</code>：退出单词拼写检查并将光标返回拼写检查开始前的位置。</li>
+</ul>
+</li>
+<li>Emacs <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Spelling.html" target="_blank" rel="external">拼写部分手册</a></li>
+</ul>
 <h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><ul>
 <li><code>C-x * c</code> 启动计算器（逆波兰），<code>C-x * t</code> 打开计算器帮助。</li>
 </ul>
@@ -311,6 +330,10 @@
 </ul>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(setq-default ispell-program-name &#34;aspell&#34;)&#10;(ispell-change-dictionary &#34;american&#34; t)</span><br></pre></td></tr></table></figure>
 <hr>
+<p>参考资料：   </p>
+<ul>
+<li><a href="http://www.ibm.com/developerworks/cn/linux/l-cn-emacs-spllchk/index.html" target="_blank" rel="external">活用 Emacs 的单词拼写检查功能</a></li>
+</ul>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/02/29/bugs-for-using-linux/">原始出处</a>(<a href="https://forec.github.io/2016/02/29/bugs-for-using-linux/">https://forec.github.io/2016/02/29/bugs-for-using-linux/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
 
         </div>
@@ -319,7 +342,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/02/29/bugs-for-using-linux/" data-id="ciyoid99k007p24ewemu4mv28" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/02/29/bugs-for-using-linux/" data-id="ciypu54j2007plkewxho8e06m" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
