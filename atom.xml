@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2017-01-31T12:26:01.000Z</updated>
+  <updated>2017-02-06T12:08:32.095Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -14,6 +14,103 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HMM 关键词检索</title>
+    <link href="http://forec.github.io/2017/02/06/talk-about-hmm/"/>
+    <id>http://forec.github.io/2017/02/06/talk-about-hmm/</id>
+    <published>2017-02-06T08:22:30.000Z</published>
+    <updated>2017-02-06T12:08:32.095Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;记一下 HMM 的一些总是忘记的名词和计算过程。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h2 id=&quot;HMM&quot;&gt;&lt;a href=&quot;#HMM&quot; class=&quot;headerlink&quot; title=&quot;HMM&quot;&gt;&lt;/a&gt;HMM&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;离散一阶马尔可夫链：系统在 t 时刻状态只和其在 t-1 时刻的状态相关。&lt;/li&gt;
+&lt;li&gt;马尔可夫模型：随机过程独立于时间 t，且状态转移概率 &lt;code&gt;Σ a_ij = 1 (j=1..N)&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;HMM 可观察到的事件是状态的随机函数，状态转移过程隐蔽（马尔可夫链），事件是一般随机过程。一个随机事件由观察值序列 &lt;code&gt;O = O_1, O_2, .., O_T&lt;/code&gt; 表示，该事件背后隐藏着实际的状态序列 &lt;code&gt;Q = q_1, q_2, .., q_T&lt;/code&gt;。HMM 的关键在于将两个序列联系起来，用可观察明字符组成的观察序列去表征由离散隐状态组成的状态序列（路径）。&lt;/li&gt;
+&lt;li&gt;HMM 要求满足马尔可夫性假设（状态构成一阶马尔可夫链）、不动性假设（状态和具体时间无关）以及输出独立性假设（输出，也就是观察到的值仅与背后的状态有关）。&lt;/li&gt;
+&lt;li&gt;HMM 由五元组 &lt;code&gt;λ = (N, M, A, B, π)&lt;/code&gt; 描述：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;N = {q_1, q_2, .., q_N}&lt;/code&gt;：有限状态集合&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M = {v_1, v_2, .., v_M}&lt;/code&gt;：有限观察值集合&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;A = {a_ij}&lt;/code&gt;：状态转移概率矩阵&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;B = {b_jk}, b_jk = P(O_t = v_k | q_t = Sj)&lt;/code&gt;：观察值概率分布矩阵&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;π = π_i&lt;/code&gt;：初始状态概率分布&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;给定 HMM 模型 &lt;code&gt;λ = (A, B, π)&lt;/code&gt;，观察序列通过状态的不断转移和 &lt;code&gt;B&lt;/code&gt; 矩阵产生，初始根据 &lt;code&gt;π&lt;/code&gt; 选择 &lt;code&gt;q_1&lt;/code&gt;，根据状态转移概率生成 &lt;code&gt;q_t&lt;/code&gt;，并根据 &lt;code&gt;q_t = i&lt;/code&gt; 和 &lt;code&gt;b_ik&lt;/code&gt; 生成 &lt;code&gt;O_t = v_k&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;对于给定模型 &lt;code&gt;λ = (π, A, B)&lt;/code&gt;，令 &lt;code&gt;O = O_1, O_2, .., O_T&lt;/code&gt; 为观察值序列，三个基本问题及解决方案：&lt;ul&gt;
+&lt;li&gt;评估问题（前向算法）：对于给定模型，求任意观察值序列的概率 &lt;code&gt;P(O | λ)&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;解码问题（韦特比算法）：对于给定模型和观察值序列，求可能性最大的状态序列 &lt;code&gt;maxQ{P(Q | O, λ)}&lt;/code&gt;，也称 Q 为最优路径。即有效选择 “最优” 状态序列以尽量好地解释观察序列。&lt;/li&gt;
+&lt;li&gt;学习问题（向前向后算法）：给定观察值序列，调整 &lt;code&gt;λ&lt;/code&gt; 使该观察值序列出现的概率 &lt;code&gt;P(O | λ)&lt;/code&gt; 最大。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;前向算法&quot;&gt;&lt;a href=&quot;#前向算法&quot; class=&quot;headerlink&quot; title=&quot;前向算法&quot;&gt;&lt;/a&gt;前向算法&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;α(t, i) = P(o_1, o_2, .., o_T, q_t = S_i | λ)&lt;/code&gt; 指 “在时刻 t，得到 t 之前的所有明符号序列，且时刻 t 的状态是 S_i” 这一事件的概率。&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;α(1, i) = P(o_1, q_1 = S_i | λ) = π(i)b(i, o_1)&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;递推：`α(t+1, j) = [Σ α(t, i) · a(i, j), i=1..N] × b(j, o_t+1)；&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;α(T, i) = P(o_1, .., o_T, q_T = S_i | λ)&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;P(O | λ) = Σ α(T, i), (i = 1..N)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;Viterbi-算法&quot;&gt;&lt;a href=&quot;#Viterbi-算法&quot; class=&quot;headerlink&quot; title=&quot;Viterbi 算法&quot;&gt;&lt;/a&gt;Viterbi 算法&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;算法和卷积码的韦特比解码同名，因为本质就一样。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;δ(t, i)&lt;/code&gt; 为在 1..t 时刻按照状态序列 &lt;code&gt;q_1, .., q_t&lt;/code&gt; 且 &lt;code&gt;q_t = S_i&lt;/code&gt; 能够产生出 &lt;code&gt;o_1, o_2, .., o_t&lt;/code&gt; 的最大概率，即 &lt;code&gt;δ(t, i) = max{ P(q_1, .., q_t-1, q_t = Si, o_1, .., o_t | λ) }&lt;/code&gt;。序列 &lt;code&gt;o&lt;/code&gt; 和系统 &lt;code&gt;λ&lt;/code&gt; 都是确定的，&lt;code&gt;max&lt;/code&gt; 根据序列 &lt;code&gt;q&lt;/code&gt; 的变动选取最优解。&lt;/li&gt;
+&lt;li&gt;记忆变量：&lt;code&gt;φ(t, i)&lt;/code&gt; 记录概率最大路径上当前状态的前一个状态。&lt;/li&gt;
+&lt;li&gt;初始化：&lt;code&gt;δ(1, i) = π(i)b(i, O_1)&lt;/code&gt;，&lt;code&gt;φ(1, i) = 0&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;递推 ：&lt;code&gt;δ(t, j) = max{δ(t-1, j) × a_ji} × b(i, O_t), 2 ≤ t ≤ T, 1 ≤ i ≤ N&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;终止：&lt;code&gt;p* = max{δ(T, i)}&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;路径回溯：&lt;code&gt;q* = φ(t+1, q*_t+1), t = T-1, T-2, .., 1&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;向前向后算法&quot;&gt;&lt;a href=&quot;#向前向后算法&quot; class=&quot;headerlink&quot; title=&quot;向前向后算法&quot;&gt;&lt;/a&gt;向前向后算法&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;最大似然估计无法解决学习问题，因为 HMM 中的状态序列为隐变量，无法被观察到。EM 算法由交替的 “期望” 过程（E）和 “极大似然估计” 过程（M）组成，E 过程从条件期望中构造完全数据的似然函数值，M 过程利用参数的统计量重新估计概率模型的参数，使训练数据对数似然最大。&lt;/li&gt;
+&lt;li&gt;初始化：满足概率条件的情况下随机给 &lt;code&gt;π_i&lt;/code&gt;、&lt;code&gt;a_ij&lt;/code&gt; 和 &lt;code&gt;b_jk&lt;/code&gt; 赋值，得模型 &lt;code&gt;λ_0&lt;/code&gt;，设 &lt;code&gt;i = 0&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;E 过程：由 &lt;code&gt;λ_i&lt;/code&gt; 根据下面公式计算期望值 &lt;code&gt;ε(t, i, j)&lt;/code&gt;（给定模型和观察序列，在时间 t 位于状态 &lt;code&gt;S_i&lt;/code&gt;，时间 t+1 位于状态 &lt;code&gt;S_j&lt;/code&gt; 的概率） 和 &lt;code&gt;γ(t, i)&lt;/code&gt;（给定模型和观察序列，在时间 t 位于状态 i 的概率），E 过程的期望是根据上一个 M 过程重估后的模型计算的；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight gcode&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;ε&lt;span class=&quot;comment&quot;&gt;(t, i, j)&lt;/span&gt; = P&lt;span class=&quot;comment&quot;&gt;(q_t = S_i, q_t+1 = S_j | O, λ)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;           = P&lt;span class=&quot;comment&quot;&gt;(q_t = S_i, q_t+1 = S_j, O | λ)&lt;/span&gt; / P&lt;span class=&quot;comment&quot;&gt;(O | λ)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;           = α&lt;span class=&quot;comment&quot;&gt;(t, i)&lt;/span&gt;· a&lt;span class=&quot;comment&quot;&gt;(i, j)&lt;/span&gt; · b&lt;span class=&quot;comment&quot;&gt;(j, O_t+1)&lt;/span&gt; · β&lt;span class=&quot;comment&quot;&gt;(t+1, j)&lt;/span&gt; / P&lt;span class=&quot;comment&quot;&gt;(O | λ)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;           = α&lt;span class=&quot;comment&quot;&gt;(t, i)&lt;/span&gt;· a&lt;span class=&quot;comment&quot;&gt;(i, j)&lt;/span&gt; · b&lt;span class=&quot;comment&quot;&gt;(j, O_t+1)&lt;/span&gt; · β&lt;span class=&quot;comment&quot;&gt;(t+1, j)&lt;/span&gt; / &amp;#123;Σi Σj α&lt;span class=&quot;comment&quot;&gt;(t, i)&lt;/span&gt; · a&lt;span class=&quot;comment&quot;&gt;(i, j)&lt;/span&gt; · b&lt;span class=&quot;comment&quot;&gt;(j, O_t+1)&lt;/span&gt; · β&lt;span class=&quot;comment&quot;&gt;(t+1, j)&lt;/span&gt; &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;γ&lt;span class=&quot;comment&quot;&gt;(t, i)&lt;/span&gt; = Σj ε&lt;span class=&quot;comment&quot;&gt;(t, i, j)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;M 过程：根据 E 过程得出的期望值，根据下面公式重新估计 &lt;code&gt;πi&lt;/code&gt;，&lt;code&gt;a_ij&lt;/code&gt; 和 &lt;code&gt;b_jk&lt;/code&gt;，得到模型 &lt;code&gt;λ_i+1&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight gcode&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;π&lt;span class=&quot;comment&quot;&gt;(i)&lt;/span&gt; = P&lt;span class=&quot;comment&quot;&gt;(q_1 = S_i)&lt;/span&gt; = γ&lt;span class=&quot;comment&quot;&gt;(1, i)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;a&lt;span class=&quot;comment&quot;&gt;(i, j)&lt;/span&gt; = &amp;#123;Σt ε&lt;span class=&quot;comment&quot;&gt;(t, i, j)&lt;/span&gt;&amp;#125; / &amp;#123;Σt γ&lt;span class=&quot;comment&quot;&gt;(t, i)&lt;/span&gt;&amp;#125;, t = &lt;span class=&quot;number&quot;&gt;1.&lt;/span&gt;.T&lt;span class=&quot;number&quot;&gt;-1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;b&lt;span class=&quot;comment&quot;&gt;(j, k)&lt;/span&gt; = &amp;#123;Σt γ&lt;span class=&quot;comment&quot;&gt;(t, j)&lt;/span&gt; × δ&lt;span class=&quot;comment&quot;&gt;(O_t, v_k)&lt;/span&gt;&amp;#125; / &amp;#123;Σt γ&lt;span class=&quot;comment&quot;&gt;(t, j)&lt;/span&gt;&amp;#125;, t = &lt;span class=&quot;number&quot;&gt;1.&lt;/span&gt;.T&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;重复 E、M 过程直到模型收敛。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;前向算法、Viterbi 和 Baum-Welch 算法的概率值连续乘法运算容易下溢。&lt;/li&gt;
+&lt;li&gt;前向算法中每步运算都可以乘一个比例因子 &lt;code&gt;c(t)&lt;/code&gt;，如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight stylus&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;α(t+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, j) = [Σ α(t, i) · &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;title&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(i, j)&lt;/span&gt;&lt;/span&gt;, i=&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;..N] × &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;title&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(j, o_t+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;α&lt;span class=&quot;string&quot;&gt;&#39;(t+1, j) = c(t) × [Σ α(t, i)&#39;&lt;/span&gt; · &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;title&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(i, j)&lt;/span&gt;&lt;/span&gt;, i=&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;..N] × &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;title&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(j, o_t+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;title&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(t)&lt;/span&gt;&lt;/span&gt; = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; / Σ α(t, i) , &lt;span class=&quot;tag&quot;&gt;i&lt;/span&gt; = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;..N&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;Viterbi 算法可以将概率值取对数（乘积化为对数求和）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;相关链接&quot;&gt;&lt;a href=&quot;#相关链接&quot; class=&quot;headerlink&quot; title=&quot;相关链接&quot;&gt;&lt;/a&gt;相关链接&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.zhihu.com/question/20962240&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;逼乎 “如何用通俗易懂的例子解释 HMM”&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.csdn.net/ppn029012/article/details/8923501&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;我邮学长 Nong Bloody 的博客&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;www.hankcs.com/ml/hidden-markov-model.html&quot;&gt;hankcs 的隐马模型笔记&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/02/06/talk-about-hmm/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/02/06/talk-about-hmm/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/02/06/talk-about-hmm/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;记一下 HMM 的一些总是忘记的名词和计算过程。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="Algorithms" scheme="http://forec.github.io/tags/Algorithms/"/>
+    
+      <category term="机器学习" scheme="http://forec.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
   
   <entry>
     <title>VS Code 配置记录</title>
@@ -1240,163 +1337,6 @@
     
       &lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第九章虚拟内存部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>操作系统（八）：内存管理</title>
-    <link href="http://forec.github.io/2017/01/03/os-concepts-8/"/>
-    <id>http://forec.github.io/2017/01/03/os-concepts-8/</id>
-    <published>2017-01-03T02:27:12.000Z</published>
-    <updated>2017-01-06T12:00:16.611Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版第八章内存管理部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;h2 id=&quot;基本硬件&quot;&gt;&lt;a href=&quot;#基本硬件&quot; class=&quot;headerlink&quot; title=&quot;基本硬件&quot;&gt;&lt;/a&gt;基本硬件&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;CPU 通常在一个 CPU 时钟周期内完成对内置寄存器的访问，对内存的访问需多个 CPU 时钟周期，在缺少数据来完成正在执行的指令时，CPU 需要 &lt;strong&gt;暂停（stall）&lt;/strong&gt; ，通常在 CPU 和内存之间添加高速缓存（cache）以协调速度差异。&lt;/li&gt;
-&lt;li&gt;要确保操作系统不被用户进程访问、用户进程不被其他用户进程访问，需要每个进程拥有独立的地址空间。通过 &lt;strong&gt;基地址寄存器（base register）&lt;/strong&gt; 和 &lt;strong&gt;界限地址寄存器（limit register）&lt;/strong&gt; 可对进程内存加以保护，基地址寄存器存储进程可访问的最低合法 &lt;em&gt;物理&lt;/em&gt; 内存地址，界限地址寄存器决定从该地址开始的，可访问的内存范围大小。CPU 硬件对 &lt;strong&gt;用户模式&lt;/strong&gt; 下产生的 &lt;strong&gt;每一个&lt;/strong&gt; 地址和寄存器指明的地址区间比较，用户模式下的程序试图访问操作系统/其他用户进程内存的行为会触发陷阱（trap），操作系统会将其视为致命错误处理。&lt;/li&gt;
-&lt;li&gt;基地址寄存器和界限地址寄存器能且仅能由操作系统的特权指令加载，因为仅有操作系统在内核模式下执行，故避免了用户程序修改这两个寄存器。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;地址绑定&quot;&gt;&lt;a href=&quot;#地址绑定&quot; class=&quot;headerlink&quot; title=&quot;地址绑定&quot;&gt;&lt;/a&gt;地址绑定&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;程序执行前需将所需部分二进制数据调入内存并置于进程空间内，执行过程中根据操作系统采用的内存管理方案可能还会有内存/硬盘之间的换入换出移动。在磁盘上等待调入内存的进程构成了 &lt;strong&gt;输入队列（input queue）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;多数系统允许用户进程存放在物理内存任意位置，原程序中的地址通常用符号来表示， &lt;em&gt;编译器&lt;/em&gt; 会将这些符号地址 &lt;strong&gt;绑定（bind）&lt;/strong&gt; 到可重定位的地址， &lt;em&gt;链接程序&lt;/em&gt; 或 &lt;em&gt;加载程序&lt;/em&gt; 再将这些可重定位的地址绑定成绝对地址。绑定是从一个地址空间到另一个地址空间的映射。将指令和数据绑定到内存地址可能有如下几种情况：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;编译时（compile time）&lt;/strong&gt; ：在编译时已经知道进程将在物理内存中的驻留地址，则可生成 &lt;strong&gt;绝对代码（absolute code）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;加载时（load time）&lt;/strong&gt; ：若编译时尚不了解进程将位于物理内存中具体哪个位置，则编译器需生成 &lt;strong&gt;可重定位代码（relocatable code）&lt;/strong&gt; ，如 “从这个模块开始的第 14 个字节”。此时，最后绑定延迟到加载时进行。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;执行时（execution）&lt;/strong&gt; ：若进程在执行时可在内存段间移动，则绑定需要在执行时进行，此种方案需要特定硬件，绝大多数通用操作系统采用这种方式。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;从源码到二进制内存镜像的过程如下图所示，图片截取自李文生老师《操作系统概念》PPT。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/multistep-processing-of-user-program.jpg&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;逻辑地址和物理地址&quot;&gt;&lt;a href=&quot;#逻辑地址和物理地址&quot; class=&quot;headerlink&quot; title=&quot;逻辑地址和物理地址&quot;&gt;&lt;/a&gt;逻辑地址和物理地址&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;CPU 生成的地址为 &lt;strong&gt;逻辑地址（logical address）&lt;/strong&gt; ，加载到 &lt;strong&gt;内存地址寄存器（memory-address register）&lt;/strong&gt; 中的地址为 &lt;strong&gt;物理地址（physical address）&lt;/strong&gt; 。编译时和加载时的地址绑定方法生成的逻辑地址和物理地址相同，执行时的地址绑定方案生成的逻辑地址和物理地址不同。通常称逻辑地址为 &lt;strong&gt;虚拟地址（virtual address）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;逻辑地址空间（logical address space）&lt;/strong&gt; 为由程序所生成的所有逻辑地址的集合， &lt;strong&gt;物理地址空间（physical address space）&lt;/strong&gt; 为与这些逻辑地址对应的物理地址集合。&lt;/li&gt;
-&lt;li&gt;运行时从虚拟地址到物理地址的映射由硬件设备 &lt;strong&gt;内存管理单元（memory-management unit，MMU）&lt;/strong&gt; 完成。一个最简单的 MMU 方案是将用户进程产生的地址加上 &lt;strong&gt;重定位寄存器（relocation register）&lt;/strong&gt; 的值作为最终的物理内存地址。&lt;/li&gt;
-&lt;li&gt;用户进程绝不会看到真正的物理地址，一个地址在内存中比较、使用均基于虚拟地址，只有该地址作为内存地址，如执行加载/存储时才需要做到物理空间的地址映射。总而言之，用户进程只产生逻辑地址，且认为地址空间从 0 开始，而使用对应内存地址前必须由 MMU 做物理地址映射。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;动态加载、链接与共享库&quot;&gt;&lt;a href=&quot;#动态加载、链接与共享库&quot; class=&quot;headerlink&quot; title=&quot;动态加载、链接与共享库&quot;&gt;&lt;/a&gt;动态加载、链接与共享库&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;动态加载（dynamic loading）&lt;/strong&gt; ：所有子程序均以可重定位的方式保存在磁盘上，仅主程序装入内存并执行，当且仅当某个子程序被需要时才会装载进内存。此种方法设计程序主要是用户程序开发者的责任。其优势在于不被使用的子程序绝不会加载，若程序中有较多代码用于处理异常，动态加载会特别有效。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;动态链接库（dynamically linked library）&lt;/strong&gt; ：部分操作系统只支持 &lt;strong&gt;静态链接（static linking）&lt;/strong&gt; ，即加载程序将操作系统提供的语言库与其他目标模块一起合并到最终的二进制程序镜像中，所有程序均有一份所需系统库的副本；而动态链接将系统库的加载延迟到运行时，用户程序对系统库的引用留有 &lt;strong&gt;存根（stub）&lt;/strong&gt; ，存根指用于定位内存驻留库程序的一小段代码。当执行存根时，若所需的系统库已经驻留在内存中，则存根使用已有的系统库，否则将系统库装入内存。最终存根均会将系统库地址替换自身并执行系统库，此时所有使用某个库的进程只需要一个库代码副本。&lt;/li&gt;
-&lt;li&gt;动态链接为库更新带来方便，库版本更新后，引用该库的程序会自动使用新版本而无需重新链接。多个版本的库也可以同时装入内存，程序根据自己所需的版本信息确定使用哪个副本。此类系统也称为 &lt;strong&gt;共享库（shared libraried）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;交换&quot;&gt;&lt;a href=&quot;#交换&quot; class=&quot;headerlink&quot; title=&quot;交换&quot;&gt;&lt;/a&gt;交换&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;内存中的进程可暂时从内存中 &lt;strong&gt;交换（swap）&lt;/strong&gt; 到 &lt;strong&gt;备份存储（backing store）&lt;/strong&gt; 上，等到再次需要执行时调回。有时称为 &lt;strong&gt;滚出（roll out）&lt;/strong&gt; 和 &lt;strong&gt;滚入（roll in）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;备份存储通常为足够大的快速磁盘，以容纳所有用户程序的内存镜像副本、并提供对内存镜像的直接访问。交换系统上下文切换时间较长，为有效使用 CPU，通常使每个进程每次执行获取的时间片比交换时间长。&lt;/li&gt;
-&lt;li&gt;为了 &lt;strong&gt;只交换用户进程真正使用的内存空间&lt;/strong&gt; （如一个用户进程当前可能只使用了 10MB，但其最多可能使用 200 MB），用户进程需要告诉系统其内存需求情况以减少交换时间。&lt;/li&gt;
-&lt;li&gt;换出进程时，进程必须完全处于空闲状态。考虑如下场景：一个正在等待 I/O 操作的进程 P 即将被换出，若 I/O 操作异步访问 P 进程内存中的缓冲区，或是 I/O 设备正忙，I/O 操作在排队等待，此时换出进程 P，换入进程 P’ 会导致 I/O 操作已经属于 P’ 的内存。解决方案：&lt;ul&gt;
-&lt;li&gt;不能换出有待处理 I/O 的进程&lt;/li&gt;
-&lt;li&gt;I/O 操作只能使用操作系统缓冲区，仅当进程在内存中执行时才发生操作系统缓冲和进程内存缓冲之间的数据转移&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;上述标准交换在目前的操作系统中使用不广泛，交换需要很长时间并且只能提供很少的执行时间。对上述交换方式的一种修正在很多 UNIX 系统中得到使用：当且仅当系统负荷过高，内存吃紧时进行交换。早期缺乏高级硬件的个人计算机通过此种交换可同时运行多个进程，如 MS Windows 3.1，该系统内存不足时将老进程交换到磁盘上，当且仅当用户再次选择执行该进程时才再次换入。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;覆盖（补充）&quot;&gt;&lt;a href=&quot;#覆盖（补充）&quot; class=&quot;headerlink&quot; title=&quot;覆盖（补充）&quot;&gt;&lt;/a&gt;覆盖（补充）&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;多道程序设计环境下可通过 &lt;strong&gt;覆盖（Overlays）&lt;/strong&gt; 技术扩充内存。由程序员实现，不需要操作系统的特殊支持。其思想为：将程序划分为若干个功能上相对独立的程序段，按程序逻辑结构让不会同时执行的程序段共享所有程序段均会使用到的内存。&lt;/li&gt;
-&lt;li&gt;覆盖方式的内存管理仅始终保留一个程序 &lt;em&gt;在任何时候&lt;/em&gt; 都需要的数据。&lt;/li&gt;
-&lt;li&gt;与交换的区别：&lt;ul&gt;
-&lt;li&gt;覆盖对程序员要求较高，程序员必须十分清楚程序的逻辑结构，明确规定各程序段的执行和覆盖顺序以及设计实现覆盖驱动模块，而交换技术对用户透明&lt;/li&gt;
-&lt;li&gt;覆盖在同一进程/作业内进行，而交换在进程与进程之间进行。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;连续内存分配&quot;&gt;&lt;a href=&quot;#连续内存分配&quot; class=&quot;headerlink&quot; title=&quot;连续内存分配&quot;&gt;&lt;/a&gt;连续内存分配&lt;/h1&gt;&lt;h2 id=&quot;内存保护&quot;&gt;&lt;a href=&quot;#内存保护&quot; class=&quot;headerlink&quot; title=&quot;内存保护&quot;&gt;&lt;/a&gt;内存保护&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;内存分为操作系统驻留区域和用户进程驻留区域，操作系统通常位于低内存（因为中断向量通常位于低内存）。 &lt;strong&gt;连续内存分配（contiguous memory allocation）&lt;/strong&gt; 可使内存中每个进程占有连续的内存区域。&lt;/li&gt;
-&lt;li&gt;通过重定位寄存器和界限地址寄存器可实现内存保护，重定位寄存器含有最低 &lt;em&gt;物理地址&lt;/em&gt; 值，界限地址寄存器含有 &lt;em&gt;逻辑地址&lt;/em&gt; 的范围值。重定位寄存器机制也允许操作系统动态改变，若某操作系统服务（如某个驱动程序）不常使用，则内存中不必保留其代码和数据，这类代码称为 &lt;strong&gt;暂时（transient）&lt;/strong&gt; 操作系统代码，它们根据需要调入/调出，可在程序执行时动态改变操作系统大小。重定位寄存器和界限地址寄存器的硬件支持如下图所示。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/hardware-support-for-relocation-limit-registers.jpg&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;内存分配&quot;&gt;&lt;a href=&quot;#内存分配&quot; class=&quot;headerlink&quot; title=&quot;内存分配&quot;&gt;&lt;/a&gt;内存分配&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;最简单的内存分配方法：将内存分为多个 &lt;strong&gt;固定&lt;/strong&gt; 大小的 &lt;strong&gt;分区（partition）&lt;/strong&gt; ，每个分区只能容纳一个进程，多道程序的程度受分区数限制。当一个分区空闲时可以从输入队列选择一个进程调入空闲分区，进程终止时释放该分区。此种方式最初被 MFT（F：Fixed，IBM OS/360）使用，目前已被淘汰。&lt;/li&gt;
-&lt;li&gt;对 MFT 的推广是 MVT（V:Variable），即 &lt;strong&gt;可变分区（variable partition）&lt;/strong&gt; 方案。操作系统维护一个表以记录哪些内存可用和哪些内存已被占用。初始时所有内存均可用于用户进程，可视作一大块可用内存，称为 &lt;strong&gt;孔（hole）&lt;/strong&gt; 。新进程到来时需要查找足够大的孔，并从该孔为进程分配所需内存，孔内剩余内存可分配给其他进程。随着进程的到来和离开，内存中会分散着大小不同的孔。进程终止时释放的内存会形成新孔，若新孔和其他孔相邻，则这些相邻的孔可以合并为一个大孔。此时系统可以检查是否有进程在等待分配内存空间，以及新合并的内存空间是否满足该进程的需求。&lt;/li&gt;
-&lt;li&gt;上述 MVT 方法是通用 &lt;strong&gt;动态存储分配问题（dynamic storage allocation problem）&lt;/strong&gt; 的一种情况，从内存中的一组孔中选择一个空闲孔有如下三种常用方法，其中执行时间、空间利用方面最差适应方法最差，空间利用方面首次适应和最佳适应相近，但首次适应更快：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;首次适应（First fit）&lt;/strong&gt; ：分配寻找到的第一个足够大的孔，查找可以从任何位置（如内存开始位置或上次首次适应结束的位置）开始，一旦找到足够大的空闲孔就停止；&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;最佳适应（Best fit）&lt;/strong&gt; ：分配 &lt;em&gt;最小&lt;/em&gt; 的足够大的孔，此方式必须查找整个表（若表内孔位置记录按孔的大小排序则不需要查找整个表）；&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;最差适应（Worst fit）&lt;/strong&gt; ：分配 &lt;em&gt;最大&lt;/em&gt; 的孔，同样需要查找整个表，产生的孔比最佳适应方法产生的孔价值更大。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;碎片&quot;&gt;&lt;a href=&quot;#碎片&quot; class=&quot;headerlink&quot; title=&quot;碎片&quot;&gt;&lt;/a&gt;碎片&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;随着进程装入和移出内存，空闲内存空间被分为散落的小段，产生 &lt;strong&gt;外部碎片问题（external fragmentation）&lt;/strong&gt; ：所有可用内存空间之和满足一个/多个进程的请求，但这些可用内存并不连续。上述首次适应和最佳适应两种不同方法导致的碎片的数量也不同，对于不同的系统两者各有优劣，分配方向（从空闲块的顶端还是模块开始分配内存）也会对碎片数量产生影响。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;50% 规则&lt;/strong&gt; ：对采用首次适应方法的统计表明，假定有 N 个块已被分配，无论采用什么优化，都可能有 0.5N 个块为外部碎片，即 1/3 的内存无法被使用。&lt;/li&gt;
-&lt;li&gt;维护一个小孔的开销比小孔本身可能更大，例如一个需要 2046B 空间的进程被分配了大小为 2048B 的孔，剩余的 2B 小孔维护的开销比 2B 大得多。因此通常采用 &lt;em&gt;固定大小的块&lt;/em&gt; 而不是字节作为分配单元。此时进程被分配的空间通常大于所需空间，分配给进程的块中使用不到的空间被称为 &lt;strong&gt;内部碎片（internal fragmentation）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;解决外部碎片问题的方法：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;紧缩（compaction）&lt;/strong&gt; ：移动内存内容使所有空闲空间合并为一整块。紧缩仅可在重定位是动态的、且在运行时重定位的情况下可用。紧缩根据采用的合并算法不同，需要的开销大小也不同，最简单的合并算法将所有进程移动到内存的一端，空闲的孔移动到内存另一端以生成大孔，其开销较大；&lt;/li&gt;
-&lt;li&gt;允许一个进程占有的内存地址空间非连续，只要有物理内存就可以为进程分配：分页、分段、分段+分页。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;分页&quot;&gt;&lt;a href=&quot;#分页&quot; class=&quot;headerlink&quot; title=&quot;分页&quot;&gt;&lt;/a&gt;分页&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;分页（Paging）&lt;/strong&gt; 允许进程物理地址空间非连续，内存和备份存储均按页划分，页大小相同。在前述连续内存分配中，内存中的数据换入/换出到备份存储时，备份存储中也会存在类似的碎片问题，而分页避免了这一点。传统的分页由硬件处理，最近的设计（64位机）结合了硬件和操作系统。 &lt;strong&gt;在第八章中，需要假定自己尚未了解第九章的内容，并且进程在执行前已经把所需要的全部数据分页加载到内存中&lt;/strong&gt; 。&lt;/p&gt;
-&lt;h2 id=&quot;分页方法&quot;&gt;&lt;a href=&quot;#分页方法&quot; class=&quot;headerlink&quot; title=&quot;分页方法&quot;&gt;&lt;/a&gt;分页方法&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;将物理内存分为固定大小的块，称为 &lt;strong&gt;帧（frame）&lt;/strong&gt; ，将逻辑内存分配同样大小的块，称为 &lt;strong&gt;页（page）&lt;/strong&gt; 。备份存储页分为同样固定大小的块，进程执行时将执行所需的页从备份存储中调入可用的内存帧中。其硬件支持如下图所示。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/hardware-support-for-pages.jpg&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
-&lt;li&gt;CPU 生成的每个逻辑地址分为两部分： &lt;strong&gt;页号（page number）&lt;/strong&gt; 和 &lt;strong&gt;页偏移（page offset）&lt;/strong&gt; ，记为 &lt;code&gt;p&lt;/code&gt; 和 &lt;code&gt;d&lt;/code&gt; 。页号为 &lt;strong&gt;页表（page table）&lt;/strong&gt; 的索引，页表包含每页位于物理内存的基地址，页 &lt;code&gt;p&lt;/code&gt; 在页表中对应的基地址加上页偏移量 &lt;code&gt;d&lt;/code&gt; 即为该逻辑地址映射的物理地址。&lt;/li&gt;
-&lt;li&gt;页大小由硬件决定，通常为 2 的次幂，根据计算机结构不同，每页大小从 512B ~ 16MB 不等。页大小为 2 的幂可直接将逻辑地址的 2 进制表示划分为 &lt;code&gt;p&lt;/code&gt; 和 &lt;code&gt;d&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;分页也是一种动态重定位，每个逻辑地址由分页硬件绑定为对应的物理地址。采用分页技术不会产生外部碎片，但可能有内部碎片（进程所需内存不足一页，或要求的内存大小不是页的整数倍则最后一帧有内存空闲）。&lt;/li&gt;
-&lt;li&gt;目前页大小通常为 4 ~ 8KB，有的系统支持更大页，有的 CPU 内核支持多种页大小。页的大小受如下因素制约：&lt;ul&gt;
-&lt;li&gt;在进程大小和页大小无关的前提下，可以假设每个进程平均有半页内部碎片，因此更小的页会带来更少的内部碎片；&lt;/li&gt;
-&lt;li&gt;页表对于页和物理内存中的帧的对应关系记录需要一定开销，并且该开销随着页大小的增大而减小，页表中每个条目通常占 4B（可变）。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;分页的重要特点是 &lt;em&gt;用户视角内存&lt;/em&gt; 和 &lt;em&gt;实际物理内存&lt;/em&gt; 的分离，通过地址转换硬件将用户视角下的逻辑地址转换为物理地址。用户程序将内存作为一整块处理，而实际物理内存中进程可能分布在各个独立的帧中。用户进程无法访问其页表规定之外的内存，进程可见的页表仅包含进程拥有的页面记录。&lt;/li&gt;
-&lt;li&gt;操作系统使用 &lt;strong&gt;帧表（frame table）&lt;/strong&gt; 维护物理内存的分配细节（已被占用的帧、可用帧等），帧表的每个条目对应一帧，并标明该帧是否空闲，若占用则被哪个（些）进程的哪个页占用等。操作系统同时 &lt;strong&gt;为每个进程维护一个页表的副本&lt;/strong&gt; ，当一个进程可被分配 CPU 时，CPU 调度程序可根据该副本定义硬件页表（用户进程运行在用户模式，若进行系统调用，操作系统需要使用进程的页表副本来获取进程逻辑地址映射的物理地址）。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;硬件支持&quot;&gt;&lt;a href=&quot;#硬件支持&quot; class=&quot;headerlink&quot; title=&quot;硬件支持&quot;&gt;&lt;/a&gt;硬件支持&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;最简单的页表硬件实现方法将页表作为一组专用寄存器。&lt;/li&gt;
-&lt;li&gt;当代计算机允许页表非常大，因此页表放置在内存中，并设置 &lt;strong&gt;页表基寄存器（page-table base register，PTBR）&lt;/strong&gt; 指向页表，改变页表的位置仅需要修改此寄存器。此种做法的缺陷在于访问一个字节需要两次内存访问（一次用于在内存的页表中查找页号对应的条目，一次用于获取目标字节）。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;转换表缓冲区（translation look-aside buffer，TLB）&lt;/strong&gt; 是针对上述问题的专用快速硬件缓冲（关联存储器），其条目由键和值组成。TLB 查找速度快且造价昂贵，通常仅有 64 ~ 1024 个条目。TLB 和页表一起使用时，TLB 仅包含最近使用过的页表条目，查询流程如下：&lt;ul&gt;
-&lt;li&gt;CPU 产生逻辑地址，从逻辑地址提取出页号交付 TLB，TLB 将页号和存储的键比对，若寻找到相同键则结束流程；&lt;/li&gt;
-&lt;li&gt;请求的页码不在 TLB 中，即 &lt;strong&gt;TLB 失效（TLB miss）&lt;/strong&gt; ，此时需要在页表中查询。在页表中查询到与页号对应的帧号后，将页号和帧号增加到 TLB 中。若 TLB 中条目已满，则操作系统使用某种策略替换掉已有的一个条目，例如 &lt;em&gt;最近最少使用替换（LRU）&lt;/em&gt; 或随机替换等。TLB 中有的条目是永久驻留的（不允许从 TLB 中被替换），通常内核代码在 TLB 中的条目固定。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;有的 TLB 在每个 TLB 条目中存储了 &lt;strong&gt;地址空间标识符（address-space identifier，ASID）&lt;/strong&gt; ，该项用于唯一标识进程，为进程提供地址空间保护。TLB 解析虚拟页号时必须确保当前运行进程的 ASID 和 TLB 中条目对应的 ASID 匹配，否则视作 TLB 失效。除了内存空间保护，ASID 还使 TLB 能够同时包含多个不同进程的记录。如果 TLB 不支持每个条目有独立的 ASID，那么一旦有新页表被选择（例如进程的换入/换出），TLB 就需要被全部 &lt;strong&gt;刷新（flushed）&lt;/strong&gt; 或删除，防止 TLB 中存在无效的条目（页号地址无效的条目，如上一个进程留下来的无效物理地址）导致被换入的进程使用错误的地址转换。&lt;/li&gt;
-&lt;li&gt;页号在 TLB 中被查找到的百分比为 &lt;strong&gt;命中率（hit ratio）&lt;/strong&gt; ， &lt;strong&gt;有效内存访问时间（effective memory-access time）&lt;/strong&gt; 的计算需要根据 TLB 的命中率加权。例如查找 TLB 需要 20ns，内存访问需要 100ns，命中率 80%，则有效内存访问时间为 &lt;code&gt;0.8 x 120 + 0.2 x 220 = 140ns&lt;/code&gt; 。需要注意的是， &lt;strong&gt;TLB 查询早于内存中页表的查询，只有 TLB 查询结束并且没有查询到帧号时才会开始在页表中的查询&lt;/strong&gt; ，此前计算机组成原理中讲过的 TLB 有错误。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;保护和共享&quot;&gt;&lt;a href=&quot;#保护和共享&quot; class=&quot;headerlink&quot; title=&quot;保护和共享&quot;&gt;&lt;/a&gt;保护和共享&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;分页情况下内存保护通过每个帧对应的保护位实现，这些保护位通常保存在页表中。常见类型的位有：&lt;ul&gt;
-&lt;li&gt;可读写/只读位：产生地址引用时除了在页表中查找对应的帧码，还需要检查保护位验证是否有对只读页进行了写操作，若有则向操作系统产生硬件陷阱。扩展这种方法可提供更细致的保护。&lt;/li&gt;
-&lt;li&gt;有效/无效位：该位有效表示与之相关的页属于当前进程的逻辑地址空间，为合法页，否则与之相关的页不属于当前进程的逻辑地址空间。使用该位可以捕获到非法地址，操作系统通过对该位的设置可允许/禁止进程对某页的访问。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;一个进程很少会使用到所有分配的地址空间，页表为地址范围内的所有页都建立一个条目是浪费的行为（并且每个进程有一个页表副本），表中的多数条目不会被使用，而这些条目却占据可用地址空间。有些系统提供了 &lt;strong&gt;页表长度寄存器（page-table length register，PTLR）&lt;/strong&gt; 表示页的大小，该寄存器的值可用于验证逻辑地址是否处于进程的有效范围内。&lt;/li&gt;
-&lt;li&gt;分页存储可以 &lt;strong&gt;共享&lt;/strong&gt; 公共代码，这对于分时系统非常重要。例如一个多用户系统，每个用户均执行一个文本编辑器，若代码不支持共享，则每个用户需要维护一个文本编辑器的副本；若代码是 &lt;strong&gt;可重入代码（reentrant code）&lt;/strong&gt; 或 &lt;strong&gt;纯代码（pure code）&lt;/strong&gt; ，则这部分代码可以被共享。可重入代码是不能自我修改的代码，它们在执行期间从不改变因此多个进程可以同时执行这部分代码。当然，除了共享的代码，每个进程还有自己的寄存器副本和数据存储。要实现共享，代码必须能够重入，并且可重入代码的只读性需要操作系统强制实现。（如果你了解 Haskell，可重入代码和 Haskell 里的 pure code 有类似的特性，后者不会对环境产生副作用，每次执行仅根据参数确定结果）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;页表结构&quot;&gt;&lt;a href=&quot;#页表结构&quot; class=&quot;headerlink&quot; title=&quot;页表结构&quot;&gt;&lt;/a&gt;页表结构&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;层次页表（Hierarchical Paging）&lt;/strong&gt; ：当代计算机支持非常大的逻辑地址空间，此时页表本身将非常大。例如 32 位逻辑地址空间的计算机系统，若页大小为 4KB，则页表需要包含 &lt;code&gt;2^20&lt;/code&gt; 个条目，即使每个条目在页表中仅需要 4B 存储，整个页表也需要 4MB 物理地址空间存储（每个进程还需要独立维护一个副本）。因为内存采取分页管理，页表的大小超过了一个页面的大小，因此需要将页表划分到足够小以便一页能够容纳。一种可行的方式是二级分页算法：例如上述 32 位逻辑地址系统，可将 20 位页号划分为 10 位的外部页表页码 &lt;code&gt;p1&lt;/code&gt; 和 10 位的页表偏移量 &lt;code&gt;p2&lt;/code&gt;，其具体的映射方式如下图所示。此种方案也称为 &lt;strong&gt;向前映射页表（forward-mapped page table）&lt;/strong&gt; 。对于 64 位体系结构，层次结构并不合适，例如 64 位 UltraSPARC 体系结构使用 7 级分页，几乎已经是内存访问极限。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/hierarchical-paging.jpg&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;哈希页表（Hashed Page）&lt;/strong&gt; 以虚拟页码作为哈希值，每个条目包括一个链表用于处理碰撞。链表中的每个元素包含三个域：虚拟页码，对应帧号以及指向链表中下一个元素的指针。此种方式的地址映射过程如下：将虚拟页号哈希到表中某个条目，若该条目对应的链表存在元素，则按顺序比较直到找到对应的元素。哈希页表的一个变种是 &lt;strong&gt;群集页表（clustered page table）&lt;/strong&gt; ，它的每个条目包括多页信息，因此一个条目存储了多个物理页帧的映射，这对于 &lt;strong&gt;稀疏（sparse）&lt;/strong&gt; 地址空间非常有效，稀疏地址空间种的地址引用通常不连续并且散布在整个地址空间。 &lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;反向页表（inverted page table）&lt;/strong&gt; ：每个进程均维护一个相关页表，这个进程使用到的每个页在其持有的页表里有一项，或者每个虚拟地址在页表里都有一项而不论这个虚拟地址是否有效，此时每个页表会有很多项，这些表会消耗大量的内存，而其目的仅仅是追踪物理内存如何使用。反向页表中，每个真实的内存页/帧存在一个条目，该条目包括引用该物理帧的虚拟页号以及拥有该页的进程信息。所以整个系统只有一个页表，每个物理内存帧仅有一条相应的条目。&lt;/li&gt;
-&lt;li&gt;一种简化的反向页表实现（IBM RT 采用）：系统每个虚拟地址对应一个三元组 &lt;code&gt;&amp;lt;pid | page numbe r | offset&amp;gt;&lt;/code&gt;，反向表中每个条目为 &lt;code&gt;&amp;lt;pid | page number&amp;gt;&lt;/code&gt;，需要内存引用时，操作系统查找反向页表寻找匹配，若匹配找到则产生物理地址，否则认为产生了非法地址访问。这种方案减少了存储每个页表所需的内存空间，但增加了查找页表所需要的时间。反向页表按照物理地址排序，而查找依据虚拟地址，所以可能需要查找整个表来寻找匹配。可以使用 &lt;em&gt;哈希页表&lt;/em&gt; 限制页表条目或加入 TLB 来改善。此外，采用反向页表的系统很难共享内存，因为每个物理帧只对应一个虚拟页条目。对于这种情况，可以允许页表的没一个条目仅包含一个虚拟地址到共享内存地址的映射，这时对未被映射虚拟地址的引用会导致页错误（page fault）。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;分段&quot;&gt;&lt;a href=&quot;#分段&quot; class=&quot;headerlink&quot; title=&quot;分段&quot;&gt;&lt;/a&gt;分段&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;采用分页管理导致用户视角的内存和实际物理地址内存分离，对于装载/写入操作必须将虚拟内存映射到实际的物理内存。 &lt;strong&gt;分段（segmentation）&lt;/strong&gt; 支持另一种用户视角，其逻辑地址空间由一些段组成，每个段有自己的编号和长度，用户通过段号和段内偏移（与分页的区别在于，分页管理中用户只指定一个虚拟地址，由硬件将虚拟地址拆分为页码和偏移，这些工作对程序员透明）来指定地址。&lt;/li&gt;
-&lt;li&gt;编译用户程序时，编译器会自动根据输入的程序源码构造段（代码段、静态区、堆、栈等），编译时链接的库可能被分配不同的段，加载程序时装入这些段并分配段号。&lt;/li&gt;
-&lt;li&gt;用户可以通过二维地址（段号、偏移）来引用存储单元，但实际物理内存仍然为一维的序列。操作系统通过 &lt;strong&gt;段表（segment table）&lt;/strong&gt; 实现将二维用户定义地址映射到一维物理地址，段表的每个条目对应一个段，存储着该段的段号、段基地址（段在内存中开始的物理地址）和段界限（段的长度），对于某段超出段长的地址引用访问会导致硬件陷阱的触发。&lt;/li&gt;
-&lt;li&gt;段表在内存中的位置由 &lt;strong&gt;段基址寄存器（segment table base register，STBR）&lt;/strong&gt; 和 &lt;strong&gt;段长度寄存器（segment table length register，STLR）&lt;/strong&gt; 指定，当段号 s 满足 &lt;code&gt;s &amp;lt; STLR&lt;/code&gt; 时该段合法。&lt;/li&gt;
-&lt;li&gt;分段会导致不连续的空闲内存空间以及外部碎片，从空闲内存为进程分配段也存在类似 &lt;em&gt;连续内存分配&lt;/em&gt; 中的问题，有首次适应和最佳适应两种分配方式。&lt;/li&gt;
-&lt;li&gt;段可以被共享，多个进程可以通过相同段号共享同一个段。段的保护可通过类似页表中的保护位实现，段表中的每一条条目有一个合法位（为 0 表示不合法），同时也可以支持读/写/执行权限。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;实例：Intel-Pentium&quot;&gt;&lt;a href=&quot;#实例：Intel-Pentium&quot; class=&quot;headerlink&quot; title=&quot;实例：Intel Pentium&quot;&gt;&lt;/a&gt;实例：Intel Pentium&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;奔腾结构允许一个段的大小最大为 4GB，每个进程最多可持有 16K 个段。进程逻辑地址空间分为两部分，第一部分最多由 8K 个段组成，此部分私有；第二部分最多由 8K 个段组成，此部分可以被所有进程共享。第一部分的信息保存在 &lt;strong&gt;本地描述符表（local descriptor table，LDT）&lt;/strong&gt; 中，第二部分信息保存在 &lt;strong&gt;全局描述符表（global descriptor table，GDT）&lt;/strong&gt; 中，这两个表中每个条目占 8B 空间，包括一个段的详细信息（段基址、段界限）。&lt;/li&gt;
-&lt;li&gt;逻辑地址格式： &lt;code&gt;&amp;lt;selector | offset&amp;gt;&lt;/code&gt;，其中选择器（selector）是一个 16 位的数，前 13 位表示段号，第 14 位表示该段在 GDT 还是 LDT 中，最后两位表示保护信息，支持四级保护。偏移量（offset）是 32 位的数，表示段内偏移量。奔腾 CPU 中有 6 个段寄存器，允许一个进程同时访问 6 个段，同时还有 6 个 8B 微程序寄存器保存相应的来自于 LDT 或 GDT 的描述符，它们使奔腾不必在每次内存引用时从内存读取描述符。&lt;/li&gt;
-&lt;li&gt;奔腾结构允许页的大小为 4KB 或 4MB，对于 4KB 的页，奔腾使用二级分页方案，32 位线性地址划分为 10、10、12 三块，类似前述的二级分页的例子。最高 10 位引用 &lt;strong&gt;页目录（page directory）&lt;/strong&gt; 的条目，中间 10 位指向内部页表，最后 12 位为 4KB 页面内的偏移。页目录中每个条目有一个 PageSize 标志，若该标识被设置则代表页帧大小 4MB，此时跳过中间 10 位对内层页表的查询，直接使用后 22 位指向 4MB 页帧内偏移。奔腾的页表还可以交换到磁盘上，通过页目录条目的无效位表示该条目对应的页表位于内存还是磁盘。若页表在磁盘上，则可使用条目中剩下的 31 位标明页表在磁盘的具体位置以调入内存。&lt;/li&gt;
-&lt;li&gt;奔腾体系结构上运行的 Linux 系统使用 6 个段（内核代码段、内核数据段、用户代码段、用户数据段、任务状态段 TSS 以及默认的 LDT 段）。Linux 中默认的 LDT 段被所有进程共享，如果一个进程需要自己的 LDT ，则它可以生成一个新的 LDT 来代替默认值。此外，每个进程有自己的 TSS 以存储上下文切换中的硬件上下文，每个进程也有自己的页表。&lt;/li&gt;
-&lt;li&gt;奔腾体系结构上运行的 Linux 仅使用了四级保护中的两种，用于区分内核模式和用户模式。Linux 采用三级分页方案（全局目录-中间目录-页表-偏移），而奔腾采用二级分页模式，此时 Linux 的 “中间目录” 大小为 0，因此等价于奔腾的二级分页。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2016/11/24/os-concepts-7/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（七）：死锁&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/04/os-concepts-9/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（九）：虚拟内存&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/01/03/os-concepts-8/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/01/03/os-concepts-8/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/01/03/os-concepts-8/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版第八章内存管理部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
