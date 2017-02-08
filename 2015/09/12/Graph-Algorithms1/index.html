@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="图的概念和术语、标准表示方式以及其他存储方式。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/algorithm-3.jpg">
-<meta property="og:updated_time" content="2016-11-04T15:44:11.017Z">
+<meta property="og:updated_time" content="2017-02-08T08:37:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图的概念和存储方式">
 <meta name="twitter:description" content="图的概念和术语、标准表示方式以及其他存储方式。">
@@ -228,7 +228,7 @@
 </blockquote>
 <p> 举例，输入数据：<br> 1 4<br> 1 3<br> 3 2<br> 5 2<br> 1 5<br> 上面输入完成后，边集数组如下<table style="text-align: center"><tbody><tr><td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr><tr><td>source</td><td>1</td><td>1</td><td>3</td><td>5</td><td>1</td></tr><tr><td>destination</td><td>4</td><td>3</td><td>2</td><td>2</td><td>5</td></tr></tbody></table>容易看出，边集数组只是简单的存储每条边的信息，如果需要存储权值只需要再加上一个域。在边集数组中查找一条边或一个顶点的度都需要扫描整个数组，所以其时间复杂性为O（e）。边集数组适合那些对边依次进行处理的运算，不适合对顶点的运算和对任一条边的运算。 </p>
 <h2 id="前向星和链式前向星"><a href="#前向星和链式前向星" class="headerlink" title="前向星和链式前向星"></a>前向星和链式前向星</h2><ul>
-<li>前向星是特殊的边集数组，把边集数组中的每一条边按照起点排序，如果起点相同就按照重点排序，之后用Len[i]记录以i为起点的边共有多少条，以Head[i]记录这Len[i]条边中第一条在前向星数组的哪个位置。举例，输入数据：<br>1 4<br>1 3<br>3 2<br>5 2<br>1 5<br>在上面的输入完成后，对其排序得到<br><table style="text-align: center"><tbody><tr><td>编号</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr><tr><td>起点</td><td>1</td><td>1</td><td>1</td><td>3</td><td>5</td></tr><tr><td>终点</td><td>3</td><td>4</td><td>5</td><td>2</td><td>2</td></tr></tbody></table><br>此时Len和Head数组分别为<table style="text-align: center"><tbody><tr><td></td><td>Head</td><td>Len</td></tr><tr><td>1</td><td>1</td><td>3</td></tr><tr><td>2</td><td>-1</td><td>0</td></tr><tr><td>3</td><td>4</td><td>1</td></tr><tr><td>4</td><td>-1</td><td>0</td></tr><tr><td>5</td><td>5</td><td>1</td></tr></tbody></table>前向星需要先对边集数组排序，用快排需要O（NlogN）复杂度，计数排序也需要O（M）的预处理时间。</li>
+<li>前向星是特殊的边集数组，把边集数组中的每一条边按照起点排序，如果起点相同就按照终点排序，之后用Len[i]记录以i为起点的边共有多少条，以Head[i]记录这Len[i]条边中第一条在前向星数组的哪个位置。举例，输入数据：<br>1 4<br>1 3<br>3 2<br>5 2<br>1 5<br>在上面的输入完成后，对其排序得到<br><table style="text-align: center"><tbody><tr><td>编号</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr><tr><td>起点</td><td>1</td><td>1</td><td>1</td><td>3</td><td>5</td></tr><tr><td>终点</td><td>3</td><td>4</td><td>5</td><td>2</td><td>2</td></tr></tbody></table><br>此时Len和Head数组分别为<table style="text-align: center"><tbody><tr><td></td><td>Head</td><td>Len</td></tr><tr><td>1</td><td>1</td><td>3</td></tr><tr><td>2</td><td>-1</td><td>0</td></tr><tr><td>3</td><td>4</td><td>1</td></tr><tr><td>4</td><td>-1</td><td>0</td></tr><tr><td>5</td><td>5</td><td>1</td></tr></tbody></table>前向星需要先对边集数组排序，用快排需要O（NlogN）复杂度，计数排序也需要O（M）的预处理时间。</li>
 <li><p>链式前向星<br>不需要排序，建立边结构体  </p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> Edge&#123;</span><br><span class="line">    <span class="keyword">int</span> next;</span><br><span class="line">    <span class="keyword">int</span> to;</span><br><span class="line">    <span class="keyword">int</span> weight;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>其中，edge[i].to为第i条边的终点，edge[i].next表示与第i条边同起点的下一边在Edge数组中的位置，edge[i].weight为权值。此外还需要数组head，初始化为-1。head[i]表示以i为起点的第一条边的存储位置，利用链式前向星存储时，head[i]记录的位置是按输入顺序最后一条以i为起点的边所存储的位置。插入边代码如下。</p>
@@ -252,7 +252,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/09/12/Graph-Algorithms1/" data-id="ciyu1xvr6008lvkewbo1wzx01" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2015/09/12/Graph-Algorithms1/" data-id="ciywpkcd8008le8ewtqj84x6f" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -584,7 +584,27 @@
             <ul>
                 
                     <li>
-                        <a href="http://forec.cn">Forec的官方网站</a>
+                        <a href="mailto:forec@bupt.edu.cn">联系 Forec</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec 的官方网站</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://fallenwood.github.io">Fallenwood 的博客</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Forec">Forec 在 GitHub</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://www.codewars.com/users/Forec">Forec 在 CodeWars</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://leetcode.com/forec/">Forec 在 LeetCode</a>
                     </li>
                 
             </ul>
