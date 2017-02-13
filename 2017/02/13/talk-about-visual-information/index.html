@@ -3,18 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>归档: 2017/1 | Forec&#39;s Notes</title>
+    <title>视觉信息论（译） | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="description" content="奋斗在Code Farm的在校生">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Forec's Notes">
-<meta property="og:url" content="http://forec.github.io/archives/2017/01/index.html">
+        <meta name="keywords" content="信息视觉,机器学习" />
+    
+    <meta name="description" content="这篇文章来自 Christopher Olah 的博客，她在 Google Brain 团队研究机器学习，我正在联系她以获取授权，得到授权后会将其翻译为中文。The English Version Is Here, and URL in plain text is https://colah.github.io/posts/2015-09-Visual-Information/.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="视觉信息论（译）">
+<meta property="og:url" content="http://forec.github.io/2017/02/13/talk-about-visual-information/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="奋斗在Code Farm的在校生">
+<meta property="og:description" content="这篇文章来自 Christopher Olah 的博客，她在 Google Brain 团队研究机器学习，我正在联系她以获取授权，得到授权后会将其翻译为中文。The English Version Is Here, and URL in plain text is https://colah.github.io/posts/2015-09-Visual-Information/.">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/talk-about-visual-information.png">
+<meta property="og:updated_time" content="2017-02-13T14:07:02.751Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Forec's Notes">
-<meta name="twitter:description" content="奋斗在Code Farm的在校生">
+<meta name="twitter:title" content="视觉信息论（译）">
+<meta name="twitter:description" content="这篇文章来自 Christopher Olah 的博客，她在 Google Brain 团队研究机器学习，我正在联系她以获取授权，得到授权后会将其翻译为中文。The English Version Is Here, and URL in plain text is https://colah.github.io/posts/2015-09-Visual-Information/.">
     
 
     
@@ -135,514 +139,157 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-archive"></i>归档: 2017/1
+    <a class="page-title-link" href="/categories/大数据/">大数据</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            
+                            <article id="post-talk-about-visual-information" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        视觉信息论（译）
+        </h1>
+    
 
-    
-    
+            </header>
         
         
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2017" class="archive-year"><i class="icon fa fa-calendar-o"></i>2017</a>
+            <div class="article-subtitle">
+                <a href="/2017/02/13/talk-about-visual-information/" class="article-date">
+    <time datetime="2017-02-13T12:38:16.000Z" itemprop="datePublished">2017-02-13</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/信息视觉/">信息视觉</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li></ul>
+
             </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
         
-        <a href="/2017/01/31/vscode-configuration/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/vscode-configuration.jpg)" alt="VS Code 配置记录" class="thumbnail-image"></span>
-    
-    
         
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2017/01/31/vscode-configuration/">0</span>
-    
-</span>
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>这篇文章来自 <a href="https://colah.github.io/about.html" target="_blank" rel="external">Christopher Olah</a> 的<a href="https://colah.github.io/posts/2015-09-Visual-Information/" target="_blank" rel="external">博客</a>，她在 Google Brain 团队研究机器学习，我正在联系她以获取授权，得到授权后会将其翻译为中文。The English Version Is <a href="https://colah.github.io/posts/2015-09-Visual-Information/" target="_blank" rel="external">Here</a>, and URL in plain text is <code>https://colah.github.io/posts/2015-09-Visual-Information/</code>.</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<p>参考资料：<a href="https://colah.github.io/posts/2015-09-Visual-Information/" target="_blank" rel="external">Visual Information Theory</a></p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/02/13/talk-about-visual-information/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/02/13/talk-about-visual-information/" target="_blank" rel="external">http://blog.forec.cn/2017/02/13/talk-about-visual-information/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/Configuration/">Configuration</a>
-            </p>
-            <p class="date"><time datetime="2017-01-31T07:38:13.000Z" itemprop="datePublished">2017-01-31</time></p>
         </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2017/01/31/vscode-configuration/">VS Code 配置记录</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
+        <footer class="article-footer">
             
-VS Code 的配置记录。
 
-        </p>
+
+
+    <a data-url="http://forec.github.io/2017/02/13/talk-about-visual-information/" data-id="ciz464fdr002bq4ewrxbkt2ac" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
     </div>
 </article>
-    
 
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2017/01/08/os-concepts-16/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-16.jpg)" alt="互斥读者-读者问题" class="thumbnail-image"></span>
-    
+    <section id="comments">
     
         
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2017/01/08/os-concepts-16/">0</span>
-    
-</span>
+    <div class="ds-thread" data-thread-key="2017/02/13/talk-about-visual-information/" data-title="视觉信息论（译）" data-url="http://forec.github.io/2017/02/13/talk-about-visual-information/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
 
     
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2017-01-08T09:52:59.000Z" itemprop="datePublished">2017-01-08</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2017/01/08/os-concepts-16/">互斥读者-读者问题</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-在 操作系统（专题）：信号量编程（上） 中，我对《操作系统概念》原书课后习题 7.16 过桥问题做了一定改动，此部分记录对改动后题目的分析。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2017/01/08/os-concepts-15/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-15.jpg)" alt="操作系统（专题）：信号量编程（下）" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2017/01/08/os-concepts-15/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2017-01-08T03:53:13.000Z" itemprop="datePublished">2017-01-08</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2017/01/08/os-concepts-15/">操作系统（专题）：信号量编程（下）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-此部分包括一些和 《信号量编程（上）》 相比稍难的信号量编程习题，可能有一小部分超出了考试范畴。这部分习题的解答均根据我个人理解编写， 不保证提供的答案绝对正确或最优 。
-
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2017/01/06/os-concepts-14/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-14-r.jpg)" alt="操作系统（专题）：信号量编程（上）" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2017/01/06/os-concepts-14/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2017-01-06T09:21:43.000Z" itemprop="datePublished">2017-01-06</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2017/01/06/os-concepts-14/">操作系统（专题）：信号量编程（上）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-此部分主要包括原书第六章（进程同步）和第七章（死锁）的部分习题（有些不属于考试范围），以及一些简单信号量编程习题（低于考试难度）的分析。这部分习题的解答均根据我个人理解编写或翻译， 不保证提供的答案绝对正确或最优 。稍微复杂一些的信号量编程在 《信号量编程（下）》。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2017/01/06/os-concepts-13/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-13.jpg)" alt="操作系统（十三）：I/O 输入系统" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2017/01/06/os-concepts-13/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2017-01-06T04:17:33.000Z" itemprop="datePublished">2017-01-06</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2017/01/06/os-concepts-13/">操作系统（十三）：I/O 输入系统</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
-
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2017/01/05/os-concepts-12/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-12.jpg)" alt="操作系统（十二）：大容量存储器结构" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2017/01/05/os-concepts-12/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2017-01-05T15:23:30.000Z" itemprop="datePublished">2017-01-05</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2017/01/05/os-concepts-12/">操作系统（十二）：大容量存储器结构</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理《Operating System Concepts》 第七版第十二章大容量存储器结构部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2017/01/05/os-concepts-11/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-11.jpg)" alt="操作系统（十一）：文件系统实现" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2017/01/05/os-concepts-11/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2017-01-05T09:11:59.000Z" itemprop="datePublished">2017-01-05</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2017/01/05/os-concepts-11/">操作系统（十一）：文件系统实现</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理《Operating System Concepts》 第七版第十一章文件系统实现部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
-
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2017/01/05/os-concepts-10/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-10.jpg)" alt="操作系统（十）：文件系统接口" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2017/01/05/os-concepts-10/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2017-01-05T03:55:47.000Z" itemprop="datePublished">2017-01-05</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2017/01/05/os-concepts-10/">操作系统（十）：文件系统接口</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理《Operating System Concepts》 第七版第十章文件系统接口部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2017/01/04/os-concepts-9/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-9.jpg)" alt="操作系统（九）：虚拟内存" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2017/01/04/os-concepts-9/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2017-01-03T16:42:29.000Z" itemprop="datePublished">2017-01-04</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2017/01/04/os-concepts-9/">操作系统（九）：虚拟内存</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理《Operating System Concepts》 第七版第九章虚拟内存部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
-
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2017/01/03/os-concepts-8/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-8.jpg)" alt="操作系统（八）：内存管理" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2017/01/03/os-concepts-8/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2017-01-03T02:27:12.000Z" itemprop="datePublished">2017-01-03</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2017/01/03/os-concepts-8/">操作系统（八）：内存管理</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理《Operating System Concepts》 第七版第八章内存管理部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-
-    </div></section>
-
-
+    </section>
 
                         </div>
                     </section>
@@ -702,6 +349,19 @@ VS Code 的配置记录。
             
         </ul>
     </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2017/02/06/talk-about-hmm/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">HMM 关键词检索</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
