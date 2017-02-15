@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>差分约束系统 | Forec&#39;s Notes</title>
+    <title>用 Haskell 实现解释器 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="Algorithms" />
+        <meta name="keywords" content="Haskell" />
     
-    <meta name="description" content="差分约束的最短路径算法证明和解释。">
+    <meta name="description" content="这篇文章主要基于王垠早年发过的文章《怎样写一个解释器》，我参考了 Racket 版本的 R2 解释器，并用 Haskell 实现 H2Lang 的简单解释器，较 R2 的功能做了一点改进。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="差分约束系统">
-<meta property="og:url" content="http://forec.github.io/2015/12/24/Graph-Algorithms6/index.html">
+<meta property="og:title" content="用 Haskell 实现解释器">
+<meta property="og:url" content="http://forec.github.io/2017/02/14/talk-about-interpreter/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="差分约束的最短路径算法证明和解释。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/algorithm-7.jpg">
-<meta property="og:updated_time" content="2016-11-04T16:22:06.344Z">
+<meta property="og:description" content="这篇文章主要基于王垠早年发过的文章《怎样写一个解释器》，我参考了 Racket 版本的 R2 解释器，并用 Haskell 实现 H2Lang 的简单解释器，较 R2 的功能做了一点改进。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/talk-about-interpreter.jpg">
+<meta property="og:updated_time" content="2017-02-15T12:10:56.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="差分约束系统">
-<meta name="twitter:description" content="差分约束的最短路径算法证明和解释。">
+<meta name="twitter:title" content="用 Haskell 实现解释器">
+<meta name="twitter:description" content="这篇文章主要基于王垠早年发过的文章《怎样写一个解释器》，我参考了 Racket 版本的 R2 解释器，并用 Haskell 实现 H2Lang 的简单解释器，较 R2 的功能做了一点改进。">
     
 
     
@@ -143,14 +143,14 @@
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-Graph-Algorithms6" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-talk-about-interpreter" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        差分约束系统
+        用 Haskell 实现解释器
         </h1>
     
 
@@ -158,33 +158,68 @@
         
         
             <div class="article-subtitle">
-                <a href="/2015/12/24/Graph-Algorithms6/" class="article-date">
-    <time datetime="2015-12-24T02:32:37.000Z" itemprop="datePublished">2015-12-24</time>
+                <a href="/2017/02/14/talk-about-interpreter/" class="article-date">
+    <time datetime="2017-02-14T12:38:16.000Z" itemprop="datePublished">2017-02-14</time>
 </a>
                 
-    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithms/">Algorithms</a></li></ul>
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Haskell/">Haskell</a></li></ul>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>差分约束的最短路径算法证明和解释。</p>
+<p>这篇文章主要基于王垠早年发过的文章<a href="http://www.yinwang.org/blog-cn/2012/08/01/interpreter" target="_blank" rel="external">《怎样写一个解释器》</a>，我参考了 Racket 版本的 R2 解释器，并用 Haskell 实现 <code>H2Lang</code> 的简单解释器，较 R2 的功能做了一点改进。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="差分约束系统"><a href="#差分约束系统" class="headerlink" title="差分约束系统"></a>差分约束系统</h1><ul>
-<li>差分约束系统用一个m×n的线性规划矩阵表示m个不等式，这m个不等式中共n个变量x1,x2,…,xn，每个不等式满足如下形式：xi - xj &lt;= bk（1 &lt;= i, j &lt;= n, 1 &lt;= k &lt;= m），在矩阵中的表示为，每一行都有一个1和一个-1,其他元素都为0。例如<table><tbody><tr><td>1</td><td>-1</td><td>0</td><td>0</td><td>0</td></tr><tr><td>1</td><td>0</td><td>0</td><td>0</td><td>-1</td></tr><tr><td>0</td><td>1</td><td>0</td><td>0</td><td>-1</td></tr><tr><td>-1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>-1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr><tr><td>0</td><td>0</td><td>-1</td><td>1</td><td>0</td></tr><tr><td>0</td><td>0</td><td>-1</td><td>0</td><td>0</td></tr><tr><td>0</td><td>0</td><td>0</td><td>-1</td><td>1</td></tr></tbody></table>用上面的矩阵乘一个n×1的变量矩阵x = (xi)，使其满足一个m×1的常数矩阵（bk）。等价于找出下面8个不等式的可行解：x1 - x2 &lt;= b1; x1 - x5 &lt;= b2; x2 - x5 &lt;= b3; x3 - x1 &lt;= b4; x4 - x1 &lt;= b5; x4 - x1 &lt;= b6; x5 - x3 &lt;= b7; x5 - x4 &lt;= b8。对于bk = (0, -1, 1, 5, 4, -1, -3, -3)的一个序列，x的一个可行解为(-5, -3, 0, -1, -4)，同样，对于任意x’ = x+d，d为任意常数，x’也是该不等式组的一组解。</li>
+<h2 id="代码的表示"><a href="#代码的表示" class="headerlink" title="代码的表示"></a>代码的表示</h2><ul>
+<li>王垠的 R2 解释器用 Racket 实现，Racket 可以很容易地用 <code>&#39;(op e1 e1)</code> 的形式表示 S-expr，并且 lambda 表达式也可以复用。<a href="http://fallenwood.github.io/2017/02/04/writing-a-simple-lisp/" target="_blank" rel="external">Fallenwood</a> 也用 Python 实现了一个类似的 Lisp 解释器，他将操作符和表达式均以列表的形式存储，利用了 Python 的动态类型。知乎上 “<a href="https://www.zhihu.com/question/20115358" target="_blank" rel="external">如何写 Lisp 解释器</a>” 这个问题下，答主 <a href="https://www.zhihu.com/people/be5invis/answers" target="_blank" rel="external">Belleve</a> 给出了 JS 实现的 Lisp 解释器，并实现了 <code>call/cc</code>。</li>
+<li>Haskell 是静态类型，没法把动态类型列表迭代那一套搬过来，因此基本思路和王垠文章中所述类似。为了方便起见，我声明新的类型，并用字符串表示值操作符：</li>
 </ul>
-<h1 id="约束图"><a href="#约束图" class="headerlink" title="约束图"></a>约束图</h1><ul>
-<li>观察差分约束系统的不等式，发现其与最短路径松弛操作相似。松弛操作的判断条件是d[v] &lt;= d[u] + w(u, v)，差分约束方程中为xi - xj &lt;= bk，因此xi &lt;=&gt; d[v]，xj &lt;=&gt; d[u]，w(u, v) &lt;=&gt; bk，据此建边vj-&gt;vi，权值为bk，变量x1,x2,…,xn分别对应结点s1,s2,s3,…,sn。</li>
-<li>在上述图中，附加一个源点s0,将其与所有顶点相连，并将s0的所有出边权值均设为0。下面将证明，给定一个差分约束系统Ax&lt;=b，设G=(V,E)为该系统对应的约束图，则如果G不包含负权环，从s0到其它各点的最短路径权值就是一组可行解，否则此系统不存在可行解。证明过程如下：当G不包含负权回路时，对于任意边(vi, vj)，根据三角不等式d[vj] &lt;= d[vi] + w(vi, vj)，设d[vi] = xi， d[vj] = xj，那么xj - xi &lt;= w(vi , vj)，因此满足对应边（vi, vj）的差分约束。而当G中包含负权回路时，假设负权回路为<v1, v2,="" ...="" ,="" vk="">，其中v1 = vk（源点s0没有入边，不可能出现在负权环上），因此整个负权环对应如下的差分约束：x2 - x1 &lt;= w(v1,v2)；x3 - x2 &lt;= w(v2, v3);…;xk - xk-1 &lt;= w(vk-1, vk)，将这k-1个不等式相加，则左边为0,而右边是负数，矛盾。因此不存在解。</v1,></li>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="typedef"><span class="keyword">data</span> <span class="type">Exp</span> = <span class="type">Value</span> <span class="type">Float</span>       |</span></span><br><span class="line">           <span class="type">Boolean</span> <span class="type">Bool</span>      |</span><br><span class="line">           <span class="type">String'</span> <span class="type">String</span>    |</span><br><span class="line">           <span class="type">Param</span> <span class="type">String</span>      |</span><br><span class="line">           <span class="type">Error</span> <span class="type">String</span>      |</span><br><span class="line">           <span class="type">Op</span> <span class="type">String</span> <span class="type">Exp</span> <span class="type">Exp</span> |</span><br><span class="line">           <span class="type">Lambda</span> <span class="type">Exp</span> <span class="type">Exp</span>    |</span><br><span class="line">           <span class="type">If</span> <span class="type">Exp</span> <span class="type">Exp</span> <span class="type">Exp</span>    |</span><br><span class="line">           <span class="type">Let</span> <span class="type">Exp</span> <span class="type">Exp</span> <span class="type">Exp</span>   |</span><br><span class="line">           <span class="type">Closure</span> <span class="type">Exp</span> <span class="type">Env</span>   |</span><br><span class="line">           <span class="type">Call</span> <span class="type">Exp</span> <span class="type">Exp</span> <span class="keyword">deriving</span> (<span class="type">Show</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在上面的型别声明中，提供了三种类型的数据（<code>Float</code>、<code>Bool</code> 和 <code>String</code>），以及变量（<code>Param</code>）、错误信息（<code>Error</code>）、运算式（<code>Op</code>）、函数（<code>Lambda</code>）、条件表达式（<code>If</code>）、绑定（<code>Let</code>）、闭包（<code>Closure</code>）和函数调用（<code>Call</code>）。</li>
+<li>出于方便考虑，只支持了二元运算符，这从 <code>Exp</code> 的声明中也能看出。如果想支持一元运算符，最简单的方式是增加型别的值构造子，并修改解释器的模式匹配；如果想支持多元运算符，可以绑定嵌套。</li>
+<li><code>Closure</code> 值构造子有一个参数为 <code>Env</code>，它用于维护闭包内表达式所处的环境的副本。</li>
 </ul>
-<h1 id="最大解与最小解"><a href="#最大解与最小解" class="headerlink" title="最大解与最小解"></a>最大解与最小解</h1><ul>
-<li>当差分约束条件给出其中一个解xi，即固定解的一个元素，求解的其他元素所能取到的最大解或最小解。在约束图的创建中，我们将从源点引出的边权值都赋为0,其实隐含着：d[vi] - d[v0] &lt;= 0这样的条件，因此求出的解一定小于等于零，如果我们把s0也看作一个变量x0,那么上面例子中的解就是(0, -5, -3, 0, -1, -4)，也就是预先指定了x0的解为0。这里的x0就是源点s0的偏移量，例如当题中增加条件，要求解的所有元素都小于某个值，此时只要将该值设置为s0的偏移量即可。</li>
-<li>对于这类有一个未知数已经定死的情况，还有一个性质：通过最短路径算法求出的一组解是所有解中的最大值。考虑到Bellman-Ford等单源最短路径算法的初始化都是d[vi] = 正无穷，通过各种约束条件使d[vi]的值不短减小来满足，因此当所有约束条件都满足，无法松弛任意边时，求出的解就是最大解。同样，如果要求所求得的解是所有解中的最小解，只要将问题转化为求解最长路径，松弛条件变为d[v] &gt;= d[u] + w(u, v)，此时的不等式变为xj - xi &gt;= -bk，因此建边vi-&gt;vj，权值为-bk，求其最长路径，即为最小值。</li>
+<h2 id="变量、值的绑定"><a href="#变量、值的绑定" class="headerlink" title="变量、值的绑定"></a>变量、值的绑定</h2><ul>
+<li>有了上述型别，简单的值可以通过对应的值构造子产生，如 <code>Value 2.34</code>、<code>Boolean True</code>、<code>String&#39; &quot;test&quot;</code> 等。</li>
+<li>变量与值的绑定通过类似 <code>Data.Map</code> 的结构，因为值和函数、运算等都可归一为表达式 <code>Exp</code>，因此用一个 <code>[(String, Exp)]</code> 的 list 存放对当前代码区域可见的变量-值绑定，称之为环境。函数 ·extEnv` 扩展已有的环境。</li>
 </ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="typedef"><span class="keyword">type</span> <span class="type">Env</span> = [<span class="container">(<span class="type">String</span>, <span class="type">Exp</span>)</span>]</span></span><br><span class="line"><span class="title">extEnv</span> :: <span class="type">String</span> -&gt; <span class="type">Exp</span> -&gt; <span class="type">Env</span> -&gt; <span class="type">Env</span></span><br><span class="line"><span class="title">extEnv</span> x v env = (x, v) : env</span><br></pre></td></tr></table></figure>
+<ul>
+<li>需要查找变量时，在当前环境中检查有无对应的键。因为 <code>extEnv</code> 将后绑定的变量插入到环境的头部，因此可以屏蔽先插入的同名变量，从而模拟出变量的就近原则。</li>
+</ul>
+<h2 id="运算符的计算"><a href="#运算符的计算" class="headerlink" title="运算符的计算"></a>运算符的计算</h2><ul>
+<li>为了保持解释器主体部分简短，我将运算符的计算提取成单独的函数。其大致结构如下：</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">calc</span> :: <span class="type">String</span> -&gt; <span class="type">Exp</span> -&gt; <span class="type">Exp</span> -&gt; <span class="type">Exp</span></span><br><span class="line"><span class="title">calc</span> <span class="string">"+"</span> (<span class="type">Value</span> v1') (<span class="type">Value</span> v2')      = <span class="type">Value</span> (v1' + v2')</span><br><span class="line"><span class="title">calc</span> <span class="string">"-"</span> (<span class="type">Value</span> v1') (<span class="type">Value</span> v2')      = <span class="type">Value</span> (v1' - v2')</span><br><span class="line"><span class="title">calc</span> <span class="string">"*"</span> (<span class="type">Value</span> v1') (<span class="type">Value</span> v2')      = <span class="type">Value</span> (v1' * v2')</span><br><span class="line"><span class="title">calc</span> <span class="string">"/"</span> (<span class="type">Value</span> v1') (<span class="type">Value</span> v2')      = <span class="type">Value</span> (v1' / v2')</span><br><span class="line"><span class="title">calc</span> ...... <span class="comment">-- other patterns</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>为了支持 <code>String&#39;</code> 和 <code>Boolean</code> 类型的计算，<code>calc</code> 函数必须为每种类型均增加模式匹配。</li>
+</ul>
+<h2 id="函数声明和调用"><a href="#函数声明和调用" class="headerlink" title="函数声明和调用"></a>函数声明和调用</h2><ul>
+<li><code>Exp</code> 型别有一个 <code>Lambda</code> 值构造子用来声明函数，解释器遇到 <code>Lambda</code> 表达式时，会将其转化为 <code>Closure</code> 值类型，即将该函数所处的环境保存下来，这么做的目的与 Lexical Scoping 和 Dynamic Scoping 有关。这一点在王垠的文章中讲的很清楚，这里简单提一下。Lexical Scoping，中文为静态域或者词法定界，Dynamic Scoping 为动态作用域，举个例子，<code>let x = 2 in (let f = \y-&gt; x * y in (let x = 4 in (f 3)))</code>，如果结果为 6 就是 Lexical Scoping，结果为 12 就是 Dynamic Scoping。Dynamic Scoping 会带来很多意想不到的后果，因此要想实现静态域，就要在函数定义时保存其所处的环境，并在函数调用时从该环境中提取变量绑定。</li>
+<li>实现的 <code>H2Lang</code> 解释器会在匹配到 <code>Lambda</code> 表达式时将其转化为闭包：<code>interp s@(Lambda _ _) env = Closure s env</code>。</li>
+<li>为了方便区分普通表达式和函数调用，我在 <code>Exp</code> 的型别中声明了 <code>Call</code> 值构造子，它将两个表达式组合到一起，并认定第一个表达式代表函数，第二个表达式代表某个变量或者值。因为多元函数可以用柯里化不断简化，因此解释器就不做处理了，在调用时可以通过 <code>Call</code> 的嵌套实现。</li>
+<li>当解释器匹配到 <code>Call e1 e2</code> 时，根据当前环境递归调用解释器计算出 <code>e2</code> 最终的表达式，假设 <code>e1</code> 匹配了 <code>Closure (Lambda (Param x) e) env&#39;)</code>，则将计算出 <code>e2</code> 的结果绑定到变量 <code>x</code>，并计算函数的值。</li>
+</ul>
+<h2 id="解释器"><a href="#解释器" class="headerlink" title="解释器"></a>解释器</h2><ul>
+<li>解释器的主体代码如下，完整代码在 <a href="https://github.com/Forec/learn/blob/master/2017.1/haskell-interpreter/h2lang.hs" target="_blank" rel="external">h2lang.hs</a>：</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">interp</span> :: <span class="type">Exp</span> -&gt; <span class="type">Env</span> -&gt; <span class="type">Exp</span></span><br><span class="line"><span class="title">interp</span> (<span class="type">Param</span> x) env = fromMaybe (<span class="type">Error</span> (<span class="string">"undefined variable"</span> ++ x)) (lookup x env)</span><br><span class="line"><span class="title">interp</span> (<span class="type">Value</span> x) _ = <span class="type">Value</span> x</span><br><span class="line"><span class="title">interp</span> (<span class="type">Boolean</span> x) _ = <span class="type">Boolean</span> x</span><br><span class="line"><span class="title">interp</span> (<span class="type">String'</span> x) _ = <span class="type">String'</span> x</span><br><span class="line"><span class="title">interp</span> s@(<span class="type">Lambda</span> _ _) env = <span class="type">Closure</span> s env</span><br><span class="line"><span class="title">interp</span> (<span class="type">Let</span> (<span class="type">Param</span> x) e1 e2) env = interp e2 (extEnv x (interp e1 env) env)</span><br><span class="line"><span class="title">interp</span> (<span class="type">Op</span> op e1 e2) env = <span class="keyword">let</span> v1 = interp e1 env</span><br><span class="line">                               v2 = interp e2 env</span><br><span class="line">                           <span class="keyword">in</span> calc op v1 v2</span><br><span class="line"><span class="title">interp</span> (<span class="type">If</span> cond e1 e2) env = <span class="keyword">let</span> c = interp cond env</span><br><span class="line">                             <span class="keyword">in</span> <span class="keyword">case</span> c <span class="keyword">of</span></span><br><span class="line">                               <span class="type">Error</span> _       -&gt; <span class="type">Error</span> <span class="string">"syntax error"</span></span><br><span class="line">                               <span class="type">Boolean</span> <span class="type">False</span> -&gt; interp e2 env</span><br><span class="line">                               _             -&gt; interp e1 env</span><br><span class="line"><span class="title">interp</span> (<span class="type">Call</span> e1 e2) env = <span class="keyword">case</span> v2 <span class="keyword">of</span> </span><br><span class="line">                            <span class="type">Value</span> _   -&gt; callExp</span><br><span class="line">                            <span class="type">Boolean</span> _ -&gt; callExp</span><br><span class="line">                            <span class="type">String'</span> _ -&gt; callExp</span><br><span class="line">                            _         -&gt; <span class="type">Error</span> <span class="string">"syntax error"</span></span><br><span class="line">    <span class="keyword">where</span> </span><br><span class="line">      v2 = interp e2 env</span><br><span class="line">      col = interp e1 env</span><br><span class="line">      callExp = <span class="keyword">case</span> col <span class="keyword">of</span></span><br><span class="line">                (<span class="type">Closure</span> (<span class="type">Lambda</span> (<span class="type">Param</span> x) e) env') -&gt; interp e (extEnv x v2 env')</span><br><span class="line">                _                                   -&gt; <span class="type">Error</span> <span class="string">"syntax error"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>效果：</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">h2</span> (<span class="type">Let</span> (<span class="type">Param</span> <span class="string">"x"</span>) (<span class="type">Value</span> <span class="number">2</span>) </span><br><span class="line">      (<span class="type">Let</span> (<span class="type">Param</span> <span class="string">"f"</span>) (<span class="type">Lambda</span> (<span class="type">Param</span> <span class="string">"y"</span>) (<span class="type">Op</span> <span class="string">"*"</span> (<span class="type">Param</span> <span class="string">"x"</span>) (<span class="type">Param</span> <span class="string">"y"</span>)))</span><br><span class="line">         (<span class="type">Let</span> (<span class="type">Param</span> <span class="string">"x"</span>) (<span class="type">Value</span> <span class="number">4</span>)</span><br><span class="line">            (<span class="type">Call</span> (<span class="type">Param</span> <span class="string">"f"</span>) (<span class="type">Value</span> <span class="number">3</span>)))))</span><br><span class="line"><span class="comment">-- Value 6.0</span></span><br><span class="line"><span class="title">h2</span> (<span class="type">Let</span> (<span class="type">Param</span> <span class="string">"x"</span>) (<span class="type">Value</span> <span class="number">3.9</span>) (<span class="type">Op</span> <span class="string">"/"</span> (<span class="type">Param</span> <span class="string">"x"</span>) (<span class="type">Value</span> <span class="number">4.32</span>)))</span><br><span class="line"><span class="comment">-- Value 0.9027778</span></span><br><span class="line"><span class="title">h2</span> (<span class="type">Let</span> (<span class="type">Param</span> <span class="string">"x"</span>) (<span class="type">Value</span> <span class="number">8.75</span>) (<span class="type">Op</span> <span class="string">"&gt;="</span> (<span class="type">Param</span> <span class="string">"x"</span>) (<span class="type">Value</span> <span class="number">7</span>)))</span><br><span class="line"><span class="comment">-- Boolean True</span></span><br><span class="line"><span class="title">h2</span> (<span class="type">Op</span> <span class="string">"=="</span> (<span class="type">Boolean</span> <span class="type">True</span>) (<span class="type">Boolean</span> <span class="type">False</span>))</span><br><span class="line"><span class="comment">-- Boolean False</span></span><br><span class="line"><span class="title">h2</span> (<span class="type">Op</span> <span class="string">"++"</span> (<span class="type">String'</span> <span class="string">"test"</span>) (<span class="type">String'</span> <span class="string">" case"</span>))</span><br><span class="line"><span class="comment">-- String' "test case"</span></span><br><span class="line"><span class="title">h2</span> (<span class="type">If</span> (<span class="type">Op</span> <span class="string">"&gt;="</span> (<span class="type">Value</span> <span class="number">2.3</span>) (<span class="type">Value</span> (-<span class="number">2.754</span>))) (<span class="type">String'</span> <span class="string">"Yes"</span>) (<span class="type">String'</span> <span class="string">"No"</span>))</span><br><span class="line"><span class="comment">-- String' "Yes"</span></span><br></pre></td></tr></table></figure>
 <hr>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://forec.github.io/2015/12/24/Graph-Algorithms6/">原始出处</a>(<a href="http://forec.github.io/2015/12/24/Graph-Algorithms6/">http://forec.github.io/2015/12/24/Graph-Algorithms6/</a>) 、作者信息（<a href="http://forec.github.io/">Forec</a>）和本声明。</p>
+<p>参考资料：  </p>
+<ul>
+<li><a href="http://www.yinwang.org/blog-cn/2012/08/01/interpreter" target="_blank" rel="external">王垠 - 怎样写一个解释器</a></li>
+<li><a href="https://fallenwood.github.io/2017/02/04/writing-a-simple-lisp/" target="_blank" rel="external">Fallenwood - 怎样写一个解释器</a></li>
+<li><a href="http://norvig.com/lispy.html" target="_blank" rel="external">(How to Write a (Lisp) Interpreter (in Python))</a></li>
+<li><a href="https://www.zhihu.com/question/20115358" target="_blank" rel="external">知乎 - 如何写 Lisp 解释器</a></li>
+</ul>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/02/14/talk-about-interpreter/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/02/14/talk-about-interpreter/" target="_blank" rel="external">http://blog.forec.cn/2017/02/14/talk-about-interpreter/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -192,7 +227,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/12/24/Graph-Algorithms6/" data-id="ciz6x7w290089ocewi05pfsr2" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/02/14/talk-about-interpreter/" data-id="ciz6x7vxz002bocewf16u2i2d" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -259,7 +294,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2015/12/24/Graph-Algorithms6/" data-title="差分约束系统" data-url="http://forec.github.io/2015/12/24/Graph-Algorithms6/"></div>
+    <div class="ds-thread" data-thread-key="2017/02/14/talk-about-interpreter/" data-title="用 Haskell 实现解释器" data-url="http://forec.github.io/2017/02/14/talk-about-interpreter/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -363,20 +398,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2015/12/25/Graph-Algorithms7-flow/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            最大流（一）
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2015/12/23/Graph-Algorithms5/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2017/02/06/talk-about-hmm/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">最短路径</p>
+        <p class="article-nav-title">HMM 关键词检索</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
