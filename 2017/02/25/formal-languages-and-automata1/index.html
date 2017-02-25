@@ -3,18 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>标签：: OS | Forec&#39;s Notes</title>
+    <title>形式语言与自动机（一）：概念 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="description" content="奋斗在Code Farm的在校生">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Forec's Notes">
-<meta property="og:url" content="http://forec.github.io/tags/OS/page/2/index.html">
+        <meta name="keywords" content="自动机" />
+    
+    <meta name="description" content="这个寒假遇到的一些问题让我想起之前形式语言与自动机的内容，程序执行的本质是状态的变化，我觉得有必要将这部分理论捡起来，需要的时候方便自己回忆。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="形式语言与自动机（一）：概念">
+<meta property="og:url" content="http://forec.github.io/2017/02/25/formal-languages-and-automata1/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="奋斗在Code Farm的在校生">
+<meta property="og:description" content="这个寒假遇到的一些问题让我想起之前形式语言与自动机的内容，程序执行的本质是状态的变化，我觉得有必要将这部分理论捡起来，需要的时候方便自己回忆。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg">
+<meta property="og:updated_time" content="2017-02-25T15:57:50.506Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Forec's Notes">
-<meta name="twitter:description" content="奋斗在Code Farm的在校生">
+<meta name="twitter:title" content="形式语言与自动机（一）：概念">
+<meta name="twitter:description" content="这个寒假遇到的一些问题让我想起之前形式语言与自动机的内容，程序执行的本质是状态的变化，我觉得有必要将这部分理论捡起来，需要的时候方便自己回忆。">
     
 
     
@@ -135,519 +139,167 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-tag"></i>标签：: <em>OS</em>
+    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            
+                            <article id="post-formal-languages-and-automata1" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        形式语言与自动机（一）：概念
+        </h1>
+    
 
-    
-    
+            </header>
         
         
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2016" class="archive-year"><i class="icon fa fa-calendar-o"></i>2016</a>
+            <div class="article-subtitle">
+                <a href="/2017/02/25/formal-languages-and-automata1/" class="article-date">
+    <time datetime="2017-02-25T15:33:13.000Z" itemprop="datePublished">2017-02-25</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自动机/">自动机</a></li></ul>
+
             </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
         
-        <a href="/2016/11/24/os-concepts-7/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-7.jpg)" alt="操作系统（七）：死锁" class="thumbnail-image"></span>
-    
-    
         
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/11/24/os-concepts-7/">0</span>
-    
-</span>
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>这个寒假遇到的一些问题让我想起之前形式语言与自动机的内容，程序执行的本质是状态的变化，我觉得有必要将这部分理论捡起来，需要的时候方便自己回忆。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="概念整理"><a href="#概念整理" class="headerlink" title="概念整理"></a>概念整理</h2><ul>
+<li><strong>形式语言</strong> 是形式化描述的 <strong>字母表</strong> 上的 <strong>字符串</strong> 的集合。<em>字母表</em> 为字符的有限集合，多用 <code>T</code> 表示；<em>字符串</em> 指字母表中的字符构成的 <strong>有限</strong> 序列。</li>
+<li><strong>自动机</strong> 接受一定的输入，执行一定的动作，产生一定的结果。使用状态迁移描述整个过程。例如可实现一个用于识别字符串的自动机系统，根据输入的字符串解析形式语言。<strong>状态</strong> 是一个标识，用于区分自动机在不同时刻的状况；自动机的本质是 <strong>根据状态、输入和规则决定下一个状态</strong> （状态迁移）。</li>
+<li>有限自动机可以认为是由一个带有读写头的有限控制器和一条写有字符的输入带组成。</li>
+<li>关系：<table><tbody><tr><td>形式语言</td><td>非限定性语言</td><td>上下文有关语言</td><td>上下文无关语言</td><td>正则语言</td></tr><br><tr><td>自动机</td><td>图灵机</td><td>线性有界自动机</td><td>下推式存储自动机</td><td>有限自动机</td></tr></tbody></table>
 
-    
-</a>
+</li>
+</ul>
+<h2 id="语言及文法"><a href="#语言及文法" class="headerlink" title="语言及文法"></a>语言及文法</h2><p>TODO</p>
+<hr>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：无<br>此专栏的下一篇文章：暂无  </p>
+<p>参考资料：《形式语言与自动机》，王柏、杨娟编著，北京邮电大学出版社</p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/" target="_blank" rel="external">http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2016-11-24T14:16:22.000Z" itemprop="datePublished">2016-11-24</time></p>
         </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/11/24/os-concepts-7/">操作系统（七）：死锁</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
+        <footer class="article-footer">
             
-整理《Operating System Concepts》 第七版死锁部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
 
-        </p>
+
+
+    <a data-url="http://forec.github.io/2017/02/25/formal-languages-and-automata1/" data-id="cizlf9opd006y4wew97iu7jda" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
     </div>
 </article>
-    
 
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/11/24/os-concepts-6/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-6-r.jpg)" alt="操作系统（六）：管程（Monitor）" class="thumbnail-image"></span>
-    
+    <section id="comments">
     
         
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/11/24/os-concepts-6/">0</span>
-    
-</span>
+    <div class="ds-thread" data-thread-key="2017/02/25/formal-languages-and-automata1/" data-title="形式语言与自动机（一）：概念" data-url="http://forec.github.io/2017/02/25/formal-languages-and-automata1/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
 
     
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2016-11-24T12:47:03.000Z" itemprop="datePublished">2016-11-24</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/11/24/os-concepts-6/">操作系统（六）：管程（Monitor）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理《Operating System Concepts》 第七版第六章 Monitor 部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/11/24/os-concepts-5/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-5-r.jpg)" alt="操作系统（五）：进程同步" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/11/24/os-concepts-5/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2016-11-24T10:41:33.000Z" itemprop="datePublished">2016-11-24</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/11/24/os-concepts-5/">操作系统（五）：进程同步</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理《Operating System Concepts》 第七版第六章进程同步部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
-
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/11/24/os-concepts-4/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-4.jpg)" alt="操作系统（四）：进程互斥" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/11/24/os-concepts-4/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2016-11-24T07:29:44.000Z" itemprop="datePublished">2016-11-24</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/11/24/os-concepts-4/">操作系统（四）：进程互斥</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/11/23/os-concepts-3/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-3.jpg)" alt="操作系统（三）：CPU 调度" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/11/23/os-concepts-3/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2016-11-23T13:49:05.000Z" itemprop="datePublished">2016-11-23</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/11/23/os-concepts-3/">操作系统（三）：CPU 调度</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理《Operating System Concepts》 第七版第五章（CPU 进程调度），内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
-
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/11/22/os-concepts-2/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-2.jpg)" alt="操作系统（二）：进程与线程" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/11/22/os-concepts-2/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2016-11-22T11:02:51.000Z" itemprop="datePublished">2016-11-22</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/11/22/os-concepts-2/">操作系统（二）：进程与线程</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/11/22/os-concepts-1/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-1.jpg)" alt="操作系统（一）：概念导读" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/11/22/os-concepts-1/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a>
-            </p>
-            <p class="date"><time datetime="2016-11-22T02:07:44.000Z" itemprop="datePublished">2016-11-22</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/11/22/os-concepts-1/">操作系统（一）：概念导读</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理《Operating System Concepts》 第七版前两章的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。
-
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/11/21/haskell-io-actions/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/haskell-io-actions.jpg)" alt="Haskell 中的非纯粹行为" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/11/21/haskell-io-actions/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/Language/">Language</a>
-            </p>
-            <p class="date"><time datetime="2016-11-21T01:03:07.000Z" itemprop="datePublished">2016-11-21</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/11/21/haskell-io-actions/">Haskell 中的非纯粹行为</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-整理 Haskell 中的 I/O 行为和性质，包括惰性 I/O、异常、临时文件、缓冲等。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/11/20/ddos-syn-attack/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/ddos-syn-attack.jpg)" alt="基于 LibNET 的 SYN Flood 攻击" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/11/20/ddos-syn-attack/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/Code/">Code</a>
-            </p>
-            <p class="date"><time datetime="2016-11-20T13:42:03.000Z" itemprop="datePublished">2016-11-20</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/11/20/ddos-syn-attack/">基于 LibNET 的 SYN Flood 攻击</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-使用 C++ 基于 Libnet 编写的 SYN 洪水拒绝服务攻击工具，支持多线程。
-
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2016/11/02/cloud-virtual-machine-config/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/vps.jpg)" alt="CVM 操作记录" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="ds-thread-count" data-thread-key="2016/11/02/cloud-virtual-machine-config/">0</span>
-    
-</span>
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <p class="category">
-            <a class="article-category-link" href="/categories/Configuration/">Configuration</a>
-            </p>
-            <p class="date"><time datetime="2016-11-02T15:08:14.000Z" itemprop="datePublished">2016-11-02</time></p>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/11/02/cloud-virtual-machine-config/">CVM 操作记录</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            
-CVM 上的操作记录。
-
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-
-    </div></section>
-
-
-    <nav id="page-nav">
-        <span class="pages">第 2 页，共 3 页</span>
-        <a class="extend prev" rel="prev" href="/tags/OS/">&laquo;</a><a class="page-number" href="/tags/OS/">1</a><span class="page-number current">2</span><a class="page-number" href="/tags/OS/page/3/">3</a><a class="extend next" rel="next" href="/tags/OS/page/3/">&raquo;</a>
-    </nav>
-
+    </section>
 
                         </div>
                     </section>
@@ -707,6 +359,19 @@ CVM 上的操作记录。
             
         </ul>
     </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2017/02/14/talk-about-interpreter/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">用 Haskell 实现解释器</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
