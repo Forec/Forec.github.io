@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2017-02-25T15:57:50.506Z</updated>
+  <updated>2017-03-01T15:45:29.000Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -14,6 +14,130 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>来看几种基本 Monad</title>
+    <link href="http://forec.github.io/2017/03/01/talk-about-some-simple-monads/"/>
+    <id>http://forec.github.io/2017/03/01/talk-about-some-simple-monads/</id>
+    <published>2017-03-01T13:52:16.000Z</published>
+    <updated>2017-03-01T15:45:29.000Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;@Fallenwood 选修的 《Foundations of Programming Languages》 课程让我看的很手痒。整理一下基本的 Typeclass 和 Monad，准备跟随贵科步伐重新学习 Haskell。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;只做整理不做总结，绝不写任何有关自己对 Monad 的理解。&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;基本-Typeclass&quot;&gt;&lt;a href=&quot;#基本-Typeclass&quot; class=&quot;headerlink&quot; title=&quot;基本 Typeclass&quot;&gt;&lt;/a&gt;基本 Typeclass&lt;/h2&gt;&lt;h3 id=&quot;Functor&quot;&gt;&lt;a href=&quot;#Functor&quot; class=&quot;headerlink&quot; title=&quot;Functor&quot;&gt;&lt;/a&gt;Functor&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Functor&lt;/code&gt; （&lt;code&gt;Data.Functor&lt;/code&gt;）类型类表明型别可以被 &lt;code&gt;map&lt;/code&gt; ，类型类声明为：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Functor&lt;/span&gt; f &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  fmap :: (a -&amp;gt; b) -&amp;gt; f a -&amp;gt; f b&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Functor&lt;/code&gt; 类型类定义中 &lt;code&gt;f&lt;/code&gt; 的 kind 是 &lt;code&gt;* -&amp;gt; *&lt;/code&gt;；&lt;code&gt;&amp;lt;$&amp;gt;&lt;/code&gt; 是 &lt;code&gt;fmap&lt;/code&gt; 的语法糖。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Functor&lt;/code&gt; 类型类需要遵守以下守则：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;fmap id = id&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;fmap (f . g) = fmap f . fmap g&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;Applicative&quot;&gt;&lt;a href=&quot;#Applicative&quot; class=&quot;headerlink&quot; title=&quot;Applicative&quot;&gt;&lt;/a&gt;Applicative&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Applicative&lt;/code&gt; （&lt;code&gt;Control.Applicative&lt;/code&gt;）算是 &lt;code&gt;Functor&lt;/code&gt; 的加强版，将一个 “包装” 在某个抽象型别中的函数应用到对应型别的值中，类型类声明为：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;container&quot;&gt;(&lt;span class=&quot;type&quot;&gt;Functor&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;f&lt;/span&gt;)&lt;/span&gt; =&amp;gt; &lt;span class=&quot;type&quot;&gt;Applicative&lt;/span&gt; f &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  pure :: a -&amp;gt; f a&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&amp;lt;*&amp;gt;) :: f (a -&amp;gt; b) -&amp;gt; f a -&amp;gt; f b&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&amp;lt;*) :: f a -&amp;gt; f b -&amp;gt; f a&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (*&amp;gt;) :: f a -&amp;gt; f b -&amp;gt; f b&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Applicative&lt;/code&gt; 类型类中定义的型别 &lt;code&gt;f&lt;/code&gt; 必须也是 &lt;code&gt;Functor&lt;/code&gt; 类型类的实例。&lt;code&gt;pure&lt;/code&gt; 函数将值包装到 &lt;code&gt;Applicative Functor&lt;/code&gt; 中。&lt;code&gt;&amp;lt;*&lt;/code&gt; 和 &lt;code&gt;*&amp;gt;&lt;/code&gt; 函数均有默认实现。&lt;/li&gt;
+&lt;li&gt;对于一个纯粹的函数 &lt;code&gt;func :: a -&amp;gt; b&lt;/code&gt;，可以通过 &lt;code&gt;fmap&lt;/code&gt; 将其作用到一个 &lt;code&gt;Functor&lt;/code&gt; 类型类上，也可以通过 &lt;code&gt;pure&lt;/code&gt; 将 &lt;code&gt;func&lt;/code&gt; 提升到 &lt;code&gt;Applicative Functor&lt;/code&gt; 中，再利用 &lt;code&gt;&amp;lt;*&amp;gt;&lt;/code&gt; 将其运用到该类型类包装的值上。例如，&lt;code&gt;pure (+) &amp;lt;*&amp;gt; (Just 2) &amp;lt;*&amp;gt; (Just 3)&lt;/code&gt; 的结果是 &lt;code&gt;Just 5&lt;/code&gt;。可以利用 &lt;code&gt;&amp;lt;$&amp;gt;&lt;/code&gt; 这一语法糖简化为 &lt;code&gt;(+) &amp;lt;$&amp;gt; (Just 2) &amp;lt;*&amp;gt; (Just 3)&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Applicative&lt;/code&gt; 类型类需要遵守如下守则（必然也满足 &lt;code&gt;Functor Laws&lt;/code&gt;）：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pure f &amp;lt;*&amp;gt; x = fmap f x&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pure id &amp;lt;*&amp;gt; x = x&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pure (.) &amp;lt;*&amp;gt; u &amp;lt;*&amp;gt; v &amp;lt;*&amp;gt; w = u &amp;lt;*&amp;gt; (v &amp;lt;*&amp;gt; w)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pure f &amp;lt;*&amp;gt; pure x = pure (f x)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;u &amp;lt;*&amp;gt; pure y = pure ($ y) &amp;lt;*&amp;gt; u&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;Monoid&quot;&gt;&lt;a href=&quot;#Monoid&quot; class=&quot;headerlink&quot; title=&quot;Monoid&quot;&gt;&lt;/a&gt;Monoid&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Monoid&lt;/code&gt; （&lt;code&gt;Data.Monoid&lt;/code&gt;）类型类的定义如下，它对应实例的型别 &lt;code&gt;m&lt;/code&gt; 的 kind 是 &lt;code&gt;*&lt;/code&gt;：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Monoid&lt;/span&gt; m &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  mempty :: m&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  mappend :: m -&amp;gt; m -&amp;gt; m&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  mconcat :: [m] -&amp;gt; m&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  mconcat = foldr mappend mempty&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Monoid&lt;/code&gt; 指群论中的半群，其需满足封闭性和右结合律。&lt;code&gt;Monoid&lt;/code&gt; 的名字看起来像是 &lt;code&gt;mono&lt;/code&gt; 和 &lt;code&gt;id&lt;/code&gt; 的组合，即 “单幺元”。这里的 &lt;code&gt;mempty&lt;/code&gt; 和下面 &lt;code&gt;MonadPlus&lt;/code&gt; 中的 &lt;code&gt;mzero&lt;/code&gt; 均为幺元。&lt;/li&gt;
+&lt;li&gt;几种常见的 &lt;code&gt;Monoid&lt;/code&gt; 如： &lt;code&gt;List&lt;/code&gt;、&lt;code&gt;Any&lt;/code&gt;、&lt;code&gt;All&lt;/code&gt;、&lt;code&gt;Sum&lt;/code&gt;、&lt;code&gt;Product&lt;/code&gt;、&lt;code&gt;Ordering&lt;/code&gt;、&lt;code&gt;Maybe&lt;/code&gt; 等。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Monoid&lt;/code&gt; 需要遵守如下守则：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;mappend mempty x = x&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mappend x mempty = x&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mappend (mappend x y) z = mappend x (mappend y z)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Monoid&lt;/code&gt; 也应用在 &lt;code&gt;Foldable&lt;/code&gt; 类型类的 &lt;code&gt;foldMap&lt;/code&gt; 函数中。&lt;code&gt;foldMap&lt;/code&gt; 的型别声明为 &lt;code&gt;(Foldable t, Monoid m) =&amp;gt; (a -&amp;gt; m) -&amp;gt; t a -&amp;gt; m&lt;/code&gt;。可以为自定义类型实作 &lt;code&gt;Foldable&lt;/code&gt; 类型类，即可通过 &lt;code&gt;foldMap&lt;/code&gt; 对自定义类型的元素做 map over、折叠等操作。注意 &lt;code&gt;foldMap&lt;/code&gt; 和 &lt;code&gt;fmap&lt;/code&gt; 的区别在于 &lt;code&gt;foldMap&lt;/code&gt; 不会将函数返回值再次包装到原类型类中，而是包装到 &lt;code&gt;Monoid&lt;/code&gt; 中。举个例子，对于自定义类型 &lt;code&gt;data Tree a = Node a (Tree a) (Tree a) | Empty&lt;/code&gt;，要想确定树中有无小于 0 的元素，只需 &lt;code&gt;getAny $ foldMap (\x -&amp;gt; Any $ x &amp;lt; 0) tree&lt;/code&gt;，这里 &lt;code&gt;foldMap&lt;/code&gt; 把树中每个元素映射到 &lt;code&gt;Any Monoid&lt;/code&gt; 中。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;Monad&quot;&gt;&lt;a href=&quot;#Monad&quot; class=&quot;headerlink&quot; title=&quot;Monad&quot;&gt;&lt;/a&gt;Monad&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Monad&lt;/code&gt; （&lt;code&gt;Control.Monad&lt;/code&gt;）类型类定义如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Applicative&lt;/span&gt; m =&amp;gt; &lt;span class=&quot;type&quot;&gt;Monad&lt;/span&gt; m &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&amp;gt;&amp;gt;=) :: m a -&amp;gt; (a -&amp;gt; m b) -&amp;gt; m b&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&amp;gt;&amp;gt;) :: m a -&amp;gt; m b -&amp;gt; m b&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  x &amp;gt;&amp;gt; y = x &amp;gt;&amp;gt;= \_ -&amp;gt; y&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  return :: a -&amp;gt; m a&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  fail :: &lt;span class=&quot;type&quot;&gt;String&lt;/span&gt; -&amp;gt; m a&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  fail msg = error msg&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Monad&lt;/code&gt; 的实例本身必须是 &lt;code&gt;Applicative&lt;/code&gt; 的实例。其类型类定义中已经默认实现了 &lt;code&gt;&amp;gt;&amp;gt;&lt;/code&gt; 和 &lt;code&gt;fail&lt;/code&gt;，定义实例时可以重写这些函数，也可以只实现 &lt;code&gt;return&lt;/code&gt; 和 &lt;code&gt;&amp;gt;&amp;gt;=&lt;/code&gt;。&lt;code&gt;return&lt;/code&gt; 等价于 &lt;code&gt;pure&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;语法 &lt;code&gt;do&lt;/code&gt; 可帮助把一些 &lt;code&gt;Monad&lt;/code&gt; 操作连接在一起，其包裹的代码的每一行均为一个 &lt;code&gt;Monad&lt;/code&gt; 实例的值。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;List&lt;/code&gt; 的 &lt;code&gt;Monad&lt;/code&gt; 实例定义如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Monad&lt;/span&gt; [] &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  return x = [x]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  xs &amp;gt;&amp;gt;= f = concat (map f xs)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  fail _ = []&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;从 &lt;code&gt;List&lt;/code&gt; 实例定义可看出，&lt;code&gt;&amp;gt;&amp;gt;=&lt;/code&gt; 类似过程式语言中的循环嵌套，即将 &lt;code&gt;&amp;gt;&amp;gt;=&lt;/code&gt; 左侧的 List 中的每个元素依次应用到右侧的函数上。List Comprehension 仅仅是它的语法糖，如 &lt;code&gt;[x | x &amp;lt;- [1..10], x&lt;/code&gt;mod&lt;code&gt;3 == 0]&lt;/code&gt; 等价于 &lt;code&gt;[1..10] &amp;gt;&amp;gt;= \x -&amp;gt; if x&lt;/code&gt;mod&lt;code&gt;3 == 0 then [x] else []&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Monad&lt;/code&gt; 需要遵守如下守则：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;return x &amp;gt;&amp;gt;= f = f x&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;m &amp;gt;&amp;gt;= return = m&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(m &amp;gt;&amp;gt;= f) &amp;gt;&amp;gt;= g = m &amp;gt;&amp;gt;= (\x -&amp;gt; f x &amp;gt;&amp;gt;= g)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;MonadPlus&quot;&gt;&lt;a href=&quot;#MonadPlus&quot; class=&quot;headerlink&quot; title=&quot;MonadPlus&quot;&gt;&lt;/a&gt;MonadPlus&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;上面的 List Comprehension 也等价于 &lt;code&gt;[1..10] &amp;gt;&amp;gt;= \x -&amp;gt; guard (x&lt;/code&gt;mod&lt;code&gt;3 == 0) &amp;gt;&amp;gt; return x&lt;/code&gt;。这需要用到 &lt;code&gt;MonadPlus&lt;/code&gt; 类型类，它指同时表现为 &lt;code&gt;Monoid&lt;/code&gt; 的 &lt;code&gt;Monad&lt;/code&gt;，其定义为：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Monad&lt;/span&gt; m =&amp;gt; &lt;span class=&quot;type&quot;&gt;MonadPlus&lt;/span&gt; m &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  mzero :: m a&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  mplus :: m a -&amp;gt; m a -&amp;gt; m a&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;mzero&lt;/code&gt; 等价于 &lt;code&gt;mempty&lt;/code&gt;，&lt;code&gt;mplus&lt;/code&gt; 等价于 &lt;code&gt;mappend&lt;/code&gt;。 &lt;code&gt;guard&lt;/code&gt; 函数的定义如下。当 &lt;code&gt;guard&lt;/code&gt; 监察的 &lt;code&gt;Bool&lt;/code&gt; 变量为 &lt;code&gt;True&lt;/code&gt; 时，&lt;code&gt;return&lt;/code&gt; 会返回一个空 unit，否则 在 List Comprehension 例子中，&lt;code&gt;mzero = []&lt;/code&gt; 不会产生任何结果。 &lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;guard&lt;/span&gt; :: (&lt;span class=&quot;type&quot;&gt;MonadPlus&lt;/span&gt; m) =&amp;gt; &lt;span class=&quot;type&quot;&gt;Bool&lt;/span&gt; -&amp;gt; m ()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;True&lt;/span&gt; = return ()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;False&lt;/span&gt; = mzero&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h2 id=&quot;常用-Monad&quot;&gt;&lt;a href=&quot;#常用-Monad&quot; class=&quot;headerlink&quot; title=&quot;常用 Monad&quot;&gt;&lt;/a&gt;常用 Monad&lt;/h2&gt;&lt;h3 id=&quot;Writer&quot;&gt;&lt;a href=&quot;#Writer&quot; class=&quot;headerlink&quot; title=&quot;Writer&quot;&gt;&lt;/a&gt;Writer&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Writer&lt;/code&gt; （&lt;code&gt;Control.Monad.Writer&lt;/code&gt;）的定义和 &lt;code&gt;Monad&lt;/code&gt; 实例定义如下，该模块并未导出其值构造子。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;typedef&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;newtype&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Writer&lt;/span&gt; w a = &lt;span class=&quot;type&quot;&gt;Writer&lt;/span&gt; &lt;span class=&quot;container&quot;&gt;&amp;#123; &lt;span class=&quot;title&quot;&gt;runWriter&lt;/span&gt; :: (&lt;span class=&quot;title&quot;&gt;a&lt;/span&gt;, &lt;span class=&quot;title&quot;&gt;w&lt;/span&gt;) &amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;container&quot;&gt;(&lt;span class=&quot;type&quot;&gt;Monoid&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;w&lt;/span&gt;)&lt;/span&gt; =&amp;gt; &lt;span class=&quot;type&quot;&gt;Monad&lt;/span&gt; &lt;span class=&quot;container&quot;&gt;(&lt;span class=&quot;type&quot;&gt;Writer&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;w&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  return x = &lt;span class=&quot;type&quot;&gt;Writer&lt;/span&gt; (x, mempty)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&lt;span class=&quot;type&quot;&gt;Writer&lt;/span&gt; (x, v)) &amp;gt;&amp;gt;= f = &lt;span class=&quot;keyword&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Writer&lt;/span&gt; (y, v&#39;) = f x &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Writer&lt;/span&gt; (y, v `mappend` v&#39;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;可用 &lt;code&gt;tell&lt;/code&gt; 向 Writer 加入 log。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;gt-r&quot;&gt;&lt;a href=&quot;#gt-r&quot; class=&quot;headerlink&quot; title=&quot;((-&amp;gt;) r)&quot;&gt;&lt;/a&gt;((-&amp;gt;) r)&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;函数也是 &lt;code&gt;Monad&lt;/code&gt;，其实例为：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Monad&lt;/span&gt; &lt;span class=&quot;container&quot;&gt;((-&amp;gt;)&lt;/span&gt; r) &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  return = const&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  g &amp;gt;&amp;gt;= f = \v -&amp;gt; f (g v) v&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;Reader&quot;&gt;&lt;a href=&quot;#Reader&quot; class=&quot;headerlink&quot; title=&quot;Reader&quot;&gt;&lt;/a&gt;Reader&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Reader&lt;/code&gt; （对函数 Monad 的一种包装）：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;typedef&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;newtype&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Reader&lt;/span&gt; s a = &lt;span class=&quot;type&quot;&gt;Reader&lt;/span&gt;&lt;span class=&quot;container&quot;&gt;&amp;#123; &lt;span class=&quot;title&quot;&gt;runReader&lt;/span&gt; :: &lt;span class=&quot;title&quot;&gt;s&lt;/span&gt; -&amp;gt; &lt;span class=&quot;title&quot;&gt;a&lt;/span&gt; &amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Monad&lt;/span&gt; &lt;span class=&quot;container&quot;&gt;(&lt;span class=&quot;type&quot;&gt;Reader&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;s&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  return x = &lt;span class=&quot;type&quot;&gt;Reader&lt;/span&gt; (const x)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  m &amp;gt;&amp;gt;= k = &lt;span class=&quot;type&quot;&gt;Reader&lt;/span&gt; $ \r -&amp;gt; runReader (k (runReader m r)) r&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;State&quot;&gt;&lt;a href=&quot;#State&quot; class=&quot;headerlink&quot; title=&quot;State&quot;&gt;&lt;/a&gt;State&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;State&lt;/code&gt; （&lt;code&gt;Control.Monad.State&lt;/code&gt;）常用来表示状态迁移，代表了改变状态的操作：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;typedef&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;newtype&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;State&lt;/span&gt; s a = &lt;span class=&quot;type&quot;&gt;State&lt;/span&gt;&lt;span class=&quot;container&quot;&gt;&amp;#123;&lt;span class=&quot;title&quot;&gt;runState&lt;/span&gt; :: &lt;span class=&quot;title&quot;&gt;s&lt;/span&gt; -&amp;gt; (&lt;span class=&quot;title&quot;&gt;a&lt;/span&gt;, &lt;span class=&quot;title&quot;&gt;s&lt;/span&gt;)&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Monad&lt;/span&gt; &lt;span class=&quot;container&quot;&gt;(&lt;span class=&quot;type&quot;&gt;State&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;s&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  return x = &lt;span class=&quot;type&quot;&gt;State&lt;/span&gt; $ \s -&amp;gt; (x, s)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&lt;span class=&quot;type&quot;&gt;State&lt;/span&gt; h) &amp;gt;&amp;gt;= f = &lt;span class=&quot;type&quot;&gt;State&lt;/span&gt; $ \s -&amp;gt; &lt;span class=&quot;keyword&quot;&gt;let&lt;/span&gt; (a, newState) = h s&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                      (&lt;span class=&quot;type&quot;&gt;State&lt;/span&gt;  g) = f a&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                                  &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; g newState&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;hr&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/03/01/talk-about-some-simple-monads/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/03/01/talk-about-some-simple-monads/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/03/01/talk-about-some-simple-monads/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;@Fallenwood 选修的 《Foundations of Programming Languages》 课程让我看的很手痒。整理一下基本的 Typeclass 和 Monad，准备跟随贵科步伐重新学习 Haskell。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="Code" scheme="http://forec.github.io/categories/Code/"/>
+    
+    
+      <category term="Haskell" scheme="http://forec.github.io/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="http://forec.github.io/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>形式语言与自动机（一）：概念</title>
@@ -841,124 +965,6 @@
     
       &lt;blockquote&gt;
 &lt;p&gt;整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>操作系统（十二）：大容量存储器结构</title>
-    <link href="http://forec.github.io/2017/01/05/os-concepts-12/"/>
-    <id>http://forec.github.io/2017/01/05/os-concepts-12/</id>
-    <published>2017-01-05T15:23:30.000Z</published>
-    <updated>2017-01-09T15:06:19.479Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版第十二章大容量存储器结构部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h1 id=&quot;大容量存储器结构&quot;&gt;&lt;a href=&quot;#大容量存储器结构&quot; class=&quot;headerlink&quot; title=&quot;大容量存储器结构&quot;&gt;&lt;/a&gt;大容量存储器结构&lt;/h1&gt;&lt;h2 id=&quot;概览&quot;&gt;&lt;a href=&quot;#概览&quot; class=&quot;headerlink&quot; title=&quot;概览&quot;&gt;&lt;/a&gt;概览&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;磁盘（magnetic disk）&lt;/strong&gt; 是现代计算机系统使用的大容量外存。磁盘片为扁平原盘，两面均涂有磁质材料，读写头在磁盘片的表面飞行，磁头和 &lt;strong&gt;磁臂（disk arm）&lt;/strong&gt; 相连 ，磁臂将每个盘面两侧的全部磁头作为一个整体一起移动。磁盘片表面被逻辑划分为圆形 &lt;strong&gt;磁道（track）&lt;/strong&gt; ，一圈磁道被进一步划分为 &lt;strong&gt;扇区（sector）&lt;/strong&gt; 。同一圈磁道在不同盘片的集合组成了 &lt;strong&gt;柱面（cylinder）&lt;/strong&gt; 。磁盘结构如下图。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/moving-head-disk-machanism.png&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
-&lt;li&gt;多数驱动器每秒可旋转 60~200 圈，磁盘速度由 &lt;strong&gt;传输速率（transfer rate）&lt;/strong&gt; 和 &lt;strong&gt;定位时间（positioning time）&lt;/strong&gt; 决定。其中传输速率指驱动器和计算机之间的数据传输速率；定位时间又称 &lt;strong&gt;随机访问时间（random access time）&lt;/strong&gt; ，包括 &lt;strong&gt;寻道时间（seek time）&lt;/strong&gt; （移动磁臂到所需柱面所需的时间） 和 &lt;strong&gt;旋转等待时间（rotational latency）&lt;/strong&gt; （等待磁盘驱动器将所需扇区旋转到磁头下的时间）。寻道时间和旋转等待时间通常为几毫秒，典型的磁盘能够以几兆每秒的速率传输。&lt;/li&gt;
-&lt;li&gt;磁盘的传输速率总是低于有效的传输速率。 &lt;strong&gt;磁盘表现的传输速率是磁盘头从磁性介质读取比特的速率&lt;/strong&gt; ，这不同于给操作系统传输块的速率（与操作系统之间传输的速率才是决定磁盘速度的传输速率）。&lt;/li&gt;
-&lt;li&gt;磁头飞行在盘片数微米上的空气层中，一旦磁头和盘片接触就会损坏磁盘表面，这称为 &lt;strong&gt;磁头碰撞（head crash）&lt;/strong&gt; 。磁头碰撞不能修复，整个磁盘必须替换。&lt;/li&gt;
-&lt;li&gt;磁盘可移动或更换。 &lt;strong&gt;软盘（floppy disk）&lt;/strong&gt; 是便宜的可移动磁盘，存储容量在 1.44MB 左右。&lt;/li&gt;
-&lt;li&gt;磁盘驱动器通过 &lt;strong&gt;I/O总线&lt;/strong&gt; 和计算机相连，可用的总线包括 &lt;strong&gt;EIDE（enhanced integrated drive electronics）&lt;/strong&gt; 、 &lt;strong&gt;ATA（advanced technology attachment）&lt;/strong&gt; 和 &lt;strong&gt;串行 ATA（serial ATA，SATA）&lt;/strong&gt; 、 &lt;strong&gt;USB（universal serial bus）&lt;/strong&gt; 、 &lt;strong&gt;FC（fiber channel）&lt;/strong&gt; 和 SCSI 总线。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;控制器（controller）&lt;/strong&gt; 是一个特殊处理器，用于执行总线上的数据传输。其中， &lt;strong&gt;主机（host）&lt;/strong&gt; 控制器是计算机上位于总线末端的控制器，而 &lt;strong&gt;磁盘（disk）&lt;/strong&gt; 控制器位于磁盘驱动器内。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;磁带（magnetic tape）&lt;/strong&gt; 是早期次级存储介质，但访问速度过慢。典型磁带可以存储 20~200GB。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;火线（FireWire）&lt;/strong&gt; 指一个接口，这个接口可以将外部设备如磁盘驱动器、DVD 驱动器等连接到计算机系统。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;磁盘结构和附属&quot;&gt;&lt;a href=&quot;#磁盘结构和附属&quot; class=&quot;headerlink&quot; title=&quot;磁盘结构和附属&quot;&gt;&lt;/a&gt;磁盘结构和附属&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;现代磁盘驱动器可以看作一个一维的 &lt;strong&gt;逻辑块（logical blocks）&lt;/strong&gt; 数组，逻辑块是最小的传输单位，通常为 512B，部分磁盘可以通过 &lt;strong&gt;低级格式化（low-level formatted）&lt;/strong&gt; 来选择不同的逻辑块大小。&lt;/li&gt;
-&lt;li&gt;一维逻辑块数组按顺序映射到磁盘的扇区， &lt;strong&gt;扇区 0 是最外面柱面的第一个磁道的第一个扇区&lt;/strong&gt; ，这个映射关系先按磁道内的扇区顺序，之后按这一柱面上各个盘面的磁道顺序，最后按照 &lt;strong&gt;从外向内&lt;/strong&gt; 的柱面顺序排序。通过这种映射， &lt;strong&gt;可以将逻辑块号转换为磁盘内的柱面号、柱面内的磁道号以及磁道内的扇区号&lt;/strong&gt; 。这种转换有一些问题，原因在于：&lt;ul&gt;
-&lt;li&gt;多数磁盘有一些缺陷扇区，这时候映射需要用其它空闲扇区替代这些缺陷扇区&lt;/li&gt;
-&lt;li&gt;有些磁盘每个磁道上的扇区数不是常量&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;对于使用 &lt;strong&gt;常量线性速度（constant linear velocity，CLV）&lt;/strong&gt; 的介质，每个磁道的位密度均匀，离盘片中心更远的磁道的长度更长，容纳的扇区也就更多，这样从内向外的磁道所包含的扇区数就会逐渐增多，外部磁道的扇区数通常比内部磁道的扇区数多 40%。这时，盘片驱动器在磁头的不同位置的旋转速度将不同，磁头越靠近盘片中心则旋转速度越快。&lt;/li&gt;
-&lt;li&gt;硬盘中通常采用 &lt;strong&gt;恒定圆角速度（constant angular velocity，CAV）&lt;/strong&gt; ，这时内磁道到外磁道的位密度会不断降低，以使磁盘驱动器转速恒定的情况下也能维持恒定的数据率。&lt;/li&gt;
-&lt;li&gt;计算机访问磁盘可通过 I/O 端口，或称 &lt;strong&gt;主机附属存储（host-attached storage）&lt;/strong&gt; ，这一般在小系统中采用；或者通过分布式文件系统的远程主机，这称为 &lt;strong&gt;网络附属存储（network-attached storage）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;磁盘调度&quot;&gt;&lt;a href=&quot;#磁盘调度&quot; class=&quot;headerlink&quot; title=&quot;磁盘调度&quot;&gt;&lt;/a&gt;磁盘调度&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;强调磁盘的几个参数：&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;寻道时间&lt;/strong&gt; 是磁臂旋转以使磁头位于目标扇区所属的柱面上的时间&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;旋转延迟&lt;/strong&gt; 是磁盘驱动器将盘片旋转以使目标扇区转动到磁头下的时间&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;磁盘带宽&lt;/strong&gt; 是传输的总字节数除以从 &lt;em&gt;服务&lt;/em&gt; 请求开始到传递结束的总时间。可以通过磁盘 I/O 请求调度来排列访问顺序，从而提高访问速度和带宽。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;进程需要磁盘 I/O 操作时会向操作系统发出系统调用，这个调用请求包括：&lt;ul&gt;
-&lt;li&gt;操作类型：输入/输出&lt;/li&gt;
-&lt;li&gt;本次传输的磁盘地址、内存地址、扇区数&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;多个进程的多道程序系统，磁盘队列可能有多个待处理请求，此时操作系统需对磁盘请求进行调度，包括 FCFS、SSTF、SCAN、C-SCAN、LOOK、C-LOOK。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;FCFS-调度&quot;&gt;&lt;a href=&quot;#FCFS-调度&quot; class=&quot;headerlink&quot; title=&quot;FCFS 调度&quot;&gt;&lt;/a&gt;FCFS 调度&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;先来先服务算法，此算法比较公平但无法提供最快的服务。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;SSTF-调度&quot;&gt;&lt;a href=&quot;#SSTF-调度&quot; class=&quot;headerlink&quot; title=&quot;SSTF 调度&quot;&gt;&lt;/a&gt;SSTF 调度&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;最短寻道时间优先法（shortest-seek-time-first，SSTF）&lt;/strong&gt; 会先处理最靠近当前磁头位置的请求，即选择距离当前磁头位置所需寻道时间最短的请求来处理。&lt;/li&gt;
-&lt;li&gt;本质上是最短作业优先（SJF）调度，但与 SJF 类似，它可能导致一些请求得不到服务，如果待处理请求队列比较长，很有可能某个请求会产生饥饿。SSTF 调度相比 FCFS 调度有很大改善，但仍不是最优的。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;SCAN-和-C-SCAN-调度&quot;&gt;&lt;a href=&quot;#SCAN-和-C-SCAN-调度&quot; class=&quot;headerlink&quot; title=&quot;SCAN 和 C-SCAN 调度&quot;&gt;&lt;/a&gt;SCAN 和 C-SCAN 调度&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;SCAN 算法有时称为 &lt;strong&gt;电梯算法（elevator algorithm）&lt;/strong&gt; ，磁臂会从磁盘的一端向另一端移动（按一维逻辑块数组的顺序），当磁头移动过每个柱面时就会处理这个柱面的服务请求。到达另一端后磁头会反向继续移动，如此往返。&lt;/li&gt;
-&lt;li&gt;如果一个请求刚好在磁头移动到请求位置之前加入磁盘请求队列，则它会马上得到服务&lt;/li&gt;
-&lt;li&gt;如果一个请求刚好在磁头移动过请求位置后加入队列，则它需要等待磁头到达另一端并调转方向、返回后才能得到服务&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;C-SCAN（circular SCAN）&lt;/strong&gt; 调度和 SCAN 类似，但当磁头从磁盘的 0 号扇区移动到磁盘的最后一个扇区（或者柱面）后不会调转方向，而是从 0 号重新开始扫描整个磁盘。&lt;/li&gt;
-&lt;li&gt;这两种算法都不会导致饥饿现象。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;LOOK-和-C-LOOK-调度&quot;&gt;&lt;a href=&quot;#LOOK-和-C-LOOK-调度&quot; class=&quot;headerlink&quot; title=&quot;LOOK 和 C-LOOK 调度&quot;&gt;&lt;/a&gt;LOOK 和 C-LOOK 调度&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;LOOK 和 SCAN 算法类似，磁头向一个方向移动，但不会一直移动到最后一个柱面才折返，而是处理完这个方向上最后一个请求后就掉头。&lt;/li&gt;
-&lt;li&gt;C-LOOK 和 C-SCAN 类似，处理完最后一个请求后就会将磁头恢复到磁盘一端重新开始按固定顺序扫描。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;算法选择&quot;&gt;&lt;a href=&quot;#算法选择&quot; class=&quot;headerlink&quot; title=&quot;算法选择&quot;&gt;&lt;/a&gt;算法选择&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;磁盘服务请求很大程度上受文件分配方法影响：一个连续分配文件会产生几个磁盘上相近位置的请求，而链接/索引文件会产生很多分散在磁盘上的块。&lt;/li&gt;
-&lt;li&gt;目录和索引块在磁盘上的位置也很重要，如果目录位于第一个柱面而文件数据位于最后一个柱面，则磁头需要横跨整个磁盘宽度。如果目录在中央柱面，则磁头只需要移动不到一半的磁盘宽度。&lt;/li&gt;
-&lt;li&gt;磁盘调度算法应该作为一个操作系统的独立模块，在必要的时候模块应该可以被替换。SSTF 或 LOOK 算法是比较合理的默认算法。&lt;/li&gt;
-&lt;li&gt;调度算法只考虑了寻道距离。旋转延迟几乎和寻道时间一样，但操作系统无法通过调度改善旋转延迟，因为现代磁盘并不透露逻辑块的物理位置。磁盘制造商会在磁盘控制器中加入磁盘调度算法缓解寻道时间和旋转延迟问题。&lt;/li&gt;
-&lt;li&gt;因为操作系统对请求服务的顺序有更多限制（如按需分页的 I/O 请求比普通应用程序的 I/O 请求优先级高），因此操作系统不能完全将磁盘调度交给磁盘控制器，而是选择自己的磁盘调度算法，将请求按调度好的顺序、按批次交给磁盘控制器。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;磁盘管理&quot;&gt;&lt;a href=&quot;#磁盘管理&quot; class=&quot;headerlink&quot; title=&quot;磁盘管理&quot;&gt;&lt;/a&gt;磁盘管理&lt;/h1&gt;&lt;h2 id=&quot;磁盘格式化&quot;&gt;&lt;a href=&quot;#磁盘格式化&quot; class=&quot;headerlink&quot; title=&quot;磁盘格式化&quot;&gt;&lt;/a&gt;磁盘格式化&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;新磁盘仅仅是含有磁性记录材料的盘片，需要通过 &lt;strong&gt;低级格式化（物理格式化，physical formatting）&lt;/strong&gt; 分为扇区。&lt;/li&gt;
-&lt;li&gt;低级格式化将磁盘的每个扇区按特定的数据结构填充数据，扇区的数据结构包括头、数据区（通常 512B）和尾部。头部和尾部包含磁盘控制器需要的信息，如扇区号码和 &lt;strong&gt;纠错代码（error-correcting code，ECC）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;操作系统需要将自己的数据结构记录到磁盘上，首先需要将磁盘分为一个或多个柱面组成的分区，操作系统可以将每个分区视作独立的磁盘。分区之后，操作系统需要通过 &lt;strong&gt;逻辑格式化（logical formatting）&lt;/strong&gt; 来创建文件系统，操作系统会将初始的文件系统数据结构存储到磁盘上。这些数据结构包括那些仍空闲的和已经分配的空间（如分配给 FAT 或者 inode）和一个初始为空的目录。&lt;/li&gt;
-&lt;li&gt;为提高效率，多数操作系统将多个块集中到一大块，称为 &lt;strong&gt;簇（cluster）&lt;/strong&gt; 。磁盘 I/O 通过块完成，文件系统 I/O 通过簇完成。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;引导块&quot;&gt;&lt;a href=&quot;#引导块&quot; class=&quot;headerlink&quot; title=&quot;引导块&quot;&gt;&lt;/a&gt;引导块&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;计算机开始运行时需要初始化（自举，bootstrap）程序，它负责初始化系统所需的各个方面，并找到磁盘上的操作系统内核，将其装入内存开始执行。&lt;/li&gt;
-&lt;li&gt;自举程序保存在 &lt;strong&gt;只读存储器（ROM）&lt;/strong&gt; 中，其位置固定，并且只读（不受病毒影响），但改变自举代码就需要改变 ROM 硬件芯片。因此操作系统只在启动 ROM 中保留一个非常小的自举程序，这个小自举程序会从磁盘上调入更完整的自举程序。更完整的自举程序可以修改，并且保存在磁盘的启动块上。&lt;/li&gt;
-&lt;li&gt;磁盘的 &lt;strong&gt;启动块（boot blocks）&lt;/strong&gt; 位于磁盘的固定位置，拥有启动分区的磁盘称为 &lt;strong&gt;启动磁盘（boot disk）&lt;/strong&gt; 或者 &lt;strong&gt;系统磁盘（system disk）&lt;/strong&gt; 。启动 ROM 中的代码将启动块中的代码装入内存并执行，启动块中的完整自举程序会从 &lt;strong&gt;非固定位置&lt;/strong&gt; 装入整个操作系统并执行。&lt;/li&gt;
-&lt;li&gt;以 Windows 2000 为例，其启动代码放置在硬盘的第一个扇区，被称为 &lt;strong&gt;主引导记录（master boot record，MBR）&lt;/strong&gt; ，MRB 中除了包含自举程序的代码，还包含硬盘分区列表和系统引导分区的具体标识。Win 2000 将硬盘分成多个分区，其中一个为 &lt;strong&gt;引导分区（boot partition）&lt;/strong&gt; ，该分区包括了操作系统和设备驱动程序。MBR 确定引导分区的位置后就会读取引导分区的第一个扇区（引导扇区，boot sector）并继续剩余的启动过程。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;坏块&quot;&gt;&lt;a href=&quot;#坏块&quot; class=&quot;headerlink&quot; title=&quot;坏块&quot;&gt;&lt;/a&gt;坏块&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;磁盘有移动部件且容错能力小，容易出问题。多数磁盘从工厂出来就有 &lt;strong&gt;坏块（bad blocks）&lt;/strong&gt; 。坏块中的数据会丢失。&lt;/li&gt;
-&lt;li&gt;简单磁盘可手动处理坏扇区。如 MS-DOS 的 &lt;code&gt;format&lt;/code&gt; 命令执行逻辑格式化时，会扫描磁盘查找坏扇区，如果找到就在 FAT 的条目中写上特殊值以标明该块已损毁。&lt;/li&gt;
-&lt;li&gt;复杂磁盘（高端 PC、WorkStation 或服务器上的 SCSI 磁盘）需要控制器维护一个磁盘坏块链表，这个链表在磁盘出厂前进行低级格式化时就已经初始化，并在磁盘使用过程中不断更新。低级格式化会将一些块备用，操作系统无法看到这些块。当坏块出现时，控制器会用备用块替换这些坏块。这种方案称为 &lt;strong&gt;扇区备用（sector sparing）&lt;/strong&gt; 或 &lt;strong&gt;转寄（forwarding）&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;典型的坏块区事务处理：&lt;ul&gt;
-&lt;li&gt;操作系统访问逻辑块 87&lt;/li&gt;
-&lt;li&gt;控制器计算该块的 ECC 值，发现该块已经损坏，因此将结果通知操作系统&lt;/li&gt;
-&lt;li&gt;下次操作系统重启时运行特殊程序告知 SCSI 控制器用备用块替代坏块&lt;/li&gt;
-&lt;li&gt;之后的每次系统访问逻辑块 87，请求都会被转换成替代后的备用块地址&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;扇区备用的另一方案是 &lt;strong&gt;扇区滑动（sector slipping）&lt;/strong&gt; ：假定逻辑块 17 损坏，第一个可用的备用块是扇区 203，则将 18 ~ 202 扇区向下滑动一个扇区，变为 19 ~ 203 扇区。这样原本的扇区 18 变为空，用来替换扇区 17。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/05/os-concepts-11/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（十一）：文件系统实现&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/06/os-concepts-13/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（十三）：I/O 输入系统&lt;/a&gt;     &lt;/p&gt;
-&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/01/05/os-concepts-12/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/01/05/os-concepts-12/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/01/05/os-concepts-12/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版第十二章大容量存储器结构部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
