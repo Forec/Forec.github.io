@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>图解 Functor, Applicative 和 Monad | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Haskell,函数式编程" />
+    
+    <meta name="description" content="这篇文章是 Aditya Bhargava 所著 《Functors, Applicatives, And Monads In Pictures》 的译文，已联系原作者取得授权。另一版本的中文译文由 题叶 翻译，可在此处查看。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图解 Functor, Applicative 和 Monad">
+<meta property="og:url" content="http://forec.github.io/2017/03/02/translation-adit-faamip/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="这篇文章是 Aditya Bhargava 所著 《Functors, Applicatives, And Monads In Pictures》 的译文，已联系原作者取得授权。另一版本的中文译文由 题叶 翻译，可在此处查看。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-faamip.png">
+<meta property="og:updated_time" content="2017-03-02T08:49:10.135Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图解 Functor, Applicative 和 Monad">
+<meta name="twitter:description" content="这篇文章是 Aditya Bhargava 所著 《Functors, Applicatives, And Monads In Pictures》 的译文，已联系原作者取得授权。另一版本的中文译文由 题叶 翻译，可在此处查看。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/apis/index.html">API</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Code/">Code</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-translation-adit-faamip" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        图解 Functor, Applicative 和 Monad
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2017/03/02/translation-adit-faamip/" class="article-date">
+    <time datetime="2017-03-02T06:07:40.000Z" itemprop="datePublished">2017-03-02</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Haskell/">Haskell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程/">函数式编程</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>这篇文章是 <a href="https://github.com/egonSchiele" target="_blank" rel="external">Aditya Bhargava</a> 所著 <a href="http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html" target="_blank" rel="external">《Functors, Applicatives, And Monads In Pictures》</a> 的译文，已联系原作者取得授权。另一版本的中文译文由 <a href="https://github.com/jiyinyiyong" target="_blank" rel="external">题叶</a> 翻译，可在<a href="http://jiyinyiyong.github.io/monads-in-pictures/" target="_blank" rel="external">此处</a>查看。</p>
+</blockquote>
+<a id="more"></a>
+<blockquote>
+<p>This Article is the Chinese translation for <a href="http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html" target="_blank" rel="external"><em>Functors, Applicatives, And Monads In Pictures</em></a> (Written by <a href="https://github.com/egonSchiele" target="_blank" rel="external">Aditya Bhargava</a>).</p>
+</blockquote>
+<ul>
+<li>英文原文写于 2013 年 4 月 17 日。</li>
+</ul>
+<h2 id="引文"><a href="#引文" class="headerlink" title="引文"></a>引文</h2><p>下图是一个简单的值：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/value.png"><br>将一个函数应用到这个值上：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/value_apply.png"><br>简直 Naive，让我们来扩展一个！假设一个值可以被放到上下文中。你可以把上下文想象成一个盒子，把值放入上下文的过程就如同把东西放到盒子里：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/value_and_context.png"><br>现在再把一个函数应用到这个值上，<strong>根据不同的上下文</strong>，我们将得到不同的结果。这就是 <code>Functor</code>、<code>Applicative</code>、<code>Monad</code>、<code>Arrows</code> 等概念的基础。就 <code>Maybe</code> 这一型别来说，它定义了两种相关联的上下文：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/context.png"><br>马上我们就会看到对 <code>Just a</code> 和 <code>Nothing</code> 应用一个函数的不同之处。在此之前，让我们先了解一下 <code>Functor</code> !</p>
+<h2 id="Functors"><a href="#Functors" class="headerlink" title="Functors"></a>Functors</h2><p>如果一个值被封装在上下文中，你会发现普通函数无法直接对其操作：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/no_fmap_ouch.png"><br>这时 <code>fmap</code> 就会发挥作用了！<code>fmap</code> 能够和上下文谈笑风生，它对普通函数和被上下文包装的值施了一点魔法，让它们能够愉快相处。举个例子，你想把函数 <code>(+3)</code> 应用到 <code>Just 2</code> 上，那么只需要加上 <code>fmap</code>：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; fmap (+<span class="number">3</span>) (<span class="type">Just</span> <span class="number">2</span>)</span><br><span class="line"><span class="type">Just</span> <span class="number">5</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap_apply.png"><br>一颗赛艇！<code>fmap</code> 向我们展示了它的威力！但是 <code>fmap</code> 怎么知道如何应用一个函数呢？</p>
+<h2 id="什么是-Functor"><a href="#什么是-Functor" class="headerlink" title="什么是 Functor"></a>什么是 Functor</h2><p><code>Functor</code> 是一个 <a href="http://learnyouahaskell.com/types-and-typeclasses#typeclasses-101" target="_blank" rel="external">类型类</a>，这是它的定义：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/functor_def.png"><br>任何型别，只要能用 <code>fmap</code> 操作，就是一个 <code>Functor</code>。下面这张图展示了 <code>fmap</code> 各个参数的含义：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap_def.png"><br>我们之所以能够执行 <code>fmap (+3) (Just 2)</code> ，是因为 <code>Maybe</code> 也是一个 <code>Functor</code> 。下面的定义指明了 <code>fmap</code> 在面对 <code>Just</code> 和 <code>Nothing</code> 时的处理方式：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Functor</span> <span class="type">Maybe</span> <span class="keyword">where</span></span></span><br><span class="line">    fmap func (<span class="type">Just</span> val) = <span class="type">Just</span> (func val)</span><br><span class="line">    fmap func <span class="type">Nothing</span> = <span class="type">Nothing</span></span><br></pre></td></tr></table></figure></p>
+<p>下图说明了执行 <code>fmap (+3) (Just 2)</code> 的整个过程：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap_just.png"><br>假设你灵机一动，让 <code>fmap</code> 把 <code>(+3)</code> 应用到 <code>Nothing</code> 上：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap_nothing.png"><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; fmap (+<span class="number">3</span>) <span class="type">Nothing</span></span><br><span class="line"><span class="type">Nothing</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/baozou.jpg"><br>就像身经百战的董先森（原文为黑客帝国里的墨菲斯，我也不知作者这么比喻是为啥），<code>fmap</code> 知道自己该做什么：从 <code>Nothing</code> 开始就从 <code>Nothing</code> 结束！这也是 <code>Maybe</code> 类型存在的意义。我们通常使用类似如下的 Python 代码处理数据库：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">post = Post.find_by_id(<span class="number">1</span>)</span><br><span class="line"><span class="keyword">if</span> post:</span><br><span class="line">  <span class="keyword">return</span> post.title</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">None</span></span><br></pre></td></tr></table></figure></p>
+<p>用 <code>Haskell</code> 可以写成 <code>fmap (getPostTitle) (findPost 1)</code>。如果 <code>findPost</code> 返回了一篇文章，我们就可以通过 <code>getPostTitle</code> 获取其标题。如果 <code>findPost</code> 返回了 <code>Nothing</code>，我们当然也应该返回 <code>Nothing</code>！是不是很简洁？<code>&lt;$&gt;</code> 是 <code>fmap</code> 的中缀版本，所以写成 <code>getPostTitle &lt;$&gt; (findPost 1)</code> 也是允许的，并且这种写法更常见。</p>
+<p>再来看一个例子：把一个函数应用到 <code>List</code> 上会发生什么呢？<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap_list.png"><br><code>List</code> 也是 <code>Functor</code>！这是它的定义：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Functor</span> [] <span class="keyword">where</span></span></span><br><span class="line">  fmap = map</span><br></pre></td></tr></table></figure></p>
+<p>我想你应该理解得差不多了，最后一个例子：如果把函数应用到另一个函数上呢，比如 <code>fmap (+3) (+1)</code> ？</p>
+<p>这是一个函数：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/function_with_value.png"><br>将某个函数应用到另一个函数：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap_function.png"><br>得到的结果是一个新函数！<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="import"><span class="keyword">import</span> Control.Applicative</span></span><br><span class="line">&gt; <span class="keyword">let</span> foo = fmap (+<span class="number">3</span>) (+<span class="number">2</span>)</span><br><span class="line">&gt; foo <span class="number">10</span></span><br><span class="line"><span class="number">15</span></span><br></pre></td></tr></table></figure></p>
+<p>由此可见，函数同样是 <code>Functor</code>：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Functor</span> <span class="container">((-&gt;)</span> r) <span class="keyword">where</span></span></span><br><span class="line">  fmap f g = f . g</span><br></pre></td></tr></table></figure></p>
+<p>函数的 <code>fmap</code> 其实就是函数复合。</p>
+<h2 id="Applicative"><a href="#Applicative" class="headerlink" title="Applicative"></a>Applicative</h2><p><code>Applicative</code> 将 <code>Functor</code> 又提高了一个层次。与 <code>Functor</code> 类似，<code>Applicative</code> 中的值也被封装在上下文中：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/value_and_context.png"><br>不同之处在于，现在函数也被封装到上下文中：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/function_and_context.png"><br><code>Control.Applicative</code> 定义了 <code>&lt;*&gt;</code>，它知道如何将一个 <em>包装在上下文中的</em> 函数应用到 <em>包装在上下文的</em> 值上。举个例子，<code>Just (+3) &lt;*&gt; Just 2 == Just 5</code>：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/applicative_just.png"><br>使用 <code>&lt;*&gt;</code> 会产生很多有趣的情况，看看下面的 <code>List</code> 会发生什么：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; [(*<span class="number">2</span>), (+<span class="number">3</span>)] &lt;*&gt; [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">[<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/applicative_list.png"><br>下面是一些 <code>Applicative</code> 有而 <code>Functor</code> 不具备的功能。如何将一个接收两个参数的函数应用到两个被封装的值呢？<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; (+) &lt;$&gt; (<span class="type">Just</span> <span class="number">5</span>)</span><br><span class="line"><span class="type">Just</span> (+<span class="number">5</span>)</span><br><span class="line">&gt; <span class="type">Just</span> (+<span class="number">5</span>) &lt;$&gt; (<span class="type">Just</span> <span class="number">4</span>)</span><br><span class="line"><span class="type">ERROR</span> ??? <span class="type">WHAT</span> <span class="type">DOES</span> <span class="type">THIS</span> <span class="type">EVEN</span> <span class="type">MEAN</span> <span class="type">WHY</span> <span class="type">IS</span> <span class="type">THE</span> <span class="type">FUNCTION</span> <span class="type">WRAPPED</span> <span class="type">IN</span> <span class="type">A</span> <span class="type">JUST</span></span><br></pre></td></tr></table></figure></p>
+<p><code>Applicative</code>：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; (+) &lt;$&gt; (<span class="type">Just</span> <span class="number">5</span>)</span><br><span class="line"><span class="type">Just</span> (+<span class="number">5</span>)</span><br><span class="line">&gt; <span class="type">Just</span> (+<span class="number">5</span>) &lt;*&gt; (<span class="type">Just</span> <span class="number">3</span>)</span><br><span class="line"><span class="type">Just</span> <span class="number">8</span></span><br></pre></td></tr></table></figure></p>
+<p><code>Applicative</code> 把 <code>Functor</code> 丢到了一边。“我今天就教你们一点人生经验”，<code>Applicative</code> 如是说，“在装备了 <code>&lt;$&gt;</code> 和 <code>&lt;*&gt;</code> 后，我可以接受任何函数，之后我把对应的封装值喂给它们，最后我就得到了一个封装好的值！哈哈哈哈哈！”<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; (*) &lt;$&gt; <span class="type">Just</span> <span class="number">5</span> &lt;*&gt; <span class="type">Just</span> <span class="number">3</span></span><br><span class="line"><span class="type">Just</span> <span class="number">15</span></span><br></pre></td></tr></table></figure></p>
+<p>对了，这种模式可以用 <code>liftA2</code> 简化：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; liftA2 (*) (<span class="type">Just</span> <span class="number">5</span>) (<span class="type">Just</span> <span class="number">3</span>)</span><br><span class="line"><span class="type">Just</span> <span class="number">15</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Monad"><a href="#Monad" class="headerlink" title="Monad"></a>Monad</h2><p>如何学习 <code>Monad</code>：</p>
+<ul>
+<li>在计算机科学专业取得博士学位。</li>
+<li>不学。因为这一节你根本用不到它！</li>
+</ul>
+<p><code>Functor</code> 将一个普通函数应用到被封装的值上：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap.png"><br><code>Applicative</code> 将一个封装的函数应用到封装值上：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/applicative.png"><br><code>Monad</code> 将一个 <strong>“接受一个普通值并回传一个被封装的值”</strong> 的函数应用到一个被封装的值上，这一任务由函数 <code>&gt;&gt;=</code> （读作 “bind”）完成。听起来似乎很拗口，让我们来看个例子吧，还是熟悉的 <code>Maybe</code>：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/context.png"><br>假设 <code>half</code> 是只对偶数感兴趣的函数：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">half</span> x = <span class="keyword">if</span> even x</span><br><span class="line">         <span class="keyword">then</span> <span class="type">Just</span> (x `div` <span class="number">2</span>)</span><br><span class="line">         <span class="keyword">else</span> <span class="type">Nothing</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/half.png"><br>如果给 <code>half</code> 一个被封装的值会怎样？<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/half_ouch.png"><br>这时我们需要用 <code>&gt;&gt;=</code> 把被封装的值挤到 <code>half</code> 中。看看 <code>&gt;&gt;=</code> 的照片：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/plunger.jpg"><br>再看看它的效果：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="type">Just</span> <span class="number">3</span> &gt;&gt;= half</span><br><span class="line"><span class="type">Nothing</span></span><br><span class="line">&gt; <span class="type">Just</span> <span class="number">4</span> &gt;&gt;= half</span><br><span class="line"><span class="type">Just</span> <span class="number">2</span></span><br><span class="line">&gt; <span class="type">Nothing</span> &gt;&gt;= half</span><br><span class="line"><span class="type">Nothing</span></span><br></pre></td></tr></table></figure></p>
+<p>这其中究竟发生了什么？<code>Monad</code> 是另一种类型类，这是它定义的一部分：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="type">Monad</span> m <span class="keyword">where</span></span></span><br><span class="line">  (&gt;&gt;=) :: m a -&gt; (a -&gt; m b) -&gt; m b</span><br></pre></td></tr></table></figure></p>
+<p>下图展示了 <code>&gt;&gt;=</code> 各个参数的意义：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/bind_def.png"><br>下面的定义让 <code>Maybe</code> 成为了 <code>Monad</code>：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Monad</span> <span class="type">Maybe</span> <span class="keyword">where</span></span></span><br><span class="line">    <span class="type">Nothing</span> &gt;&gt;= func = <span class="type">Nothing</span></span><br><span class="line">    <span class="type">Just</span> val &gt;&gt;= func  = func val</span><br></pre></td></tr></table></figure></p>
+<p>来看看执行 <code>Just 3 &gt;&gt;= half</code> 时发生了什么：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/monad_just.png"><br>如果传入 <code>Nothing</code> 就更容易了：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/monad_nothing.png"><br>这些调用过程还可以被连起来，比如执行 <code>Just 20 &gt;&gt;= half &gt;&gt;= half &gt;&gt;= half</code> 会得到 <code>Nothing</code>：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/monad_chain.png"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/whoa.png"><br>流弊！现在我们知道，<code>Maybe</code> 既是 <code>Functor</code>，又是 <code>Applicative</code>，还是 <code>Monad</code>。   </p>
+<p>再来看另一个例子：<code>IO Monad</code>。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/io.png">    </p>
+<p>介绍三个函数先。  </p>
+<ul>
+<li><code>getLine</code> 不接受参数并获取用户输入（<code>getLine :: IO String</code>）：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/getLine.png">    </li>
+<li><code>readFile</code> 接受一个字符串（文件路径）并返回文件的内容（<code>readFile :: FilePath -&gt; IO String</code>，<code>FilePath</code> 是 <code>String</code> 的别名）：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/readFile.png">    </li>
+<li><code>putStrLn</code> 接受一个字符串并打印它（<code>putStrLn :: String -&gt; IO ()</code>）：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/putStrLn.png">    </li>
+</ul>
+<p>这三个函数都接受一个正常的值（或者不接受值）并且回传一个被封装在 <code>IO Monad</code> 中的值。我们可以用 <code>&gt;&gt;=</code> 把它们串起来！<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/monad_io.png"><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">getLine</span> &gt;&gt;= readFile &gt;&gt;= putStrLn</span><br></pre></td></tr></table></figure></p>
+<p>Haskell 还为我们提供了 <code>do</code>，它是 <code>Monad</code> 的语法糖：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">foo</span> = <span class="keyword">do</span></span><br><span class="line">    filename &lt;- getLine</span><br><span class="line">    contents &lt;- readFile filename</span><br><span class="line">    putStrLn contents</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>实现了 <code>Functor</code> 类型类的数据类型被称为 functor。</li>
+<li>实现了 <code>Applicative</code> 类型类的数据类型被称为 applicative。</li>
+<li>实现了 <code>Monad</code> 类型类的数据类型被称为 monad。</li>
+<li><code>Maybe</code> 实现了这三种类型类，所以它同时是 functor、applicative 和 monad。   </li>
+</ol>
+<p>它们三个之间的区别是什么呢？<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/recap.png">    </p>
+<ul>
+<li><strong><code>functors</code></strong> ：使用 <code>fmap</code> 或 <code>&lt;$&gt;</code> 把一个普通函数应用到被封装的值上</li>
+<li><strong><code>applicatives</code></strong> ：使用 <code>&lt;*&gt;</code> 或 <code>liftA</code> 把一个被封装的函数应用到被封装的值上</li>
+<li><strong><code>monads</code></strong> ：使用 <code>&gt;&gt;=</code> 或 <code>liftM</code> 把一个接受普通值、回传封装值的函数应用到一个被封装的值上</li>
+</ul>
+<p>亲爱的朋友（我觉得我们算是朋友了），我想我们都会认为 monad 是一个简单并且聪明的概念。既然你已经读完了这篇“科普文”，不如再仔细了解一下 monad：LYAH 编写的 <a href="http://learnyouahaskell.com/a-fistful-of-monads" target="_blank" rel="external">Monad 章节</a> 中包含了许多我在本文中忽略的信息，他写的非常棒，我就不在此赘述了。</p>
+<p>更多与 Monad 相关的图文介绍，请看 <a href="http://blog.forec.cn/2017/03/02/translation-adit-tum/" target="_blank" rel="external">三种有用的 monad</a>。</p>
+<hr>
+<p>英文原文链接： <a href="http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html" target="_blank" rel="external"><em>Functors, Applicatives, And Monads In Pictures</em></a>  Written by <a href="https://github.com/egonSchiele" target="_blank" rel="external">Aditya Bhargava</a>    </p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/03/02/translation-adit-faamip/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/03/02/translation-adit-faamip/" target="_blank" rel="external">http://blog.forec.cn/2017/03/02/translation-adit-faamip/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2017/03/02/translation-adit-faamip/" data-id="cizs50q010025loewqru518fe" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2017/03/02/translation-adit-faamip/" data-title="图解 Functor, Applicative 和 Monad" data-url="http://forec.github.io/2017/03/02/translation-adit-faamip/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2017/03/01/talk-about-some-simple-monads/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">来看几种基本 Monad</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/02/translation-adit-faamip/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-faamip.png)" alt="图解 Functor, Applicative 和 Monad" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2017/03/02/translation-adit-faamip/" class="title">图解 Functor, Applicative 和 Monad</a></p>
+                            <p class="item-date"><time datetime="2017-03-02T06:07:40.000Z" itemprop="datePublished">2017-03-02</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/01/talk-about-some-simple-monads/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/talk-about-some-simple-monads.png)" alt="来看几种基本 Monad" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2017/03/01/talk-about-some-simple-monads/" class="title">来看几种基本 Monad</a></p>
+                            <p class="item-date"><time datetime="2017-03-01T13:52:16.000Z" itemprop="datePublished">2017-03-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/02/25/formal-languages-and-automata1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="形式语言与自动机（一）：概念" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/02/25/formal-languages-and-automata1/" class="title">形式语言与自动机（一）：概念</a></p>
+                            <p class="item-date"><time datetime="2017-02-25T15:33:13.000Z" itemprop="datePublished">2017-02-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/02/14/talk-about-interpreter/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/talk-about-interpreter.jpg)" alt="用 Haskell 实现解释器" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2017/02/14/talk-about-interpreter/" class="title">用 Haskell 实现解释器</a></p>
+                            <p class="item-date"><time datetime="2017-02-14T12:38:16.000Z" itemprop="datePublished">2017-02-14</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/02/06/talk-about-hmm/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/talk-about-hmm.jpg)" alt="HMM 关键词检索" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/02/06/talk-about-hmm/" class="title">HMM 关键词检索</a></p>
+                            <p class="item-date"><time datetime="2017-02-06T08:22:30.000Z" itemprop="datePublished">2017-02-06</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">24</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 15px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 15px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17px;">线程</a> <a href="/tags/自动机/" style="font-size: 10px;">自动机</a> <a href="/tags/计组与体系结构/" style="font-size: 14px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="mailto:forec@bupt.edu.cn">联系 Forec</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec 的官方网站</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://fallenwood.github.io">Fallenwood 的博客</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Forec">Forec 在 GitHub</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://www.codewars.com/users/Forec">Forec 在 CodeWars</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://leetcode.com/forec/">Forec 在 LeetCode</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>京ICP备16060806号-1 &copy; 2017 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'forec'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>

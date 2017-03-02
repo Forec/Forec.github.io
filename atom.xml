@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2017-03-01T15:45:29.000Z</updated>
+  <updated>2017-03-02T08:49:10.135Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -14,6 +14,95 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>图解 Functor, Applicative 和 Monad</title>
+    <link href="http://forec.github.io/2017/03/02/translation-adit-faamip/"/>
+    <id>http://forec.github.io/2017/03/02/translation-adit-faamip/</id>
+    <published>2017-03-02T06:07:40.000Z</published>
+    <updated>2017-03-02T08:49:10.135Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;这篇文章是 &lt;a href=&quot;https://github.com/egonSchiele&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Aditya Bhargava&lt;/a&gt; 所著 &lt;a href=&quot;http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;《Functors, Applicatives, And Monads In Pictures》&lt;/a&gt; 的译文，已联系原作者取得授权。另一版本的中文译文由 &lt;a href=&quot;https://github.com/jiyinyiyong&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;题叶&lt;/a&gt; 翻译，可在&lt;a href=&quot;http://jiyinyiyong.github.io/monads-in-pictures/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;此处&lt;/a&gt;查看。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This Article is the Chinese translation for &lt;a href=&quot;http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;&lt;em&gt;Functors, Applicatives, And Monads In Pictures&lt;/em&gt;&lt;/a&gt; (Written by &lt;a href=&quot;https://github.com/egonSchiele&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Aditya Bhargava&lt;/a&gt;).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;英文原文写于 2013 年 4 月 17 日。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;引文&quot;&gt;&lt;a href=&quot;#引文&quot; class=&quot;headerlink&quot; title=&quot;引文&quot;&gt;&lt;/a&gt;引文&lt;/h2&gt;&lt;p&gt;下图是一个简单的值：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/value.png&quot;&gt;&lt;br&gt;将一个函数应用到这个值上：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/value_apply.png&quot;&gt;&lt;br&gt;简直 Naive，让我们来扩展一个！假设一个值可以被放到上下文中。你可以把上下文想象成一个盒子，把值放入上下文的过程就如同把东西放到盒子里：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/value_and_context.png&quot;&gt;&lt;br&gt;现在再把一个函数应用到这个值上，&lt;strong&gt;根据不同的上下文&lt;/strong&gt;，我们将得到不同的结果。这就是 &lt;code&gt;Functor&lt;/code&gt;、&lt;code&gt;Applicative&lt;/code&gt;、&lt;code&gt;Monad&lt;/code&gt;、&lt;code&gt;Arrows&lt;/code&gt; 等概念的基础。就 &lt;code&gt;Maybe&lt;/code&gt; 这一型别来说，它定义了两种相关联的上下文：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/context.png&quot;&gt;&lt;br&gt;马上我们就会看到对 &lt;code&gt;Just a&lt;/code&gt; 和 &lt;code&gt;Nothing&lt;/code&gt; 应用一个函数的不同之处。在此之前，让我们先了解一下 &lt;code&gt;Functor&lt;/code&gt; !&lt;/p&gt;
+&lt;h2 id=&quot;Functors&quot;&gt;&lt;a href=&quot;#Functors&quot; class=&quot;headerlink&quot; title=&quot;Functors&quot;&gt;&lt;/a&gt;Functors&lt;/h2&gt;&lt;p&gt;如果一个值被封装在上下文中，你会发现普通函数无法直接对其操作：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/no_fmap_ouch.png&quot;&gt;&lt;br&gt;这时 &lt;code&gt;fmap&lt;/code&gt; 就会发挥作用了！&lt;code&gt;fmap&lt;/code&gt; 能够和上下文谈笑风生，它对普通函数和被上下文包装的值施了一点魔法，让它们能够愉快相处。举个例子，你想把函数 &lt;code&gt;(+3)&lt;/code&gt; 应用到 &lt;code&gt;Just 2&lt;/code&gt; 上，那么只需要加上 &lt;code&gt;fmap&lt;/code&gt;：&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; fmap (+&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;) (&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap_apply.png&quot;&gt;&lt;br&gt;一颗赛艇！&lt;code&gt;fmap&lt;/code&gt; 向我们展示了它的威力！但是 &lt;code&gt;fmap&lt;/code&gt; 怎么知道如何应用一个函数呢？&lt;/p&gt;
+&lt;h2 id=&quot;什么是-Functor&quot;&gt;&lt;a href=&quot;#什么是-Functor&quot; class=&quot;headerlink&quot; title=&quot;什么是 Functor&quot;&gt;&lt;/a&gt;什么是 Functor&lt;/h2&gt;&lt;p&gt;&lt;code&gt;Functor&lt;/code&gt; 是一个 &lt;a href=&quot;http://learnyouahaskell.com/types-and-typeclasses#typeclasses-101&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;类型类&lt;/a&gt;，这是它的定义：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/functor_def.png&quot;&gt;&lt;br&gt;任何型别，只要能用 &lt;code&gt;fmap&lt;/code&gt; 操作，就是一个 &lt;code&gt;Functor&lt;/code&gt;。下面这张图展示了 &lt;code&gt;fmap&lt;/code&gt; 各个参数的含义：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap_def.png&quot;&gt;&lt;br&gt;我们之所以能够执行 &lt;code&gt;fmap (+3) (Just 2)&lt;/code&gt; ，是因为 &lt;code&gt;Maybe&lt;/code&gt; 也是一个 &lt;code&gt;Functor&lt;/code&gt; 。下面的定义指明了 &lt;code&gt;fmap&lt;/code&gt; 在面对 &lt;code&gt;Just&lt;/code&gt; 和 &lt;code&gt;Nothing&lt;/code&gt; 时的处理方式：&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Functor&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Maybe&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    fmap func (&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; val) = &lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; (func val)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    fmap func &lt;span class=&quot;type&quot;&gt;Nothing&lt;/span&gt; = &lt;span class=&quot;type&quot;&gt;Nothing&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;下图说明了执行 &lt;code&gt;fmap (+3) (Just 2)&lt;/code&gt; 的整个过程：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap_just.png&quot;&gt;&lt;br&gt;假设你灵机一动，让 &lt;code&gt;fmap&lt;/code&gt; 把 &lt;code&gt;(+3)&lt;/code&gt; 应用到 &lt;code&gt;Nothing&lt;/code&gt; 上：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap_nothing.png&quot;&gt;&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; fmap (+&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;) &lt;span class=&quot;type&quot;&gt;Nothing&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;Nothing&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/baozou.jpg&quot;&gt;&lt;br&gt;就像身经百战的董先森（原文为黑客帝国里的墨菲斯，我也不知作者这么比喻是为啥），&lt;code&gt;fmap&lt;/code&gt; 知道自己该做什么：从 &lt;code&gt;Nothing&lt;/code&gt; 开始就从 &lt;code&gt;Nothing&lt;/code&gt; 结束！这也是 &lt;code&gt;Maybe&lt;/code&gt; 类型存在的意义。我们通常使用类似如下的 Python 代码处理数据库：&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;post = Post.find_by_id(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; post:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; post.title&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;None&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;用 &lt;code&gt;Haskell&lt;/code&gt; 可以写成 &lt;code&gt;fmap (getPostTitle) (findPost 1)&lt;/code&gt;。如果 &lt;code&gt;findPost&lt;/code&gt; 返回了一篇文章，我们就可以通过 &lt;code&gt;getPostTitle&lt;/code&gt; 获取其标题。如果 &lt;code&gt;findPost&lt;/code&gt; 返回了 &lt;code&gt;Nothing&lt;/code&gt;，我们当然也应该返回 &lt;code&gt;Nothing&lt;/code&gt;！是不是很简洁？&lt;code&gt;&amp;lt;$&amp;gt;&lt;/code&gt; 是 &lt;code&gt;fmap&lt;/code&gt; 的中缀版本，所以写成 &lt;code&gt;getPostTitle &amp;lt;$&amp;gt; (findPost 1)&lt;/code&gt; 也是允许的，并且这种写法更常见。&lt;/p&gt;
+&lt;p&gt;再来看一个例子：把一个函数应用到 &lt;code&gt;List&lt;/code&gt; 上会发生什么呢？&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap_list.png&quot;&gt;&lt;br&gt;&lt;code&gt;List&lt;/code&gt; 也是 &lt;code&gt;Functor&lt;/code&gt;！这是它的定义：&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Functor&lt;/span&gt; [] &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  fmap = map&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;我想你应该理解得差不多了，最后一个例子：如果把函数应用到另一个函数上呢，比如 &lt;code&gt;fmap (+3) (+1)&lt;/code&gt; ？&lt;/p&gt;
+&lt;p&gt;这是一个函数：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/function_with_value.png&quot;&gt;&lt;br&gt;将某个函数应用到另一个函数：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap_function.png&quot;&gt;&lt;br&gt;得到的结果是一个新函数！&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; &lt;span class=&quot;import&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; Control.Applicative&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; &lt;span class=&quot;keyword&quot;&gt;let&lt;/span&gt; foo = fmap (+&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;) (+&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; foo &lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;number&quot;&gt;15&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;由此可见，函数同样是 &lt;code&gt;Functor&lt;/code&gt;：&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Functor&lt;/span&gt; &lt;span class=&quot;container&quot;&gt;((-&amp;gt;)&lt;/span&gt; r) &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  fmap f g = f . g&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;函数的 &lt;code&gt;fmap&lt;/code&gt; 其实就是函数复合。&lt;/p&gt;
+&lt;h2 id=&quot;Applicative&quot;&gt;&lt;a href=&quot;#Applicative&quot; class=&quot;headerlink&quot; title=&quot;Applicative&quot;&gt;&lt;/a&gt;Applicative&lt;/h2&gt;&lt;p&gt;&lt;code&gt;Applicative&lt;/code&gt; 将 &lt;code&gt;Functor&lt;/code&gt; 又提高了一个层次。与 &lt;code&gt;Functor&lt;/code&gt; 类似，&lt;code&gt;Applicative&lt;/code&gt; 中的值也被封装在上下文中：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/value_and_context.png&quot;&gt;&lt;br&gt;不同之处在于，现在函数也被封装到上下文中：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/function_and_context.png&quot;&gt;&lt;br&gt;&lt;code&gt;Control.Applicative&lt;/code&gt; 定义了 &lt;code&gt;&amp;lt;*&amp;gt;&lt;/code&gt;，它知道如何将一个 &lt;em&gt;包装在上下文中的&lt;/em&gt; 函数应用到 &lt;em&gt;包装在上下文的&lt;/em&gt; 值上。举个例子，&lt;code&gt;Just (+3) &amp;lt;*&amp;gt; Just 2 == Just 5&lt;/code&gt;：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/applicative_just.png&quot;&gt;&lt;br&gt;使用 &lt;code&gt;&amp;lt;*&amp;gt;&lt;/code&gt; 会产生很多有趣的情况，看看下面的 &lt;code&gt;List&lt;/code&gt; 会发生什么：&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; [(*&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;), (+&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;)] &amp;lt;*&amp;gt; [&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/applicative_list.png&quot;&gt;&lt;br&gt;下面是一些 &lt;code&gt;Applicative&lt;/code&gt; 有而 &lt;code&gt;Functor&lt;/code&gt; 不具备的功能。如何将一个接收两个参数的函数应用到两个被封装的值呢？&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; (+) &amp;lt;$&amp;gt; (&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; (+&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; &lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; (+&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;) &amp;lt;$&amp;gt; (&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;ERROR&lt;/span&gt; ??? &lt;span class=&quot;type&quot;&gt;WHAT&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;DOES&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;THIS&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;EVEN&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;MEAN&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;WHY&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;IS&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;THE&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;FUNCTION&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;WRAPPED&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;IN&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;JUST&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Applicative&lt;/code&gt;：&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; (+) &amp;lt;$&amp;gt; (&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; (+&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; &lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; (+&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;) &amp;lt;*&amp;gt; (&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Applicative&lt;/code&gt; 把 &lt;code&gt;Functor&lt;/code&gt; 丢到了一边。“我今天就教你们一点人生经验”，&lt;code&gt;Applicative&lt;/code&gt; 如是说，“在装备了 &lt;code&gt;&amp;lt;$&amp;gt;&lt;/code&gt; 和 &lt;code&gt;&amp;lt;*&amp;gt;&lt;/code&gt; 后，我可以接受任何函数，之后我把对应的封装值喂给它们，最后我就得到了一个封装好的值！哈哈哈哈哈！”&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; (*) &amp;lt;$&amp;gt; &lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt; &amp;lt;*&amp;gt; &lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;15&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;对了，这种模式可以用 &lt;code&gt;liftA2&lt;/code&gt; 简化：&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; liftA2 (*) (&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;) (&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;15&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Monad&quot;&gt;&lt;a href=&quot;#Monad&quot; class=&quot;headerlink&quot; title=&quot;Monad&quot;&gt;&lt;/a&gt;Monad&lt;/h2&gt;&lt;p&gt;如何学习 &lt;code&gt;Monad&lt;/code&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在计算机科学专业取得博士学位。&lt;/li&gt;
+&lt;li&gt;不学。因为这一节你根本用不到它！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;Functor&lt;/code&gt; 将一个普通函数应用到被封装的值上：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/fmap.png&quot;&gt;&lt;br&gt;&lt;code&gt;Applicative&lt;/code&gt; 将一个封装的函数应用到封装值上：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/applicative.png&quot;&gt;&lt;br&gt;&lt;code&gt;Monad&lt;/code&gt; 将一个 &lt;strong&gt;“接受一个普通值并回传一个被封装的值”&lt;/strong&gt; 的函数应用到一个被封装的值上，这一任务由函数 &lt;code&gt;&amp;gt;&amp;gt;=&lt;/code&gt; （读作 “bind”）完成。听起来似乎很拗口，让我们来看个例子吧，还是熟悉的 &lt;code&gt;Maybe&lt;/code&gt;：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/context.png&quot;&gt;&lt;br&gt;假设 &lt;code&gt;half&lt;/code&gt; 是只对偶数感兴趣的函数：&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;half&lt;/span&gt; x = &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; even x&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;         &lt;span class=&quot;keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; (x `div` &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;         &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Nothing&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/half.png&quot;&gt;&lt;br&gt;如果给 &lt;code&gt;half&lt;/code&gt; 一个被封装的值会怎样？&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/half_ouch.png&quot;&gt;&lt;br&gt;这时我们需要用 &lt;code&gt;&amp;gt;&amp;gt;=&lt;/code&gt; 把被封装的值挤到 &lt;code&gt;half&lt;/code&gt; 中。看看 &lt;code&gt;&amp;gt;&amp;gt;=&lt;/code&gt; 的照片：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/plunger.jpg&quot;&gt;&lt;br&gt;再看看它的效果：&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; &lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt; &amp;gt;&amp;gt;= half&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;Nothing&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; &lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt; &amp;gt;&amp;gt;= half&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; &lt;span class=&quot;type&quot;&gt;Nothing&lt;/span&gt; &amp;gt;&amp;gt;= half&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;Nothing&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;这其中究竟发生了什么？&lt;code&gt;Monad&lt;/code&gt; 是另一种类型类，这是它定义的一部分：&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Monad&lt;/span&gt; m &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&amp;gt;&amp;gt;=) :: m a -&amp;gt; (a -&amp;gt; m b) -&amp;gt; m b&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;下图展示了 &lt;code&gt;&amp;gt;&amp;gt;=&lt;/code&gt; 各个参数的意义：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/bind_def.png&quot;&gt;&lt;br&gt;下面的定义让 &lt;code&gt;Maybe&lt;/code&gt; 成为了 &lt;code&gt;Monad&lt;/code&gt;：&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Monad&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;Maybe&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;where&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;type&quot;&gt;Nothing&lt;/span&gt; &amp;gt;&amp;gt;= func = &lt;span class=&quot;type&quot;&gt;Nothing&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;type&quot;&gt;Just&lt;/span&gt; val &amp;gt;&amp;gt;= func  = func val&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;来看看执行 &lt;code&gt;Just 3 &amp;gt;&amp;gt;= half&lt;/code&gt; 时发生了什么：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/monad_just.png&quot;&gt;&lt;br&gt;如果传入 &lt;code&gt;Nothing&lt;/code&gt; 就更容易了：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/monad_nothing.png&quot;&gt;&lt;br&gt;这些调用过程还可以被连起来，比如执行 &lt;code&gt;Just 20 &amp;gt;&amp;gt;= half &amp;gt;&amp;gt;= half &amp;gt;&amp;gt;= half&lt;/code&gt; 会得到 &lt;code&gt;Nothing&lt;/code&gt;：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/monad_chain.png&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/whoa.png&quot;&gt;&lt;br&gt;流弊！现在我们知道，&lt;code&gt;Maybe&lt;/code&gt; 既是 &lt;code&gt;Functor&lt;/code&gt;，又是 &lt;code&gt;Applicative&lt;/code&gt;，还是 &lt;code&gt;Monad&lt;/code&gt;。   &lt;/p&gt;
+&lt;p&gt;再来看另一个例子：&lt;code&gt;IO Monad&lt;/code&gt;。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/io.png&quot;&gt;    &lt;/p&gt;
+&lt;p&gt;介绍三个函数先。  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;getLine&lt;/code&gt; 不接受参数并获取用户输入（&lt;code&gt;getLine :: IO String&lt;/code&gt;）：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/getLine.png&quot;&gt;    &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;readFile&lt;/code&gt; 接受一个字符串（文件路径）并返回文件的内容（&lt;code&gt;readFile :: FilePath -&amp;gt; IO String&lt;/code&gt;，&lt;code&gt;FilePath&lt;/code&gt; 是 &lt;code&gt;String&lt;/code&gt; 的别名）：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/readFile.png&quot;&gt;    &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;putStrLn&lt;/code&gt; 接受一个字符串并打印它（&lt;code&gt;putStrLn :: String -&amp;gt; IO ()&lt;/code&gt;）：&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/putStrLn.png&quot;&gt;    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这三个函数都接受一个正常的值（或者不接受值）并且回传一个被封装在 &lt;code&gt;IO Monad&lt;/code&gt; 中的值。我们可以用 &lt;code&gt;&amp;gt;&amp;gt;=&lt;/code&gt; 把它们串起来！&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/monad_io.png&quot;&gt;&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;getLine&lt;/span&gt; &amp;gt;&amp;gt;= readFile &amp;gt;&amp;gt;= putStrLn&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;Haskell 还为我们提供了 &lt;code&gt;do&lt;/code&gt;，它是 &lt;code&gt;Monad&lt;/code&gt; 的语法糖：&lt;br&gt;&lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;title&quot;&gt;foo&lt;/span&gt; = &lt;span class=&quot;keyword&quot;&gt;do&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    filename &amp;lt;- getLine&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    contents &amp;lt;- readFile filename&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    putStrLn contents&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;实现了 &lt;code&gt;Functor&lt;/code&gt; 类型类的数据类型被称为 functor。&lt;/li&gt;
+&lt;li&gt;实现了 &lt;code&gt;Applicative&lt;/code&gt; 类型类的数据类型被称为 applicative。&lt;/li&gt;
+&lt;li&gt;实现了 &lt;code&gt;Monad&lt;/code&gt; 类型类的数据类型被称为 monad。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Maybe&lt;/code&gt; 实现了这三种类型类，所以它同时是 functor、applicative 和 monad。   &lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;它们三个之间的区别是什么呢？&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/adit-faamip/recap.png&quot;&gt;    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;functors&lt;/code&gt;&lt;/strong&gt; ：使用 &lt;code&gt;fmap&lt;/code&gt; 或 &lt;code&gt;&amp;lt;$&amp;gt;&lt;/code&gt; 把一个普通函数应用到被封装的值上&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;applicatives&lt;/code&gt;&lt;/strong&gt; ：使用 &lt;code&gt;&amp;lt;*&amp;gt;&lt;/code&gt; 或 &lt;code&gt;liftA&lt;/code&gt; 把一个被封装的函数应用到被封装的值上&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;monads&lt;/code&gt;&lt;/strong&gt; ：使用 &lt;code&gt;&amp;gt;&amp;gt;=&lt;/code&gt; 或 &lt;code&gt;liftM&lt;/code&gt; 把一个接受普通值、回传封装值的函数应用到一个被封装的值上&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;亲爱的朋友（我觉得我们算是朋友了），我想我们都会认为 monad 是一个简单并且聪明的概念。既然你已经读完了这篇“科普文”，不如再仔细了解一下 monad：LYAH 编写的 &lt;a href=&quot;http://learnyouahaskell.com/a-fistful-of-monads&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Monad 章节&lt;/a&gt; 中包含了许多我在本文中忽略的信息，他写的非常棒，我就不在此赘述了。&lt;/p&gt;
+&lt;p&gt;更多与 Monad 相关的图文介绍，请看 &lt;a href=&quot;http://blog.forec.cn/2017/03/02/translation-adit-tum/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;三种有用的 monad&lt;/a&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;英文原文链接： &lt;a href=&quot;http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;&lt;em&gt;Functors, Applicatives, And Monads In Pictures&lt;/em&gt;&lt;/a&gt;  Written by &lt;a href=&quot;https://github.com/egonSchiele&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Aditya Bhargava&lt;/a&gt;    &lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/03/02/translation-adit-faamip/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/03/02/translation-adit-faamip/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/03/02/translation-adit-faamip/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;这篇文章是 &lt;a href=&quot;https://github.com/egonSchiele&quot;&gt;Aditya Bhargava&lt;/a&gt; 所著 &lt;a href=&quot;http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html&quot;&gt;《Functors, Applicatives, And Monads In Pictures》&lt;/a&gt; 的译文，已联系原作者取得授权。另一版本的中文译文由 &lt;a href=&quot;https://github.com/jiyinyiyong&quot;&gt;题叶&lt;/a&gt; 翻译，可在&lt;a href=&quot;http://jiyinyiyong.github.io/monads-in-pictures/&quot;&gt;此处&lt;/a&gt;查看。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="Code" scheme="http://forec.github.io/categories/Code/"/>
+    
+    
+      <category term="Haskell" scheme="http://forec.github.io/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="http://forec.github.io/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>来看几种基本 Monad</title>
@@ -842,129 +931,6 @@
     
       &lt;blockquote&gt;
 &lt;p&gt;此部分主要包括原书第六章（进程同步）和第七章（死锁）的部分习题（有些不属于考试范围），以及一些简单信号量编程习题（低于考试难度）的分析。这部分习题的解答均根据我个人理解编写或翻译， &lt;strong&gt;不保证提供的答案绝对正确或最优&lt;/strong&gt; 。稍微复杂一些的信号量编程在 《&lt;a href=&quot;http://blog.forec.cn/2017/01/08/os-concepts-15/&quot;&gt;信号量编程（下）&lt;/a&gt;》。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>操作系统（十三）：I/O 输入系统</title>
-    <link href="http://forec.github.io/2017/01/06/os-concepts-13/"/>
-    <id>http://forec.github.io/2017/01/06/os-concepts-13/</id>
-    <published>2017-01-06T04:17:33.000Z</published>
-    <updated>2017-01-11T14:27:00.661Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;p&gt;注：整理只包含第 13 章内核 I/O 子系统之前的内容，考试涉及整章内容。&lt;/p&gt;
-&lt;h1 id=&quot;I-O-硬件&quot;&gt;&lt;a href=&quot;#I-O-硬件&quot; class=&quot;headerlink&quot; title=&quot;I/O 硬件&quot;&gt;&lt;/a&gt;I/O 硬件&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;设备驱动程序（device drivers）&lt;/strong&gt; 为 I/O 子系统提供了统一设备的访问接口。&lt;/li&gt;
-&lt;li&gt;设备和计算机的通信通过 &lt;strong&gt;端口（port）&lt;/strong&gt; ，一组被一个/多个设备共同使用的线称为 &lt;strong&gt;总线（bus）&lt;/strong&gt; 。总线是一组线和一组严格定义的描述在线上传输信息的协议。 &lt;strong&gt;链环（daisy chaine）&lt;/strong&gt; 形容的是多个设备相连，最终设备通过端口连接到计算机上的模式。链环常常按总线方式工作，一个典型的 PC 总线结构如下图。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/typical-pc-bus.png&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
-&lt;li&gt;上图中包含一个 &lt;strong&gt;PCI 总线&lt;/strong&gt; （最常用的 PC 系统总线）用于连接 CPU 和内存子系统/快速设备， &lt;strong&gt;扩展总线（expansion bus）&lt;/strong&gt; 用于连接串/并行端口和相对慢的设备（键盘）。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;控制器（controller）&lt;/strong&gt; 是用来操作端口、总线或者设备的一组电子器件，它的复杂程度和传输协议有关，如串行端口控制器比较简单，而 SCSI 总线控制器常实现为一个和计算机相连的独立的 &lt;strong&gt;主机适配器（host adapter）&lt;/strong&gt; ，这个适配器会有处理器、微码以及一定的私有内存，从而能够处理 SCSI 协议信息。&lt;/li&gt;
-&lt;li&gt;控制器有一个/多个用于数据和控制信号的寄存器， &lt;strong&gt;处理器通过读写这些寄存器来实现与控制器的通信&lt;/strong&gt; 。这种通信的可以通过特殊的 I/O 指令向指定的 I/O 端口地址传输一个字节/字，也可以通过 &lt;strong&gt;内存映射&lt;/strong&gt; I/O 模式（在 &lt;a href=&quot;http://blog.forec.cn/2017/01/04/os-concepts-9/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;虚拟内存&lt;/a&gt; 中介绍过），处理器能够通过标准数据传输指令完成对控制器的读写。部分系统同时采用这两种方式，例如图像控制器有 I/O 端口来完成基本控制操作，还有一个较大的内存映射区域来支持屏幕内容的接收和生成。&lt;/li&gt;
-&lt;li&gt;I/O 端口通常有 4 种寄存器，寄存器通常为 1 ~ 4B：状态寄存器、控制寄存器、数据输入寄存器和数据输出寄存器。有的控制器有 FIFO 芯片从而可以保留多个输入/输出数据。上述四种寄存器的主要功能有：&lt;ul&gt;
-&lt;li&gt;主机从 &lt;strong&gt;数据输入寄存器&lt;/strong&gt; 读出数据&lt;/li&gt;
-&lt;li&gt;主机向 &lt;strong&gt;数据输出寄存器&lt;/strong&gt; 写入数据&lt;/li&gt;
-&lt;li&gt;主机可从 &lt;strong&gt;状态寄存器&lt;/strong&gt; 读出设备当前的状态&lt;/li&gt;
-&lt;li&gt;主机向 &lt;strong&gt;控制寄存器&lt;/strong&gt; 写入数据来发送命令、改变设备状态&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;轮询&quot;&gt;&lt;a href=&quot;#轮询&quot; class=&quot;headerlink&quot; title=&quot;轮询&quot;&gt;&lt;/a&gt;轮询&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;主机和控制器之间交互很复杂，但基本的 &lt;strong&gt;握手（handshaking）&lt;/strong&gt; 比较简单。假设控制器的状态寄存器中有一位用于说明设备当前是否在忙，控制器正忙时就将这一位置位。控制器的命令寄存器中有一位说明主机是否有任务准备就绪，当主机需要控制器执行某个操作时，需要将命令寄存器的这一位置位。主机和控制器交互输出一个字节时的握手流程如下：&lt;ol&gt;
-&lt;li&gt;主机不断读取状态寄存器，直到状态寄存器中的 &lt;em&gt;忙位&lt;/em&gt; 为 0&lt;/li&gt;
-&lt;li&gt;主机设置命令寄存器中的 &lt;em&gt;写位&lt;/em&gt; 并把一个字节写到数据输出寄存器&lt;/li&gt;
-&lt;li&gt;主机设置命令寄存器中的 &lt;em&gt;就绪位&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;控制器注意到命令寄存器中的就绪位被置位，因此将状态寄存器中的 &lt;em&gt;忙位&lt;/em&gt; 置位&lt;/li&gt;
-&lt;li&gt;控制器读取命令寄存器并发现 &lt;em&gt;写位&lt;/em&gt; 被置位，因此了解到需要执行一条写命令。它从数据输出寄存器读出一个字节，并向设备执行 I/O 操作&lt;/li&gt;
-&lt;li&gt;控制器操作完成后将命令寄存器中的 &lt;em&gt;就绪位&lt;/em&gt; 清除，并清除状态寄存器中的 &lt;em&gt;故障位&lt;/em&gt; （这说明 I/O 设备成功完成任务），最后清除状态寄存器中的 &lt;em&gt;忙位&lt;/em&gt; 表示本次字节传输操作结束&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;在步骤 1 中主机将处于 &lt;strong&gt;忙等待（busy-waiting）&lt;/strong&gt; 或者 &lt;strong&gt;轮询（polling）&lt;/strong&gt; 状态。多数计算机体系只需要三个 CPU 指令周期就可以完成基本的轮询操作，但不断地重复轮询会浪费处理器资源。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;中断&quot;&gt;&lt;a href=&quot;#中断&quot; class=&quot;headerlink&quot; title=&quot;中断&quot;&gt;&lt;/a&gt;中断&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;中断（interrupt）&lt;/strong&gt; 是使外设通知 CPU 的硬件机制。CPU 硬件有一条 &lt;strong&gt;中断请求线（Interrupt-request line，IRL）&lt;/strong&gt; ，CPU 执行完每条指令都会检测 IRL 判断是否有控制器通过 IRL 发送了信号。如果有，CPU 会保存当前的状态并且跳转到 &lt;strong&gt;中断处理程序（interrupt-handler）&lt;/strong&gt; 。中断处理程序会判断中断原因、进行处理、恢复状态并执行中断返回指令使 CPU 返回中断之前的执行状态。整个流程大致为：&lt;ul&gt;
-&lt;li&gt;设备控制器通过中断请求线 &lt;strong&gt;发送中断信号引起（raise）中断&lt;/strong&gt; &lt;/li&gt;
-&lt;li&gt;CPU &lt;strong&gt;捕获（catch）中断并分发（dispatch）到中断处理程序&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;中断处理程序处理设备请求以 &lt;strong&gt;清除中断&lt;/strong&gt; &lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;CPU 和 &lt;strong&gt;中断控制器（interrupt-controller）&lt;/strong&gt; 硬件提供了以下三个特性：&lt;ul&gt;
-&lt;li&gt;在 CPU 执行关键指令时可以延迟对中断的处理&lt;/li&gt;
-&lt;li&gt;能够将中断快速转发给适当的中断处理程序，而不必检查所有设备以确定是哪个设备引发了中断&lt;/li&gt;
-&lt;li&gt;支持多级中断，可以根据紧迫性来响应中断&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;多数 CPU 有两个中断请求线： &lt;strong&gt;非屏蔽中断（nonmaskable）&lt;/strong&gt; 用于处理非常严重的，不可以恢复的内存错误等问题， &lt;strong&gt;可屏蔽中断（maskable）&lt;/strong&gt; 可被设备控制器用来请求服务，如果 CPU 正在执行关键、不可中断指令，则可以屏蔽这一类中断线上的请求。&lt;/li&gt;
-&lt;li&gt;中断机制根据 &lt;strong&gt;中断向量（interrupt vector）&lt;/strong&gt; 来选择中断服务程序。中断向量和中断服务程序被维护在一张表中，中断向量支持的地址数量有限（例如 8 位中断向量只能对应 256 个中断服务程序，奔腾即为 256 个中断向量，0~31 用于各种错误等非屏蔽中断，剩下的为可屏蔽中断）， &lt;strong&gt;中断链接（interrupt chaining）&lt;/strong&gt; 可解决这个问题：中断向量指向的不再是单一的中断服务程序，而是一个中断服务程序的链表，中断一旦发生，对应链表中的全部中断处理程序都会一一调用，直到发现了能够处理请求的中断服务程序为止。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;中断优先级（interrupt priority）&lt;/strong&gt; 使 CPU 可以在不屏蔽所有中断的情况下延迟处理低优先级的中断，并且也允许高优先级的中断抢占低优先级的中断处理。&lt;/li&gt;
-&lt;li&gt;现代操作系统启动时会探查硬件总线、确定哪些设备存在并将对应的中断处理程序安装到中断向量中。操作系统对于中断机制的应用非常广泛：&lt;ul&gt;
-&lt;li&gt;设备控制器通过中断表明自己已经准备好服务&lt;/li&gt;
-&lt;li&gt;通过中断机制处理例如被 0 除、违例内存访问等 &lt;strong&gt;异常（Exception）&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;使用中断进行虚拟内存分页，页错误会引发中断异常，这个中断会挂起当前进程并跳转到内核的页错误处理程序&lt;/li&gt;
-&lt;li&gt;程序执行系统调用会触发 &lt;strong&gt;软中断（software interrupt）&lt;/strong&gt; 或者 &lt;strong&gt;陷阱指令（trap）&lt;/strong&gt; &lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;直接内存访问&quot;&gt;&lt;a href=&quot;#直接内存访问&quot; class=&quot;headerlink&quot; title=&quot;直接内存访问&quot;&gt;&lt;/a&gt;直接内存访问&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;使用通用处理器不断监听设备控制器的寄存器并按字节传输（ &lt;strong&gt;程序控制 I/O&lt;/strong&gt; ，Programmed I/O，PIO）是对计算资源的非常过分的浪费。计算机为了避免 PIO 增加 CPU 负担，将一部分数据传输任务交付 &lt;strong&gt;直接内存访问（direct-memory access，DMA）&lt;/strong&gt; 控制器。&lt;/li&gt;
-&lt;li&gt;开始 DMA 传输时，主机向内存写入 DMA 命令块，块中包含传输的源、目的地址指针以及传输的字节数。 &lt;strong&gt;CPU 将该命令块的地址写到 DMA 控制器中&lt;/strong&gt; 并继续其他工作，DMA 控制器会根据命令块直接操作内存总线完成传输（这段时间 CPU 无法使用总线）。传输完成后 DMA 控制器会中断 CPU 并交还给  CPU 总线控制权。&lt;/li&gt;
-&lt;li&gt;DMA 和设备控制器之间的握手通过 &lt;strong&gt;DMA-request&lt;/strong&gt; 和 &lt;strong&gt;DMA-acknowledge&lt;/strong&gt; 线进行，设备有数据需要传输时，设备控制器就通过 DMA-request 线通知 DMA 控制器，DMA 控制器会发出申请中断 CPU，在从 CPU 获取所需要的地址后将地址放到内存地址总线上，并通过 DMA-acknowledge 线通知设备控制器。设备控制器收到这个信号，向内存地址总线上的地址写入数据。交互过程如下图。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/steps-dma-transfer.png&quot; width=&quot;500px&quot;&gt;&lt;/li&gt;
-&lt;li&gt;DMA 控制总线传输期间 CPU 不能访问主存（仍可访问 L1、L2 缓存），这称为 &lt;strong&gt;周期挪用（cycle stealing）&lt;/strong&gt; ，会放慢 CPU 计算，但往往能够改善系统总体性能。有的 DMA 使用物理内存地址，有的使用虚拟内存地址（这时候需要有一个虚拟到物理地址的转换），使用虚拟内存地址的 DMA 称为 &lt;strong&gt;直接虚拟内存访问（direct virtual-memory access，DVMA）&lt;/strong&gt; 。DVMA 可以直接实现两个内存映射设备之间的传输而无需 CPU 干涉。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;I-O-应用接口及后面几节简单摘要&quot;&gt;&lt;a href=&quot;#I-O-应用接口及后面几节简单摘要&quot; class=&quot;headerlink&quot; title=&quot;I/O 应用接口及后面几节简单摘要&quot;&gt;&lt;/a&gt;I/O 应用接口及后面几节简单摘要&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;设备在很多方面有很大差异：&lt;ul&gt;
-&lt;li&gt;字符流或块：字符流设备按字节传输，块设备以块为单位传输&lt;/li&gt;
-&lt;li&gt;顺序访问或随机访问&lt;/li&gt;
-&lt;li&gt;同步或异步：同步设备按照一定响应时间进行数据传输，异步设备则呈现无规则/不可预测的响应时间&lt;/li&gt;
-&lt;li&gt;共享或专用：共享设备可以被多个进程/线程并发使用，专用设备则不可以&lt;/li&gt;
-&lt;li&gt;操作速度：设备速度不同&lt;/li&gt;
-&lt;li&gt;读写/只读/只写：设备支持的数据传输方向不同&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;块设备（block-device）&lt;/strong&gt; 接口规定了访问磁盘驱动器以及其它块设备所需的各个方面。操作系统本身和特殊的应用程序（如数据库）倾向于将块设备当作简单的线性块数组访问，这种访问方式称为 &lt;strong&gt;原始（raw） I/O&lt;/strong&gt; 。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;阻塞和非阻塞 I/O&lt;/strong&gt; ：&lt;ul&gt;
-&lt;li&gt;应用程序发出 &lt;strong&gt;阻塞（blocking） I/O&lt;/strong&gt; 类型的系统调用时，应用程序就会被挂起，移动到进程等待队列中。因为阻塞式的 I/O 容易理解，并且 I/O 设备执行所需的时间是异步的，执行时间不可预估，因此绝大多数操作系统给应用程序预留的接口都是阻塞系统调用。&lt;/li&gt;
-&lt;li&gt;有的用户级进程需要 &lt;strong&gt;非阻塞（nonblocking） I/O&lt;/strong&gt; ，例如用户接口，它用来接收键盘/鼠标输入，同时还要在屏幕回显。又或者视频应用程序，它需要从磁盘读取帧并解码到显示器上。非阻塞 I/O 通常使用多线程实现，有的线程执行阻塞系统调用，其他线程继续执行。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;异步系统调用（asynchronous system call）&lt;/strong&gt; 不必等待 I/O 完成就可以立刻返回，应用程序继续执行。I/O 完成时会通知应用程序，比如设置程序空间里某个变量，或者触发信号/软件中断等。&lt;br&gt;&lt;img src=&quot;http://7xktmz.com1.z0.glb.clouddn.com/two-io-methods.png&quot; width=&quot;400px&quot;&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;缓冲区（buffer）&lt;/strong&gt; 是用来保存两个设备之间或者设备和应用程序之间传输数据的内存区域。采用缓冲的理由有：&lt;ul&gt;
-&lt;li&gt;处理数据流的生产者与消费者之间的速度差异&lt;/li&gt;
-&lt;li&gt;协调传输数据大小不一致的设备&lt;/li&gt;
-&lt;li&gt;支持程序 I/O 的复制语义&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;I/O 内核子系统&lt;/strong&gt; （kernel’s I/O subsystem）提供了很多和 I/O 有关的服务，包括：&lt;ul&gt;
-&lt;li&gt;调度（scheduling）&lt;/li&gt;
-&lt;li&gt;缓冲（buffering）&lt;/li&gt;
-&lt;li&gt;高速缓存（caching）&lt;/li&gt;
-&lt;li&gt;假脱机（spooling）&lt;/li&gt;
-&lt;li&gt;设备预留（device reservation）&lt;/li&gt;
-&lt;li&gt;错误处理（error handling）&lt;/li&gt;
-&lt;li&gt;名称转换（name translation）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/05/os-concepts-12/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（十二）：大容量存储器结构&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/06/os-concepts-14/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（专题）：信号量编程&lt;/a&gt;    &lt;/p&gt;
-&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/01/06/os-concepts-13/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/01/06/os-concepts-13/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/01/06/os-concepts-13/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;整理《Operating System Concepts》 第七版第十三章 I/O 输入系统部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 &lt;strong&gt;按个人理解简化、翻译为中文，可能存在一些不准确之处&lt;/strong&gt; 。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
