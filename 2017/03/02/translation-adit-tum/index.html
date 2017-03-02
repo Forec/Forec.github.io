@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>计组与体系结构笔记（二） | Forec&#39;s Notes</title>
+    <title>三种实用 Monad | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="计组与体系结构" />
+        <meta name="keywords" content="Haskell,函数式编程" />
     
-    <meta name="description" content="整理第三章布尔代数，并加入一些数字逻辑的相关内容。">
+    <meta name="description" content="这篇文章是 Aditya Bhargava 所著 《Three Useful Monads》 的中文译文，已联系原作者取得授权。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="计组与体系结构笔记（二）">
-<meta property="og:url" content="http://forec.github.io/2015/10/14/Computer-Organization-Architecture2/index.html">
+<meta property="og:title" content="三种实用 Monad">
+<meta property="og:url" content="http://forec.github.io/2017/03/02/translation-adit-tum/index.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="整理第三章布尔代数，并加入一些数字逻辑的相关内容。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/computer-organization-2.png">
-<meta property="og:updated_time" content="2016-11-22T11:09:28.631Z">
+<meta property="og:description" content="这篇文章是 Aditya Bhargava 所著 《Three Useful Monads》 的中文译文，已联系原作者取得授权。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png">
+<meta property="og:updated_time" content="2017-03-02T11:54:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="计组与体系结构笔记（二）">
-<meta name="twitter:description" content="整理第三章布尔代数，并加入一些数字逻辑的相关内容。">
+<meta name="twitter:title" content="三种实用 Monad">
+<meta name="twitter:description" content="这篇文章是 Aditya Bhargava 所著 《Three Useful Monads》 的中文译文，已联系原作者取得授权。">
     
 
     
@@ -139,18 +139,18 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <a class="page-title-link" href="/categories/计算机理论基础/">计算机理论基础</a>
+    <a class="page-title-link" href="/categories/Code/">Code</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-Computer-Organization-Architecture2" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-translation-adit-tum" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        计组与体系结构笔记（二）
+        三种实用 Monad
         </h1>
     
 
@@ -158,63 +158,60 @@
         
         
             <div class="article-subtitle">
-                <a href="/2015/10/14/Computer-Organization-Architecture2/" class="article-date">
-    <time datetime="2015-10-14T10:54:17.000Z" itemprop="datePublished">2015-10-14</time>
+                <a href="/2017/03/02/translation-adit-tum/" class="article-date">
+    <time datetime="2017-03-02T10:24:20.000Z" itemprop="datePublished">2017-03-02</time>
 </a>
                 
-    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/计组与体系结构/">计组与体系结构</a></li></ul>
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Haskell/">Haskell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/函数式编程/">函数式编程</a></li></ul>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
             <blockquote>
-<p>整理第三章布尔代数，并加入一些数字逻辑的相关内容。</p>
+<p>这篇文章是 <a href="https://github.com/egonSchiele" target="_blank" rel="external">Aditya Bhargava</a> 所著 <a href="http://adit.io/posts/2013-06-10-three-useful-monads.html" target="_blank" rel="external">《Three Useful Monads》</a> 的中文译文，已联系原作者取得授权。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="布尔代数"><a href="#布尔代数" class="headerlink" title="布尔代数"></a>布尔代数</h1><ol>
-<li><strong>布尔表达式</strong>和<strong>布尔恒等式</strong><ul>
-<li>布尔表达式（Boolean expression）由变量和算符组合，基础算符为AND、OR和NOT，称为与（布尔和）、或（布尔积）和非。下面用+，·和~表示三种运算符。</li>
-<li>布尔恒等式：<table><tbody><tr><td>恒等式</td><td>与形式</td><td>或形式</td></tr><tr><td>一致律</td><td>1 · x = x</td><td>0 + x = x</td></tr><tr><td>零律</td><td>0 · x = 0</td><td>1 + x = 1</td></tr><tr><td>幂等律</td><td>x · x = x</td><td>x + x = x</td></tr><tr><td>互补律</td><td>x · ~x = 0</td><td>x + ~x = 1</td></tr><tr><td>交换律</td><td>x · y = y · x</td><td>x + y = y + x</td></tr><tr><td>结合律</td><td>（x · y）· z = x ·（y · z）</td><td>（x + y）+ z = x +（y + z）</td></tr><tr><td>分配律</td><td>x + y·z =（x + y）·（x + z）</td><td>x·（y + z） = x · y + x · z</td></tr><tr><td>吸收律</td><td>x·（x + y） = x</td><td>x + x · y = x</td></tr><tr><td>德摩根律</td><td>~（x · y） = ~x + ~y</td><td>~（ x + y ）= ~x · ~y</td></tr></tbody></table>需要注意的一个常见错误是认为~（x · y）= ~x · ~y。<br>以下是几个在布尔表达式化简时常用的恒等式，使用时适当配项。<table><tbody><tr><td>还原律</td><td>A · B + A · ~B = A</td><td>（A + B）·（A + ~B）= A</td></tr><tr><td>吸收律</td><td>A ·（A + B）= A</td><td>A ·（A + B）= A</td></tr><tr><td>吸收律</td><td>A ·（~A + B）= A · B</td><td>A + ~A · B = A + B</td></tr><tr><td>冗余律</td><td colspan="2">A · B + ~A · C + B · C = A · B + ~A · C</td></tr></tbody></table></li>
+<blockquote>
+<p>This Article is the Chinese translation for <a href="http://adit.io/posts/2013-06-10-three-useful-monads.html" target="_blank" rel="external"><em>Three Useful Monads</em></a> (Written by <a href="https://github.com/egonSchiele" target="_blank" rel="external">Aditya Bhargava</a>).</p>
+</blockquote>
+<ul>
+<li>英文原文写于 2013 年 6 月 10 日。</li>
 </ul>
-</li>
-<li><strong>运算基本规则</strong><ul>
-<li>代入规则：任何一个含有变量A的等式，如果将所有出现A的位置都代之以一个逻辑函数，则等式仍成立。</li>
-<li>反演规则：求一个逻辑函数F的反码（非函数~F)，可将F中的与换成或，或换成与，原变量换成非变量，非变量换成原变量，1换成0，0换成1。要保持原式先与后或的顺序，二变量（含2）以上的非号不变。如F = A + ~（B + ~C + ~（D + ~E）），则~F = ~A · ~（~B · ~C · ~（~D · E））。</li>
-<li>对偶规则：变量不变，其余和反演的规则相同。</li>
+<h2 id="引文"><a href="#引文" class="headerlink" title="引文"></a>引文</h2><blockquote>
+<p>在阅读本文之前，你应当了解 <code>Monad</code> 的基本概念，否则请先阅读 <a href="http://blog.forec.cn/2017/03/02/translation-adit-faamip/" target="_blank" rel="external">《图解 Functor, Applicative 和 Monad》</a>。</p>
+</blockquote>
+<p>下图是函数 <code>half</code>：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/half.png"><br>我们可以将其连续应用多次：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">half</span> . half $ <span class="number">8</span></span><br><span class="line">=&gt; <span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<p>结果和我们预期的一致。现在你决定记录这个函数的执行过程：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/half_with_log.png"><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">half</span> x = (x `div` <span class="number">2</span>, <span class="string">"I just halved "</span> ++ (show x) ++ <span class="string">"!"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>看起来不错。如果我们想将其连续应用多次，又该怎么书写呢？我们无法直接使用 <code>half . half $ 8</code>，因为应用一次 <code>half</code> 的返回值已经变成了元组，我们无法对元组继续应用 <code>half</code>。下图展示了我们实际期望的功能：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/half_chain.png"><br>显然这个功能不会自己产生，我们必须自己实现：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">finalValue</span> = (val2, log1 ++ log2)</span><br><span class="line">    <span class="keyword">where</span> (val1, log1) = half <span class="number">8</span></span><br><span class="line">          (val2, log2) = half val1</span><br></pre></td></tr></table></figure></p>
+<p>但是如果需要记录更多的函数呢？这里存在一个模式：我们希望将每个返回 <code>(Value, Log)</code> 的函数 “串” 到一起。这其实是一种副作用，而 <code>Monad</code> 刚好擅长处理这种副作用！</p>
+<h2 id="Writer-Monad"><a href="#Writer-Monad" class="headerlink" title="Writer Monad"></a>Writer Monad</h2><p><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/writer_monad_on_a_horse.png"><br><code>Writer Monad</code> 非常酷炫。“老铁，让我来处理这波历史记录”，<code>Writer</code> 这么说，“我会帮助你的代码恢复整洁，我还能帮你上天！”（原著这里为 “启动齐柏林飞艇”）。每个 <code>Writer</code> 都包含一个历史记录并回传计算结果。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/writer_monad.png"><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="typedef"><span class="keyword">data</span> <span class="type">Writer</span> w a = <span class="type">Writer</span> <span class="container">&#123; <span class="title">runWriter</span> :: (<span class="title">a</span>, <span class="title">w</span>) &#125;</span></span></span><br></pre></td></tr></table></figure></p>
+<p><code>Writer</code> 允许我们这么写代码：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">half</span> <span class="number">8</span> &gt;&gt;= half</span><br></pre></td></tr></table></figure></p>
+<p>或者你可以用 <code>&lt;=&lt;</code>，它实现了 <code>Monad</code> 版本的函数复合：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">half</span> &lt;=&lt; half $ <span class="number">8</span></span><br></pre></td></tr></table></figure></p>
+<p>非常接近 <code>half . half $ 8</code> 的写法！一颗赛艇！<br>我们使用 <code>tell</code> 来写入历史记录，用 <code>return</code> 将一个普通的值放入 <code>Writer</code> 的返回值。这是 <code>Writer</code> 版本的 <code>half</code> 函数：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">half</span> :: <span class="type">Int</span> -&gt; <span class="type">Writer</span> <span class="type">String</span> <span class="type">Int</span></span><br><span class="line"><span class="title">half</span> x = <span class="keyword">do</span></span><br><span class="line">        tell (<span class="string">"I just halved "</span> ++ (show x) ++ <span class="string">"!"</span>)</span><br><span class="line">        return (x `div` <span class="number">2</span>)</span><br></pre></td></tr></table></figure></p>
+<p>新的 <code>half</code> 会回传一个 <code>Writer</code>：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/half_writer.png"><br><code>runWriter</code> 能帮助我们取出 <code>Writer</code> 封装的元组。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/run_writer.png"><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">runWriter</span> $ half <span class="number">8</span></span><br><span class="line">=&gt; (<span class="number">4</span>, <span class="string">"I just halved 8!"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>然而，真正牛逼的地方在于，我们现在可以用 <code>&gt;&gt;=</code> 把 <code>half</code> 串起来了：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">runWriter</span> $ half <span class="number">8</span> &gt;&gt;= half</span><br><span class="line">=&gt; (<span class="number">2</span>, <span class="string">"I just halved 8!I just halved 4!"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>下图说明了上面这行代码的原理：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/half_monad_chain.png"><br>我们不需要写任何繁杂的代码，因为 <code>&gt;&gt;=</code> 知道如何将两个 <code>Writer</code> 合并（做 <code>Monad</code> 最重要的是整整齐齐了）！下面是 <code>&gt;&gt;=</code> 针对 <code>Writer</code> 的完整定义：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/writer_bind_definition.png"><br>其实这就是我们之前写过的样本代码，不过现在 <code>&gt;&gt;=</code> 帮助我们简化了。别忘了我们还有 <code>return</code>，它将一个值放入 <code>Monad</code> 中，对于 <code>Writer</code> 而言其作用如下图：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/writer_return_definition.png"><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">return</span> val = <span class="type">Writer</span> (val, <span class="string">""</span>)</span><br></pre></td></tr></table></figure></p>
+<p>（<strong>注意</strong>：这些定义 <em>可视作</em> 正确的。实际的 <code>Writer Monad</code> 允许将任何 <code>Monoid</code> 类型作为 “历史记录”，而不仅限于字符串。这里我用字符串简化以帮助你理解。）<br>感谢 <code>Writer Monad</code> ！</p>
+<h2 id="Reader-Monad"><a href="#Reader-Monad" class="headerlink" title="Reader Monad"></a>Reader Monad</h2><p>假如你想将一些配置传递给许多函数，不妨试试 <code>Reader Monad</code>！<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/reader_monad.png"><br><code>Reader Monad</code> 允许你将一个值传递给所有幕后的函数。举个例子：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">greeter</span> :: <span class="type">Reader</span> <span class="type">String</span> <span class="type">String</span></span><br><span class="line"><span class="title">greeter</span> = <span class="keyword">do</span></span><br><span class="line">    name &lt;- ask</span><br><span class="line">    return (<span class="string">"hello, "</span> ++ name ++ <span class="string">"!"</span>)</span><br></pre></td></tr></table></figure></p>
+<p><code>greeter</code> 回传一个 <code>Reader Monad</code>：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/greeter_reader.png"><br>下面是 <code>Reader</code> 的定义：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="typedef"><span class="keyword">data</span> <span class="type">Reader</span> r a = <span class="type">Reader</span> <span class="container">&#123;  <span class="title">runReader</span> :: <span class="title">r</span> -&gt; <span class="title">a</span> &#125;</span></span></span><br></pre></td></tr></table></figure></p>
+<p><code>Reader</code> 的唯一字段是一个函数，<code>runReader</code> 可以取出这个函数：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/run_reader.png"><br>现在你可以给这个函数一些输入，它们将会被 <code>greeter</code> 应用：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/run_reader_expanded.png"><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">runReader</span> greeter $ <span class="string">"adit"</span></span><br><span class="line">=&gt; <span class="string">"hello, adit!"</span></span><br></pre></td></tr></table></figure></p>
+<p>所以每当你使用 <code>&gt;&gt;=</code> 都会得到一个 <code>Reader</code>。当你向该 <code>Reader</code> 传入一个状态时，这个状态会被传递给 monad 中的每个函数。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/reader_bind_definition.png"><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">m</span> &gt;&gt;= k  = <span class="type">Reader</span> $ \r -&gt; runReader (k (runReader m r)) r</span><br></pre></td></tr></table></figure></p>
+<p><code>Reader</code> 有些复杂，不过复杂的才是最吼的。<br><code>return</code> 将一个值放入 <code>Reader</code> ：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/reader_return_definition.png"><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">return</span> a = <span class="type">Reader</span> $ \_ -&gt; a</span><br></pre></td></tr></table></figure></p>
+<p><code>ask</code> 将传入的状态回传：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">ask</span> = <span class="type">Reader</span> $ \x -&gt; x</span><br></pre></td></tr></table></figure></p>
+<p>想了解更多关于 <code>Reader</code> 的内容吗？你可以在 <a href="https://gist.github.com/egonSchiele/5752172" target="_blank" rel="external">这里</a> 看到一个更长的例子（需翻墙）。</p>
+<h2 id="State-Monad"><a href="#State-Monad" class="headerlink" title="State Monad"></a>State Monad</h2><p><code>State Monad</code> 是 <code>Reader Monad</code> 最好的朋友：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/state_monad.png"><br>她看起来和 <code>Reader Monad</code> 非常像，只不过它既可读又可写。这是 <code>State</code> 的定义：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">State</span> s a = <span class="type">State</span> &#123; runState :: s -&gt; (a, s) &#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/run_state_expanded.png"><br>你可以使用 <code>get</code> 获取状态，也可用 <code>put</code> 改变状态。举个例子：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">greeter</span> :: <span class="type">State</span> <span class="type">String</span> <span class="type">String</span></span><br><span class="line"><span class="title">greeter</span> = <span class="keyword">do</span></span><br><span class="line">    name &lt;- get</span><br><span class="line">    put <span class="string">"tintin"</span></span><br><span class="line">    return (<span class="string">"hello, "</span> ++ name ++ <span class="string">"!"</span>)</span><br><span class="line"></span><br><span class="line"><span class="title">runState</span> greeter $ <span class="string">"adit"</span></span><br><span class="line">=&gt; (<span class="string">"hello, adit!"</span>, <span class="string">"tintin"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>没毛病！<code>Reader</code> 就像在说 “你无法改变我”，而 <code>State</code> 则对改变持兹瓷态度。<br><code>State</code> 和 <code>Reader</code> 的定义看起来非常相似：<br><code>return</code>：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/state_return_definition.png"><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">return</span> a = <span class="type">State</span> $ \s -&gt; (a, s)</span><br></pre></td></tr></table></figure></p>
+<p><code>&gt;&gt;=</code>：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/state_bind_definition.png"><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">m</span> &gt;&gt;= k = <span class="type">State</span> $ \s -&gt; <span class="keyword">let</span> (a, s') = runState m s</span><br><span class="line">                         <span class="keyword">in</span> runState (k a) s'</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><img src="http://7xktmz.com1.z0.glb.clouddn.com/adit-tum/conclusion.png"><br><code>Writer</code>、<code>Reader</code>、<code>State</code>。现在你已经将这三个强大的武器添加到你的兵器库了，请不遗余力地使用它们！</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="http://sigfpe.blogspot.com/2006/08/you-could-have-invented-monads-and.html" target="_blank" rel="external">Why Monads are useful</a></li>
+<li><a href="http://www.maztravel.com/haskell/readerMonad.html" target="_blank" rel="external">A good explaination of the Reader monad</a></li>
 </ul>
-</li>
-<li><strong>通用门电路</strong>：常用的门电路是与非门（NAND）和或非门（NOR）。与非门也称万能门，可以构建所有的数字电路。下图给出用与非门实现与门、非门和非门的方法。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/与非门.jpg" alt="与非门实现基本数字电路" width="400px"><br>使用与非门的电路成本低，并且在物理上构建复杂的集成电路时使用相同的结构模块比使用一些基本结构模块（与、非、或）的集合要容易的多。根据对偶原理，或非门也可以构建任意的数字电路。</li>
-</ol>
 <hr>
-<h1 id="数字电路元件"><a href="#数字电路元件" class="headerlink" title="数字电路元件"></a>数字电路元件</h1><ol>
-<li><strong>集成电路</strong>的电子元件直接在半导体芯片上腐蚀制成，与对等的分立器件相比，集成电路上的元件体积更小，工作时消耗的电能更多。</li>
-<li><strong>组合逻辑电路</strong>可以用来构建包含基本布尔算符，输入输出的数字电路，组合逻辑的输出完全取决于给定的输入值。<ul>
-<li><strong>半加器</strong>（half-adder）：求和操作为异或函数，进位输出等价于一个与门。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/半加器.jpg" alt="半加器" width="200px"></li>
-<li><strong>全加器</strong>（full-adder）：求和的加法电路有三个输入（x，y和进位输入）。例如要制作16位字的全加器，只需要将下图所示电路复制16次。但因为运算速度慢，现实中不会采用这种方法实现加法运算，改进方法包括使用先行进位加法器，选择进位加法器和存储进位加法器等，目的都是缩短由于两个二进制数字相加的逐位进位过程造成的延迟时间。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/全加器.jpg" alt="全加器" width="200px"></li>
-<li><strong>译码器</strong>（decoder）：利用输入和对应数值选择某跟特定的输出线。下图是一个2-4译码器的电路构成。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/2-4译码器.gif" alt="2-4译码器"></li>
-<li><strong>多路复用器</strong>（multiplexer）用来从众多输入线中选择需要的二进制信息，然后直接用单一输出线输出。通过一组选择变量，或称为控制线，来控制选定某个特定的输入线，每个特定时刻都只有一个输入（被选中的输入）可以通过线路连到输出端，其他输入都会断开。分时共享的计算机和调制解调器网络都是使用多路复用器来分配终端。下图是一个简单的多路复用器的物理电路构成。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/多路复用器.jpg" alt="多路复用器" width="300px"></li>
-</ul>
-</li>
-<li><strong>时序逻辑电路</strong>：对于组合逻辑电路，函数的输出值完全取决于函数的输入值，即没有记忆功能。时序逻辑电路的输出同时时当前的输入和之前的输入的函数，为了记忆之前的输入，时序电路必须具有某种存储单元，称之为<strong>触发器</strong>（flip-flop），触发器的状态是此前的电路输入的函数。<ul>
-<li>时钟信号：时序电路依赖过去的输入决定当前的输出，因此各种事件的发生必须有先后次序。有的时序电路是异步（asynchronous）的，意味着只要任意的输入值发生改变，这类电路就会被激活。同步（synchronous）时序逻辑电路则利用时钟来对各个事件进行排序。时钟能够产生一系列具有精确宽度和间隔的连续脉冲，脉冲间隔成为时钟的周期时间，速度一般用MHz衡量。大部分时序电路采用边缘出发（有的为水平触发），即电路的状态在时钟脉冲的上升边缘或者下降边缘发生改变。</li>
-<li>触发器：水平触发电路只要时钟信号在高电平或者低电平时旧可以改变状态。<strong>锁存器</strong>（latch）属于水平出发类型，而触发器为边缘触发类型。时序电路通过<strong>反馈</strong>“记忆”过去的状态。可以通过<strong>特征表</strong>描述触发器，用Q（t）表示电路当前状态，Q（t+1）表示电路的下一个状态。</li>
-<li><strong>SR触发器</strong>：三个输入，S、R和当前的输出Q（t）。若S，R均为0，则Q（t+1）= Q（t）；若R = 1，S = 0，则Q（t+1）= 0（复位）；若R = 0，S = 1，则Q（t+1）= 1（置为）；S、R均为1未定义。下面是实际的SR触发器示意图。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/SR触发器.jpg" alt="SR触发器" width="300px"></li>
-<li><strong>JK触发器</strong>：以Jack Kilby命名，是对SR触发器的简单修改，防止了R、S同时为1的非法状态的发生，当J、K都为1时Q（t+1）= ~Q（t）。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/JK触发器.png" alt="JK触发器" width="200px"></li>
-<li><strong>D触发器</strong>（data）：D触发器是一个真实的计算机存储器单元，如果输入设置为1，则时钟脉冲到来时输出为1，如果输入为0，时钟脉冲到来时输出为0。作用在于时钟脉冲到来时才将数据送出，并且用边沿触发，防止外来干扰在数据传输时的影响。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/D触发器.png" alt="D触发器"></li>
-<li>典型时序逻辑电路：下图是一个4位寄存器的逻辑图<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/4位寄存器.jpg" alt="4位寄存器" width="300px"></li>
-</ul>
-</li>
-<li>数字集成电路：数字电路实现的逻辑功能都是以集成电路（IC）形式体现的，具有体积小，可靠性高，功耗低，集成度高等特点。目前广泛采用CMOS电路和TTL电路两种类型。CMOS已成为主导技术并有可能取代TTL。二者相比，前者功耗小，集成度高，后者速度快，但集成度不如CMOS。<ul>
-<li>CMOS系列：金属氧化物半导体晶体管作为开关元件的门电路叫MOS电路，分为使用P沟道管的PMOS电路，使用N沟道管的NMOS电路和同时使用的CMOS电路。直流电源下，CMOS可分为+5V和+3.3V两类，3.3V电源是对5V的改进，减少功耗34%。采用5V直流电压的基本CMOS系列有74HC、74HCT、74AC、74ACT、74AHC和74AHCT。采用3.3V直流电压的基本CMOS系列有74LV、74LVC、74ALVC。CMOS和TTL结合的BiCMOS系列有74BCT、74ACT、74LVT、74ALB，BiCMOS是最先进的系列。</li>
-<li>TTL系列：为晶体管-晶体管逻辑电路工艺制造技术的缩写。TTL由5V直流电压供电，有74、74S、74AS、74LS、74ALS、74F等。</li>
-<li>集成电路使用特性：1）负载能力，一个逻辑门的输出端所能连接的下一级逻辑门输入端结点个数称为该逻辑门的扇出数（负载能力）。一般逻辑门负载能力为8,功率逻辑门负载能力可达25。2）延迟特性，定义输入波形前沿的50%到输出波形前沿的50%之间的时间间隔t1为前沿延迟，同理定义t2为后沿延迟，t = （t1 + t2）/2为平均传输延迟时间（平均时延）。TTL低速器件t &gt; 40ns，中速器件t = 15～40ns，高速器件t = 8～15ns，超高速器件t &lt; 8ns。3）功耗特性，当输出端空载，门电路输出低电平时电路的功耗称为<strong>空载导通功耗</strong>P-on，当输出端为高电平时电路功耗称为<strong>空载截止功耗</strong>P-off，P-off &lt; P-on。CMOS门电路平均功耗(P-on + P-off)/2在微瓦数量级。4）未使用的输入端引脚要接到一个固定的逻辑电平。与门和与非门要接到电源电压+Vcc，或门和或非门要接地。</li>
-</ul>
-</li>
-</ol>
-<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2015/10/12/Computer-Organization-Architecture1/" target="_blank" rel="external">计组与体系结构笔记（一）：基础概念</a><br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2015/10/21/Computer-Organization-Architecture3/" target="_blank" rel="external">计组与体系结构笔记（三）：简单体系模型</a></p>
-<hr>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2015/10/14/Computer-Organization-Architecture2/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2015/10/14/Computer-Organization-Architecture2/" target="_blank" rel="external">http://blog.forec.cn/2015/10/14/Computer-Organization-Architecture2/</a>) 、作者信息（<a href="https://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+<p>英文原文链接： <a href="http://adit.io/posts/2013-06-10-three-useful-monads.html" target="_blank" rel="external"><em>Three Useful Monads</em></a> （Written by <a href="https://github.com/egonSchiele" target="_blank" rel="external">Aditya Bhargava</a>）   </p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/03/02/translation-adit-tum/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/03/02/translation-adit-tum/" target="_blank" rel="external">http://blog.forec.cn/2017/03/02/translation-adit-tum/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
         <footer class="article-footer">
@@ -222,7 +219,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/10/14/Computer-Organization-Architecture2/" data-id="cizsc7uil009z44ewj7ffcypb" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/03/02/translation-adit-tum/" data-id="cizsc7ud1002644ewfgp1iswl" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -289,7 +286,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2015/10/14/Computer-Organization-Architecture2/" data-title="计组与体系结构笔记（二）" data-url="http://forec.github.io/2015/10/14/Computer-Organization-Architecture2/"></div>
+    <div class="ds-thread" data-thread-key="2017/03/02/translation-adit-tum/" data-title="三种实用 Monad" data-url="http://forec.github.io/2017/03/02/translation-adit-tum/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -393,20 +390,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2015/10/21/Computer-Organization-Architecture3/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            计组与体系结构笔记（三）
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2015/10/12/Computer-Organization-Architecture1/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2017/03/02/translation-adit-faamip/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">计组与体系结构笔记（一）</p>
+        <p class="article-nav-title">图解 Functor, Applicative 和 Monad</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     

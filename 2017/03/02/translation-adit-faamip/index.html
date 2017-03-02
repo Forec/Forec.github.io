@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="这篇文章是 Aditya Bhargava 所著 《Functors, Applicatives, And Monads In Pictures》 的译文，已联系原作者取得授权。另一版本的中文译文由 题叶 翻译，可在此处查看。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-faamip.png">
-<meta property="og:updated_time" content="2017-03-02T08:49:10.135Z">
+<meta property="og:updated_time" content="2017-03-02T10:35:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图解 Functor, Applicative 和 Monad">
 <meta name="twitter:description" content="这篇文章是 Aditya Bhargava 所著 《Functors, Applicatives, And Monads In Pictures》 的译文，已联系原作者取得授权。另一版本的中文译文由 题叶 翻译，可在此处查看。">
@@ -226,10 +226,10 @@
 <li><strong><code>applicatives</code></strong> ：使用 <code>&lt;*&gt;</code> 或 <code>liftA</code> 把一个被封装的函数应用到被封装的值上</li>
 <li><strong><code>monads</code></strong> ：使用 <code>&gt;&gt;=</code> 或 <code>liftM</code> 把一个接受普通值、回传封装值的函数应用到一个被封装的值上</li>
 </ul>
-<p>亲爱的朋友（我觉得我们算是朋友了），我想我们都会认为 monad 是一个简单并且聪明的概念。既然你已经读完了这篇“科普文”，不如再仔细了解一下 monad：LYAH 编写的 <a href="http://learnyouahaskell.com/a-fistful-of-monads" target="_blank" rel="external">Monad 章节</a> 中包含了许多我在本文中忽略的信息，他写的非常棒，我就不在此赘述了。</p>
-<p>更多与 Monad 相关的图文介绍，请看 <a href="http://blog.forec.cn/2017/03/02/translation-adit-tum/" target="_blank" rel="external">三种有用的 monad</a>。</p>
+<p>亲爱的朋友（我觉得我们算是朋友了），现在你是否觉得 monad 是一个简单并聪明的概念呢？既然你已经读完了这篇 “科普文”，不如进一步了解一下 monad：LYAH 编写的 <a href="http://learnyouahaskell.com/a-fistful-of-monads" target="_blank" rel="external">Monad 章节</a> 中包含了许多我在本文中忽略的信息，他写的非常棒，我就不在此赘述了。</p>
+<p>更多与 Monad 相关的图文介绍，请看 <a href="http://blog.forec.cn/2017/03/02/translation-adit-tum/" target="_blank" rel="external">三种实用 monad</a>。</p>
 <hr>
-<p>英文原文链接： <a href="http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html" target="_blank" rel="external"><em>Functors, Applicatives, And Monads In Pictures</em></a>  Written by <a href="https://github.com/egonSchiele" target="_blank" rel="external">Aditya Bhargava</a>    </p>
+<p>英文原文链接： <a href="http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html" target="_blank" rel="external"><em>Functors, Applicatives, And Monads In Pictures</em></a>  （Written by <a href="https://github.com/egonSchiele" target="_blank" rel="external">Aditya Bhargava</a>） </p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/03/02/translation-adit-faamip/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/03/02/translation-adit-faamip/" target="_blank" rel="external">http://blog.forec.cn/2017/03/02/translation-adit-faamip/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
@@ -238,7 +238,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/03/02/translation-adit-faamip/" data-id="cizs50q010025loewqru518fe" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/03/02/translation-adit-faamip/" data-id="cizsc7ud4002c44ew6a5c7ze8" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -409,6 +409,16 @@
         
 <nav id="article-nav">
     
+        <a href="/2017/03/02/translation-adit-tum/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            三种实用 Monad
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
     
         <a href="/2017/03/01/talk-about-some-simple-monads/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
@@ -427,6 +437,26 @@
         <h3 class="widget-title">最新文章</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2017/03/02/translation-adit-tum/" class="title">三种实用 Monad</a></p>
+                            <p class="item-date"><time datetime="2017-03-02T10:24:20.000Z" itemprop="datePublished">2017-03-02</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -508,26 +538,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2017/02/06/talk-about-hmm/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/talk-about-hmm.jpg)" alt="HMM 关键词检索" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
-                            <p class="item-title"><a href="/2017/02/06/talk-about-hmm/" class="title">HMM 关键词检索</a></p>
-                            <p class="item-date"><time datetime="2017-02-06T08:22:30.000Z" itemprop="datePublished">2017-02-06</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -537,7 +547,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">24</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">32</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">24</span></li></ul>
         </div>
     </div>
 
@@ -547,7 +557,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 15px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 15px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17px;">线程</a> <a href="/tags/自动机/" style="font-size: 10px;">自动机</a> <a href="/tags/计组与体系结构/" style="font-size: 14px;">计组与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 16px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 16px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17px;">线程</a> <a href="/tags/自动机/" style="font-size: 10px;">自动机</a> <a href="/tags/计组与体系结构/" style="font-size: 14px;">计组与体系结构</a>
         </div>
     </div>
 
