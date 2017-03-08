@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-4.jpg">
-<meta property="og:updated_time" content="2017-01-06T11:58:33.867Z">
+<meta property="og:updated_time" content="2017-03-06T10:59:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（四）：进程互斥">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第六章进程互斥部分的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -246,7 +246,7 @@
 </li>
 <li>Bakery 算法流程如下</li>
 </ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    choosing[i] = <span class="literal">true</span>;</span><br><span class="line">    number[i] = max(number[<span class="number">0</span>], number[<span class="number">1</span>], ..., number[n-<span class="number">1</span>])+<span class="number">1</span>;</span><br><span class="line">    choosing[i] = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; n; j++)&#123;</span><br><span class="line">    <span class="comment">// 此循环保证所有比当前进程持更高优先级的进程已离开临界区</span></span><br><span class="line">        <span class="keyword">while</span> (chossing[j]);</span><br><span class="line">        <span class="keyword">while</span> (number[j] != <span class="number">0</span> &amp;&amp; (number[j], j) &lt; (number[i], i));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    number[i] = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 剩余区</span></span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    choosing[i] = <span class="literal">true</span>;</span><br><span class="line">    number[i] = max(number[<span class="number">0</span>], number[<span class="number">1</span>], ..., number[n-<span class="number">1</span>])+<span class="number">1</span>;</span><br><span class="line">    choosing[i] = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; n; j++)&#123;</span><br><span class="line">    <span class="comment">// 此循环保证所有比当前进程持更高优先级的进程已离开临界区</span></span><br><span class="line">        <span class="keyword">while</span> (choosing[j]);</span><br><span class="line">        <span class="keyword">while</span> (number[j] != <span class="number">0</span> &amp;&amp; (number[j], j) &lt; (number[i], i));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 临界区</span></span><br><span class="line">    number[i] = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 剩余区</span></span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
 <ul>
 <li>Bakery 算法正确性证明：<ul>
 <li>首先，元组的大小比较和取号规则（只增）保证了全部进程都可维持一个严格递增的顺序，而不会出现两个进程地位相等的情况。</li>
@@ -284,7 +284,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/24/os-concepts-4/" data-id="ciztq0vgq0045i4ewyoh2sgr7" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/24/os-concepts-4/" data-id="cj014jqyi00457gew8hgxjlb8" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
