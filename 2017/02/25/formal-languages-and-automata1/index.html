@@ -3,21 +3,21 @@
 <head>
     <meta charset="utf-8">
     
-    <title>形式语言与自动机（一）：概念 | Forec&#39;s Notes</title>
+    <title>形式语言与自动机：语言 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
         <meta name="keywords" content="自动机" />
     
     <meta name="description" content="这个寒假遇到的一些问题让我想起之前形式语言与自动机的内容，程序执行的本质是状态的变化，我觉得有必要将这部分理论捡起来，需要的时候方便自己回忆。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="形式语言与自动机（一）：概念">
+<meta property="og:title" content="形式语言与自动机：语言">
 <meta property="og:url" content="http://forec.github.io/2017/02/25/formal-languages-and-automata1/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="这个寒假遇到的一些问题让我想起之前形式语言与自动机的内容，程序执行的本质是状态的变化，我觉得有必要将这部分理论捡起来，需要的时候方便自己回忆。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg">
-<meta property="og:updated_time" content="2017-02-25T15:57:50.506Z">
+<meta property="og:updated_time" content="2017-03-18T13:43:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="形式语言与自动机（一）：概念">
+<meta name="twitter:title" content="形式语言与自动机：语言">
 <meta name="twitter:description" content="这个寒假遇到的一些问题让我想起之前形式语言与自动机的内容，程序执行的本质是状态的变化，我觉得有必要将这部分理论捡起来，需要的时候方便自己回忆。">
     
 
@@ -150,7 +150,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-        形式语言与自动机（一）：概念
+        形式语言与自动机：语言
         </h1>
     
 
@@ -180,10 +180,68 @@
 
 </li>
 </ul>
-<h2 id="语言及文法"><a href="#语言及文法" class="headerlink" title="语言及文法"></a>语言及文法</h2><p>TODO</p>
+<h2 id="语言及文法"><a href="#语言及文法" class="headerlink" title="语言及文法"></a>语言及文法</h2><ul>
+<li>字符串的运算：字符串 <code>ω</code> 的长度记为 <code>|ω|</code>， <code>ω</code> 的逆记为 <code>ω^T</code>。字符串的 <strong>连接</strong> 满足结合律，且有 <code>εω = ωε = ω</code>，<code>|ω1ω2| = |ω1| + |ω2|</code>。空串 <code>ε</code> 是任何串的前/后缀和字串。</li>
+<li>字母表的 <strong>幂运算</strong>：设 T 为字母表，n∈N。<ol>
+<li>T0 = {ε}</li>
+<li>设 x∈T(n-1)，a∈T，则 ax∈Tn</li>
+<li>Tn 中的元素只能由 (1) 和 (2) 构成</li>
+</ol>
+</li>
+<li><strong>闭包</strong>（*）：<code>T* = Σ Tk (k = 0..n) = T0 ∪ T1 ∪ ... ∪ Tn</code>，闭包（+）：<code>T+ = Σ Tk (k = 1..n)</code>，即 <code>T* = T+ ∪ {ε}</code>。</li>
+<li><strong>语言</strong>：T 为字母表，任何集合 L ⊆ T* 是字母表 T 上的一个语言。<ul>
+<li>积运算：L1 与 L2 的积是 L1 和 L2 中字符串相连的集合，不满足交换律</li>
+<li>幂运算：<code>L0 = {ε}, Ln = L · L(n-1) = L(n-1) · L (n ≥ 1)</code></li>
+<li><code>∅</code> 表示不存在任何句子的语言，<code>{ε}</code> 表示仅存在空句子的语言</li>
+</ul>
+</li>
+<li><strong>文法</strong>：用来定义语言的数学模型称为文法。<ul>
+<li>语言 L 为有限集合：通过列举表示</li>
+<li>语言 L 为无限集合，通过文法产生系统或机器识别系统</li>
+<li>元语言：描述语言的语言，文法是一种元语言</li>
+</ul>
+</li>
+<li><strong>BNF（巴科斯范式）</strong>：</li>
+</ul>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">&lt;数字&gt;</span> ::= 0 |<span class="string"> 1 </span>|<span class="string"> 2 </span>|<span class="string"> .. </span>|<span class="string"> 9</span><br><span class="line">&lt;字母&gt; ::= A </span>|<span class="string"> B </span>|<span class="string"> C </span>|<span class="string"> .. </span>|<span class="string"> Z </span>|<span class="string"> a </span>|<span class="string"> b </span>|<span class="string"> c </span>|<span class="string"> .. </span>|<span class="string"> z</span><br><span class="line">&lt;标识符&gt; ::= &lt;字母&gt; </span>|<span class="string"> &lt;标识符&gt;&lt;字母&gt; </span>|<span class="string"> &lt;标识符&gt;&lt;数字&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>Chomsky 文法体系</strong>：任何一种文法必包含有：两个不同的有限符号集合（终结符号集合 N 和非终结符号集合 T）；一个形式化规则的有限集合 P （又称生成式集合）；一个起始符 S。</li>
+<li>文法的 <strong>形式定义</strong> ：文法 G 是一个四元组，<code>G = (N, T, P, S)</code>。其中 N ∩ T = ∅；P 为形式为 <code>α → β</code> 的生成式 <strong>有限</strong> 集合，且 <code>α ∈ (N ∪ T)* N+ (N∪T)*</code>，<code>β ∈ (N∪T)*</code>；S 是起始符，S ∈ N。</li>
+</ul>
+<h2 id="推导和句型"><a href="#推导和句型" class="headerlink" title="推导和句型"></a>推导和句型</h2><ul>
+<li>直接推导：<code>G = (N, T, P, S)</code>，有 <code>A → β</code> 是 P 中的生成式，α 和 γ 均属于 <code>(N ∪ T)*</code>，则 <code>αAγ ⇒ αβγ</code> 称 αAγ 直接导出 αβγ，或者说 αβγ 是 αAγ 的直接推导；</li>
+<li>推导序列：<code>α = α0 ⇒ α1 ⇒ ... ⇒ αn</code> 是长度为 n 的推导序列，<code>α = α0</code> 是长度为 0 的推导序列。对 α 推导出 α’，记为 <code>α ⇒(*, G) α&#39;</code>，若 α 推导出 α’ 用了长度大于 0 的推导序列，则记为 <code>α ⇒(+, G) α&#39;</code>。推导序列的每一步都会产生一个字符串，这些字符串称为 <strong>句型</strong>。</li>
+<li>字符串 <code>α</code> 是文法 G 的句型，当且仅当 <code>S ⇒(*, G) α</code>，且 <code>α ∈ (N ∪ T)*</code>。句型包含 <strong>句子</strong>，ω 是 G 的句子，当且仅当 <code>S ⇒(*, G) ω</code> 且 <code>ω ∈ T*</code>，即必须由起始符集合 S 推导出，并且由终结符集合构成的。</li>
+<li>例：括号匹配语言，定义集合基本元素 <code>()</code>，递归产生其他句子：若 S 为合法串，则 <code>(S)</code> 和 <code>SS</code> 均合法。故 P 中包含三种生成式：<code>S → (); S → (S); S → SS</code>。</li>
+</ul>
+<h2 id="Chomsky-文法体系分类"><a href="#Chomsky-文法体系分类" class="headerlink" title="Chomsky 文法体系分类"></a>Chomsky 文法体系分类</h2><ul>
+<li>0 型文法：无限制文法 ⇒ 无限制语言，递归可枚举语言（图灵机）</li>
+<li><strong>1 型文法</strong>：上下文有关文法，CSG ⇒ 上下文有关语言，CSL（线性有界自动机，LBA）<ul>
+<li>生成式形式：<code>α → β</code>，其中 <code>|α| ≤ |β|, β ∈ (N ∪ T)+, α ∈ (N ∪ T)* N+ (N ∪ T)*</code>，即满足生成式的 <strong>左侧短于右侧</strong> ，且 <strong>不包含 <code>A → ε</code></strong> 。</li>
+<li>应用：过程式语言调用时形参与实参的一致性检查。</li>
+</ul>
+</li>
+<li><strong>2 型文法</strong>：上下文无关文法，CFG ⇒ 上下文无关语言，CEL（下推自动机，PDA）<ul>
+<li>生成式形式：<code>A → B</code>，其中 <code>A ∈ N, β ∈ (N ∪ T)*</code>，可以包含 <code>A → ε</code>。</li>
+<li>每个生成式左侧都是 <strong>单个非终结符</strong>。</li>
+</ul>
+</li>
+<li><strong>3 型文法</strong>：正则文法 ⇒ 正则语言（有限自动机，FA）<ul>
+<li>左线性文法：<code>A → Bω</code> 或 <code>A → ω</code>，其中 <code>A, B ∈ N, ω ∈ T*</code>；</li>
+<li>右线性文法：<code>A → ωB</code> 或 <code>A → ω</code>，其中 <code>A, B ∈ N, ω ∈ T*</code>。</li>
+</ul>
+</li>
+<li>已知语言求特定文法，得到的文法不是唯一的。</li>
+<li>几种文法之间关系：<ul>
+<li>0 型：无限制，包括 1、2、3 型文法；</li>
+<li>1 型：不允许 A → ε，包含不含 A → ε 的 2、3 型文法</li>
+<li>2 型：包含 3 型文法</li>
+</ul>
+</li>
+</ul>
 <hr>
-<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：无<br>此专栏的下一篇文章：暂无  </p>
-<p>参考资料：《形式语言与自动机》，王柏、杨娟编著，北京邮电大学出版社</p>
+<p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：无<br>此专栏的下一篇文章：<a href="http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/" target="_blank" rel="external">形式语言与自动机：FA 和右线性文法</a>    </p>
+<p>参考资料：《形式语言与自动机》，王柏、杨娟编著，北京邮电大学出版社    </p>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/" target="_blank" rel="external">http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
 
         </div>
@@ -192,7 +250,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/02/25/formal-languages-and-automata1/" data-id="cj014jr0t007b7gewmch8x6lq" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/02/25/formal-languages-and-automata1/" data-id="cj0fb452n007f6wew4tb977sn" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -259,7 +317,7 @@
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2017/02/25/formal-languages-and-automata1/" data-title="形式语言与自动机（一）：概念" data-url="http://forec.github.io/2017/02/25/formal-languages-and-automata1/"></div>
+    <div class="ds-thread" data-thread-key="2017/02/25/formal-languages-and-automata1/" data-title="形式语言与自动机：语言" data-url="http://forec.github.io/2017/02/25/formal-languages-and-automata1/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
@@ -395,6 +453,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata2.jpg)" alt="形式语言与自动机：FA 和右线性文法" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/03/18/formal-languages-and-automata2/" class="title">形式语言与自动机：FA 和右线性文法</a></p>
+                            <p class="item-date"><time datetime="2017-03-18T13:41:32.000Z" itemprop="datePublished">2017-03-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
@@ -458,7 +536,7 @@
                             <a href="/2017/02/25/formal-languages-and-automata1/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="形式语言与自动机（一）：概念" class="thumbnail-image"></span>
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="形式语言与自动机：语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -467,28 +545,8 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
-                            <p class="item-title"><a href="/2017/02/25/formal-languages-and-automata1/" class="title">形式语言与自动机（一）：概念</a></p>
+                            <p class="item-title"><a href="/2017/02/25/formal-languages-and-automata1/" class="title">形式语言与自动机：语言</a></p>
                             <p class="item-date"><time datetime="2017-02-25T15:33:13.000Z" itemprop="datePublished">2017-02-25</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2017/02/14/talk-about-interpreter/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/talk-about-interpreter.jpg)" alt="用 Haskell 实现解释器" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
-                            <p class="item-title"><a href="/2017/02/14/talk-about-interpreter/" class="title">用 Haskell 实现解释器</a></p>
-                            <p class="item-date"><time datetime="2017-02-14T12:38:16.000Z" itemprop="datePublished">2017-02-14</time></p>
                         </div>
                     </li>
                 
@@ -501,7 +559,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">32</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">24</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">32</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">25</span></li></ul>
         </div>
     </div>
 
@@ -511,7 +569,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 16px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 16px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17px;">线程</a> <a href="/tags/自动机/" style="font-size: 10px;">自动机</a> <a href="/tags/计组与体系结构/" style="font-size: 14px;">计组与体系结构</a>
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 16px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 16px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 11px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 16px;">函数式编程</a> <a href="/tags/图分割/" style="font-size: 11px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 11px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17px;">线程</a> <a href="/tags/自动机/" style="font-size: 11px;">自动机</a> <a href="/tags/计组与体系结构/" style="font-size: 14px;">计组与体系结构</a>
         </div>
     </div>
 
