@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2017-03-18T13:43:26.475Z</updated>
+  <updated>2017-03-18T14:15:48.503Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>形式语言与自动机：FA 和右线性文法</title>
+    <title>FSA 和右线性文法</title>
     <link href="http://forec.github.io/2017/03/18/formal-languages-and-automata2/"/>
     <id>http://forec.github.io/2017/03/18/formal-languages-and-automata2/</id>
     <published>2017-03-18T13:41:32.000Z</published>
-    <updated>2017-03-18T13:43:26.475Z</updated>
+    <updated>2017-03-18T14:15:48.503Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;有限自动机和右线性文法。&lt;/p&gt;
@@ -28,7 +28,7 @@
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;p&gt;TODO&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;形式语言与自动机：语言&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;形式语言与自动机：FA 和右线性文法&lt;/a&gt;    &lt;/p&gt;
+&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;形式语言&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：暂无      &lt;/p&gt;
 &lt;p&gt;参考资料：《形式语言与自动机》，王柏、杨娟编著，北京邮电大学出版社    &lt;/p&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
@@ -332,11 +332,11 @@
   </entry>
   
   <entry>
-    <title>形式语言与自动机：语言</title>
+    <title>形式语言</title>
     <link href="http://forec.github.io/2017/02/25/formal-languages-and-automata1/"/>
     <id>http://forec.github.io/2017/02/25/formal-languages-and-automata1/</id>
     <published>2017-02-25T15:33:13.000Z</published>
-    <updated>2017-03-18T13:43:29.000Z</updated>
+    <updated>2017-03-18T14:15:53.000Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;这个寒假遇到的一些问题让我想起之前形式语言与自动机的内容，程序执行的本质是状态的变化，我觉得有必要将这部分理论捡起来，需要的时候方便自己回忆。&lt;/p&gt;
@@ -396,7 +396,7 @@
 &lt;li&gt;每个生成式左侧都是 &lt;strong&gt;单个非终结符&lt;/strong&gt;。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;3 型文法&lt;/strong&gt;：正则文法 ⇒ 正则语言（有限自动机，FA）&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;3 型文法&lt;/strong&gt;：正则文法 ⇒ 正则语言（有限自动机，FSA）&lt;ul&gt;
 &lt;li&gt;左线性文法：&lt;code&gt;A → Bω&lt;/code&gt; 或 &lt;code&gt;A → ω&lt;/code&gt;，其中 &lt;code&gt;A, B ∈ N, ω ∈ T*&lt;/code&gt;；&lt;/li&gt;
 &lt;li&gt;右线性文法：&lt;code&gt;A → ωB&lt;/code&gt; 或 &lt;code&gt;A → ω&lt;/code&gt;，其中 &lt;code&gt;A, B ∈ N, ω ∈ T*&lt;/code&gt;。&lt;/li&gt;
 &lt;/ul&gt;
@@ -410,7 +410,7 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：无&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;形式语言与自动机：FA 和右线性文法&lt;/a&gt;    &lt;/p&gt;
+&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：无&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;FSA 和右线性文法&lt;/a&gt;    &lt;/p&gt;
 &lt;p&gt;参考资料：《形式语言与自动机》，王柏、杨娟编著，北京邮电大学出版社    &lt;/p&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
