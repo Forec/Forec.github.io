@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://forec.github.io/"/>
-  <updated>2017-03-18T14:15:48.503Z</updated>
+  <updated>2017-03-19T15:13:22.000Z</updated>
   <id>http://forec.github.io/</id>
   
   <author>
@@ -16,19 +16,124 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>FSA 和右线性文法</title>
-    <link href="http://forec.github.io/2017/03/18/formal-languages-and-automata2/"/>
-    <id>http://forec.github.io/2017/03/18/formal-languages-and-automata2/</id>
-    <published>2017-03-18T13:41:32.000Z</published>
-    <updated>2017-03-18T14:15:48.503Z</updated>
+    <title>右线性语言</title>
+    <link href="http://forec.github.io/2017/03/19/formal-languages-and-automata3/"/>
+    <id>http://forec.github.io/2017/03/19/formal-languages-and-automata3/</id>
+    <published>2017-03-19T15:09:53.000Z</published>
+    <updated>2017-03-19T15:13:22.000Z</updated>
     
     <content type="html">&lt;blockquote&gt;
-&lt;p&gt;有限自动机和右线性文法。&lt;/p&gt;
+&lt;p&gt;正则集、正则式，右线性文法，正则表达式与有限自动机之间的图示关系，右线性语言与有限自动机之间的关系。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;p&gt;TODO&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;形式语言&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：暂无      &lt;/p&gt;
+&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;有限自动机&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：暂无     &lt;/p&gt;
+&lt;p&gt;参考资料：《形式语言与自动机》，王柏、杨娟编著，北京邮电大学出版社    &lt;/p&gt;
+&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/03/19/formal-languages-and-automata3/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/03/19/formal-languages-and-automata3/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/03/19/formal-languages-and-automata3/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;正则集、正则式，右线性文法，正则表达式与有限自动机之间的图示关系，右线性语言与有限自动机之间的关系。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="自动机" scheme="http://forec.github.io/tags/%E8%87%AA%E5%8A%A8%E6%9C%BA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>有限自动机</title>
+    <link href="http://forec.github.io/2017/03/18/formal-languages-and-automata2/"/>
+    <id>http://forec.github.io/2017/03/18/formal-languages-and-automata2/</id>
+    <published>2017-03-18T13:41:32.000Z</published>
+    <updated>2017-03-19T15:12:36.000Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;确定的/非确定的有限自动机，带/不带 ε 转移的非确定有限自动机以及各自之间的等价性。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;有限自动机（Finite State Automation）&lt;/strong&gt; ：&lt;strong&gt;状态&lt;/strong&gt; 是将事物区分开的一种标识，状态 + 输入 → 状态转移。&lt;ul&gt;
+&lt;li&gt;具有 &lt;strong&gt;离散&lt;/strong&gt; 输入（输出，不必须）系统的一种数学模型，特殊情况下也可无输入；&lt;/li&gt;
+&lt;li&gt;有限的状态；&lt;/li&gt;
+&lt;li&gt;根据每次转换的后继状态数量可区分为 &lt;strong&gt;确定的&lt;/strong&gt; 有限自动机（DFA，后继状态唯一）和 &lt;strong&gt;不确定的&lt;/strong&gt; 有限自动机（NFA，后继状态有多个）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;确定的有限自动机&quot;&gt;&lt;a href=&quot;#确定的有限自动机&quot; class=&quot;headerlink&quot; title=&quot;确定的有限自动机&quot;&gt;&lt;/a&gt;确定的有限自动机&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;形式定义：DFA 是一个五元组，&lt;code&gt;M = (Q, T, δ, q0, F)&lt;/code&gt;：&lt;ul&gt;
+&lt;li&gt;Q：有限的状态集合&lt;/li&gt;
+&lt;li&gt;T：有限的输入字母表&lt;/li&gt;
+&lt;li&gt;δ：转换函数，映射 Q × T → Q&lt;/li&gt;
+&lt;li&gt;q0：初始状态，q0 ∈ Q&lt;/li&gt;
+&lt;li&gt;F：终止状态集，F ⊆ Q&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;输入一个字符串时，对转换函数 δ 扩展：&lt;code&gt;δ&amp;#39; = Q × T* → Q&lt;/code&gt;，对任何 q ∈ Q，定义：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;q&amp;#39;(q, ε) = q&lt;/code&gt; ：没有读到字符时，有限自动机状态不变&lt;/li&gt;
+&lt;li&gt;对 a ∈ T 和 ω ∈ T*，有 &lt;code&gt;δ&amp;#39;(q, ωa) = δ(δ&amp;#39;(q, ω), a)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;被 DFA 接收的字符串 ω 满足：&lt;code&gt;δ(q0, ω) = p, p ∈ F&lt;/code&gt;，即 &lt;strong&gt;输入结束后能够使 DFA 状态到达终态&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;格局&lt;/strong&gt; ：FSA 在某个时刻的工作状态可以用 &lt;code&gt;(q, ω)&lt;/code&gt; 表明，其中 ω 为待输入字符串，q 为当前状态。&lt;ul&gt;
+&lt;li&gt;初始格局：&lt;code&gt;(q0, ω)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;终止格局：&lt;code&gt;(q, ε), q ∈ F&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;当 &lt;code&gt;δ(q, a)&lt;/code&gt; 含有 q1，则用格局形式写为 &lt;code&gt;(q, aω) |--- (q1, ω)&lt;/code&gt;，其中 ω ∈ T*，符号 &lt;code&gt;|---&lt;/code&gt; 表示从一个格局变换为另一个格局。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;不确定的有限自动机&quot;&gt;&lt;a href=&quot;#不确定的有限自动机&quot; class=&quot;headerlink&quot; title=&quot;不确定的有限自动机&quot;&gt;&lt;/a&gt;不确定的有限自动机&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;形式定义：NFA 是一个五元组，&lt;code&gt;M = (Q, T, δ, q0, F)&lt;/code&gt;，与 DFA 仅 δ 不同，NFA 的 δ 的映射范围为 &lt;code&gt;Q × T → 2^Q&lt;/code&gt;，即 NFA 在某个状态下读入一个字符时，可转换的后继状态是 Q 的一个子集。&lt;/li&gt;
+&lt;li&gt;输入字符串时对 δ 扩展：&lt;ul&gt;
+&lt;li&gt;对 ε ∈ T*，有 `δ’(q, ε) = {q}’；&lt;/li&gt;
+&lt;li&gt;对任意 a ∈ T, ω ∈ T*，有 `δ’(q, ωa) = {p | 对 δ’(q, ω) 中的某个状态 r，且 p 在 δ(r, a) 内}；&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;δ(P, ω) = ∪ δ(q, ω), q ∈ P, P ⊆ Q&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;NFA 接受的语言为 `L(M) = {ω | δ(q0, ω) 含 F 中的一个状态}。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;DFA-和-NFA-的等价性&quot;&gt;&lt;a href=&quot;#DFA-和-NFA-的等价性&quot; class=&quot;headerlink&quot; title=&quot;DFA 和 NFA 的等价性&quot;&gt;&lt;/a&gt;DFA 和 NFA 的等价性&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;DFA 是 NFA 的特例，NFA 必然能够接受 DFA 能接受的语言。&lt;/li&gt;
+&lt;li&gt;从 NFA 构造等价的 DFA（&lt;strong&gt;子集构造法&lt;/strong&gt;）：&lt;ul&gt;
+&lt;li&gt;设 L 为某个 NFA，&lt;code&gt;N = (QN, T, δN, q0, FN)&lt;/code&gt;，定义等价的 DFA 为 &lt;code&gt;M = (QD, T, δD, {q0}, FD)&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;定义的 DFA 中，&lt;code&gt;QD = {S | S ⊆ QN} = 2^Q&lt;/code&gt;，对 S ∈ QD 和 a ∈ T，有 &lt;code&gt;δD(S, a) = ∪ δN(q, a), q ∈ S&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;FD = {S | S ⊆ QN ∩ S ∩ FN ≠ ∅}&lt;/code&gt; （只要有一个在 F 中就可视为终止状态）；&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;构造过程从 q0 开始，仅当某些状态已加入可达状态时，才加入 DFA 中&lt;/strong&gt;。最坏情况下由 NFA 构造的 DFA 状态数目为 2^|QN|。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;带-ε-转移的不确定的有限自动机&quot;&gt;&lt;a href=&quot;#带-ε-转移的不确定的有限自动机&quot; class=&quot;headerlink&quot; title=&quot;带 ε 转移的不确定的有限自动机&quot;&gt;&lt;/a&gt;带 ε 转移的不确定的有限自动机&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;有 ε 转换的 NFA 与无 ε 转换的 NFA 区别仅在于转换函数 δ 的不同，有 ε 转移的 NFA 在输入空串 ε（无输入）时也会引起状态转移，即 δ 是从 Q × (T ∪ {ε}) → 2^Q。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ε-闭包（closure）&lt;/strong&gt;：&lt;ul&gt;
+&lt;li&gt;状态 q 的 ε-闭包记为 ε-CLOSURE 或 ECLOSURE，定义为从 q 仅通过 ε 路径可以到达的状态（包括 q 自身）；&lt;/li&gt;
+&lt;li&gt;状态子集 I 的 ε-闭包：&lt;code&gt;ε-CLOSURE(I) = ∪ ε-CLOSURE(q), q ∈ I&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;Ia：对状态子集 I ⊆ Q，任意 a ∈ T，&lt;code&gt;Ia = ε-CLOSURE(P), P = δ(I, a)&lt;/code&gt;，即 P 是从 I 中状态经过一条标 a 的边可以到达的状态集合。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;扩展定义 δ’：Q × T* → 2^Q，对任何 q ∈ Q，有：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;δ&amp;#39;(q, ε) = ε-CLOSURE(q)&lt;/code&gt; &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;δ&amp;#39;(q, ωa) = ε-CLOSURE(P), P = {p | 对某些 r ∈ δ&amp;#39;(q, ω) 且 p ∈ δ(r, a)}&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;δ(q, a) ≠ δ’(q, a)，因为 δ(q, a) 仅表示由 q 出发，仅沿着 &lt;strong&gt;一条&lt;/strong&gt; 标 a 的路径能到达的状态，而 δ’(q, a) 表示经过标 a 或 ε 的路径得到状态集合的 ε-闭包，即 &lt;code&gt;δ&amp;#39;(q, ωa) = ε-CLOSURE(δ( δ&amp;#39;(q, ω), a ))&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;有-ε-转换的-NFA-和无-ε-转换的-NFA-等价&quot;&gt;&lt;a href=&quot;#有-ε-转换的-NFA-和无-ε-转换的-NFA-等价&quot; class=&quot;headerlink&quot; title=&quot;有 ε 转换的 NFA 和无 ε 转换的 NFA 等价&quot;&gt;&lt;/a&gt;有 ε 转换的 NFA 和无 ε 转换的 NFA 等价&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;ε-NFA 是无 ε 转移的 NFA 的一般情况。设 &lt;code&gt;M = (Q, T, δ, q0, F)&lt;/code&gt; 是一个 ε-NFA，可构造一个等价的无 ε 的 NFA：&lt;code&gt;M1 = (Q, T, S1, q0, F1)&lt;/code&gt;&lt;ul&gt;
+&lt;li&gt;对任何 a ∈ T，&lt;code&gt;δ1(q, a) = δ&amp;#39;(q, a)&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;若 ε-CLORSURE(q0) ∩ F ≠ ∅，则 F1 = F ∪ {q0}，否则 F1 = F。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;构造方法：先确定 F，之后按照 &lt;code&gt;δ1(q, a) = δ&amp;#39;(q, a)&lt;/code&gt; 来确定生成式集合。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;形式语言&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/03/19/formal-languages-and-automata3/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;右线性文法&lt;/a&gt;      &lt;/p&gt;
 &lt;p&gt;参考资料：《形式语言与自动机》，王柏、杨娟编著，北京邮电大学出版社    &lt;/p&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
@@ -36,7 +141,7 @@
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;p&gt;有限自动机和右线性文法。&lt;/p&gt;
+&lt;p&gt;确定的/非确定的有限自动机，带/不带 ε 转移的非确定有限自动机以及各自之间的等价性。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
@@ -336,7 +441,7 @@
     <link href="http://forec.github.io/2017/02/25/formal-languages-and-automata1/"/>
     <id>http://forec.github.io/2017/02/25/formal-languages-and-automata1/</id>
     <published>2017-02-25T15:33:13.000Z</published>
-    <updated>2017-03-18T14:15:53.000Z</updated>
+    <updated>2017-03-19T15:00:35.000Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;这个寒假遇到的一些问题让我想起之前形式语言与自动机的内容，程序执行的本质是状态的变化，我觉得有必要将这部分理论捡起来，需要的时候方便自己回忆。&lt;/p&gt;
@@ -376,7 +481,7 @@
 &lt;figure class=&quot;highlight gherkin&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;variable&quot;&gt;&amp;lt;数字&amp;gt;&lt;/span&gt; ::= 0 |&lt;span class=&quot;string&quot;&gt; 1 &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; 2 &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; .. &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; 9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;lt;字母&amp;gt; ::= A &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; B &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; C &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; .. &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; Z &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; a &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; b &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; c &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; .. &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; z&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;lt;标识符&amp;gt; ::= &amp;lt;字母&amp;gt; &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; &amp;lt;标识符&amp;gt;&amp;lt;字母&amp;gt; &lt;/span&gt;|&lt;span class=&quot;string&quot;&gt; &amp;lt;标识符&amp;gt;&amp;lt;数字&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Chomsky 文法体系&lt;/strong&gt;：任何一种文法必包含有：两个不同的有限符号集合（终结符号集合 N 和非终结符号集合 T）；一个形式化规则的有限集合 P （又称生成式集合）；一个起始符 S。&lt;/li&gt;
-&lt;li&gt;文法的 &lt;strong&gt;形式定义&lt;/strong&gt; ：文法 G 是一个四元组，&lt;code&gt;G = (N, T, P, S)&lt;/code&gt;。其中 N ∩ T = ∅；P 为形式为 &lt;code&gt;α → β&lt;/code&gt; 的生成式 &lt;strong&gt;有限&lt;/strong&gt; 集合，且 &lt;code&gt;α ∈ (N ∪ T)* N+ (N∪T)*&lt;/code&gt;，&lt;code&gt;β ∈ (N∪T)*&lt;/code&gt;；S 是起始符，S ∈ N。&lt;/li&gt;
+&lt;li&gt;文法的 &lt;strong&gt;形式定义&lt;/strong&gt; ：文法 G 是一个四元组，&lt;code&gt;G = (N, T, P, S)&lt;/code&gt;。其中 N ∩ T = ∅；P 为形式为 &lt;code&gt;α → β&lt;/code&gt; 的生成式 &lt;strong&gt;有限&lt;/strong&gt; 集合，且 &lt;code&gt;α ∈ (N∪T)* N+ (N∪T)*&lt;/code&gt;，&lt;code&gt;β ∈ (N∪T)*&lt;/code&gt;；S 是起始符，S ∈ N。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&quot;推导和句型&quot;&gt;&lt;a href=&quot;#推导和句型&quot; class=&quot;headerlink&quot; title=&quot;推导和句型&quot;&gt;&lt;/a&gt;推导和句型&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;直接推导：&lt;code&gt;G = (N, T, P, S)&lt;/code&gt;，有 &lt;code&gt;A → β&lt;/code&gt; 是 P 中的生成式，α 和 γ 均属于 &lt;code&gt;(N ∪ T)*&lt;/code&gt;，则 &lt;code&gt;αAγ ⇒ αβγ&lt;/code&gt; 称 αAγ 直接导出 αβγ，或者说 αβγ 是 αAγ 的直接推导；&lt;/li&gt;
@@ -410,7 +515,7 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：无&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;FSA 和右线性文法&lt;/a&gt;    &lt;/p&gt;
+&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：无&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;有限自动机&lt;/a&gt;    &lt;/p&gt;
 &lt;p&gt;参考资料：《形式语言与自动机》，王柏、杨娟编著，北京邮电大学出版社    &lt;/p&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
@@ -734,58 +839,6 @@
       <category term="云存储" scheme="http://forec.github.io/tags/%E4%BA%91%E5%AD%98%E5%82%A8/"/>
     
       <category term="线程" scheme="http://forec.github.io/tags/%E7%BA%BF%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>互斥读者-读者问题</title>
-    <link href="http://forec.github.io/2017/01/08/os-concepts-16/"/>
-    <id>http://forec.github.io/2017/01/08/os-concepts-16/</id>
-    <published>2017-01-08T09:52:59.000Z</published>
-    <updated>2017-01-11T14:47:38.752Z</updated>
-    
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;在 &lt;a href=&quot;http://blog.forec.cn/2017/01/06/os-concepts-14/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（专题）：信号量编程（上）&lt;/a&gt; 中，我对《操作系统概念》原书课后习题 7.16 过桥问题做了一定改动，此部分记录对改动后题目的分析。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;p&gt;注：以下解法均已通过程序验证，不会发生饥饿或死锁，验证代码可在 &lt;a href=&quot;https://github.com/Forec/semaphore-test&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;这里&lt;/a&gt; 查看。&lt;/p&gt;
-&lt;h2 id=&quot;村庄过桥问题&quot;&gt;&lt;a href=&quot;#村庄过桥问题&quot; class=&quot;headerlink&quot; title=&quot;村庄过桥问题&quot;&gt;&lt;/a&gt;村庄过桥问题&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;原题大致翻译（原书 7.16）：一座桥连接了南北两个村庄，两个村庄的居民可以从桥上通过，但桥上不能同时承载两个人（无论同方向还是相向）。使用信号量保证死锁和饥饿都不会发生。&lt;/li&gt;
-&lt;li&gt;我个人对此题编写的信号量解法如下，通过两个互斥信号量均衡双方争夺过桥权限的次数：&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; num_waiting_north = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; num_waiting_south = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;     &lt;span class=&quot;comment&quot;&gt;// 南北方等待过桥人数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;semaphore mutex_south = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;semaphore mutex_north = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;     &lt;span class=&quot;comment&quot;&gt;// 南北方等待过桥人数修改互斥锁&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;semaphore bridge = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;          &lt;span class=&quot;comment&quot;&gt;// 过桥权限&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;semaphore north_entry = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;semaphore south_entry = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;             &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 南北参与争夺桥的权限，开始双方均允许争夺&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;enter_bridge_north&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;&amp;#123;    &lt;span class=&quot;comment&quot;&gt;// 北方居民试图过桥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(mutex_north);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    num_waiting_north ++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(mutex_north);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(north_entry);    &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 将自己加入等待队列，如果等待队列有资源就可以等待桥资源&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(bridge);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 过桥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(mutex_north);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    num_waiting_north --;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(mutex_north);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(mutex_south);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (num_waiting_south == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)   &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 若南方当前无人准备过桥则本次过桥不计入争夺次数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(north_entry);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 若南方有居民准备过桥则允许南方等待队列中的一个居民争夺过桥权限&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(south_entry);      &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(mutex_south);   &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(bridge);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;enter_bridge_south&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;&amp;#123;    &lt;span class=&quot;comment&quot;&gt;// 南方居民试图过桥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 与北方居民对称&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h2 id=&quot;互斥读者-读者问题&quot;&gt;&lt;a href=&quot;#互斥读者-读者问题&quot; class=&quot;headerlink&quot; title=&quot;互斥读者-读者问题&quot;&gt;&lt;/a&gt;互斥读者-读者问题&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;在 &lt;a href=&quot;http://blog.forec.cn/2017/01/08/os-concepts-15/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（专题）：信号量编程（下）&lt;/a&gt; 的 “简单信号量编程” 部分中，北京大学 1992 年的入学考试题实际也是对书后习题 7.16 的改动，即 &lt;strong&gt;同一方向允许多辆车依次通过但不允许两辆车相对行驶&lt;/strong&gt; ，但未要求不发生饥饿。&lt;/li&gt;
-&lt;li&gt;再对原题做了一点改变：将原题条件改成同一方向同时允许多个居民依次通过但不允许两个居民相向行走， &lt;strong&gt;同时保证不发生饥饿现象&lt;/strong&gt; 。 &lt;strong&gt;新的题目和原来的两道题目的主要区别&lt;/strong&gt; 在于：&lt;ul&gt;
-&lt;li&gt;与教材 7.16 相比，教材 7.16 要求桥上任何时刻最多只能有一个人，而新的题目允许桥上 &lt;strong&gt;同时&lt;/strong&gt; 出现多个同方向的居民。即原题要求 &lt;strong&gt;依次&lt;/strong&gt; 通过，所以即使是同方向的居民也需要等待；新的题目允许 &lt;strong&gt;同时&lt;/strong&gt; 通过，即同方向的居民无需等待。&lt;/li&gt;
-&lt;li&gt;与北京大学 1992 入学考试题相比，原题允许同方向多辆车同时通过，但未要求保证不发生饥饿，而新的题目要求保证不发生饥饿现象。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;我个人认为改造后的问题等价为读者-写者问题的变种：将读者-写者问题中的写者也换成另一类读者，并且要保证没有饥饿现象。因此我将改造后的问题称作 &lt;strong&gt;互斥读者-读者问题&lt;/strong&gt; ，只需要对第三读者写者问题中的写者稍作处理就可以使用第三读者写者问题的解法实现。我基于第三读者-写者问题编写的信号量解法如下，解法依赖于信号量自身进程队列的先进先出特性：&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; num_waiting_north = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; num_waiting_south = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;    &lt;span class=&quot;comment&quot;&gt;// 南北等待人数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;semaphore north_mutex = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;semaphore south_mutex = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;    &lt;span class=&quot;comment&quot;&gt;// 修改等待人数的互斥锁&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;semaphore bridge = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;         &lt;span class=&quot;comment&quot;&gt;// 桥资源&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;semaphore &lt;span class=&quot;built_in&quot;&gt;queue&lt;/span&gt; = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;          &lt;span class=&quot;comment&quot;&gt;// 通过信号量的先进先出维护双方居民顺序&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;enter_bridge_north&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;&amp;#123;   &lt;span class=&quot;comment&quot;&gt;// 北方居民尝试过桥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(&lt;span class=&quot;built_in&quot;&gt;queue&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(north_mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    num_waiting_north++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (num_waiting_north == &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 第一个北方居民要获得桥的通过权&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        wait(bridge);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(&lt;span class=&quot;built_in&quot;&gt;queue&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(north_mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 过桥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(north_mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    num_waiting_north --;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (num_waiting_north == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 最后一个离开的北方居民交出桥的通过权权&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(bridge);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(north_mutex);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;enter_bridge_south&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;&amp;#123;    &lt;span class=&quot;comment&quot;&gt;// 南方居民尝试过桥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 与北方居民过桥对称&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;对于上面改造后的问题，通过转换为第三读者-写者问题得到的解法 &lt;strong&gt;依赖于信号量进程队列的先进先出特性&lt;/strong&gt; 。我构想了另一种解法（下面的代码），但我认为这种解法有些过于复杂，并且依赖状态的记录。此算法已经经过程序验证。或者你有另外的解法，请一定要告诉我（在评论中留言或 &lt;a href=&quot;mailto:forec@bupt.edu.cn&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;点此&lt;/a&gt; 向我发送邮件）！&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;40&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 其它变量和上面代码相同&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;bool&lt;/span&gt; north_entered = FALSE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;bool&lt;/span&gt; south_entered = FALSE;   &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 我方自上次对方通过桥后是否又有人通过桥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;semaphore north_entry = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;semaphore south_entry = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;    &lt;span class=&quot;comment&quot;&gt;// 双方居民争夺桥权的资格&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;enter_bridge_north&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;&amp;#123;   &lt;span class=&quot;comment&quot;&gt;// 北方居民过桥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(mutex_north);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    num_waiting_north ++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(mutex_north);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(north_entry);    &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 此句必须放置在 num_waiting_north++ 后，否则一方通过后将再无机会&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 打断对方的权限，直到对方主动交出&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (num_waiting_north == &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 第一个北方居民要获取桥的资源&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        wait(bridge);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    north_entered = TRUE;    &lt;span class=&quot;comment&quot;&gt;// 标记北方已经有人通过桥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (num_waiting_south == &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 南方无人等待过桥则允许下一个北方居民过桥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;// 如果南方有人过桥，过桥后一定会再次给北方机会所以跳过此步&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(north_entry); &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 过桥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    wait(mutex_north);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    num_waiting_north --;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (south_entered) &amp;#123; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        signal(south_entry);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        south_entered = FALSE;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 如果有南方居民已经通过桥，则说明 south_entry 为 0，因为最后&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 一个通过的南方居民没有机会对 south_entry 做 signal。这样最后&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 一个离开的北方居民需要将 south_entry 置为 1，使南方居民能够获得过桥资格。&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(mutex_north);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    signal(bridge);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;enter_bridge_south&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;&amp;#123;    &lt;span class=&quot;comment&quot;&gt;// 南方居民过桥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 与北方居民对称&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/01/08/os-concepts-15/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;操作系统（十五）：信号量编程（下）&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：专栏已结束&lt;/p&gt;
-&lt;p&gt;参考资料：《操作系统概念 英文第七版》，恐龙书，英文名《Operating System Concepts》，作者 Abraham Silberschatz、Peter Baer Galvin、Greg Gagne&lt;/p&gt;
-&lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/01/08/os-concepts-16/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/01/08/os-concepts-16/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/01/08/os-concepts-16/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;在 &lt;a href=&quot;http://blog.forec.cn/2017/01/06/os-concepts-14/&quot;&gt;操作系统（专题）：信号量编程（上）&lt;/a&gt; 中，我对《操作系统概念》原书课后习题 7.16 过桥问题做了一定改动，此部分记录对改动后题目的分析。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="计算机理论基础" scheme="http://forec.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="OS" scheme="http://forec.github.io/tags/OS/"/>
     
   </entry>
   
