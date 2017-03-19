@@ -53,7 +53,7 @@
     <link href="http://forec.github.io/2017/03/18/formal-languages-and-automata2/"/>
     <id>http://forec.github.io/2017/03/18/formal-languages-and-automata2/</id>
     <published>2017-03-18T13:41:32.000Z</published>
-    <updated>2017-03-19T15:12:36.000Z</updated>
+    <updated>2017-03-19T15:24:23.000Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;确定的/非确定的有限自动机，带/不带 ε 转移的非确定有限自动机以及各自之间的等价性。&lt;/p&gt;
@@ -133,7 +133,7 @@
 &lt;li&gt;构造方法：先确定 F，之后按照 &lt;code&gt;δ1(q, a) = δ&amp;#39;(q, a)&lt;/code&gt; 来确定生成式集合。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
-&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;形式语言&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/03/19/formal-languages-and-automata3/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;右线性文法&lt;/a&gt;      &lt;/p&gt;
+&lt;p&gt;专栏目录：&lt;a href=&quot;http://blog.forec.cn/columns/cs-basic.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;计算机理论基础&lt;/a&gt;&lt;br&gt;此专栏的上一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/02/25/formal-languages-and-automata1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;形式语言&lt;/a&gt;&lt;br&gt;此专栏的下一篇文章：&lt;a href=&quot;http://blog.forec.cn/2017/03/19/formal-languages-and-automata3/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;右线性语言&lt;/a&gt;      &lt;/p&gt;
 &lt;p&gt;参考资料：《形式语言与自动机》，王柏、杨娟编著，北京邮电大学出版社    &lt;/p&gt;
 &lt;p&gt;原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章&lt;a href=&quot;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原始出处&lt;/a&gt;(&lt;a href=&quot;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/&lt;/a&gt;) 、作者信息（&lt;a href=&quot;http://forec.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Forec&lt;/a&gt;）和本声明。&lt;/p&gt;
 </content>
