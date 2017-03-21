@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="正则集、正则式，右线性文法，正则表达式与有限自动机之间的图示关系，右线性语言与有限自动机之间的关系。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg">
-<meta property="og:updated_time" content="2017-03-19T15:13:22.000Z">
+<meta property="og:updated_time" content="2017-03-21T15:16:12.278Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="右线性语言">
 <meta name="twitter:description" content="正则集、正则式，右线性文法，正则表达式与有限自动机之间的图示关系，右线性语言与有限自动机之间的关系。">
@@ -172,7 +172,107 @@
 <p>正则集、正则式，右线性文法，正则表达式与有限自动机之间的图示关系，右线性语言与有限自动机之间的关系。</p>
 </blockquote>
 <a id="more"></a>
-<p>TODO</p>
+<h2 id="正则集和正则式"><a href="#正则集和正则式" class="headerlink" title="正则集和正则式"></a>正则集和正则式</h2><ul>
+<li>正则集可用正则式表示。字母表 T 上的一个正则式和它表示的正则集可递归定义如下：<ul>
+<li>ε 和 ∅ 都是正则式，分别表示的正则集是 {ε} 和空集 ∅；</li>
+<li>任意 a ∈ T 是正则式，他表示的正则集是 {a}（以上两条为原子正则式）；</li>
+<li>如果 A 和 B 是正则式，分别表示的正则集是 L(A) 和 L(B)，则 (A+B)、(A·B)、(A<em>) 也都是正则式，分别表示的正则集是 <code>L(A) ∪ L(B)</code>、<code>L(A)L(B)</code>、`L(A)</em><code>。操作的优先级为</code>*（闭包） &gt; ·（连接）&gt; +（联合）`。</li>
+</ul>
+</li>
+<li>仅由 <strong>有限次</strong> 使用以上三步定义的表达式才是字母表 T 的正则式。如果两个正则式表示相同的正则集，则称两个正则式相等。</li>
+<li>假设 α、β、γ 都是正则式，则：<ul>
+<li><code>(α + β) + γ = α + (β + γ)</code></li>
+<li><code>(α · β) · γ = α · (β · γ)</code></li>
+<li><code>α + β = β + α</code></li>
+<li><code>α + α = α</code></li>
+<li><code>α · (β + γ) = (α · β) + (α · γ)</code></li>
+<li><code>(β + γ) · α = (β · α) + (γ · α)</code></li>
+<li><code>α + ∅= α</code>（零元）</li>
+<li><strong><code>α · ∅ = ∅ · α = ∅</code>（零元）</strong></li>
+<li><strong><code>α · ε = ε · a = a</code>（幺元）</strong></li>
+<li><code>(α*)* = α*</code>（闭包）</li>
+<li><code>α* = ε + α+</code></li>
+<li><code>∅* = ε</code></li>
+</ul>
+</li>
+<li>注意：<ul>
+<li>正则集是 T* 的子集；</li>
+<li>L+ 包含 ε 当且仅当 L 包含 ε；</li>
+<li>每个正则集至少对应一个正则式。</li>
+</ul>
+</li>
+</ul>
+<h2 id="右线性文法与正则"><a href="#右线性文法与正则" class="headerlink" title="右线性文法与正则"></a>右线性文法与正则</h2><h3 id="右线性文法与正则式"><a href="#右线性文法与正则式" class="headerlink" title="右线性文法与正则式"></a>右线性文法与正则式</h3><ul>
+<li>右线性文法（正则文法）与正则式具有等价性。</li>
+<li>求解规则：设 <code>x = αx + β, α ∈ T*, β ∈ (N∪T)*, x ∈ N</code>，可解出 <code>x = α*β</code>。</li>
+<li>例：<code>G = {N = {S, A, B}, T = {a, b}, P, S}</code>，其中 P 包括以下规则：<code>S → aA, S → bB, S → b, A → bA, A → ε, B → bS</code>。<ul>
+<li>将 P 中的推导式联立，可得到 <code>S = aA + bB + b</code>，<code>A =bA + ε</code> 和 <code>B = bS</code>；</li>
+<li>根据 <code>A = bA + ε</code>，应用求解规则得到 <code>A = b*</code>；</li>
+<li>将 <code>A = b*</code>，<code>B = bS</code> 代入，得到 <code>S = ab* + bbS + b</code>，转换形式得到 <code>S = (bb)S + (ab* + b)</code>；</li>
+<li>在此应用求解规则得到 <code>S = (bb)*(ab*+b)</code>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="右线性文法与正则集"><a href="#右线性文法与正则集" class="headerlink" title="右线性文法与正则集"></a>右线性文法与正则集</h3><ul>
+<li><strong>正则集是由右线性文法产生的语言，二者是等同的</strong> ，按照上面定义的正则集都是右线性文法产生的语言。</li>
+<li>设字母表为 T。∅、{ε} 和 {a}（任意 a ∈ T）都是正则集，则 ∅、{ε} 和 {a} 都是右线性语言。它们分别对应的右线性文法是 <code>G∅ = ({S}, T, ∅, S)</code>、<code>G{ε} = ({S}, T, {S → ε}, S)</code> 以及 <code>G{a} = ({S}, {a}, {S → a}, S)</code>。</li>
+<li>可证明，设字母表 T 上有右线性语言 L1 和 L2，则 L1∪L2、L1L2 和 L1* 都是右线性语言。<ul>
+<li>证 L1 ∪ L2 为右线性语言：有右线性文法 <code>G = (N, T, P, S)</code>，其中 <code>N = N1 ∪ N2 ∪ {S}</code>，<code>P = P1 ∪ P2 ∪ {S → S1, S → S2}</code>，S ∉ N1 ∪ N2，是一个新的非终结符；</li>
+<li>证 L1L2 为右线性语言：有右线性文法 <code>G = (N, T, P, S)</code>，其中 N = N1 ∪ N2，S = S1，生成式 P 为：若 A → αB ∈ P1 则 A → αB ∈ P，若 A → α ∈ P1，则 A → αS2 ∈ P，P2 ⊆ P。</li>
+<li>证 L1* 是右线性语言：有右线性文法 <code>G = (N, T, P, S)</code>，其中 N = N1 ∪ {S}，S ∉ N1，S 是一个新非终结符，生成式 P 定义为：若 A → αB ∈ P1 则 A → αB ∈ P，若 A → α ∈ P1 则 A → αS ∈ P 且 A → α ∈ P，且 P 中包括 {S → S1, S → ε}。</li>
+</ul>
+</li>
+</ul>
+<h2 id="正则表达式和有限自动机"><a href="#正则表达式和有限自动机" class="headerlink" title="正则表达式和有限自动机"></a>正则表达式和有限自动机</h2><blockquote>
+<p>以下图片均来自王柏教授（北京邮电大学大数据科学与服务中心）的《形式语言与自动机》课件。</p>
+</blockquote>
+<ul>
+<li>有限自动机、右（左）线性文法和正则表达式都定义了同一种语言（正则语言）。</li>
+<li>由 DFA 构造等价的正则表达式（状态消去法）:</li>
+</ul>
+<p><img src="http://7xktmz.com1.z0.glb.clouddn.com/fla/fla-1.jpg" width="500px"></p>
+<ul>
+<li>从 DFA 构造等价正则表达式的具体步骤如下：<ul>
+<li>对每一终态 q，依次消去除 q 和初态 q0 之外的其它状态；</li>
+<li>若 q ≠ q0，最终可得到一般形式：<code>(R+ SU*T)*SU*</code>，如下图中左侧的自动机；</li>
+<li>若 q = q0，最终可得到如图中右侧的自动机，对应正则式为 <code>R*</code>；</li>
+<li>最终的正则表达式为 <strong>每一终态对应的正则表达式之和（联合）</strong> 。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/fla/fla-2.jpg"></li>
+</ul>
+</li>
+<li>从正则表达式构建等价的 ε-NFA，可根据如下几种基本组合子组合：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/fla/fla-3.jpg" width="400px"></li>
+<li>对于 <code>R+S</code>、<code>RS</code> 以及 <code>R*</code>，分别为下图中从上到下三种连接方式：<div><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/fla/fla-4.jpg" width="250px" style="display:inline"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/fla/fla-5.jpg" width="250px" style="display:inline"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/fla/fla-6.jpg" width="250px" style="display:inline"><br></div>
+
+</li>
+</ul>
+<h2 id="右线性文法与有限自动机"><a href="#右线性文法与有限自动机" class="headerlink" title="右线性文法与有限自动机"></a>右线性文法与有限自动机</h2><h3 id="右线性文法-⇒-有限自动机"><a href="#右线性文法-⇒-有限自动机" class="headerlink" title="右线性文法 ⇒ 有限自动机"></a>右线性文法 ⇒ 有限自动机</h3><ul>
+<li>设右线性文法 G = (N, T, P, S)，产生语言为 L(G)，则存在一个有限自动机 M 接受语言 L(M) = L(G)。</li>
+<li>构造：构造一个与 G 等价的 NFA M = (Q, T, δ, q0, F)，其中<ul>
+<li>Q = N ∪ {H}，H 为新增状态，H ∉ N；</li>
+<li>q0 = S；</li>
+<li>当 S → ε ∈ P 时，F = {H, S}，否则 F = {H}；</li>
+<li>δ 的定义为：若 A → αB ∈ P 则 B ∈ δ(A, α)，若 A → α ∈ P 则 H ∈ δ(A, α)，且对任意输入有 δ(H, α) = ∅。</li>
+</ul>
+</li>
+<li>例：G = ({S, B}, {α, β}, P, S)，其中 P 为 S → αB, B → αB | βS | α。<ul>
+<li>令 NFA M = (Q, T, δ, q0, F)，Q = {S, B, H}，T = {α, β}，q0 = S，F = {H}；</li>
+<li>∵ S → αB，故 δ(S, α) 中包括 B；</li>
+<li>∵ B → αB，故 δ(B, α) 中包括 B；</li>
+<li>∵ B → βS，故 δ(B, β) 中包括 S；</li>
+<li>∵ B → α，故 δ(B, α) 中包括 H。</li>
+</ul>
+</li>
+</ul>
+<h3 id="有限自动机-⇒-右线性文法"><a href="#有限自动机-⇒-右线性文法" class="headerlink" title="有限自动机 ⇒ 右线性文法"></a>有限自动机 ⇒ 右线性文法</h3><ul>
+<li>设 DFA M 接受的语言为 L(M)，则存在右线性文法 G，它产生的语言 L(G) = L(M)。</li>
+<li>构造：设 M = (Q, T, δ, q0, F)，则令 G = (N, T, P, S)，其中 <ul>
+<li>N = Q，S = q0；</li>
+<li>若 δ(A, α) = B 且 B ∉ F 则 A → αB ∈ P；</li>
+<li>若 δ(A, α) = B 且 B ∈ F 则 A → α ∈ P，A → αB ∈ P。</li>
+</ul>
+</li>
+<li>对于 NFA，可以转换为等价的 DFA 再做相应构造。</li>
+</ul>
+<h2 id="右线性语言性质"><a href="#右线性语言性质" class="headerlink" title="右线性语言性质"></a>右线性语言性质</h2><p>TODO</p>
 <hr>
 <p>专栏目录：<a href="http://blog.forec.cn/columns/cs-basic.html" target="_blank" rel="external">计算机理论基础</a><br>此专栏的上一篇文章：<a href="http://blog.forec.cn/2017/03/18/formal-languages-and-automata2/" target="_blank" rel="external">有限自动机</a><br>此专栏的下一篇文章：暂无     </p>
 <p>参考资料：《形式语言与自动机》，王柏、杨娟编著，北京邮电大学出版社    </p>
@@ -184,7 +284,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/03/19/formal-languages-and-automata3/" data-id="cj0gu16gv007bh8ewzzobfsob" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/03/19/formal-languages-and-automata3/" data-id="cj0joihbn007b44ew92vpibyb" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
