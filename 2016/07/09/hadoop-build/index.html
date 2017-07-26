@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="简单记录在Ubuntu Linux上搭建本地伪分布式的Hadoop MapReduce集群过程及使用方法。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/hadoop-build.jpg">
-<meta property="og:updated_time" content="2016-11-04T16:45:01.330Z">
+<meta property="og:updated_time" content="2017-07-26T04:31:51.011Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop配置和使用">
 <meta name="twitter:description" content="简单记录在Ubuntu Linux上搭建本地伪分布式的Hadoop MapReduce集群过程及使用方法。">
@@ -238,6 +238,14 @@
 <p>需要注意，在伪分布式的hadoop上执行MapReduce任务时，需ssh到localhost，之后在8088端口才能看到作业记录。</p>
 </blockquote>
 <hr>
+<h3 id="Spark-测试"><a href="#Spark-测试" class="headerlink" title="Spark 测试"></a>Spark 测试</h3><ul>
+<li><p>Spark 自带的 Pi 测试：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># spark local</span></span><br><span class="line">/opt/spark-<span class="number">1.6</span><span class="number">.3</span>/bin/spark-submit --<span class="keyword">class</span> org.apache.spark.examples.SparkPi /opt/spark-<span class="number">1.6</span><span class="number">.3</span>/lib/spark-examples-<span class="number">1.6</span><span class="number">.3</span>-hadoop2<span class="number">.6</span><span class="number">.0</span>.jar <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># spark yarn client</span></span><br><span class="line">/opt/spark-<span class="number">1.6</span><span class="number">.3</span>/bin/spark-submit --<span class="keyword">class</span> org.apache.spark.examples.SparkPi --master yarn /opt/spark-<span class="number">1.6</span><span class="number">.3</span>/lib/spark-examples-<span class="number">1.6</span><span class="number">.3</span>-hadoop2<span class="number">.6</span><span class="number">.0</span>.jar <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># spark yarn cluster</span></span><br><span class="line">/opt/spark-<span class="number">1.6</span><span class="number">.3</span>/bin/spark-submit --<span class="keyword">class</span> org.apache.spark.examples.SparkPi --master yarn --deploy-mode cluster /opt/spark-<span class="number">1.6</span><span class="number">.3</span>/lib/spark-examples-<span class="number">1.6</span><span class="number">.3</span>-hadoop2<span class="number">.6</span><span class="number">.0</span>.jar <span class="number">10</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>出现 slave lost 的问题，可能是 <a href="https://issues.apache.org/jira/browse/YARN-4714" target="_blank" rel="external">这里</a> 导致的问题，在 <code>etc/hadoop/yarn-site.xml</code> 中加入:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.nodemanager.pmem-check-enabled<span class="tag">&lt;/<span class="title">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">value</span>&gt;</span>false<span class="tag">&lt;/<span class="title">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.nodemanager.vmem-check-enabled<span class="tag">&lt;/<span class="title">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">value</span>&gt;</span>false<span class="tag">&lt;/<span class="title">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 <h1 id="完整的hadoop作业运行示例"><a href="#完整的hadoop作业运行示例" class="headerlink" title="完整的hadoop作业运行示例"></a>完整的hadoop作业运行示例</h1><ul>
 <li>安装并配置好hadoop，执行<code>$ sbin/start-yarn.sh</code>和<code>$ sbin/start-dfs.sh</code>。</li>
 <li>一段简单的java代码如下，export出的jar包可在hadoop上执行MapReduce作业。使用eclipse或idea时，需要导入SDK、JDK和scala-hadoop-assembly包。</li>
@@ -256,7 +264,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/07/09/hadoop-build/" data-id="cj2ulp32y00727sewfx8sxcwo" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/07/09/hadoop-build/" data-id="cj5kikdnm00721gzzc01cpu9p" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
