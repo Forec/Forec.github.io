@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>HDFS 组织及工作 | Forec&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Hadoop,分布式系统" />
+    
+    <meta name="description" content="Apache Hadoop 是一款支持数据密集型分布式应用程序并以 Apache 2.0 许可协议发布的开源软件框架。它支持在商品硬件构建的大型集群上运行的应用程序。Hadoop 是根据谷歌公司发表的 MapReduce 和 Google 文件系统的论文自行实现而成。所有的 Hadoop 模块都有一个基本假设，即硬件故障是常见情况，应该由框架自动处理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HDFS 组织及工作">
+<meta property="og:url" content="http://forec.github.io/2017/08/22/hadoop_knowledge/index.html">
+<meta property="og:site_name" content="Forec's Notes">
+<meta property="og:description" content="Apache Hadoop 是一款支持数据密集型分布式应用程序并以 Apache 2.0 许可协议发布的开源软件框架。它支持在商品硬件构建的大型集群上运行的应用程序。Hadoop 是根据谷歌公司发表的 MapReduce 和 Google 文件系统的论文自行实现而成。所有的 Hadoop 模块都有一个基本假设，即硬件故障是常见情况，应该由框架自动处理。">
+<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg">
+<meta property="og:updated_time" content="2017-08-22T07:37:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HDFS 组织及工作">
+<meta name="twitter:description" content="Apache Hadoop 是一款支持数据密集型分布式应用程序并以 Apache 2.0 许可协议发布的开源软件框架。它支持在商品硬件构建的大型集群上运行的应用程序。Hadoop 是根据谷歌公司发表的 MapReduce 和 Google 文件系统的论文自行实现而成。所有的 Hadoop 模块都有一个基本假设，即硬件故障是常见情况，应该由框架自动处理。">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Forec&#39;s Notes" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="http://7xktmz.com1.z0.glb.clouddn.com/sitefavicon.png# path to favicon" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css" type="text/css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css" type="text/css">
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <script src="/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css" type="text/css">
+    
+    
+    
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于我</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/columns/index.html">专栏</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/projects/index.html">个人项目列表</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="http://forec.cn">FOREC 的官方网站</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/apis/index.html">API</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js" type="text/javascript"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/大数据-分布式系统/">大数据/分布式系统</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-hadoop_knowledge" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        HDFS 组织及工作
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-subtitle">
+                <a href="/2017/08/22/hadoop_knowledge/" class="article-date">
+    <time datetime="2017-08-22T08:16:16.000Z" itemprop="datePublished">2017-08-22</time>
+</a>
+                
+    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/">Hadoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式系统/">分布式系统</a></li></ul>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <blockquote>
+<p>Apache Hadoop 是一款支持数据密集型分布式应用程序并以 Apache 2.0 许可协议发布的开源软件框架。它支持在商品硬件构建的大型集群上运行的应用程序。Hadoop 是根据谷歌公司发表的 MapReduce 和 Google 文件系统的论文自行实现而成。所有的 Hadoop 模块都有一个基本假设，即硬件故障是常见情况，应该由框架自动处理。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="子项目"><a href="#子项目" class="headerlink" title="子项目"></a>子项目</h2><ul>
+<li><strong>Hadoop Common</strong>：在 0.20 及以前的版本中，包含 HDFS、MapReduce 和其他项目公共内容，从 0.21 开始 HDFS 和 MapReduce 被分离为独立的子项目，其余内容为 Hadoop Common   </li>
+<li><strong>HDFS</strong>：Hadoop Distributed File System  </li>
+<li><strong>MapReduce</strong>：并行计算框架，0.20 前使用 <code>org.apache.hadoop.mapred</code> 旧接口，0.20 版本开始引入 <code>org.apache.hadoop.mapreduce</code> 的新 API  </li>
+</ul>
+<h2 id="HDFS-结构"><a href="#HDFS-结构" class="headerlink" title="HDFS 结构"></a>HDFS 结构</h2><ul>
+<li>HDFS 是一个高度容错性的系统，适合部署在廉价的机器上。</li>
+<li>硬件错误是常态而不是异常，错误检测和快速、自动的恢复是HDFS最核心的架构目标。</li>
+<li>运行在 HDFS 上的应用需要 <strong>流式访问</strong> 数据集，HDFS 的设计更多考虑了数据批处理，而不是用户交互处理。比之数据访问的低延迟问题，更关键的在于 <strong>数据访问的高吞吐量</strong>。</li>
+<li><strong>移动计算比移动数据更划算</strong>：一个应用请求的计算，离它操作的数据越近就越高效，HDFS 为应用提供了将它们自己移动到数据附近的接口。</li>
+<li>HDFS 采用 <strong>master/slave 结构</strong>，一个 HDFS 集群由一个 Namenode 和一定数目的 Datanodes 组成。Namenode 是一个 <strong>中心服务器</strong>，负责管理文件系统的命名空间以及客户端对文件的访问；集群中的 Datanode 一般是一个节点一个，负责管理它所在节点上的存储。HDFS 暴露了文件系统的命名空间，用户能够以文件的形式在上面存储数据。从内部看，一个文件其实被分成一个或多个数据块，这些块存储在一组 Datanode 上。Namenode 执行文件系统的命名空间操作，如打开、关闭、重命名文件或目录，它也<strong>负责确定数据块到具体 Datanode 节点的映射</strong>。Datanode 负责处理文件系统客户端的读写请求，在 Namenode 的统一调度下进行数据块的创建、删除和复制。Namenode 是所有 HDFS 元数据的仲裁者和管理者，<strong>用户数据永远不会流过 Namenode</strong>。</li>
+</ul>
+<h3 id="数据复制和副本"><a href="#数据复制和副本" class="headerlink" title="数据复制和副本"></a>数据复制和副本</h3><ul>
+<li>HDFS 将<strong>每个文件存储成一系列的数据块</strong>，除了最后一个，所有的数据块都是同样大小的。一个典型的数据块大小是 64MB，HDFS 中的文件总是按照 64MB 被切分成不同的块，每个块尽可能地存储于不同的 Datanode 中。为了容错，文件的所有数据块都会有副本，每个文件的数据块大小和副本系数都是可配置的，应用程序可以指定某个文件的副本数目。副本系数可以在文件创建的时候指定，也可以在之后改变。HDFS中的文件都是一次性写入的，并且严格要求在任何时候只能有一个写入者。</li>
+<li>Namenode 全权管理数据块的复制，它<strong>周期性地从集群中的每个 Datanode 接收心跳信号和块状态报告</strong>。接收到心跳信号意味着该 Datanode 节点工作正常，块状态报告包含了一个该 Datanode 上所有数据块的列表。</li>
+<li>大型 HDFS 实例一般运行在跨越多个机架的计算机组成的集群上，不同机架上的两台机器之间的通讯需要经过交换机。在大多数情况下，同一个机架内的两台机器间的带宽会比不同机架的两台机器间的带宽大。通过 <strong>机架感知</strong>（使用 API resolve 将 slave 的 DNS 名称（或IP地址）转换成机架id）Namenode可以确定每个 Datanode 所属的机架 id。一种简单但没有优化的策略是将副本存放在不同的机架上，这样可以有效防止当整个机架失效时数据的丢失，且允许读数据的时候充分利用多个机架的带宽。但这种策略的一个写操作需要传输数据块到多个机架，增加了写的代价。<br>大多数情况下，副本系数是3，HDFS 的存放策略是将 <strong>一个副本存放在本地机架的节点上，一个副本放在同一机架的另一个节点上，最后一个副本放在不同机架的节点上</strong>。</li>
+<li>HDFS 会<strong>尽量让读取程序读取离它最近的副本</strong>。如果在读取程序的同一个机架上有一个副本，那么就读取该副本。如果一个 HDFS 集群跨越多个数据中心，那么客户端也将首先读本地数据中心的副本。</li>
+<li>Namenode 启动后会进入一个称为 <strong>安全模式</strong> 的特殊状态。处于安全模式的 Namenode 不会进行数据块的复制，并从所有的 Datanode 接收心跳信号和块状态报告。块状态报告包括了某个 Datanode 所有的数据块列表，每个数据块都有一个指定的最小副本数。当 Namenode 确认某个数据块的副本数目达到这个最小值，那么该数据块就会被认为是副本安全的；在一定百分比（这个参数可配置）的数据块被 Namenode 检测确认是安全之后（加上一个额外的30秒等待时间）， Namenode 将退出安全模式状态。接下来它会确定还有哪些数据块的副本没有达到指定数目，并将这些数据块复制到其他 Datanode 上。</li>
+</ul>
+<h3 id="元数据持久化"><a href="#元数据持久化" class="headerlink" title="元数据持久化"></a>元数据持久化</h3><ul>
+<li>Namenode 上保存着 HDFS 的命名空间，对于任何对文件系统元数据产生修改的操作，Namenode 都会使用 <code>EditLog</code> 事务日志记录下来。Namenode 在本地操作系统的文件系统中存储这个 <code>Editlog</code>。整个文件系统的命名空间，包括数据块到文件的映射、文件的属性等，都存储在一个称为 <code>FsImage</code> 的文件中，这个文件也放在 Namenode 所在的本地文件系统上。</li>
+<li><strong>Namenode 在内存中保存着整个文件系统的命名空间和文件数据块映射的映像</strong>。这个关键的元数据结构设计得很紧凑，因此 4G 内存的 Namenode 足够支撑大量的文件和目录。当 Namenode <strong>启动时</strong>，它从硬盘中读取 <code>Editlog</code> 和 <code>FsImage</code>，将所有 <code>Editlog</code> 中的事务作用在内存中的 <code>FsImage</code> 上，并将这个新版本的 <code>FsImage</code> 从内存中保存到本地磁盘上，然后删除旧的 <code>Editlog</code>，这个过程称为一个<strong>检查点</strong>。</li>
+<li>Datanode <strong>将 HDFS 数据以文件的形式存储在本地的文件系统中</strong>，它并不知道有关 HDFS 文件的信息。它把<strong>每个HDFS数据块存储在本地文件系统的一个单独的文件中</strong>。Datanode 并不在同一个目录创建所有的文件，而是用试探的方法来确定每个目录的最佳文件数目，并且在适当的时候创建子目录。在同一个目录中创建所有的本地文件并不是最优的选择，这是因为本地文件系统可能无法高效地在单个目录中支持大量的文件。当 Datanode 启动时，它会扫描本地文件系统，产生一个这些本地文件对应的所有 HDFS 数据块的列表，然后作为报告发送到 Namenode ，这个报告就是块状态报告。</li>
+</ul>
+<h3 id="集群通讯和健壮性"><a href="#集群通讯和健壮性" class="headerlink" title="集群通讯和健壮性"></a>集群通讯和健壮性</h3><ul>
+<li>客户端通过一个可配置的 <strong>TCP</strong> 端口连接到 Namenode，通过 ClientProtocol 协议与 Namenode 交互。而 Datanode 使用 DatanodeProtocol 协议与 Namenode 交互。一个远程过程调用模型被抽象出来封装 ClientProtocol 和 Datanodeprotocol 协议。Namenode 不会主动发起 RPC，而是响应来自客户端或 Datanode 的 RPC 请求。</li>
+<li>三种出错情况是：<strong>Namenode 出错、Datanode 出错、网络割裂</strong>。Datanode 出错和网络割裂可能导致一部分 Datanode 跟 Namenode 失去联系。Namenode 通过心跳信号的缺失来将近期不再发送心跳信号 Datanode 标记为宕机，不会再将新的 IO 请求发给它们，且任何存储在宕机 Datanode 上的数据将不再有效。这可能会引起一些数据块的副本系数低于指定值，Namenode 不断地检测这些需要复制的数据块，一旦发现就启动复制操作。</li>
+<li>HDFS 支持<strong>数据均衡策略</strong>。如果某个 Datanode 节点上剩余空闲空间低于临界点，系统会自动地将数据从这个 Datanode 移动到其他空闲 Datanode。当对某个文件的请求突然增加，也可能启动一个计划创建该文件新的副本，并且同时重新平衡集群中的其他数据。</li>
+<li>当 HDFS 客户端创建一个新的 HDFS 文件时，会计算这个文件每个数据块的校验和，并<strong>将校验和作为一个单独的隐藏文件保存在同一个 HDFS 名字空间下</strong>。当客户端获取文件内容后，它会检验从 Datanode 获取的数据跟相应的校验和文件中的校验和是否匹配，如果不匹配，客户端可以选择从其他 Datanode 获取该数据块的副本。</li>
+<li><code>FsImage</code> 和 <code>Editlog</code> 是 HDFS 的核心数据结构。如果这些文件损坏了，整个 HDFS 实例都将失效，因此 Namenode 可以配置成支持维护多个 <code>FsImage</code> 和 <code>Editlog</code> 的副本。Namenode 是 HDFS 集群中的 <strong>单点故障</strong> 所在。如果 Namenode 机器故障，需要手工干预。也可以通过指定配置，在 Namenode 宕机时切换到 Secondary Namenode。</li>
+</ul>
+<h3 id="数据组织"><a href="#数据组织" class="headerlink" title="数据组织"></a>数据组织</h3><ul>
+<li><strong>客户端缓存</strong>：客户端创建文件的请求并没有立即发送给 Namenode。HDFS 客户端会先将文件数据缓存到本地的一个临时文件，应用程序的写操作被透明地重定向到这个临时文件。当这个临时文件累积的数据量超过一个数据块的大小，客户端才会联系 Namenode。Namenode 将文件名插入文件系统的层次结构中，并且分配一个数据块给它，然后返回 Datanode 的标识符和目标数据块给客户端。接着客户端将这块数据从本地临时文件上传到指定的 Datanode 上。当文件关闭时，在临时文件中剩余的没有上传的数据也会传输到指定的 Datanode 上，然后客户端告诉 Namenode 文件已关闭，此时 Namenode 才将文件创建操作提交到日志里进行存储。<strong>如果 Namenode 在文件关闭前宕机，该文件将丢失</strong>。</li>
+<li><strong>流水线复制</strong>：假设文件的副本系数设置为3，且客户端开始向第一个 Datanode 传输数据，第一个 Datanode 逐小块(4 KB)地接收数据，将每一部分写入本地仓库，并同时传输该部分到列表中第二个 Datanode 节点。第二个 Datanode 也以此类推同时传给第三个 Datanode。即，Datanode 流水线式地从前一个节点接收数据，并在同时转发给下一个节点。</li>
+</ul>
+<h2 id="HDFS-使用"><a href="#HDFS-使用" class="headerlink" title="HDFS 使用"></a>HDFS 使用</h2><h3 id="存储空间回收"><a href="#存储空间回收" class="headerlink" title="存储空间回收"></a>存储空间回收</h3><ul>
+<li>当用户或应用程序删除某个文件时，HDFS 会将这个文件重命名转移到 <code>.Trash</code> 目录。文件在 <code>.Trash</code> 中保存的时间是可配置的（设置属性 <code>fs.trash.interval</code>），超时后 Namenode 会将该文件从命名空间中删除，删除文件会使得该文件相关的数据块被释放，因此从用户删除文件到 HDFS 空闲空间的增加之间会有一定时间的延迟。</li>
+<li>当一个文件的副本系数被减小后，Namenode 会选择过剩的副本删除，并在下次心跳检测时将该信息传递给 Datanode。</li>
+</ul>
+<h3 id="Secondary-NameNode"><a href="#Secondary-NameNode" class="headerlink" title="Secondary NameNode"></a>Secondary NameNode</h3><ul>
+<li>因为 NameNode 只有在启动阶段才合并 <code>fsImage</code> 和 <code>EditLog</code>，所以日志文件可能会变得非常庞大，且下一次 NameNode 启动会花很长时间。</li>
+<li>Secondary NameNode 定期合并 <code>fsImage</code> 和 <code>EditLog</code>，将日志文件大小控制在一个限度下。因为内存需求和 NameNode 在一个数量级上，所以通常 Secondary NameNode 和 NameNode 运行在不同的机器上。Secondary NameNode 通过 <code>bin/start-dfs.sh</code> 在`conf/masters 中指定的节点上启动。</li>
+<li>Secondary NameNode 的检查点进程启动，由两个配置参数控制：<ul>
+<li><code>fs.checkpoint.period</code>：指定连续两次检查点的最大时间间隔，默认为 1 小时；</li>
+<li><code>fs.checkpoint.size</code>：定义日志文件的最大值，一旦超过这个值会强制执行检查点，默认值是64MB。</li>
+</ul>
+</li>
+<li>Secondary NameNode 保存最新检查点的目录与 NameNode 的目录结构相同，NameNode 可以在需要的时候读取 Secondary NameNode 上的检查点镜像。如果 NameNode 上除了最新的检查点以外，所有的其他的历史镜像和日志文件都丢失了，则可以引入这个最新的检查点：<ul>
+<li>在配置参数 <code>dfs.name.dir</code> 指定的位置创建空目录；</li>
+<li>把检查点目录的位置赋值给配置参数 <code>fs.checkpoint.dir</code>；</li>
+<li>启动 NameNode，并加上 <code>-importCheckpoint</code>。</li>
+</ul>
+</li>
+<li>按上述步骤，NameNode 会从 <code>fs.checkpoint.dir</code> 目录读取检查点，并把它保存在 <code>dfs.name.dir</code> 目录下。如果 <code>dfs.name.dir</code> 目录下有合法的镜像文件，NameNode 会启动失败。NameNode 会检查 <code>fs.checkpoint.dir</code> 目录下镜像文件的一致性，但是不会改动它。</li>
+</ul>
+<h2 id="Map-Reduce"><a href="#Map-Reduce" class="headerlink" title="Map/Reduce"></a>Map/Reduce</h2><ul>
+<li>一个 Map/Reduce 作业通常会把输入的数据集切分为若干独立的数据块，由 map 任务以完全并行的方式处理它们。框架会对 map 的输出先进行排序，然后把结果输入给 reduce 任务。通常作业的输入和输出都会被存储在文件系统中。整个框架负责任务的调度和监控，以及重新执行已经失败的任务。</li>
+<li>通常，<strong>Map/Reduce 框架和分布式文件系统是运行在一组相同的节点上的</strong>，即计算节点和存储节点通常在一起。Map/Reduce 框架由一个单独的 master JobTracker 和每个集群节点一个 slave TaskTracker 组成。master 负责调度构成一个作业的所有任务，这些任务分布在不同的 slave 上，master 监控它们的执行，重新执行已经失败的任务，slave 仅负责执行由 master 指派的任务。</li>
+<li>应用程序通过提供 map 和 reduce 来实现 Mapper 和 Reducer 接口，它们组成作业的核心。Mapper 将输入键值对映射到一组中间格式的键值对集合，这种转换的中间格式记录集不需要与输入记录集的类型一致，一个给定的输入键值对可以映射成 0 个或多个输出键值对；Reducer 将与一个 key 关联的一组中间数值集归约为一个更小的数值集。<strong>Map 的数目通常是由输入数据的大小决定的</strong>，一般就是所有输入文件的总块数。</li>
+<li>Reducer有3个主要阶段：shuffle、sort 和 reduce。<ul>
+<li>Shuffle：Reducer 的输入就是 Mapper 已经排好序的输出。在这个阶段，框架通过 HTTP 为每个 Reducer 获得所有 Mapper 输出中与之相关的分块。</li>
+<li>Sort：框架按照 key 的值对 Reducer 的输入进行分组（不同 mapper 的输出中可能会有相同的key）。<strong>Shuffle 和 Sort 两个阶段是同时进行的</strong>，map 的输出也是一边被取回一边被合并的。</li>
+<li>Reduce：框架为已分组的输入数据中的每个 <code>&lt;key, (list of values)&gt;</code> 对调用一次 <code>reduce(WritableComparable, Iterator, OutputCollector, Reporter)</code> 方法。Reduce任务的输出通常是通过调用 <code>OutputCollector.collect(WritableComparable, Writable)</code> 写入文件系统的。Reducer的输出是没有排序的。Reduce的数目建议是 0.95 或 1.75 乘以 <code>(&lt;no. of nodes&gt; * mapred.tasktracker.reduce.tasks.maximum)</code>。增加 Reduce 的数目会增加整个框架的开销，但可以改善负载均衡，降低由于执行失败带来的负面影响。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>参考资料：<a href="http://hadoop.apache.org/docs/r1.0.4/" target="_blank" rel="external">Hadoop 0.18 中文文档</a>    </p>
+<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="http://blog.forec.cn/2017/08/22/hadoop_knowledge/" target="_blank" rel="external">原始出处</a>(<a href="http://blog.forec.cn/2017/08/22/hadoop_knowledge/" target="_blank" rel="external">http://blog.forec.cn/2017/08/22/hadoop_knowledge/</a>) 、作者信息（<a href="http://forec.cn/" target="_blank" rel="external">Forec</a>）和本声明。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://forec.github.io/2017/08/22/hadoop_knowledge/" data-id="cj6na50dm0000iqzz4q3ld1ki" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="uyan_frame"></div>
+
+    
+    </section>
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Forec" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus-circle" href="https://plus.google.com/u/0/103559279723380829001" target="_blank">
+                        <i class="icon fa fa-google-plus-circle"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/MrForec" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/MrForec" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/atom.xml" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="mail-forward" href="mailto:forec@bupt.edu.cn" target="_blank">
+                        <i class="icon fa fa-mail-forward"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2017/03/21/AlligatorEggs/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">从鳄鱼蛋看 λ 演算</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/大数据-分布式系统/">大数据/分布式系统</a></p>
+                            <p class="item-title"><a href="/2017/08/22/hadoop_knowledge/" class="title">HDFS 组织及工作</a></p>
+                            <p class="item-date"><time datetime="2017-08-22T08:16:16.000Z" itemprop="datePublished">2017-08-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2017/03/21/AlligatorEggs/" class="title">从鳄鱼蛋看 λ 演算</a></p>
+                            <p class="item-date"><time datetime="2017-03-21T15:42:42.000Z" itemprop="datePublished">2017-03-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/03/19/formal-languages-and-automata3/" class="title">右线性语言</a></p>
+                            <p class="item-date"><time datetime="2017-03-19T15:09:53.000Z" itemprop="datePublished">2017-03-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/计算机理论基础/">计算机理论基础</a></p>
+                            <p class="item-title"><a href="/2017/03/18/formal-languages-and-automata2/" class="title">有限自动机</a></p>
+                            <p class="item-date"><time datetime="2017-03-18T13:41:32.000Z" itemprop="datePublished">2017-03-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Code/">Code</a></p>
+                            <p class="item-title"><a href="/2017/03/02/translation-adit-tum/" class="title">三种实用 Monad</a></p>
+                            <p class="item-date"><time datetime="2017-03-02T10:24:20.000Z" itemprop="datePublished">2017-03-02</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Code/">Code</a><span class="category-list-count">33</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Configuration/">Configuration</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Language/">Language</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据-分布式系统/">大数据/分布式系统</a><span class="category-list-count">16</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机理论基础/">计算机理论基础</a><span class="category-list-count">26</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Access/" style="font-size: 10px;">Access</a> <a href="/tags/Algorithms/" style="font-size: 20px;">Algorithms</a> <a href="/tags/CVM/" style="font-size: 10px;">CVM</a> <a href="/tags/Data-Structures/" style="font-size: 12.5px;">Data-Structures</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Emacs/" style="font-size: 10px;">Emacs</a> <a href="/tags/Golang/" style="font-size: 15.83px;">Golang</a> <a href="/tags/Hadoop/" style="font-size: 11.67px;">Hadoop</a> <a href="/tags/Haskell/" style="font-size: 15.83px;">Haskell</a> <a href="/tags/Mistakes/" style="font-size: 13.33px;">Mistakes</a> <a href="/tags/OS/" style="font-size: 19.17px;">OS</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Qt/" style="font-size: 10px;">Qt</a> <a href="/tags/Raspberry/" style="font-size: 10px;">Raspberry</a> <a href="/tags/Safety/" style="font-size: 10px;">Safety</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/sicp/" style="font-size: 10.83px;">sicp</a> <a href="/tags/云存储/" style="font-size: 15px;">云存储</a> <a href="/tags/函数式编程/" style="font-size: 16.67px;">函数式编程</a> <a href="/tags/分布式系统/" style="font-size: 10px;">分布式系统</a> <a href="/tags/图分割/" style="font-size: 10.83px;">图分割</a> <a href="/tags/字符编码/" style="font-size: 10.83px;">字符编码</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/线程/" style="font-size: 17.5px;">线程</a> <a href="/tags/自动机/" style="font-size: 11.67px;">自动机</a> <a href="/tags/计组与体系结构/" style="font-size: 14.17px;">计组与体系结构</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="mailto:forec@bupt.edu.cn">联系 Forec</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://forec.cn">Forec 的官方网站</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://fallenwood.github.io">Fallenwood 的博客</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Forec">Forec 在 GitHub</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://www.codewars.com/users/Forec">Forec 在 CodeWars</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>京ICP备16060806号-1 &copy; 2017 Forec</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2133293# enter youyan uid here"></script>
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js" type="text/javascript"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js" type="text/javascript"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js" type="text/javascript"></script>
+
+    </div>
+</body>
+</html>
