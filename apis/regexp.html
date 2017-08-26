@@ -3,22 +3,37 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Spark集群计算环境配置和使用 | Forec&#39;s Notes</title>
+    <title>API 服务 - 正则模式 | Forec&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="Hadoop,Spark" />
-    
-    <meta name="description" content="在Hadoop配置与使用基础上配置Spark集群计算环境，以及简单Scala程序在集群的运行。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Spark集群计算环境配置和使用">
-<meta property="og:url" content="http://forec.github.io/2016/07/11/spark-initial/index.html">
+    <meta name="description" content="此页面是 正则模式 对应的 API 说明，你可以查看 索引 来寻找需要的 API。
+Regexp Mode For English Version Is HereIndex For English Version Is Here
+正则模式下 API 需要如下参数:
+
+plain（可选）：你想要搜索/匹配的文本，默认为空
+pattern（可选）:你想要匹配/搜索的正则表达式，默认为空
+method（">
+<meta property="og:type" content="website">
+<meta property="og:title" content="API 服务 - 正则模式">
+<meta property="og:url" content="http://forec.github.io/apis/regexp.html">
 <meta property="og:site_name" content="Forec's Notes">
-<meta property="og:description" content="在Hadoop配置与使用基础上配置Spark集群计算环境，以及简单Scala程序在集群的运行。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/spark-initial.png">
-<meta property="og:updated_time" content="2016-11-04T16:45:17.272Z">
+<meta property="og:description" content="此页面是 正则模式 对应的 API 说明，你可以查看 索引 来寻找需要的 API。
+Regexp Mode For English Version Is HereIndex For English Version Is Here
+正则模式下 API 需要如下参数:
+
+plain（可选）：你想要搜索/匹配的文本，默认为空
+pattern（可选）:你想要匹配/搜索的正则表达式，默认为空
+method（">
+<meta property="og:updated_time" content="2017-08-26T14:45:01.063Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spark集群计算环境配置和使用">
-<meta name="twitter:description" content="在Hadoop配置与使用基础上配置Spark集群计算环境，以及简单Scala程序在集群的运行。">
+<meta name="twitter:title" content="API 服务 - 正则模式">
+<meta name="twitter:description" content="此页面是 正则模式 对应的 API 说明，你可以查看 索引 来寻找需要的 API。
+Regexp Mode For English Version Is HereIndex For English Version Is Here
+正则模式下 API 需要如下参数:
+
+plain（可选）：你想要搜索/匹配的文本，默认为空
+pattern（可选）:你想要匹配/搜索的正则表达式，默认为空
+method（">
     
 
     
@@ -139,78 +154,51 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Configuration/">Configuration</a>
+    <em class="page-title-link" data-url="/apis/regexp.html">API 服务 - 正则模式</em>
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-spark-initial" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="page-undefined" class="article article-single article-type-page" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        Spark集群计算环境配置和使用
+        API 服务 - 正则模式
         </h1>
     
 
             </header>
         
         
-            <div class="article-subtitle">
-                <a href="/2016/07/11/spark-initial/" class="article-date">
-    <time datetime="2016-07-11T06:53:38.000Z" itemprop="datePublished">2016-07-11</time>
-</a>
-                
-    <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/">Hadoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spark/">Spark</a></li></ul>
-
-            </div>
-        
         
         <div class="article-entry" itemprop="articleBody">
-            <blockquote>
-<p>在<a href="https://forec.github.io/2016/07/09/hadoop-build/">Hadoop配置与使用</a>基础上配置Spark集群计算环境，以及简单Scala程序在集群的运行。</p>
-</blockquote>
-<a id="more"></a>
-<h1 id="在Hadoop通用并行框架上配置Spark"><a href="#在Hadoop通用并行框架上配置Spark" class="headerlink" title="在Hadoop通用并行框架上配置Spark"></a>在Hadoop通用并行框架上配置Spark</h1><ul>
-<li>从<a href="http://spark.apache.org/downloads.html" target="_blank" rel="external">Apache Spark</a>下载合适的版本，以<code>Pre-build for Hadoop 2.6</code>为例，将压缩包解压到某目录，该压缩包目录作为环境变量<code>SPARK_HOME</code>。</li>
-<li>向环境变量添加<code>%SPARK_HOME%/bin</code>并source生效。</li>
-<li>将<code>%HADOOP_HOME%\etc\hadoop</code>作为<code>HADOOP_CONF_DIR</code>添加到环境变量。</li>
-<li>按Hadoop集群的运行方式启动Hadoop  </li>
-</ul>
-<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/hdfs namenode -<span class="built_in">format</span></span><br><span class="line">bin/hdfs dfs -<span class="built_in">mkdir</span> /user/&lt;username&gt;</span><br><span class="line">sbin/<span class="built_in">start</span>-dfs.sh</span><br><span class="line">sbin/<span class="built_in">start</span>-yarn.sh</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="在Hadoop集群上执行Spark作业"><a href="#在Hadoop集群上执行Spark作业" class="headerlink" title="在Hadoop集群上执行Spark作业"></a>在Hadoop集群上执行Spark作业</h1><h2 id="一个Scala的MapReduce样本"><a href="#一个Scala的MapReduce样本" class="headerlink" title="一个Scala的MapReduce样本"></a>一个Scala的MapReduce样本</h2><ul>
-<li>此样例为多维属性向量的均值计算</li>
-</ul>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.spark.&#123;<span class="type">SparkConf</span>, <span class="type">SparkContext</span>&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.rdd.<span class="type">RDD</span></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Statistic</span> &#123;</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span>(</span>args: <span class="type">Array</span>[<span class="type">String</span>]) &#123;</span><br><span class="line">    <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setAppName(<span class="string">"example"</span>)</span><br><span class="line">    <span class="keyword">val</span> spark = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line">    <span class="keyword">val</span> set = spark.textFile(args(<span class="number">0</span>)).flatMap &#123;</span><br><span class="line">      line =&gt; line.split(<span class="string">" "</span>).map &#123; opt =&gt; (opt.split(<span class="string">":"</span>)(<span class="number">0</span>).toInt, opt.split(<span class="string">":"</span>)(<span class="number">1</span>).toFloat) &#125;</span><br><span class="line">    &#125;.reduceByKey(_+_)</span><br><span class="line">    <span class="keyword">val</span> count = set.count()</span><br><span class="line">    set.collect.map &#123; <span class="keyword">case</span> (key, value) =&gt; value/count&#125;.foreach&#123;println&#125;</span><br><span class="line">    spark.stop()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            <p>此页面是 <strong>正则模式</strong> 对应的 API 说明，你可以查看 <a href="http://blog.forec.cn/apis/index.html" target="_blank" rel="external">索引</a> 来寻找需要的 API。</p>
+<p><a href="https://github.com/Forec/web-api/blob/master/apis/regexp.md" target="_blank" rel="external">Regexp Mode For English Version Is Here</a><br><a href="https://github.com/Forec/web-api" target="_blank" rel="external">Index For English Version Is Here</a></p>
+<p>正则模式下 API 需要如下参数:</p>
 <ul>
-<li>样例代码中，set为(Int, Float)的<code>&lt;key, value&gt;</code>对的RDD，通过<code>reduceByKey</code>将相同属性求和，在最后collect回收所有分布式集群上的结果汇总到本地。</li>
+<li><code>plain</code>（可选）：你想要搜索/匹配的文本，默认为空</li>
+<li><code>pattern</code>（可选）:你想要匹配/搜索的正则表达式，默认为空</li>
+<li><code>method</code>（可选）：你想要使用的匹配方法，默认为 <code>match</code></li>
+<li><code>count</code>（可选）：仅在使用 <code>findSome</code> 方法时需要此参数，该方法会在 <code>plain</code> 中搜索所有与 <code>pattern</code> 匹配的子串，并且取这个列表的前 <code>count</code> 项返回。若不指定 <code>count</code> 或 <code>count</code> 字段无法被解析为数字，将会默认令 <code>count</code> 为 -1，此时效果与 <code>findAll</code> 相同。</li>
 </ul>
-<h2 id="执行作业"><a href="#执行作业" class="headerlink" title="执行作业"></a>执行作业</h2><ul>
-<li>将要执行的代码export为jar包，一下文件名为<code>example.jar</code>。</li>
-<li>ssh到localhost（此处使用伪分布式Hadoop集群）。</li>
-<li>执行如下命令，其中<code>path_to_example_jar</code>为jar包所在的位置，MainClass为jar包中要执行的object，args为传入MainClass的参数列表，空格隔开，可变长。</li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit --class MainClass --master yarn-cluster path_to_example_jar args...</span><br></pre></td></tr></table></figure>
+<h2 id="可用方法"><a href="#可用方法" class="headerlink" title="可用方法"></a>可用方法</h2><p>可使用的方法如下，大/小写不影响。</p>
 <ul>
-<li>执行作业后可在Hadoop监视器的logs中看到输出。</li>
+<li><code>match</code>：若 <code>plain</code> 和 <code>pattern</code> 匹配成功则返回 <code>plain</code> 字段，状态码为 200；否则返回空串，状态码为 300。</li>
+<li><code>find</code>：若在 <code>plain</code> 中搜索到与 <code>pattern</code> 匹配的子串，则返回第一个搜索到的子串，状态码为 200；否则返回空串，状态码为 300。</li>
+<li><code>findindex</code>：若在 <code>plain</code> 中搜索到与 <code>pattern</code> 匹配的子串，则以字符串形式返回第一个搜索到的子串的起始下标和结束下表，中间用逗号分隔，状态码为 200；否则返回空串，状态码为 300。</li>
+<li><code>findall</code>：在 <code>plain</code> 中搜索到与 <code>pattern</code> 匹配的子串，返回所有匹配子串的集合，状态码为 200；否则返回空集合，状态码为 300。</li>
+<li><code>findsome</code>：在 <code>plain</code> 中搜索到与 <code>pattern</code> 匹配的子串，将匹配子串的前 <code>count</code> 项作为一个集合返回，状态码为 200；否则返回空集合，状态码为 300。</li>
 </ul>
-<h2 id="Scala的部分Spark-API"><a href="#Scala的部分Spark-API" class="headerlink" title="Scala的部分Spark API"></a>Scala的部分Spark API</h2><ul>
-<li>API文档根目录：<br><a href="http://spark.apache.org/docs/1.5.1/api/scala/index.html#package" target="_blank" rel="external">http://spark.apache.org/docs/1.5.1/api/scala/index.html#package</a></li>
-<li><code>&lt;key, value&gt;</code>类型的RDD：<br><a href="http://spark.apache.org/docs/1.5.1/api/scala/index.html#org.apache.spark.rdd.PairRDDFunctions" target="_blank" rel="external">http://spark.apache.org/docs/1.5.1/api/scala/index.html#org.apache.spark.rdd.PairRDDFunctions</a></li>
-<li>所有RDD：<br><a href="http://spark.apache.org/docs/1.5.1/api/scala/index.html#org.apache.spark.rdd.RDD" target="_blank" rel="external">http://spark.apache.org/docs/1.5.1/api/scala/index.html#org.apache.spark.rdd.RDD</a></li>
-</ul>
-<hr>
-<p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/07/11/spark-initial/">原始出处</a>(<a href="https://forec.github.io/2016/07/11/spark-initial/">https://forec.github.io/2016/07/11/spark-initial/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
-
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; curl http://api.forec.cn/regexp?plain=peach&amp;pattern=pe.ch</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">200</span>,<span class="string">"result"</span>:<span class="string">"peach"</span>&#125;</span><br><span class="line">&gt; curl http://api.forec.cn/regexp?plain=peach&amp;pattern=pe.ch&amp;method=find</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">200</span>,<span class="string">"result"</span>:<span class="string">"peach"</span>&#125;</span><br><span class="line">&gt; curl http://api.forec.cn/regexp?plain=peach&amp;pattern=pe.ch&amp;method=findIndex</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">200</span>,<span class="string">"result"</span>:<span class="string">"0,5"</span>&#125;</span><br><span class="line">&gt; curl http://api.forec.cn/regexp?plain=peach&amp;pattern=pe.ch&amp;method=findall</span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">200</span>,<span class="string">"result"</span>:<span class="string">"&#123;\"peach\"&#125;"</span>&#125;</span><br><span class="line">&gt; curl http://api.forec.cn/regexp?plain=p1e2a3c4h&amp;pattern=\d&amp;method=findsome&amp;count=<span class="number">2</span></span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">200</span>,<span class="string">"result"</span>:<span class="string">"&#123;\"1\", \"2\"&#125;"</span>&#125;</span><br></pre></td></tr></table></figure>
         </div>
         <footer class="article-footer">
             
 
 
 
-    <a data-url="http://forec.github.io/2016/07/11/spark-initial/" data-id="cj6tf4wb10035loewf7ga2nvy" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/apis/regexp.html" data-id="cj6tf4w8p000cloewp4zi6e4l" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -274,14 +262,6 @@
     </div>
 </article>
 
-    <section id="comments">
-    
-        
-    <div id="uyan_frame"></div>
-
-    
-    </section>
-
                         </div>
                     </section>
                     <aside id="sidebar">
@@ -340,29 +320,6 @@
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2016/09/08/gochan-accumulate/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            Golang的通道技巧
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2016/07/10/python-visit-access-database/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">Python3操作Access数据库</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
     
     <div class="widgets-container">
         
