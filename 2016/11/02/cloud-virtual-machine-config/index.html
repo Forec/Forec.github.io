@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="CVM 上的操作记录。">
 <meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/vps.jpg">
-<meta property="og:updated_time" content="2016-12-16T07:45:56.667Z">
+<meta property="og:updated_time" content="2017-11-06T02:42:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CVM 操作记录">
 <meta name="twitter:description" content="CVM 上的操作记录。">
@@ -255,6 +255,47 @@
 <li>增加配置文件 <code>wordpress_https.conf</code>，除下面部分，其它和 wordpress 配置文件相同</li>
 </ul>
 <figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml">server </span><span class="expression">&#123;</span><br><span class="line">    <span class="variable">listen</span> 443;</span><br><span class="line">    <span class="variable">sever</span>_<span class="variable">name</span> <span class="variable">forec.cn</span>;</span><br><span class="line">    <span class="variable">ssl</span>_<span class="variable">certificate</span>  <span class="end-block">/usr</span><span class="end-block">/local</span><span class="end-block">/nginx</span><span class="end-block">/conf</span><span class="end-block">/server.crt</span>;</span><br><span class="line">    <span class="variable">ssl</span>_<span class="variable">certificate</span>_<span class="variable">key</span>  <span class="end-block">/usr</span><span class="end-block">/local</span><span class="end-block">/nginx</span><span class="end-block">/conf</span><span class="end-block">/server</span>_<span class="variable">nopwd.key</span>;</span><br><span class="line">&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<h2 id="OpenVPN-Server"><a href="#OpenVPN-Server" class="headerlink" title="OpenVPN Server"></a>OpenVPN Server</h2><ul>
+<li>安装依赖并复制配置</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release&#10;yum install openvpn easy-rsa -y&#10;cp /usr/share/doc/openvpn-*/sample/sample-config-files/server.conf /etc/openvpn</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编辑 <code>/etc/openvpn/server.conf</code></li>
+</ul>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dh dh2048.pem</span><br><span class="line">push <span class="string">"redirect-gateway def1 bypass-dhcp"</span></span><br><span class="line">push <span class="string">"dhcp-option DNS 8.8.8.8"</span></span><br><span class="line">push <span class="string">"dhcp-option DNS 8.8.4.4"</span></span><br><span class="line"><span class="keyword">user</span> <span class="title">nobody</span></span><br><span class="line"><span class="keyword">group</span> <span class="title">nobody</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>复制 rsa 配置</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /etc/openvpn/easy-rsa/keys&#10;cp -rf /usr/share/easy-rsa/2.0/* /etc/openvpn/easy-rsa&#10;cp /etc/openvpn/easy-rsa/openssl-1.0.0.cnf /etc/openvpn/easy-rsa/openssl.cnf</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编辑 <code>/etc/openvpn/easy-rsa/vars</code></li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> KEY_COUNTRY=<span class="string">"US"</span></span><br><span class="line"><span class="keyword">export</span> KEY_PROVINCE=<span class="string">"NY"</span></span><br><span class="line"><span class="keyword">export</span> KEY_<span class="built_in">CITY</span>=<span class="string">"New York"</span></span><br><span class="line"><span class="keyword">export</span> KEY_ORG=<span class="string">"DigitalOcean"</span></span><br><span class="line"><span class="keyword">export</span> KEY_EMAIL=<span class="string">"sammy@example.com"</span></span><br><span class="line"><span class="keyword">export</span> KEY_OU=<span class="string">"Community"</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># X509 Subject Field</span></span><br><span class="line"><span class="keyword">export</span> KEY_NAME=<span class="string">"server"</span></span><br><span class="line"><span class="keyword">export</span> KEY_CN=openvpn<span class="variable">.example</span><span class="variable">.com</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建证书</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/openvpn/easy-rsa&#10;source ./vars&#10;./clean-all&#10;./build-ca&#10;./build-key-server server&#10;./build-dh&#10;cd /etc/openvpn/easy-rsa/keys&#10;cp dh2048.pem ca.crt server.crt server.key /etc/openvpn</span><br></pre></td></tr></table></figure>
+<ul>
+<li>为客户端创建证书</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/openvpn/easy-rsa&#10;./build-key client</span><br></pre></td></tr></table></figure>
+<ul>
+<li>设置路由</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install iptables-services -y&#10;systemctl mask firewalld&#10;systemctl enable iptables&#10;systemctl stop firewalld&#10;systemctl start iptables&#10;iptables --flush&#10;iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE&#10;iptables-save &#62; /etc/sysconfig/iptables&#10;sed -n &#39;0a net.ipv4.ip_forward = 1&#39; /etc/sysctl.conf&#10;systemctl restart network.service</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>启动 openvpn</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl -f enable openvpn@server.service&#10;systemctl start openvpn@server.service</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置客户端：将 <code>/etc/openvpn/easy-rsa/keys/ca.crt</code>、<code>/etc/openvpn/easy-rsa/keys/client.crt</code>、<code>/etc/openvpn/easy-rsa/keys/client.key</code> 拷贝到客户机，或者可以将其中的 key 包含到配置文件的 <code>&lt;ca&gt;&lt;/ca&gt;</code>、<code>&lt;cert&gt;&lt;/cert&gt;</code> 和 <code>&lt;key&gt;&lt;/key&gt;</code> 字段中。</p>
+</li>
+<li>创建客户端配置文件 <code>client.ovpn</code>：</li>
+</ul>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">client</span><br><span class="line">dev tun</span><br><span class="line">proto udp</span><br><span class="line">remote your_server_ip <span class="number">1194</span></span><br><span class="line">resolv-retry infinite</span><br><span class="line">nobind</span><br><span class="line">persist-key</span><br><span class="line">persist-tun</span><br><span class="line"><span class="keyword">comp</span>-lzo</span><br><span class="line"><span class="keyword">verb</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">ca</span> /path/<span class="keyword">to</span>/<span class="keyword">ca</span>.crt</span><br><span class="line">cert /path/<span class="keyword">to</span>/client.crt</span><br><span class="line">key /path/<span class="keyword">to</span>/client.key</span><br></pre></td></tr></table></figure>
+<ul>
+<li>启动：<code>sudo openvpn --config ~/path/to/client.ovpn</code></li>
+<li>结合客户端／服务器输出的错误信息，对双方配置文件再做调整。</li>
+</ul>
 <hr>
 <p>原创作品，允许转载，转载时无需告知，但请务必以超链接形式标明文章<a href="https://forec.github.io/2016/11/02/cloud-virtual-machine-config/">原始出处</a>(<a href="https://forec.github.io/2016/11/02/cloud-virtual-machine-config/">https://forec.github.io/2016/11/02/cloud-virtual-machine-config/</a>) 、作者信息（<a href="https://forec.github.io/">Forec</a>）和本声明。</p>
 
@@ -264,7 +305,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/" data-id="cj6tfp1fa008kugewif2cjt0d" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/02/cloud-virtual-machine-config/" data-id="cj7hr3z39008kyb2f7fgwo2x3" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
