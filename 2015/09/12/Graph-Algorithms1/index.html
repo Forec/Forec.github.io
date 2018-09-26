@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2015/09/12/Graph-Algorithms1/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="图的概念和术语、标准表示方式以及其他存储方式。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/algorithm-3.jpg">
-<meta property="og:updated_time" content="2017-02-08T08:37:06.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/algorithm-3.jpg">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.076Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图的概念和存储方式">
 <meta name="twitter:description" content="图的概念和术语、标准表示方式以及其他存储方式。">
@@ -208,7 +208,7 @@
 <ul>
 <li><strong>邻接表</strong>：G=（V，E）的邻接表由一个包含|V|个列表的数组D组成，每个顶点对应数组中的一个列表。对于顶点u∈V，当存在一条路径u-&gt;v（v∈V），则D[u]中包含v或指向v的指针。邻接表中的顶点可以按任意顺序存储。当G是有向图，邻接表D的长度为E，G是无向图，邻接表D的长度为2E（一条边需要在两个方向存储）。邻接表修改后可以支持多种图的变体，有很强的适应性，但若要确定图中边（u，v）是否存在只能经过线性时间搜索。</li>
 <li><strong>邻接数组</strong>：在G=（V，E）中，将各个顶点按某种方式编号为1，2，3，……，|V|，之后通过一个|V|×|V|的矩阵A存储，当（u，v）∈E，Auv =  1，否则Auv = 0。若为加权图，则可以用权值和∞代替1和0。这种表示方法在O(1)的时间内得到u，v之间的关系，但需要较大的存储空间。</li>
-<li>以下是无向图和有向图使用上述两种方式的表示形式。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/无向图存储方式实例.jpg" alt="无向图表示实例" width="500px"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/有向图存储方式实例.jpg" alt="无向图表示实例" width="500px"><br>从上面图可以看出，邻接矩阵A关于主对角线对称，即A = A^T ，在无向图的一些应用中可以只存储主对角线和主对角线以上的部分，减少一半的存储空间。</li>
+<li>以下是无向图和有向图使用上述两种方式的表示形式。<br><img src="http://qiniu.forec.cn/无向图存储方式实例.jpg" alt="无向图表示实例" width="500px"><br><img src="http://qiniu.forec.cn/有向图存储方式实例.jpg" alt="无向图表示实例" width="500px"><br>从上面图可以看出，邻接矩阵A关于主对角线对称，即A = A^T ，在无向图的一些应用中可以只存储主对角线和主对角线以上的部分，减少一半的存储空间。</li>
 </ul>
 <h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><ul>
 <li>邻接表表示法（无向加权图）</li>
@@ -219,7 +219,7 @@
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> * @author Forec</span><br><span class="line"> * Test Adjacency Matrix</span><br><span class="line"> */</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> INF <span class="number">0x7fff</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Min</span><span class="params">( <span class="keyword">int</span> a, <span class="keyword">int</span> b )</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a &lt; b ? a : b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Max</span><span class="params">( <span class="keyword">int</span> a, <span class="keyword">int</span> b )</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a &gt; b ? a : b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> V, E, u, v, w;</span><br><span class="line">	<span class="keyword">int</span> i, j;</span><br><span class="line">	<span class="built_in">scanf</span>( <span class="string">"%d %d"</span>, &amp;V, &amp;E );</span><br><span class="line">	<span class="keyword">int</span> ** Mat = ( <span class="keyword">int</span> ** )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( <span class="keyword">int</span> * ) * ( V + <span class="number">1</span> ) ); </span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )&#123;</span><br><span class="line">		Mat[i] = ( <span class="keyword">int</span> * )<span class="built_in">malloc</span>( <span class="keyword">sizeof</span>( <span class="keyword">int</span> ) * ( i + <span class="number">1</span> ) );</span><br><span class="line">		<span class="keyword">for</span> ( j = <span class="number">1</span> ; j &lt; i ; j++ )</span><br><span class="line">			Mat[i][j] = INF;</span><br><span class="line">		Mat[i][i] = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">0</span> ; i &lt; E ; i++ )&#123;</span><br><span class="line">		<span class="built_in">scanf</span>( <span class="string">"%d %d %d"</span>, &amp;u, &amp;v, &amp;w );</span><br><span class="line">		Mat[Max( u, v )][Min( u, v )] = w;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> ( i = <span class="number">1</span> ; i &lt;= V ; i++ )&#123;</span><br><span class="line">		<span class="keyword">for</span> ( j = <span class="number">1</span> ; j &lt;= i ; j++ )</span><br><span class="line">			<span class="built_in">printf</span>( <span class="string">"%d\t"</span>,Mat[i][j]);</span><br><span class="line">		<span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li><img src="http://7xktmz.com1.z0.glb.clouddn.com/邻接表测试图.png" alt="邻接表测试图" width="300px" style="float:left"><img src="http://7xktmz.com1.z0.glb.clouddn.com/邻接矩阵测试图.png" alt="邻接矩阵测试图" width="300px"></li>
+<li><img src="http://qiniu.forec.cn/邻接表测试图.png" alt="邻接表测试图" width="300px" style="float:left"><img src="http://qiniu.forec.cn/邻接矩阵测试图.png" alt="邻接矩阵测试图" width="300px"></li>
 </ul>
 <hr>
 <p></p><h1 id="3">其他存储方式</h1><p></p>
@@ -252,7 +252,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/09/12/Graph-Algorithms1/" data-id="cjjrxons8009mzp2foyjcxht8" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2015/09/12/Graph-Algorithms1/" data-id="cjmj3zfm7009m2b2f5vvlrrsw" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -413,7 +413,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -433,7 +433,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -453,7 +453,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -473,7 +473,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -493,7 +493,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

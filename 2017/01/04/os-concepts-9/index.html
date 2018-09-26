@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2017/01/04/os-concepts-9/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第九章虚拟内存部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-9.jpg">
-<meta property="og:updated_time" content="2017-01-11T13:38:54.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/os-concepts-9.jpg">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.008Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（九）：虚拟内存">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第九章虚拟内存部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -186,7 +186,7 @@
 <li>内存与备份存储之间换入换出的速度加快（程序实际占用物理内存变小）。</li>
 </ul>
 </li>
-<li>进程的虚拟地址空间即为进程在内存中存放的 <strong>逻辑</strong> 视图，通常进程的的虚拟地址空间从某一个逻辑地址开始（比如 0）连续存放，如下图。随着动态内存分配，堆向上增长，子程序调用带来栈向下增长以及载入动态链接库时空白区域被填充。堆和栈之间的巨大的空白部分是虚拟地址的一部分，但只有在堆/栈生长时这部分虚拟地址才需要对应实际的物理帧。含有空白的虚拟地址空间称为 <strong>稀（sparse）</strong> 地址空间。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/virtual-address-space.png" width="150px"></li>
+<li>进程的虚拟地址空间即为进程在内存中存放的 <strong>逻辑</strong> 视图，通常进程的的虚拟地址空间从某一个逻辑地址开始（比如 0）连续存放，如下图。随着动态内存分配，堆向上增长，子程序调用带来栈向下增长以及载入动态链接库时空白区域被填充。堆和栈之间的巨大的空白部分是虚拟地址的一部分，但只有在堆/栈生长时这部分虚拟地址才需要对应实际的物理帧。含有空白的虚拟地址空间称为 <strong>稀（sparse）</strong> 地址空间。<br><img src="http://qiniu.forec.cn/virtual-address-space.png" width="150px"></li>
 <li>虚拟内存允许文件和内存通过共享页被多个进程共享，优势在于：<ul>
 <li>系统库可被多个进程共享</li>
 <li>多个进程之间可以通过共享内存通信</li>
@@ -205,7 +205,7 @@
 <li>重新读取因为页错误而终端的指令，进程可以访问此前无法访问的页。</li>
 </ul>
 </li>
-<li>上述按需调页的一种极端情况是在不调入任何需要页的情况下就执行进程，因此进程执行过程中将不断出现页错误、调入页、继续执行。这种方案称为 <strong>纯粹按需调页（pure demand paging）</strong> 。按需调页处理页错误的流程如下图所示。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/page-fault-steps.jpg" width="400px"></li>
+<li>上述按需调页的一种极端情况是在不调入任何需要页的情况下就执行进程，因此进程执行过程中将不断出现页错误、调入页、继续执行。这种方案称为 <strong>纯粹按需调页（pure demand paging）</strong> 。按需调页处理页错误的流程如下图所示。<br><img src="http://qiniu.forec.cn/page-fault-steps.jpg" width="400px"></li>
 <li>理论上单个指令可能触发多个页错误（例如一页用于获取指令，一页用于获取指令所需的数据），但此种情况较少见，正常执行程序满足 <strong>局部引用（locality of reference）</strong> 特性，使按需调页的性能较好。</li>
 </ul>
 <h2 id="按需调页与分页"><a href="#按需调页与分页" class="headerlink" title="按需调页与分页"></a>按需调页与分页</h2><ul>
@@ -316,7 +316,7 @@
 <h2 id="系统颠簸"><a href="#系统颠簸" class="headerlink" title="系统颠簸"></a>系统颠簸</h2><ul>
 <li>当低优先级进程分配的帧数量少于体系结构所需的最少数量时，进程应当暂停执行并且换出分配的剩余帧，以使其他进程能够使用这部分帧空间。</li>
 <li>对于分配帧数不足的进程，当进程缺少所需的页时触发页错误，此时必须置换某个页。如果当前所有页对于这个进程而言都是需要使用的页，则它置换出一个页后，又立刻需要这个页，因此它将频繁产生页错误并触发页调度行为。这称为 <strong>颠簸（thrashing）</strong> ： <strong>如果一个进程在换页上用的时间多于执行时间，则这个进程在颠簸</strong> 。</li>
-<li>系统颠簸的原因在于：操作系统监控 CPU 使用率，CPU 利用率过低时会引入新进程来增加多道程序程度。然而，采用全局置换算法时，一个进程会置换任意进程的帧，这可能导致被换出页所属的进程也触发页错误，它们会再从其他进程中获取帧。 <strong>这些链式反应带来的页调度行为将使进程排队等待换页设备，就绪队列变空，CPU 使用率降低，导致 CPU 调度程序随之增加多道程序程度，新进程将引发更多的页错误，CPU 使用率进一步降低</strong> 。系统颠簸现象如下图。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/system-thrashing.png" width="250px"></li>
+<li>系统颠簸的原因在于：操作系统监控 CPU 使用率，CPU 利用率过低时会引入新进程来增加多道程序程度。然而，采用全局置换算法时，一个进程会置换任意进程的帧，这可能导致被换出页所属的进程也触发页错误，它们会再从其他进程中获取帧。 <strong>这些链式反应带来的页调度行为将使进程排队等待换页设备，就绪队列变空，CPU 使用率降低，导致 CPU 调度程序随之增加多道程序程度，新进程将引发更多的页错误，CPU 使用率进一步降低</strong> 。系统颠簸现象如下图。<br><img src="http://qiniu.forec.cn/system-thrashing.png" width="250px"></li>
 <li>随着多道程序程度增加，CPU 使用率增加直到最大值，之后开始系统颠簸，此时必须降低多道程序程度才能增加 CPU 使用率并降低系统颠簸。 <strong>局部置换算法（local replacement algorithm）</strong> ，也称 <strong>优先置换算法（priority replacement）</strong> 可以限制系统颠簸：如果一个进程开始颠簸，则它不能从其它进程获得帧，但问题未得到彻底解决，一个进程颠簸时会花费大量时间等待调页设备，这将导致调页设备的平均等待队列变长，页错误的平均等待时间增加，此时其它未颠簸进程的有效访问时间也会增加。</li>
 <li>要 <strong>防止颠簸</strong> ，必须给进程提供足够多的帧。 <strong>局部模型（locality model）</strong> 可以帮助确定进程实际正在使用多少帧，该模型说明，进程执行时在局部之间移动。 <strong>局部是进程经常使用的页的集合，进程由多个不同局部组成且局部之间可能重叠</strong> 。如果进程分配的帧数小于现有局部的大小，则进程会颠簸，因为它无法把所有常用页都放置在内存中。例如，进程调用了一个子程序，则其进入新的局部，这个新局部中的内存引用包括子程序的指令、局部变量以及子程序使用到的部分全局变量；当子程序退出时，进程从该局部返回主程序的局部（也可能在之后再次调用子程序进入该局部）。因此，局部是由程序和数据结构定义的，它是缓存的基础（cache、LRU 置换算法其实也都是基于局部性原理，在访问序列完全随机的情况下性能甚至不如 FIFO 算法），如果对任意数据访问完全随机而没有局部性原理，则缓存完全无用。</li>
 </ul>
@@ -349,7 +349,7 @@
 <li>缺点：碎片，可能有 50% 的内存因为碎片而浪费</li>
 </ul>
 </li>
-<li><strong>slab 分配</strong> ：slab 由一个或多个 <strong>物理上</strong> 连续的页组成，高速缓存 <strong>含有</strong> 一个或多个 slab。每个内核数据结构都有一个 cache （如进程描述符 cache 只存储进程描述符对象、文件对象和信号量等以此类推），每个 cache <strong>包含</strong> 内核数据结构的 <strong>对象实例</strong> 。 slab 算法用 cache 存储内核对象，cache 创建之初会初始化一系列空闲的内核对象，这些对象的数量和 slab 的大小有关（例如 12KB 的 slab 可存储 4 个 3KB 大小的内核对象）。一旦操作系统需要内核结构的对象，就可以直接从 cache 上获取一个空闲的并将其标注为 <strong>已使用（used）</strong> 。下面这张图需要注意的地方有，物理内存连续分配，实线（带箭头）表示包含关系，每个 cache 都存储了一类内核数据结构对象：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/cache-slab-objects.png" width="400px"></li>
+<li><strong>slab 分配</strong> ：slab 由一个或多个 <strong>物理上</strong> 连续的页组成，高速缓存 <strong>含有</strong> 一个或多个 slab。每个内核数据结构都有一个 cache （如进程描述符 cache 只存储进程描述符对象、文件对象和信号量等以此类推），每个 cache <strong>包含</strong> 内核数据结构的 <strong>对象实例</strong> 。 slab 算法用 cache 存储内核对象，cache 创建之初会初始化一系列空闲的内核对象，这些对象的数量和 slab 的大小有关（例如 12KB 的 slab 可存储 4 个 3KB 大小的内核对象）。一旦操作系统需要内核结构的对象，就可以直接从 cache 上获取一个空闲的并将其标注为 <strong>已使用（used）</strong> 。下面这张图需要注意的地方有，物理内存连续分配，实线（带箭头）表示包含关系，每个 cache 都存储了一类内核数据结构对象：<br><img src="http://qiniu.forec.cn/cache-slab-objects.png" width="400px"></li>
 <li>Linux 下的 slab 有三种状态：满的（slab 中所有对象都标记为使用），空的（均为空闲）以及部分。slab 分配的分配流程如下：首先从部分空闲的 slab 分配，若没有则从空的 slab 分配，如果仍没有则从 <strong>物理连续页</strong> 上分配新的 slab 并将其交付给一个 cache，并从新 slab 分配空间。其优点主要有：<ul>
 <li>没有因为碎片引起的内存浪费。每个内核数据结构都有与自己的结构相对应的 cache，而每个 cache 由若干个 slab 组成， <strong>每个 slab 又可分为若干个和对象大小相等的部分</strong> ，所以内核请求对象所获得的内存刚好和对象大小一致；</li>
 <li>slab 中的对象预先创建，可以直接从 cache 快速分配。因为操作系统经常分配、释放内存，使用 slab 分配能够更快地使内存请求得到响应，用完对象释放时也只需要将内核对象标记为空闲并返回给  cache。</li>
@@ -384,7 +384,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/01/04/os-concepts-9/" data-id="cjjrxonpo003rzp2fiswyqkzf" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/01/04/os-concepts-9/" data-id="cjmj3zfiz003r2b2fds1su93g" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -545,7 +545,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -565,7 +565,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -585,7 +585,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -605,7 +605,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -625,7 +625,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

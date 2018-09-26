@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2016/07/09/hadoop-build/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="简单记录在Ubuntu Linux上搭建本地伪分布式的Hadoop MapReduce集群过程及使用方法。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/hadoop-build.jpg">
-<meta property="og:updated_time" content="2017-07-26T04:31:50.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/hadoop-build.jpg">
+<meta property="og:updated_time" content="2018-09-26T06:08:28.998Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop配置和使用">
 <meta name="twitter:description" content="简单记录在Ubuntu Linux上搭建本地伪分布式的Hadoop MapReduce集群过程及使用方法。">
@@ -208,8 +208,8 @@
 <h3 id="在本地启动hadoop"><a href="#在本地启动hadoop" class="headerlink" title="在本地启动hadoop"></a>在本地启动hadoop</h3><ul>
 <li>格式化文件系统: <code>$ bin/hdfs namenode -format</code>。</li>
 <li>启动NameNode和DataNode: <code>sbin/start-dfs.sh</code>，其log文件写入<code>%HADOOP_HOME%/logs</code>。</li>
-<li>访问地址<code>http://localhost:50070</code>可以看到NameNode的网页接口，如下图。<img src="http://7xktmz.com1.z0.glb.clouddn.com/overview.png" width="500px"></li>
-<li>将地址栏的<code>http://localhost:50070/dfshealth.***</code>改成<code>http://localhost:50070/dfshealth.jsp</code>可进入文件系统，如下图。<img src="http://7xktmz.com1.z0.glb.clouddn.com/directory.png" width="500px"></li>
+<li>访问地址<code>http://localhost:50070</code>可以看到NameNode的网页接口，如下图。<img src="http://qiniu.forec.cn/overview.png" width="500px"></li>
+<li>将地址栏的<code>http://localhost:50070/dfshealth.***</code>改成<code>http://localhost:50070/dfshealth.jsp</code>可进入文件系统，如下图。<img src="http://qiniu.forec.cn/directory.png" width="500px"></li>
 <li>建立HDFS目录以执行MapReduce任务：<code>$ bin/hdfs dfs -mkdir /user</code>，<code>$ bin/hdfs dfs -mkdir /user/&lt;username&gt;</code>。</li>
 <li>将输入文件拷贝到分布式文件系统中: <code>$ bin/hdfs dfs -put /local_dir_for_input_files /dir_in_distributed_filesystem_for_input</code>。</li>
 <li>注意上面的<code>/dir_in_distributed_filesystem_for_input</code>是分布式文件系统中输入文件的目录，此命令将本地的输入文件拷贝到了分布式文件系统的该目录中。</li>
@@ -230,7 +230,7 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">property</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="title">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="title">name</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="title">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="title">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>启动资源管理器和节点管理器：<code>$ sbin/start-yarn.sh</code>。</li>
-<li>启动浏览器，访问<code>http://localhost:8088/</code>，可以查看hadoop的资源监视器，如下图。<img src="http://7xktmz.com1.z0.glb.clouddn.com/yarn.png" width="500px"></li>
+<li>启动浏览器，访问<code>http://localhost:8088/</code>，可以查看hadoop的资源监视器，如下图。<img src="http://qiniu.forec.cn/yarn.png" width="500px"></li>
 <li>按上面执行hadoop的方式执行一个MapReduce任务。</li>
 <li>作业完成后关闭虚拟机：<code>$ sbin/stop-yarn.sh</code>。</li>
 </ul>
@@ -264,7 +264,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/07/09/hadoop-build/" data-id="cjjrxonr80078zp2ffanuw0x4" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/07/09/hadoop-build/" data-id="cjmj3zfl600782b2fiycrtzfh" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -425,7 +425,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -445,7 +445,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -465,7 +465,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -485,7 +485,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -505,7 +505,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

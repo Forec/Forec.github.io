@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2017/01/06/os-concepts-14/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="此部分主要包括原书第六章（进程同步）和第七章（死锁）的部分习题（有些不属于考试范围），以及一些简单信号量编程习题（低于考试难度）的分析。这部分习题的解答均根据我个人理解编写或翻译， 不保证提供的答案绝对正确或最优 。稍微复杂一些的信号量编程在 《信号量编程（下）》。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-14-r.jpg">
-<meta property="og:updated_time" content="2017-01-11T15:16:20.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/os-concepts-14-r.jpg">
+<meta property="og:updated_time" content="2018-09-26T06:08:28.975Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（专题）：信号量编程（上）">
 <meta name="twitter:description" content="此部分主要包括原书第六章（进程同步）和第七章（死锁）的部分习题（有些不属于考试范围），以及一些简单信号量编程习题（低于考试难度）的分析。这部分习题的解答均根据我个人理解编写或翻译， 不保证提供的答案绝对正确或最优 。稍微复杂一些的信号量编程在 《信号量编程（下）》。">
@@ -231,7 +231,7 @@
 </li>
 </ol>
 <h2 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h2><ol>
-<li>考虑教材 7.1 描述的交通死锁问题（如下图所示），试说明死锁发生的四个必要条件在这个问题中均得到满足，并简述在这个问题中避免死锁的方案。（原书 7.1）<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/deadlock-traffic.jpg" width="400px"><ul>
+<li>考虑教材 7.1 描述的交通死锁问题（如下图所示），试说明死锁发生的四个必要条件在这个问题中均得到满足，并简述在这个问题中避免死锁的方案。（原书 7.1）<br><img src="http://qiniu.forec.cn/deadlock-traffic.jpg" width="400px"><ul>
 <li>死锁发生的四个必要条件分别是：互斥、占有并等待、非抢占和循环等待。因为只有一条道路的每个位置上只能由一辆车占据，故满足资源互斥；当一辆车占据道路上某个位置时，它必须等待前面的车移动（获取新位置）才可以移动，，即占有并等待；一辆车不能被移开，故此系统为非抢占；每个车都在等待前面的车移动，每个十字路口的车辆则循环等待下一个十字路口的车辆移动，故循环等待。</li>
 <li>一个简单的方案是：当十字路口已存在车辆时，新到来的车辆不能进入十字路口。</li>
 </ul>
@@ -315,7 +315,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/01/06/os-concepts-14/" data-id="cjjrxonq7004lzp2fwy0sv80y" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/01/06/os-concepts-14/" data-id="cjmj3zfjr004l2b2fr8p60ho8" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -476,7 +476,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -496,7 +496,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -516,7 +516,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -536,7 +536,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -556,7 +556,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

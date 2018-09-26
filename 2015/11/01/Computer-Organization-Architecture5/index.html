@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2015/11/01/Computer-Organization-Architecture5/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="存储器类型和层次结构，高速缓存，虚拟存储器，有效组合方法。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/computer-organization-5.png">
-<meta property="og:updated_time" content="2016-11-22T11:07:26.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/computer-organization-5.png">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.253Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计组与体系结构笔记（五）">
 <meta name="twitter:description" content="存储器类型和层次结构，高速缓存，虚拟存储器，有效组合方法。">
@@ -191,7 +191,7 @@
 <li><strong>缺失损失</strong>（miss penalty）：CPU处理一次缺失时间所需要的时间，包括利用新数据块取代上层某个数据块所需要的时间、所需数据传递给处理器需要的附加时间。通常处理一次缺失事件花费的时间要比命中事件更多。</li>
 </ul>
 </li>
-<li>层次结构<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/存储器层次结构.png" alt="存储器体系结构"><br>如上图所示，寄存器、1级、2级缓存和主存储器都为系统存储层，寄存器访问时间在1～2ns，1级缓存3～10ns，2级缓存25～50ns，主存储器30～90ns；硬盘为在线存储，访问速度5～20ms。除了上图表示的存储层之外，优化磁盘为近线存储，访问速度100ms～5s；磁带为离线存储，访问速度10s～3min。对于任何给定数据，处理器将访问数据请求传送给存储器中速度最快、规模最小的最高层，通常是高速缓存而不是寄存器，因为寄存器有专用用途。核心思想为：<strong>较低层的存储器系统会响应较高层的存储器对位于存储器单元X处的数据请求，同时低层存储器也会将包含地址X的整个数据块返回较高层的存储器系统</strong>。</li>
+<li>层次结构<br><img src="http://qiniu.forec.cn/存储器层次结构.png" alt="存储器体系结构"><br>如上图所示，寄存器、1级、2级缓存和主存储器都为系统存储层，寄存器访问时间在1～2ns，1级缓存3～10ns，2级缓存25～50ns，主存储器30～90ns；硬盘为在线存储，访问速度5～20ms。除了上图表示的存储层之外，优化磁盘为近线存储，访问速度100ms～5s；磁带为离线存储，访问速度10s～3min。对于任何给定数据，处理器将访问数据请求传送给存储器中速度最快、规模最小的最高层，通常是高速缓存而不是寄存器，因为寄存器有专用用途。核心思想为：<strong>较低层的存储器系统会响应较高层的存储器对位于存储器单元X处的数据请求，同时低层存储器也会将包含地址X的整个数据块返回较高层的存储器系统</strong>。</li>
 <li><strong>引用的局部性</strong>：处理器倾向于以规范的方式访问存储器，例如当没有分支转移时，PC会在每次提取一条指令后自动增量+1。如果处理器在t时刻访问了存储器单元X，则很有可能在t+1时刻访问X+1。因为计算机程序对存储器引用通常有集中成组成簇的形式，所以低层存储器会将包含X的整个数据块返回高层存储器系统。如果返回的额外数据在不久的将来被引用，就可以很快装入CPU。引用的局部性有：<ul>
 <li><strong>时间局部性</strong>（Temporal locality）：最近访问过的内容在不久的将来可能再次被访问。</li>
 <li><strong>空间局部性</strong>（Spatial locality）：对存储器地址空间的访问形成团簇的集中倾向（如数组或循环操作）。</li>
@@ -206,7 +206,7 @@
 <h2 id="映射模式和数据访问过程"><a href="#映射模式和数据访问过程" class="headerlink" title="映射模式和数据访问过程"></a>映射模式和数据访问过程</h2><ul>
 <li>主存储器块远多于高速缓存块，主存储器块需要竞争才能获取高速缓存中的对应位置。通过<strong>对主存储器地址的各个位划分并规定特殊意义来实现地址转换</strong>，将地址的二进制位分为不同的组（2～3个地址域）。主要有直接映射、全关联、组关联等。  </li>
 <li>数据访问过程：主存储器和高速缓存的存储空间都会被划分成相同大小的字块，当生成一个存储器地址时，CPU首先搜索高速缓存存储器判断需求的数据块是否存在，找不到则将主存储器中该字所在的整个块装入高速缓存。CPU使用主存储器地址的其中一个地址域，直接给出已驻留在高速缓存的请求数据的位置，称为<strong>高速缓存命中</strong>（Cache hit）；CPU对没有驻留在高速缓存的数据，会指示出数据将要存放在高速缓存中的位置，称为<strong>高速缓存缺失</strong>（Cache miss）。接下来，CPU将检查高速缓存块的一个有效位，验证所引用的高速缓存块的合法性，若有效位合法，表示引用数据块正确，可能产生高速缓存命中，否则CPU访问主存储器。之后，CPU还会将属于改高速缓存块的标记和主存储器的标记域（主存储器地址中划分的一组二进制位，标记与对应数据块一起存放到高速缓存中）比对，匹配则产生高速缓存命中。</li>
-<li><strong>直接映射</strong>高速缓存<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/直接映射的高速缓存.png" width="400px" alt="直接映射"><br>二进制的主存储器地址被划分为表格中的几个域<table><tbody><tr><td width="50px">标记</td><td width="50px">块</td><td width="50px">字（偏移量）</td></tr></tbody></table><br>举例：存储器由2^14个字组成，高速缓存有16个存储空间块，每个块包含8个字，因此存储器共被分为2^11个块，每个存储器地址为14位二进制数。14位地址中，最右边三位为字域，中间4位指定高速缓存数据块（2^4=16），高7位为标记域。<table><tbody><tr><td width="50px">标记（7位）</td><td width="50px">块（4位）</td><td width="50px">字（偏移量），3位</td></tr></tbody></table>每个块的标记都和该块一起存放在高速缓存中，本例中主存储器的第0、2^4、…、2^(4+k)块都要映射到高速缓存中的第0块，映射时提取主存储器的块域即可决定高速缓存的位置，而标记域可以区分高速缓存的第0块是主存储器中的哪一块。整个过程无需搜索，成本低于其它种类高速缓存。缺陷：假设主存储器中的0块和16块循环调用，则每次都会产生高速缓存缺失。</li>
+<li><strong>直接映射</strong>高速缓存<br><img src="http://qiniu.forec.cn/直接映射的高速缓存.png" width="400px" alt="直接映射"><br>二进制的主存储器地址被划分为表格中的几个域<table><tbody><tr><td width="50px">标记</td><td width="50px">块</td><td width="50px">字（偏移量）</td></tr></tbody></table><br>举例：存储器由2^14个字组成，高速缓存有16个存储空间块，每个块包含8个字，因此存储器共被分为2^11个块，每个存储器地址为14位二进制数。14位地址中，最右边三位为字域，中间4位指定高速缓存数据块（2^4=16），高7位为标记域。<table><tbody><tr><td width="50px">标记（7位）</td><td width="50px">块（4位）</td><td width="50px">字（偏移量），3位</td></tr></tbody></table>每个块的标记都和该块一起存放在高速缓存中，本例中主存储器的第0、2^4、…、2^(4+k)块都要映射到高速缓存中的第0块，映射时提取主存储器的块域即可决定高速缓存的位置，而标记域可以区分高速缓存的第0块是主存储器中的哪一块。整个过程无需搜索，成本低于其它种类高速缓存。缺陷：假设主存储器中的0块和16块循环调用，则每次都会产生高速缓存缺失。</li>
 <li><strong>全关联</strong>高速缓存：不为主存储器中的数据块唯一指定在高速缓存中的存放位置，允许主存储器的数据块存放到高速缓存的任意位置。要找到某个数据块必须搜索全部高速缓存，因此整个高速缓存需要按照关联存储器（associative memory）模式构建，以便CPU可以执行平行搜索，也就是说每次搜索操作 都需要把请求的标记与所有存放在高速缓存中的标记比对，其实现需要特殊硬件，成本较高。关联映射需要把主存储器的地址划分为标记域和字域两部分，仍然以上例举例，标记域为11位，字域为3位。对于全关联映射，如果高速缓存已满，需要一种置换算法决定从高速缓存中丢弃哪个数据块。被丢弃的块称为<strong>牺牲块</strong>。最简单的置换方法是<strong>先进先出</strong>，但现在已经较少使用。</li>
 <li><strong>组关联</strong>高速缓存：考虑直接映射的缺陷和全关联高速缓存的成本，将其组合成<strong>N路的组关联高速缓存映射</strong>（N-way set associative Cache mapping），映射方法类似直接映射，区别在于不是将数据块映射到高速缓存中的某一个空间块，而是映射到由几个高速缓存块组成的某个块组中。同一个高速缓存的所有组的大小必须相同。在组关联高速缓存中，主存储器地址分为标记域、组域和字域，作用类似。一个N路的组关联高速缓存，每组包含N个高速缓存块。在每组内使用关联映射方式，搜索组内全部数据，与标记域比对。</li>
 <li><strong>置换策略</strong>：最佳算法的目标是替换掉在未来最长时间段内不再使用的高速缓存块。实际上无法预测未来，但当某个程序运行过一次之后，就可以应用最佳算法（最佳算法无法实现，只能寻找接近最佳算法的算法）。考虑时间局部性，可以跟踪每个高速缓存块上次访问的时间，选择最近最少被使用的高速缓存块作为牺牲块，这种算法称为<strong>LRU</strong>（least recently used）算法，LRU需要系统保留每个高速缓存块的历史访问记录，因此需要较大存储空间，拖慢速度。上文的先进先出（FIFO）选取存放在高速缓存中时间最长的块作为牺牲块。<strong>随机选择</strong>可以解决LRU和FIFO遇到的“简并引用”问题，即对某个高速缓存块的重复移入移出操作，但随机选择可能将即将需要的数据丢弃，降低平均性能，并且很难有真正意义的随机置换。</li>
@@ -237,7 +237,7 @@
 <h2 id="分页"><a href="#分页" class="headerlink" title="分页"></a>分页</h2><ul>
 <li>概念：按照固定大小的页帧为各个进程分配物理存储空间，用页表跟踪每个虚拟页的物理位置，<strong>每个进程都有自己的页表，页表驻留在主存储器中</strong>。页表有N行，N为该进程的虚拟页的页码数。若当前进程的某些页不在主存储器中，页表会将该页的有效位置零。通常页表还会附加一些内容，如<strong>修正位</strong>指示页中内容是否发生了改变，提高CPU进行返回页内容到硬盘的操作效率；<strong>使用位</strong>指示页的使用情况，如果处理器访问过某一页则置1，一定时间后会置零，若长时间保持0，则将该页从主存储器移出。如果程序进程并不正好占用几个页，或进程本身全部内容小于一个页的大小，则分页后会产生潜在的<strong>内部碎片</strong>，进程占用的最后一个页帧的剩余空间将被浪费。</li>
 <li>工作原理：进程生成一个虚拟地址时，操作系统必须动态将虚拟地址转换成数据实际驻留的存储器物理地址。为简化问题，假设不存在高速缓存，从程序角度看，一个10字节程序的最后一个字节会存放在地址9，而实际可能驻留在物理存储器的1239位置（程序从1230位置开始装入）。将虚拟地址分为<strong>页域</strong>和<strong>偏移量</strong>，偏移量表示数据在页内位置。与高速缓存类似，页面大小为2的次幂，简化提取页码和偏移量的操作。<br>流程如下：1.从虚拟地址提取页码，2.从虚拟地址提取偏移量，3.访问页表将页码转换为对应的物理页帧数，首先在页表中查找页码，之后检查该页的有效位：若有效位为0，说明产生了缺页事件，操作系统介入，在磁盘上查找到对应的页，在主存储器寻找到一个空帧（如果主存储器满，则使用置换算法移除一个牺牲页，并将牺牲页复制到硬盘），将要使用的页复制到空页帧内，并更新页表（牺牲页置零，移入页置一）；若有效位为1，则查找的页已在主存储器中，使用实际物理页帧数代替虚拟页码，加上偏移量产生物理地址。</li>
-<li>举例：以一个真实的小系统为例，不涉及高速缓存。假设长度为15字节的程序需要访问一个按字节编址的8字节存储器，每一页的长度是两个字。程序执行时，按照以下地址引用：0，1，2，3，6，7，14。假设另一个进程正在占用主存储器的第0帧和第1帧，当请求地址0时，产生缺页事件，因此第0页中的地址0和地址1都被复制到主存储器的第2帧。请求地址1时，页1已经存在于主存储器中，因此产生一次命中。假设此时占用主存储器前两帧的进程已经结束，接着引用地址2，产生缺页事件，地址2和3所在的页1会被复制到存储器的第0帧。继续进行到访问14之前，此时主存储器已满，页表情况如图所示。<img src="http://7xktmz.com1.z0.glb.clouddn.com/分页存储器演示.png" alt="分页存储器演示">最后访问地址14将产生某个牺牲页，将牺牲页替换后，主存储器中即产生了内部碎片，该页帧的第二个字节并没有被使用。<br>假设一个更大规模的存储器系统，不考虑高速缓存。虚拟地址空间长度位为8KB字，物理存储器大小4KB字，按字节寻址，物理存储器页的大小为1KB字。虚拟存储器大小为8KB=2^13，因此虚拟地址13位，其中3位地址用作页域，共8页，每页有2^10个偏移量，对应每页有2^10个字节。物理存储器大小4KB，12位地址，2位地址作为地址域，有2^2=4个页帧。地址转换即将虚拟存储器的3位页域转换成物理存储器的2位页帧域。<h2 id="分页有效存取时间"><a href="#分页有效存取时间" class="headerlink" title="分页有效存取时间"></a>分页有效存取时间</h2></li>
+<li>举例：以一个真实的小系统为例，不涉及高速缓存。假设长度为15字节的程序需要访问一个按字节编址的8字节存储器，每一页的长度是两个字。程序执行时，按照以下地址引用：0，1，2，3，6，7，14。假设另一个进程正在占用主存储器的第0帧和第1帧，当请求地址0时，产生缺页事件，因此第0页中的地址0和地址1都被复制到主存储器的第2帧。请求地址1时，页1已经存在于主存储器中，因此产生一次命中。假设此时占用主存储器前两帧的进程已经结束，接着引用地址2，产生缺页事件，地址2和3所在的页1会被复制到存储器的第0帧。继续进行到访问14之前，此时主存储器已满，页表情况如图所示。<img src="http://qiniu.forec.cn/分页存储器演示.png" alt="分页存储器演示">最后访问地址14将产生某个牺牲页，将牺牲页替换后，主存储器中即产生了内部碎片，该页帧的第二个字节并没有被使用。<br>假设一个更大规模的存储器系统，不考虑高速缓存。虚拟地址空间长度位为8KB字，物理存储器大小4KB字，按字节寻址，物理存储器页的大小为1KB字。虚拟存储器大小为8KB=2^13，因此虚拟地址13位，其中3位地址用作页域，共8页，每页有2^10个偏移量，对应每页有2^10个字节。物理存储器大小4KB，12位地址，2位地址作为地址域，有2^2=4个页帧。地址转换即将虚拟存储器的3位页域转换成物理存储器的2位页帧域。<h2 id="分页有效存取时间"><a href="#分页有效存取时间" class="headerlink" title="分页有效存取时间"></a>分页有效存取时间</h2></li>
 <li>处理器每次对虚拟存储器的访问都必须至少执行两次对物理存储器的访问操作，一次引用页表，一次访问要请求的实际数据。假设访问一次主存储器时间200ns，产生的缺页率为1%，处理缺页的时间为10ms，包括将缺页转移到存储器，更新页表以及引用数据所需要的总时间。该存储器的EAT = 0.99 ×（200ns+200ns）+ 0.01 ×（10ms + 200ns）= 100398ns。即使缺页率为0，有效存取时间仍为400ns，是存储器访问时间的两倍，原因在于页表存储在主存储器中。</li>
 <li><strong>转换旁视缓冲器</strong>（translation look-aside buffer，TLB）：存放最近的页查询数据值，可以加速页表查询时间。每个TLB入口目录由一个虚拟页页码和对应的物理页帧帧数组成，使用关联高速缓存实现TLB。使用TLB的一个查询过程为：1.从虚拟地址提取页码和偏移量，2.在TLB中搜索虚拟页码，3.如TLB中找到虚拟页码和物理帧数对，则将偏移量加上物理帧数产生实际物理地址，直接访问该存储单元，4.如发生TLB缺失，则处理器重复分页存储器的流程，并更新TLB。</li>
 <li>分页虚拟存储的优缺点：查找页表实现地址转换需要较大开销，需要额外空间存储页表，需要专门的硬件和操作系统支持。优点在于可以允许系统运行虚拟地址空间比实际物理存储器空间大的多得程序，允许进程和进程自身分享物理存储器，使用固定大小的页帧简化存储器空间的分配和地址安排问题。</li>
@@ -261,7 +261,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/11/01/Computer-Organization-Architecture5/" data-id="cjjrxonsf00a2zp2ft5jb8scm" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2015/11/01/Computer-Organization-Architecture5/" data-id="cjmj3zfmg00a22b2f8z3o3yl1" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -422,7 +422,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -442,7 +442,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -462,7 +462,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -482,7 +482,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -502,7 +502,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

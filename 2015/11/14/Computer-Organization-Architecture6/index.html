@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2015/11/14/Computer-Organization-Architecture6/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="输入/输出和存储系统。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/computer-organization-6.jpg">
-<meta property="og:updated_time" content="2016-11-22T11:07:38.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/computer-organization-6.jpg">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.033Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计组与体系结构笔记（六）">
 <meta name="twitter:description" content="输入/输出和存储系统。">
@@ -201,7 +201,7 @@
 </blockquote>
 <h2 id="磁盘驱动器"><a href="#磁盘驱动器" class="headerlink" title="磁盘驱动器"></a>磁盘驱动器</h2><ul>
 <li>磁盘驱动器被称为<strong>随机存储设备</strong>，或直接存储设备。磁盘上的每个存储单元被称为<strong>扇区</strong>，有独一无二的存取地址。这些扇区按照同心圆环的形式划分为一圈一圈的<strong>磁道</strong>（每个同心圆环为一个磁道），每个磁道上的扇区数都相同，因此数据在磁盘中心写入的数据比磁盘边缘更加密集。有的厂商会把全部扇区制作为近似相同的容量，这样外部磁道可以放置比内部磁道更多的扇区，存储更多信息，这种方法称为<strong>分区位</strong>，现在很少被使用，因为需要更复杂的驱动控制电路。磁道从磁盘最外的磁道0开始编号，在一条磁道分布的圆周上，<strong>扇区的分配顺序可能不连续</strong>，这样允许驱动器电路有时间在读取下一个扇区之前处理完扇区进程的内容，这种技术称为<strong>交叉存储技术</strong>。现代磁盘驱动器大多一次读取一条磁道，而不是一次读取一个扇区，因此交叉存储技术已经不再流行。</li>
-<li>磁盘（hard）包括控制电路和一个或多个金属/玻璃盘片，称为碟片。盘片上镀有一层薄的磁性材料薄膜，碟片堆叠在转轴上，通过一个马达带动磁盘碟片旋转，速度可达每分钟15000rpm，典型的磁盘转速为5400rpm和7200rpm。磁盘的读写头安装在一个旋转的磁盘驱动臂上，磁盘驱动臂通过其转轴上缠绕的线圈的感应磁场来进行准确定位，<strong>整个梳状的读写头可以向磁盘中心移动或从磁盘中心移开</strong>。<img src="http://7xktmz.com1.z0.glb.clouddn.com/磁盘.jpg" alt="磁盘扇区格式">对于一个堆叠的磁盘结构，磁盘上的各个磁道上下一一对应，形成一个圆柱面。<strong>一组梳状的读写头每次可以访问一个柱面</strong>。通常磁盘的可用面上都有一个磁头，但对于一些老式的磁盘系统特别是移动磁盘，最上层碟片的上表面和最下层磁盘的下表面常常都是不用的。<strong>磁盘磁头从来都不会触及磁盘的表面，而是悬浮在磁盘表面的上方</strong>，之间仅仅相隔几个微米厚的空气层。当磁盘系统断电后，磁头退到一个安全的地方，这一过程称为<strong>停靠磁头</strong>。如果读写头接触到磁盘表面，就会损坏磁盘，称为<strong>磁头撞损</strong>。</li>
+<li>磁盘（hard）包括控制电路和一个或多个金属/玻璃盘片，称为碟片。盘片上镀有一层薄的磁性材料薄膜，碟片堆叠在转轴上，通过一个马达带动磁盘碟片旋转，速度可达每分钟15000rpm，典型的磁盘转速为5400rpm和7200rpm。磁盘的读写头安装在一个旋转的磁盘驱动臂上，磁盘驱动臂通过其转轴上缠绕的线圈的感应磁场来进行准确定位，<strong>整个梳状的读写头可以向磁盘中心移动或从磁盘中心移开</strong>。<img src="http://qiniu.forec.cn/磁盘.jpg" alt="磁盘扇区格式">对于一个堆叠的磁盘结构，磁盘上的各个磁道上下一一对应，形成一个圆柱面。<strong>一组梳状的读写头每次可以访问一个柱面</strong>。通常磁盘的可用面上都有一个磁头，但对于一些老式的磁盘系统特别是移动磁盘，最上层碟片的上表面和最下层磁盘的下表面常常都是不用的。<strong>磁盘磁头从来都不会触及磁盘的表面，而是悬浮在磁盘表面的上方</strong>，之间仅仅相隔几个微米厚的空气层。当磁盘系统断电后，磁头退到一个安全的地方，这一过程称为<strong>停靠磁头</strong>。如果读写头接触到磁盘表面，就会损坏磁盘，称为<strong>磁头撞损</strong>。</li>
 <li><strong>寻道时间</strong>指磁盘驱动臂定位到指定的磁道上所需的时间。寻道时间并不包括磁头读取磁盘目录的时间。<strong>磁盘目录</strong>将逻辑文件信息如my_story.doc，映射到对应的物理扇区位置，如第7柱面中第3表面的第72扇区。部分高性能的磁盘会在每个可用面的每个磁道上都提供一个读写头，消除了寻道时间。<strong>旋转延迟</strong>是指读写头定位到指定的扇区所需的时间。旋转延迟和寻道时间的和为存取时间。</li>
 <li>在每次执行读写操作前都必须读取磁盘目录，由于磁盘最外层的磁道在相同面积内有最低的位密度，因此与内层磁道相比更不容易出现位错误。为保证更高的可靠性，可以把磁盘目录存放在最外层磁道，即磁道0。因此每次存取操作驱动臂都必须向外摆动到磁道0，然后回到所需数据的磁道上。随着记录技术和纠错算法发展，目前已经允许磁盘目录放到能够提供最佳性能的位置上，即最中间的磁道上。实际情况中，操作系统以群组的形式为扇区分配地址，称为<strong>区块</strong>。每个块中扇区的数目决定了分配表的大小，如果分配的块越小，则当一个文件不能装满整个块时，浪费的空间就越小；而如果每个块中的扇区数目过少，则记录块的分配表会很大，查找速度会减慢。</li>
 </ul>
@@ -215,12 +215,12 @@
 <p>1988年美国加州大学伯克利分校的David Patterson、Garth Gibson和Randy Katz三人发表了“廉价磁盘冗余阵列的实例”的论文，创造RAID一词，介绍了如何利用若干数量的廉价小磁盘替代大型机上的大型昂贵的单磁盘。论文中三人定义了5种类型（称为级）的RAID，每一级RAID具有不同的性能和可靠性，后来经过各厂商发展，增加了其他RAID级。更高编号的RAID层次不一定是更好的RAID系统，下面使用的编号方法保留了Berkeley命名方法。</p>
 </blockquote>
 <ul>
-<li>RAID Level 0：简称RAID-0，是将数据以条带形式存放在几个磁盘表面上，一个记录会占用几个磁盘表面的多个扇区，又称为磁盘跨区、块交错数据分带或磁盘分带。分带是简单的将逻辑顺序的数据进行分段，分段可以小到单一位，或某个特定大小的块。因为RAID-0不提供冗余，因此在各种RAID配置结构中，RAID-0有最佳性能，尤其在每个磁盘都有自己的独立控制器和高速缓存时。RAID-0非常廉价，但系统整体可靠性为单个磁盘期望性能的几分之一。如阵列由5个磁盘组成，每个磁盘设计寿命50000小时，则整个系统期望设计寿命50000/5 = 10000 小时。磁盘数增加，失效概率随之增加。没有冗余导致RAID-0没有容错能力，因此RAID-0的唯一好处在于性能，通常用于非关键的而又需要高速读取、写入的数据，或改变不太频繁和经常被分的数据，或低成本场合。<img src="http://7xktmz.com1.z0.glb.clouddn.com/RAID0.jpg" alt="RAID-0"></li>
-<li>RAID Level 1：称为磁盘镜像，是所有RAID级中失效保护最佳的方案，存储方式和RAID-0相同，但每次写入数据都会复制到另一组完全相同的磁盘上。这种方式的读取性能更优异，尤其在镜像盘（第二组磁盘）和住驱动器相差180度旋转时，减少一半反应时间。RAID-1适合于面向事务、高可用率的工作环境，以及高容错率的应用，如会计、工资表。<img src="http://7xktmz.com1.z0.glb.clouddn.com/RAID1.jpg" alt="RAID-1"></li>
-<li>RAID Level 2：因为RAID-1方案成本为RAID-0的两倍，因此RAID-2只是用磁盘组中的一个或几个磁盘存储其他磁盘中的数据信息。RAID-2在每个条带中只写入一位数据，而不采用任意大小的块写入数据，这样需要至少八个磁盘表面才能存放数据，另外需要一组磁盘驱动器存放纠错信息，这些纠错位由海明编码生成。如果磁盘阵列中的任何一个驱动器损坏，可以用海明驱动器重建这个驱动器。同样，如果海明驱动器出错，也可以用数据驱动器重建。然而，所有驱动器必须严格同步，并且生成海明编码的过程非常耗时。<img src="http://7xktmz.com1.z0.glb.clouddn.com/RAID2.jpg" alt="RAID-2"></li>
-<li>RAID Level 3：RAID-3同RAID-2一样，每次按照一位的方式将数据交错分配到各个驱动器的条带中，但与RAID-2不同的是，RAID-3只使用一个驱动器来保存简单的奇偶校验位，只需对每一位进行异或即可。利用这种方法可以对一个损坏的驱动器重建，例如6号驱动器损坏并要被替换，只要对其他7个数据驱动器和奇偶校验器上的数据异或即可。RAID-3需要同步操作，比RAID-1和RAID-2更经济，不适合面向事务的应用程序，更适合读写大块数据块的情况。<img src="http://7xktmz.com1.z0.glb.clouddn.com/RAID3.jpg" width="500px" alt="RAID-3"></li>
+<li>RAID Level 0：简称RAID-0，是将数据以条带形式存放在几个磁盘表面上，一个记录会占用几个磁盘表面的多个扇区，又称为磁盘跨区、块交错数据分带或磁盘分带。分带是简单的将逻辑顺序的数据进行分段，分段可以小到单一位，或某个特定大小的块。因为RAID-0不提供冗余，因此在各种RAID配置结构中，RAID-0有最佳性能，尤其在每个磁盘都有自己的独立控制器和高速缓存时。RAID-0非常廉价，但系统整体可靠性为单个磁盘期望性能的几分之一。如阵列由5个磁盘组成，每个磁盘设计寿命50000小时，则整个系统期望设计寿命50000/5 = 10000 小时。磁盘数增加，失效概率随之增加。没有冗余导致RAID-0没有容错能力，因此RAID-0的唯一好处在于性能，通常用于非关键的而又需要高速读取、写入的数据，或改变不太频繁和经常被分的数据，或低成本场合。<img src="http://qiniu.forec.cn/RAID0.jpg" alt="RAID-0"></li>
+<li>RAID Level 1：称为磁盘镜像，是所有RAID级中失效保护最佳的方案，存储方式和RAID-0相同，但每次写入数据都会复制到另一组完全相同的磁盘上。这种方式的读取性能更优异，尤其在镜像盘（第二组磁盘）和住驱动器相差180度旋转时，减少一半反应时间。RAID-1适合于面向事务、高可用率的工作环境，以及高容错率的应用，如会计、工资表。<img src="http://qiniu.forec.cn/RAID1.jpg" alt="RAID-1"></li>
+<li>RAID Level 2：因为RAID-1方案成本为RAID-0的两倍，因此RAID-2只是用磁盘组中的一个或几个磁盘存储其他磁盘中的数据信息。RAID-2在每个条带中只写入一位数据，而不采用任意大小的块写入数据，这样需要至少八个磁盘表面才能存放数据，另外需要一组磁盘驱动器存放纠错信息，这些纠错位由海明编码生成。如果磁盘阵列中的任何一个驱动器损坏，可以用海明驱动器重建这个驱动器。同样，如果海明驱动器出错，也可以用数据驱动器重建。然而，所有驱动器必须严格同步，并且生成海明编码的过程非常耗时。<img src="http://qiniu.forec.cn/RAID2.jpg" alt="RAID-2"></li>
+<li>RAID Level 3：RAID-3同RAID-2一样，每次按照一位的方式将数据交错分配到各个驱动器的条带中，但与RAID-2不同的是，RAID-3只使用一个驱动器来保存简单的奇偶校验位，只需对每一位进行异或即可。利用这种方法可以对一个损坏的驱动器重建，例如6号驱动器损坏并要被替换，只要对其他7个数据驱动器和奇偶校验器上的数据异或即可。RAID-3需要同步操作，比RAID-1和RAID-2更经济，不适合面向事务的应用程序，更适合读写大块数据块的情况。<img src="http://qiniu.forec.cn/RAID3.jpg" width="500px" alt="RAID-3"></li>
 <li>RAID Level 4：RAID-4和RAID-2一样，是理论上的RAID级。使用一个奇偶校验位驱动器和一组数据磁盘，将数据写入统一大小的条带中，奇偶校验位也存储为条带。然而RAID-4使系统性能严重下降，因为数据盘对奇偶校验盘有竞争情况。假设正在处理奇偶校验块，如果有一个条带1和条带4的写入请求，在RAID-0和RAID-1时会直接写入，而RAID-4的奇偶校验则成为了瓶颈。</li>
-<li>RAID Level 5：RAID-5是所有以RAID为基础的应用系统中使用数量最多的，能够以最少的成本提供最佳的保护，改进了RAID-4，将奇偶校验位写到多个磁盘上而非一个磁盘。但在所有RAID层次中，RAID-5需要的磁盘控制器是最复杂的。图中绿色方块代表奇偶校验位。<img src="http://7xktmz.com1.z0.glb.clouddn.com/RAID5.gif" alt="RAID-5"></li>
+<li>RAID Level 5：RAID-5是所有以RAID为基础的应用系统中使用数量最多的，能够以最少的成本提供最佳的保护，改进了RAID-4，将奇偶校验位写到多个磁盘上而非一个磁盘。但在所有RAID层次中，RAID-5需要的磁盘控制器是最复杂的。图中绿色方块代表奇偶校验位。<img src="http://qiniu.forec.cn/RAID5.gif" alt="RAID-5"></li>
 <li>RAID Level 6：前面所有的RAID系统只能允许最多有一个磁盘出错，但通常磁盘驱动器出错呈现成簇的倾向（寿命相同，灾难性事件）。RAID-6对每排数据使用两组纠错条带，除使用奇偶校验位外还使用Reed-Soloman纠错编码提供二层保护。RAID-6的写入性能很差，并且生成Reed-Soloman编码需要的代价很大，因此目前没有商业配置的RAID-6系统。</li>
 <li>RAID混合系统：如RAID-10，将RAID-0的分带和RAID-1的镜像结合。</li>
 </ul>
@@ -248,7 +248,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/11/14/Computer-Organization-Architecture6/" data-id="cjjrxonse009yzp2fid6x88fq" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2015/11/14/Computer-Organization-Architecture6/" data-id="cjmj3zfme009y2b2fiyunga9q" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -409,7 +409,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -429,7 +429,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -449,7 +449,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -469,7 +469,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -489,7 +489,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

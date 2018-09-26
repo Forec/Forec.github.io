@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2017/01/08/os-concepts-15/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="此部分包括一些和 《信号量编程（上）》 相比稍难的信号量编程习题，可能有一小部分超出了考试范畴。这部分习题的解答均根据我个人理解编写， 不保证提供的答案绝对正确或最优 。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-15.jpg">
-<meta property="og:updated_time" content="2017-01-11T15:10:32.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/os-concepts-15.jpg">
+<meta property="og:updated_time" content="2018-09-26T06:08:28.986Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（专题）：信号量编程（下）">
 <meta name="twitter:description" content="此部分包括一些和 《信号量编程（上）》 相比稍难的信号量编程习题，可能有一小部分超出了考试范畴。这部分习题的解答均根据我个人理解编写， 不保证提供的答案绝对正确或最优 。">
@@ -203,7 +203,7 @@
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 左侧士兵</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    wait(left_mutex);</span><br><span class="line">    left ++;</span><br><span class="line">    <span class="keyword">int</span> number = left;  <span class="comment">// 临时变量记录自己是第几个通过的士兵</span></span><br><span class="line">    <span class="keyword">if</span> (left == <span class="number">1</span>)</span><br><span class="line">        wait(bridge);</span><br><span class="line">    signal(left_mutex);</span><br><span class="line">    <span class="comment">// 过桥</span></span><br><span class="line">    <span class="keyword">if</span> (number == m)</span><br><span class="line">        signal(bridge);</span><br><span class="line">&#125; <span class="keyword">while</span> (TRUE);  </span><br><span class="line"></span><br><span class="line"><span class="comment">// 右侧士兵与左侧同理</span></span><br></pre></td></tr></table></figure>
 <h2 id="有限双向行驶问题"><a href="#有限双向行驶问题" class="headerlink" title="有限双向行驶问题"></a>有限双向行驶问题</h2><ul>
-<li>（南开大学 1997 年题）在南开大学和天津大学之间有一条小路 S -&gt; T，小路中间有一个安全岛 M，安全岛能够同时容纳两辆自行车，可供两个已经从两端进入小路的自行车错车用。整个地图如下图，S 到 K 段的小路和 T 到 L 段的小路同时都只能允许一辆自行车通过。试设计一个算法，使来往的自行车都能顺利通过。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/nankai-tianda.jpg" width="400px"></li>
+<li>（南开大学 1997 年题）在南开大学和天津大学之间有一条小路 S -&gt; T，小路中间有一个安全岛 M，安全岛能够同时容纳两辆自行车，可供两个已经从两端进入小路的自行车错车用。整个地图如下图，S 到 K 段的小路和 T 到 L 段的小路同时都只能允许一辆自行车通过。试设计一个算法，使来往的自行车都能顺利通过。<br><img src="http://qiniu.forec.cn/nankai-tianda.jpg" width="400px"></li>
 <li>此题和上面的单向行驶问题类似，但同时每个方向只能允许一辆车通过，并且允许两个方向各有来车一辆。此题和教材 7.16 过桥问题也非常相似。应当注意体会本题和单向行驶、习题 7.16 的区别与联系。</li>
 <li>分析：需要先确定需要用信号量维护的资源对象种类和数量。首先 S 端和 T 端能且仅能进入一辆自行车，直到进入的自行车从另一端离开，否则在我方通行两辆自行车期间，一旦对方有来车就会出现死锁。正因为 S 和 T 端最多只能进入一辆，所以安全岛 M 最多也只会出现两辆自行车，所以不需要为 M 设置信号量。此外，除了要控制路口 S 和 T 的进入权限，还要控制两段小路 S-K 和 L-T 的通行权限，不能允许从 S 方向进入的自行车和从 T 方向进入的自行车同时进入这两段小路。因此共有 4 个互斥信号量。</li>
 <li>声明信号量：<ul>
@@ -301,7 +301,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/01/08/os-concepts-15/" data-id="cjjrxonq5004izp2fgzy3sv1f" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/01/08/os-concepts-15/" data-id="cjmj3zfjp004i2b2fgcvzommr" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -462,7 +462,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -482,7 +482,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -502,7 +502,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -522,7 +522,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -542,7 +542,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

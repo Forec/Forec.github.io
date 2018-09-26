@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2016/02/18/machinelearning8/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="回归是前面监督学习方法的延续，监督学习指的是有目标变量或者预测目标的机器学习方法。回归于分类的不同在于其目标变量是连续数值型。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/machine-learning-5.png">
-<meta property="og:updated_time" content="2017-08-22T07:30:30.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/machine-learning-5.png">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.304Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记（Chapter 08 - 回归）">
 <meta name="twitter:description" content="回归是前面监督学习方法的延续，监督学习指的是有目标变量或者预测目标的机器学习方法。回归于分类的不同在于其目标变量是连续数值型。">
@@ -185,14 +185,14 @@
 </ul>
 </li>
 <li>求解回归系数：假定输入数据存放在矩阵X中，回归系数存放在向量W中，对于给定的数据X1，预测结果会通过Y1=X^T·W给出。要找到W，最常用的方法是找出使误差最小的W。误差指预测y值和真实y值之间的差值，使用该误差的简单累加会使正负误差相互抵消，因此采用平方误差。平方误差写作<code>∑(y&#39;-x^T·W)^2</code>，用矩阵表示写作<code>(y-Xw)^T·(y-Xw)</code>，如果对w求导，就得到<code>X^T·(Y-Xw)</code>，令其为零，解出<code>w=(X^T·X)^(-1)·X^T·y</code>。注意公式中包含了<code>(X^T·X)^(-1)</code>，因此要在代码中判断矩阵是否可逆。该方法称为<strong>OLS</strong>（普通最小二乘法）。</li>
-<li><p>下面是原始数据点的分布<img src="http://7xktmz.com1.z0.glb.clouddn.com/ch08-%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E7%82%B9.png" width="500px"></p>
+<li><p>下面是原始数据点的分布<img src="http://qiniu.forec.cn/ch08-%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E7%82%B9.png" width="500px"></p>
 </li>
 <li><p>标准回归函数和数据导入函数 - regression.py</p>
 </li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">(fileName)</span>:</span></span><br><span class="line">    numFeat = len(open(fileName).readline().split(<span class="string">'\t'</span>)) - <span class="number">1</span></span><br><span class="line">    dataMat = []; labelMat = []</span><br><span class="line">    fr = open(fileName)</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">        lineArr = []</span><br><span class="line">        curLine = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(numFeat):</span><br><span class="line">            lineArr.append(float(curLine[i]))</span><br><span class="line">        dataMat.append(lineArr)</span><br><span class="line">        labelMat.append(float(curLine[-<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">return</span> dataMat, labelMat</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">standRegres</span><span class="params">(xArr, yArr)</span>:</span></span><br><span class="line">    xMat = mat(xArr); yMat = mat(yArr).T</span><br><span class="line">    xTx = xMat.T * xMat</span><br><span class="line">    <span class="keyword">if</span> linalg.det(xTx) == <span class="number">0.0</span>:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"This matrix is singular, cannot do reverse"</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    ws = xTx.I * (xMat.T * yMat)</span><br><span class="line">    <span class="keyword">return</span> ws</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p>生成的线性回归效果图如下<img src="http://7xktmz.com1.z0.glb.clouddn.com/ch08-%E6%A0%87%E5%87%86%E5%9B%9E%E5%BD%92%E5%87%BD%E6%95%B0.png" width="500px"></p>
+<li><p>生成的线性回归效果图如下<img src="http://qiniu.forec.cn/ch08-%E6%A0%87%E5%87%86%E5%9B%9E%E5%BD%92%E5%87%BD%E6%95%B0.png" width="500px"></p>
 </li>
 <li><p>Numpy库提供了corrcoef(yEstimate, yActure)方法来计算预测值和真实值的相关性。下面的交互代码结果中，yMat和自己匹配是最完美的，而yHat和yMat的相关系数为0.98。</p>
 </li>
@@ -211,7 +211,7 @@
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">drawPlotAboutK</span><span class="params">()</span>:</span></span><br><span class="line">    xArr, yArr = loadDataSet(<span class="string">'ex0.txt'</span>)</span><br><span class="line">    xMat = mat(xArr)</span><br><span class="line">    srtInd = xMat[:,<span class="number">1</span>].argsort(<span class="number">0</span>)</span><br><span class="line">    xSrot = xMat[srtInd][:,<span class="number">0</span>,:]</span><br><span class="line">    <span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">    fig = plt.figure()</span><br><span class="line">    ax = fig.add_subplot(<span class="number">211</span>)</span><br><span class="line">    yHat01 = lwlrTest(xArr, xArr, yArr, <span class="number">0.01</span>)</span><br><span class="line">    ax.plot(xSrot[:,<span class="number">1</span>],yHat01[srtInd])</span><br><span class="line">    ax.scatter(xMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>], mat(yArr).T.flatten().A[<span class="number">0</span>], s =<span class="number">2</span>, c=<span class="string">'green'</span>)</span><br><span class="line">    ax = fig.add_subplot(<span class="number">212</span>)</span><br><span class="line">    yHat001 = lwlrTest(xArr, xArr, yArr, <span class="number">0.003</span>)</span><br><span class="line">    ax.plot(xSrot[:,<span class="number">1</span>],yHat001[srtInd])</span><br><span class="line">    ax.scatter(xMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>], mat(yArr).T.flatten().A[<span class="number">0</span>], s =<span class="number">2</span>, c=<span class="string">'green'</span>)</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
 <ul>
-<li>上面代码绘制出结果如下，可以看出当k=0.003时纳入了太多的噪声点，k=1时的结果和使用最小二乘法的标准线性回归类似，k=0.01时的模型效果最好，平滑并且挖掘出数据内在规律。上图是k=0.01的情况，下图是k=0.003的情况。<img src="http://7xktmz.com1.z0.glb.clouddn.com/%E4%B8%8D%E5%90%8Ck%E5%8F%96%E5%80%BC%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E5%9B%9E%E5%BD%92%E7%BB%93%E6%9E%9C.png" width="500px"></li>
+<li>上面代码绘制出结果如下，可以看出当k=0.003时纳入了太多的噪声点，k=1时的结果和使用最小二乘法的标准线性回归类似，k=0.01时的模型效果最好，平滑并且挖掘出数据内在规律。上图是k=0.01的情况，下图是k=0.003的情况。<img src="http://qiniu.forec.cn/%E4%B8%8D%E5%90%8Ck%E5%8F%96%E5%80%BC%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E5%9B%9E%E5%BD%92%E7%BB%93%E6%9E%9C.png" width="500px"></li>
 <li>局部加权线性回归也存在问题，即增加了计算量。因为其对每个点做预测时都要使用整个数据集，虽然k=0.01时得到了很好的估计，但大多数数据点的权重接近0，如果避免这些运算，可以减少程序运行时间，从而缓解因计算量增加带来的问题。</li>
 </ul>
 <h1 id="预测鲍鱼年龄"><a href="#预测鲍鱼年龄" class="headerlink" title="预测鲍鱼年龄"></a>预测鲍鱼年龄</h1><ul>
@@ -229,7 +229,7 @@
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ridgeRegres</span><span class="params">(xMat, yMat, lam = <span class="number">0.2</span>)</span>:</span></span><br><span class="line">    xTx = xMat.T * xMat</span><br><span class="line">    denom = xTx + eye(shape(xMat)[<span class="number">1</span>]) * lam</span><br><span class="line">    <span class="keyword">if</span> linalg.det(denom) == <span class="number">0.0</span>:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"This matrix is singular, cannot do reverse"</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    ws = denom.I * (xMat.T * yMat)</span><br><span class="line">    <span class="keyword">return</span> ws</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ridgeTest</span><span class="params">(xArr, yArr)</span>:</span></span><br><span class="line">    xMat = mat(xArr); yMat = mat(yArr).T</span><br><span class="line">    yMean = mean(yMat, <span class="number">0</span>)</span><br><span class="line">    yMean1 = mean(yMat, <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">print</span> yMean, yMean1</span><br><span class="line">    yMat = yMat - yMean</span><br><span class="line">    xMeans = mean(xMat, <span class="number">0</span>)</span><br><span class="line">    xVar = var(xMat, <span class="number">0</span>)</span><br><span class="line">    xMat = (xMat - xMeans) / xVar</span><br><span class="line">    numTestPts = <span class="number">30</span></span><br><span class="line">    wMat = zeros((numTestPts, shape(xMat)[<span class="number">1</span>]))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(numTestPts):</span><br><span class="line">        ws = ridgeRegres(xMat, yMat, exp(i-<span class="number">10</span>))</span><br><span class="line">        wMat[i,:] = ws.T</span><br><span class="line">    <span class="keyword">return</span> wMat</span><br><span class="line">    </span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>abX, abY = regression.loadDataSet(<span class="string">'abalone.txt'</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ridgeWeights = regression.ridgeTest(abX, abY)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>fig = plt.figure()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax.plot(ridgeWeights)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>plt.show()</span><br></pre></td></tr></table></figure>
 <ul>
-<li>上面代码最后的cpython交互部分代码给出了岭回归的回归系数变化图，如下。在最左边即λ最小时，可以得到所有系数的原始值（和线性回归一致），在最右边，系数全部缩减为0。在中间的某个值可以取得最好的预测效果。<img src="http://7xktmz.com1.z0.glb.clouddn.com/%E5%B2%AD%E5%9B%9E%E5%BD%92%E5%9B%9E%E5%BD%92%E7%B3%BB%E6%95%B0%E5%8F%98%E5%8C%96%E5%9B%BE.png" width="500px"></li>
+<li>上面代码最后的cpython交互部分代码给出了岭回归的回归系数变化图，如下。在最左边即λ最小时，可以得到所有系数的原始值（和线性回归一致），在最右边，系数全部缩减为0。在中间的某个值可以取得最好的预测效果。<img src="http://qiniu.forec.cn/%E5%B2%AD%E5%9B%9E%E5%BD%92%E5%9B%9E%E5%BD%92%E7%B3%BB%E6%95%B0%E5%8F%98%E5%8C%96%E5%9B%BE.png" width="500px"></li>
 </ul>
 <h2 id="lasso"><a href="#lasso" class="headerlink" title="lasso"></a>lasso</h2><ul>
 <li>在增加约束<code>∑w^2&lt;=λ</code>的情况下，普通的最小二乘法会得到与岭回归同样的公式，这个限制条件限定了所有回归系数的平方和不能大于λ。使用普通的最小二乘法回归在当两个或更多的特征相关时，可能会得出一个很大的正系数和一个很大的负系数。正是因为上面限制条件的存在，岭回归可以避免这个问题。与岭回归类似，另一个缩减方法lasso也对回归系数做了限定，但约束为<code>∑|w|&lt;=λ</code>，这个约束条件用绝对值取代平方和。虽然形式变化不大，但结果差距明显。当λ足够小时，一些系数会因此被迫缩减到0，这个特性可以帮助我们更好地理解数据。在这个新的约束条件下求解回归系数极大的增加了计算复杂度，需要使用二次规划算法。</li>
@@ -252,7 +252,7 @@
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>regression.stageWise(xArr, yArr, <span class="number">0.001</span>, <span class="number">5000</span>)</span><br><span class="line">array([[ <span class="number">0.</span>   ,  <span class="number">0.</span>   ,  <span class="number">0.</span>   , ...,  <span class="number">0.</span>   ,  <span class="number">0.</span>   ,  <span class="number">0.</span>   ],</span><br><span class="line">       [ <span class="number">0.</span>   ,  <span class="number">0.</span>   ,  <span class="number">0.</span>   , ...,  <span class="number">0.</span>   ,  <span class="number">0.</span>   ,  <span class="number">0.</span>   ],</span><br><span class="line">       [ <span class="number">0.</span>   ,  <span class="number">0.</span>   ,  <span class="number">0.</span>   , ...,  <span class="number">0.</span>   ,  <span class="number">0.</span>   ,  <span class="number">0.</span>   ],</span><br><span class="line">       ...,</span><br><span class="line">       [ <span class="number">0.043</span>, -<span class="number">0.011</span>,  <span class="number">0.12</span> , ..., -<span class="number">0.963</span>, -<span class="number">0.105</span>,  <span class="number">0.187</span>],</span><br><span class="line">       [ <span class="number">0.044</span>, -<span class="number">0.011</span>,  <span class="number">0.12</span> , ..., -<span class="number">0.963</span>, -<span class="number">0.105</span>,  <span class="number">0.187</span>],</span><br><span class="line">       [ <span class="number">0.043</span>, -<span class="number">0.011</span>,  <span class="number">0.12</span> , ..., -<span class="number">0.963</span>, -<span class="number">0.105</span>,  <span class="number">0.187</span>]])</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>xMat = mat(xArr); yMat = mat(yArr).T</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>xMat = regression.regularize(xMat)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yM = mean(yMat, <span class="number">0</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>yMat = yMat - yM</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>weights = regression.standRegres(xMat, yMat.T)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>weights.T</span><br><span class="line">matrix([[ <span class="number">0.0430442</span> , -<span class="number">0.02274163</span>,  <span class="number">0.13214087</span>,  <span class="number">0.02075182</span>,  <span class="number">2.22403814</span>,</span><br><span class="line">         -<span class="number">0.99895312</span>, -<span class="number">0.11725427</span>,  <span class="number">0.16622915</span>]])</span><br></pre></td></tr></table></figure>
 <ul>
-<li>从数据可以看出，5000次迭代后，逐步线性回归算法和组常规的最小二乘法效果类似，使用0.001的ε值并经过5000次迭代的效果如下图。逐步线性回归算法的好处在于它可以帮助人们理解现有的模型并做出改进。当构建了一个模型后，可以运行该算法找出重要的特征，这样有可能及时停止那些不重要特征的收集。如果用于测试，该算法每100次迭代后就可以构建出一个模型，可以使用类似10折交叉验证的方法比较这些模型，选择误差最小的模型。<strong>当应用缩减方法（如逐步线性回归或岭回归）时，模型也就增加了偏差，与此同时减小了模型的方差</strong>。<img src="http://7xktmz.com1.z0.glb.clouddn.com/%E9%80%90%E6%AD%A5%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%B3%BB%E6%95%B0%E4%B8%8E%E8%BF%AD%E4%BB%A3%E6%AC%A1%E6%95%B0%E5%85%B3%E7%B3%BB.png" width="500px"></li>
+<li>从数据可以看出，5000次迭代后，逐步线性回归算法和组常规的最小二乘法效果类似，使用0.001的ε值并经过5000次迭代的效果如下图。逐步线性回归算法的好处在于它可以帮助人们理解现有的模型并做出改进。当构建了一个模型后，可以运行该算法找出重要的特征，这样有可能及时停止那些不重要特征的收集。如果用于测试，该算法每100次迭代后就可以构建出一个模型，可以使用类似10折交叉验证的方法比较这些模型，选择误差最小的模型。<strong>当应用缩减方法（如逐步线性回归或岭回归）时，模型也就增加了偏差，与此同时减小了模型的方差</strong>。<img src="http://qiniu.forec.cn/%E9%80%90%E6%AD%A5%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%B3%BB%E6%95%B0%E4%B8%8E%E8%BF%AD%E4%BB%A3%E6%AC%A1%E6%95%B0%E5%85%B3%E7%B3%BB.png" width="500px"></li>
 </ul>
 <h1 id="权衡偏差与方差"><a href="#权衡偏差与方差" class="headerlink" title="权衡偏差与方差"></a>权衡偏差与方差</h1><ul>
 <li>当发现模型和测量值之间存在差异，说明出现了误差。当对复杂的过程进行简化时，会导致模型和测量值之间出现“噪声”或者误差，若无法理解数据的真是生成过程，也会导致差异发生。另外，测量过程本身也可能产生“噪声”。</li>
@@ -290,7 +290,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/02/18/machinelearning8/" data-id="cjjrxonql005bzp2fc5q8psdf" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/02/18/machinelearning8/" data-id="cjmj3zfk9005b2b2fnhw11h27" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -451,7 +451,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -471,7 +471,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -491,7 +491,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -511,7 +511,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -531,7 +531,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

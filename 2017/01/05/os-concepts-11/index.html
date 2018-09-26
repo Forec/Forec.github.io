@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2017/01/05/os-concepts-11/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第十一章文件系统实现部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-11.jpg">
-<meta property="og:updated_time" content="2017-01-09T14:43:48.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/os-concepts-11.jpg">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.027Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（十一）：文件系统实现">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第十一章文件系统实现部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -203,7 +203,7 @@
 <li><strong>单个进程的打开文件表</strong> ，每个条目包括指向系统范围内打开文件表的条目的指针以及与进程相关的其它文件信息</li>
 </ul>
 </li>
-<li>打开文件表的索引有多种名称，UFS 称之为 <strong>文件描述符（file descriptor）</strong> ，Windows 称之为 <strong>文件句柄（file handle）</strong> ，只要文件没有关闭，所有对文件的操作都是通过打开文件表执行的。文件系统中用户进程读文件的操作形式如下图所示。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/in-memory-file-system-read.png" width="500px"></li>
+<li>打开文件表的索引有多种名称，UFS 称之为 <strong>文件描述符（file descriptor）</strong> ，Windows 称之为 <strong>文件句柄（file handle）</strong> ，只要文件没有关闭，所有对文件的操作都是通过打开文件表执行的。文件系统中用户进程读文件的操作形式如下图所示。<br><img src="http://qiniu.forec.cn/in-memory-file-system-read.png" width="500px"></li>
 </ul>
 <h2 id="分区和挂载"><a href="#分区和挂载" class="headerlink" title="分区和挂载"></a>分区和挂载</h2><ul>
 <li>一个磁盘可以分成多个分区，一个卷也可能横跨多个磁盘上的多个分区（RAID 的一种形式）。</li>
@@ -243,7 +243,7 @@
 <li>链接分配方法的一个变种是 <strong>文件分配表（file-allocation table，FAT）</strong> ，它被应用于 MS-DOS 和 OS/2 操作系统。每个卷的开始部分存储文件分配表，卷内的每一块都在表中占有一项，这个表可以通过块号码索引， <strong>表中存储的值是这一块指向的下一块块号</strong> 。<ul>
 <li>文件在目录中的条目只含有文件第一块的块号，访问文件时按照 FAT 表中存储的链接关系一直向下寻找，直到最后一块（最后一块在 FAT 表中标记为一个特殊的文件结束值，可以根据这个值判断是否为最后一块）。</li>
 <li>要分配一个新的块，只需要在 FAT 表中找到第一个值为 0（值为 0 表示一个块没有被使用）的块，用新块的地址替换掉此前最后一块的文件结束值，并且用文件结束值替换 FAT 表中的 0。</li>
-<li>FAT 需要采用缓存才能提高效率，否则可能导致大量的磁头寻道时间：磁头要移动到卷的开头读入 FAT  以获得块的位置，然后才能移动到块本身。最坏情况下每块的读取都要移动两次。但它的优点在于改善了随机访问时间， <strong>因为 FAT 的存在，操作系统可以快速找到文件任意一块的位置</strong> 。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/file-allocation-table.png" width="400px"></li>
+<li>FAT 需要采用缓存才能提高效率，否则可能导致大量的磁头寻道时间：磁头要移动到卷的开头读入 FAT  以获得块的位置，然后才能移动到块本身。最坏情况下每块的读取都要移动两次。但它的优点在于改善了随机访问时间， <strong>因为 FAT 的存在，操作系统可以快速找到文件任意一块的位置</strong> 。<br><img src="http://qiniu.forec.cn/file-allocation-table.png" width="400px"></li>
 </ul>
 </li>
 </ul>
@@ -258,7 +258,7 @@
 <li>索引块的大小需要经过仔细考量：每个文件都有一个索引块，索引块太大会造成浪费，太小又不足以满足大文件存储需求。针对这一问题的处理机制有如下几点：<ul>
 <li><strong>链接方案（Linked scheme）</strong> ：一个索引块就是一个磁盘块。它本身能够直接读写，当遇到大文件存储时可以将多个索引块链接。例如一个索引块可以包含一个头部（头部包含文件名）以及 100 个磁盘块的地址。索引块的最后一个存储单元存储着指向下一个索引块的地址如果是小文件则这个指针为 <code>nil</code>，如果是大文件则指向了另一个索引块。</li>
 <li><strong>多层索引（Multilevel index）</strong> ：设置两层索引块，第一层指向第二层，第二层指向文件块。根据最大文件大小的不同，可以继续到第三/四层。对于块大小为 4KB 的情况，可以在一个索引块里装入 1024 个 4B 指针，两层索引就可以容纳 1048 576 个数据块，即最大文件为 4GB。</li>
-<li><strong>组合方案（Combined scheme）</strong> ：在 UFS 中使用了这种方案。将索引块的前 15 个指针存在文件的 inode 里，这 15 个指针中：前 12 个直接指向了数据块，这样不超过 12 块的文件就不需要其它索引块；后 3 个指针分别是一级间接块、二级间接块、三级间接块指针。这种方法允许一个文件的块数超过 4B 文件指针能访问的空间。许多 UNIX 系统支持 64 位文件指针，这时允许文件/文件系统达到数 T 字节。UNIX 的inode 大致如下：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/unix-inode-indexed.jpg" width="500px"></li>
+<li><strong>组合方案（Combined scheme）</strong> ：在 UFS 中使用了这种方案。将索引块的前 15 个指针存在文件的 inode 里，这 15 个指针中：前 12 个直接指向了数据块，这样不超过 12 块的文件就不需要其它索引块；后 3 个指针分别是一级间接块、二级间接块、三级间接块指针。这种方法允许一个文件的块数超过 4B 文件指针能访问的空间。许多 UNIX 系统支持 64 位文件指针，这时允许文件/文件系统达到数 T 字节。UNIX 的inode 大致如下：<br><img src="http://qiniu.forec.cn/unix-inode-indexed.jpg" width="500px"></li>
 </ul>
 </li>
 <li>索引分配方案和链接分配方案在性能上都有欠缺，虽然索引块能够缓存在内存里，但数据块会分布到整个分区中。</li>
@@ -290,7 +290,7 @@
 <li>通常会有多个连续的块需要同时分配、释放，尤其是采用了连续分配或簇的情况下。因此可以不记录 n 个空闲块地址，而是记录连续多块空闲块的第一块的地址，以及连续的空闲块的数量。这样空闲空间表的每个条目包含了第一个空闲块地址和连续空闲块数量，虽然每个条目占用的空间增长了，但表的总长度会缩短（连续空闲块的数量往往大于 1）。</li>
 </ul>
 <h2 id="UNIX-成组链接（补充）"><a href="#UNIX-成组链接（补充）" class="headerlink" title="UNIX 成组链接（补充）"></a>UNIX 成组链接（补充）</h2><ul>
-<li>将文件存储设备中的所有的空闲块 <strong>从后向前</strong> 按 50 块为一组进行划分，每组的第一块用于存放 <strong>前一组</strong> 的总块数和每块的块号，因为第一组前面已经没有其他组存在，所以第一组实际有 49 块。因为存储空间不一定正好是 50 的整数倍，所以最后一组可能不足 50 块。因为最后一组后面没有其他组，所以最后一组的总块数和每块块号的信息存放到管理文件存储设备的文件资源表中。如下图所示。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/unix-group-linked.png" width="500px"></li>
+<li>将文件存储设备中的所有的空闲块 <strong>从后向前</strong> 按 50 块为一组进行划分，每组的第一块用于存放 <strong>前一组</strong> 的总块数和每块的块号，因为第一组前面已经没有其他组存在，所以第一组实际有 49 块。因为存储空间不一定正好是 50 的整数倍，所以最后一组可能不足 50 块。因为最后一组后面没有其他组，所以最后一组的总块数和每块块号的信息存放到管理文件存储设备的文件资源表中。如下图所示。<br><img src="http://qiniu.forec.cn/unix-group-linked.png" width="500px"></li>
 <li>操作系统启动时将文件资源表复制到内存，此时文件资源表中包含了最后一组的空闲块总数以及空闲块的块号。操作系统还会设置一个用于空闲块分配、回收的堆栈，堆栈存储着空闲块的块号，栈指针 ptr 的初值等于最后一组的空闲块的总块数。</li>
 <li>成组链接分配方法：申请者请求获得 n 块空闲块，操作系统将按照先进先出的原则，将栈顶指向的块号分配给请求者，同时 ptr 自减。重复此操作直到 n 块分配完毕，或者堆栈中只剩下最后一个空闲块的块号（此块实际存储的是下一组的空闲块块数和各块块号）。当堆栈只剩下最后一个空闲块的块号时：<ul>
 <li>从堆栈中弹出该块的块号，系统启动 I/O 设备，将该块存放的内容读入内存（即将下一组空闲块号和总块数读入空闲资源表），并设置 ptr 为下一组的空闲块数</li>
@@ -314,7 +314,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2017/01/05/os-concepts-11/" data-id="cjjrxonqc004uzp2fx90hj8pf" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2017/01/05/os-concepts-11/" data-id="cjmj3zfjx004u2b2fzemppkhn" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -475,7 +475,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -495,7 +495,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -515,7 +515,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -535,7 +535,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -555,7 +555,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

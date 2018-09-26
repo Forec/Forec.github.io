@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2015/10/14/Computer-Organization-Architecture2/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理第三章布尔代数，并加入一些数字逻辑的相关内容。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/computer-organization-2.png">
-<meta property="og:updated_time" content="2016-11-22T11:09:28.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/computer-organization-2.png">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.082Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计组与体系结构笔记（二）">
 <meta name="twitter:description" content="整理第三章布尔代数，并加入一些数字逻辑的相关内容。">
@@ -184,25 +184,25 @@
 <li>对偶规则：变量不变，其余和反演的规则相同。</li>
 </ul>
 </li>
-<li><strong>通用门电路</strong>：常用的门电路是与非门（NAND）和或非门（NOR）。与非门也称万能门，可以构建所有的数字电路。下图给出用与非门实现与门、非门和非门的方法。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/与非门.jpg" alt="与非门实现基本数字电路" width="400px"><br>使用与非门的电路成本低，并且在物理上构建复杂的集成电路时使用相同的结构模块比使用一些基本结构模块（与、非、或）的集合要容易的多。根据对偶原理，或非门也可以构建任意的数字电路。</li>
+<li><strong>通用门电路</strong>：常用的门电路是与非门（NAND）和或非门（NOR）。与非门也称万能门，可以构建所有的数字电路。下图给出用与非门实现与门、非门和非门的方法。<br><img src="http://qiniu.forec.cn/与非门.jpg" alt="与非门实现基本数字电路" width="400px"><br>使用与非门的电路成本低，并且在物理上构建复杂的集成电路时使用相同的结构模块比使用一些基本结构模块（与、非、或）的集合要容易的多。根据对偶原理，或非门也可以构建任意的数字电路。</li>
 </ol>
 <hr>
 <h1 id="数字电路元件"><a href="#数字电路元件" class="headerlink" title="数字电路元件"></a>数字电路元件</h1><ol>
 <li><strong>集成电路</strong>的电子元件直接在半导体芯片上腐蚀制成，与对等的分立器件相比，集成电路上的元件体积更小，工作时消耗的电能更多。</li>
 <li><strong>组合逻辑电路</strong>可以用来构建包含基本布尔算符，输入输出的数字电路，组合逻辑的输出完全取决于给定的输入值。<ul>
-<li><strong>半加器</strong>（half-adder）：求和操作为异或函数，进位输出等价于一个与门。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/半加器.jpg" alt="半加器" width="200px"></li>
-<li><strong>全加器</strong>（full-adder）：求和的加法电路有三个输入（x，y和进位输入）。例如要制作16位字的全加器，只需要将下图所示电路复制16次。但因为运算速度慢，现实中不会采用这种方法实现加法运算，改进方法包括使用先行进位加法器，选择进位加法器和存储进位加法器等，目的都是缩短由于两个二进制数字相加的逐位进位过程造成的延迟时间。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/全加器.jpg" alt="全加器" width="200px"></li>
-<li><strong>译码器</strong>（decoder）：利用输入和对应数值选择某跟特定的输出线。下图是一个2-4译码器的电路构成。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/2-4译码器.gif" alt="2-4译码器"></li>
-<li><strong>多路复用器</strong>（multiplexer）用来从众多输入线中选择需要的二进制信息，然后直接用单一输出线输出。通过一组选择变量，或称为控制线，来控制选定某个特定的输入线，每个特定时刻都只有一个输入（被选中的输入）可以通过线路连到输出端，其他输入都会断开。分时共享的计算机和调制解调器网络都是使用多路复用器来分配终端。下图是一个简单的多路复用器的物理电路构成。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/多路复用器.jpg" alt="多路复用器" width="300px"></li>
+<li><strong>半加器</strong>（half-adder）：求和操作为异或函数，进位输出等价于一个与门。<br><img src="http://qiniu.forec.cn/半加器.jpg" alt="半加器" width="200px"></li>
+<li><strong>全加器</strong>（full-adder）：求和的加法电路有三个输入（x，y和进位输入）。例如要制作16位字的全加器，只需要将下图所示电路复制16次。但因为运算速度慢，现实中不会采用这种方法实现加法运算，改进方法包括使用先行进位加法器，选择进位加法器和存储进位加法器等，目的都是缩短由于两个二进制数字相加的逐位进位过程造成的延迟时间。<br><img src="http://qiniu.forec.cn/全加器.jpg" alt="全加器" width="200px"></li>
+<li><strong>译码器</strong>（decoder）：利用输入和对应数值选择某跟特定的输出线。下图是一个2-4译码器的电路构成。<br><img src="http://qiniu.forec.cn/2-4译码器.gif" alt="2-4译码器"></li>
+<li><strong>多路复用器</strong>（multiplexer）用来从众多输入线中选择需要的二进制信息，然后直接用单一输出线输出。通过一组选择变量，或称为控制线，来控制选定某个特定的输入线，每个特定时刻都只有一个输入（被选中的输入）可以通过线路连到输出端，其他输入都会断开。分时共享的计算机和调制解调器网络都是使用多路复用器来分配终端。下图是一个简单的多路复用器的物理电路构成。<br><img src="http://qiniu.forec.cn/多路复用器.jpg" alt="多路复用器" width="300px"></li>
 </ul>
 </li>
 <li><strong>时序逻辑电路</strong>：对于组合逻辑电路，函数的输出值完全取决于函数的输入值，即没有记忆功能。时序逻辑电路的输出同时时当前的输入和之前的输入的函数，为了记忆之前的输入，时序电路必须具有某种存储单元，称之为<strong>触发器</strong>（flip-flop），触发器的状态是此前的电路输入的函数。<ul>
 <li>时钟信号：时序电路依赖过去的输入决定当前的输出，因此各种事件的发生必须有先后次序。有的时序电路是异步（asynchronous）的，意味着只要任意的输入值发生改变，这类电路就会被激活。同步（synchronous）时序逻辑电路则利用时钟来对各个事件进行排序。时钟能够产生一系列具有精确宽度和间隔的连续脉冲，脉冲间隔成为时钟的周期时间，速度一般用MHz衡量。大部分时序电路采用边缘出发（有的为水平触发），即电路的状态在时钟脉冲的上升边缘或者下降边缘发生改变。</li>
 <li>触发器：水平触发电路只要时钟信号在高电平或者低电平时旧可以改变状态。<strong>锁存器</strong>（latch）属于水平出发类型，而触发器为边缘触发类型。时序电路通过<strong>反馈</strong>“记忆”过去的状态。可以通过<strong>特征表</strong>描述触发器，用Q（t）表示电路当前状态，Q（t+1）表示电路的下一个状态。</li>
-<li><strong>SR触发器</strong>：三个输入，S、R和当前的输出Q（t）。若S，R均为0，则Q（t+1）= Q（t）；若R = 1，S = 0，则Q（t+1）= 0（复位）；若R = 0，S = 1，则Q（t+1）= 1（置为）；S、R均为1未定义。下面是实际的SR触发器示意图。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/SR触发器.jpg" alt="SR触发器" width="300px"></li>
-<li><strong>JK触发器</strong>：以Jack Kilby命名，是对SR触发器的简单修改，防止了R、S同时为1的非法状态的发生，当J、K都为1时Q（t+1）= ~Q（t）。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/JK触发器.png" alt="JK触发器" width="200px"></li>
-<li><strong>D触发器</strong>（data）：D触发器是一个真实的计算机存储器单元，如果输入设置为1，则时钟脉冲到来时输出为1，如果输入为0，时钟脉冲到来时输出为0。作用在于时钟脉冲到来时才将数据送出，并且用边沿触发，防止外来干扰在数据传输时的影响。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/D触发器.png" alt="D触发器"></li>
-<li>典型时序逻辑电路：下图是一个4位寄存器的逻辑图<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/4位寄存器.jpg" alt="4位寄存器" width="300px"></li>
+<li><strong>SR触发器</strong>：三个输入，S、R和当前的输出Q（t）。若S，R均为0，则Q（t+1）= Q（t）；若R = 1，S = 0，则Q（t+1）= 0（复位）；若R = 0，S = 1，则Q（t+1）= 1（置为）；S、R均为1未定义。下面是实际的SR触发器示意图。<br><img src="http://qiniu.forec.cn/SR触发器.jpg" alt="SR触发器" width="300px"></li>
+<li><strong>JK触发器</strong>：以Jack Kilby命名，是对SR触发器的简单修改，防止了R、S同时为1的非法状态的发生，当J、K都为1时Q（t+1）= ~Q（t）。<br><img src="http://qiniu.forec.cn/JK触发器.png" alt="JK触发器" width="200px"></li>
+<li><strong>D触发器</strong>（data）：D触发器是一个真实的计算机存储器单元，如果输入设置为1，则时钟脉冲到来时输出为1，如果输入为0，时钟脉冲到来时输出为0。作用在于时钟脉冲到来时才将数据送出，并且用边沿触发，防止外来干扰在数据传输时的影响。<br><img src="http://qiniu.forec.cn/D触发器.png" alt="D触发器"></li>
+<li>典型时序逻辑电路：下图是一个4位寄存器的逻辑图<br><img src="http://qiniu.forec.cn/4位寄存器.jpg" alt="4位寄存器" width="300px"></li>
 </ul>
 </li>
 <li>数字集成电路：数字电路实现的逻辑功能都是以集成电路（IC）形式体现的，具有体积小，可靠性高，功耗低，集成度高等特点。目前广泛采用CMOS电路和TTL电路两种类型。CMOS已成为主导技术并有可能取代TTL。二者相比，前者功耗小，集成度高，后者速度快，但集成度不如CMOS。<ul>
@@ -222,7 +222,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/10/14/Computer-Organization-Architecture2/" data-id="cjjrxonsj00abzp2fomxn5e9y" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2015/10/14/Computer-Organization-Architecture2/" data-id="cjmj3zfmk00ab2b2fleltd23z" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -383,7 +383,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -403,7 +403,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -423,7 +423,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -443,7 +443,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -463,7 +463,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2016/02/21/machinelearning10/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="聚类是一种无监督学习，将相似的对象归到同一个簇中，类似全自动分类，即类别体系也是自动构建的。聚类方法几乎可以应用于所有对性，簇内的对象越相似，聚类效果越好。K-均值聚类算法可以发现k个不同的簇，且每个簇的中心采用簇中所含值的均值构成。聚类与分类的区别在于，分类的目标事先已知，而聚类未知。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/machine-learning-7.png">
-<meta property="og:updated_time" content="2017-08-22T07:30:24.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/machine-learning-7.png">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.156Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记（Chapter 10 - K-均值聚类算法）">
 <meta name="twitter:description" content="聚类是一种无监督学习，将相似的对象归到同一个簇中，类似全自动分类，即类别体系也是自动构建的。聚类方法几乎可以应用于所有对性，簇内的对象越相似，聚类效果越好。K-均值聚类算法可以发现k个不同的簇，且每个簇的中心采用簇中所含值的均值构成。聚类与分类的区别在于，分类的目标事先已知，而聚类未知。">
@@ -219,7 +219,7 @@
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">distSLC</span><span class="params">(vecA, vecB)</span>:</span></span><br><span class="line">    a = sin(vecA[<span class="number">0</span>,<span class="number">1</span>]*pi/<span class="number">180</span>) * sin(vecB[<span class="number">0</span>,<span class="number">1</span>]*pi/<span class="number">180</span>)</span><br><span class="line">    b = cos(vecA[<span class="number">0</span>,<span class="number">1</span>]*pi/<span class="number">180</span>) * cos(vecB[<span class="number">0</span>,<span class="number">1</span>]*pi/<span class="number">180</span>) *\</span><br><span class="line">     cos(pi*(vecB[<span class="number">0</span>,<span class="number">0</span>]-vecA[<span class="number">0</span>,<span class="number">0</span>])/<span class="number">180</span>)</span><br><span class="line">    <span class="keyword">return</span> arccos(a+b)*<span class="number">6371.0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clusterClubs</span><span class="params">(numClust=<span class="number">5</span>)</span>:</span></span><br><span class="line">    datList = []</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> open(<span class="string">'places.txt'</span>).readlines():</span><br><span class="line">        lineArr = line.split(<span class="string">'\t'</span>)</span><br><span class="line">        datList.append([float(lineArr[<span class="number">4</span>]), float(lineArr[<span class="number">3</span>])])</span><br><span class="line">    datMat = mat(datList)</span><br><span class="line">    myCentroids, clustAssing = biKmeans(datMat, numClust, distMeas = distSLC)</span><br><span class="line">    fig = plt.figure()</span><br><span class="line">    rect = [<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.8</span>, <span class="number">0.8</span>]</span><br><span class="line">    scatterMarkers = [<span class="string">'s'</span>, <span class="string">'o'</span>, <span class="string">'^'</span>, <span class="string">'8'</span>, <span class="string">'p'</span>, <span class="string">'d'</span>, <span class="string">'v'</span>, <span class="string">'h'</span>, <span class="string">'&gt;'</span>, <span class="string">'&lt;'</span>]</span><br><span class="line">    axprops = dict(xticks=[], yticks=[])</span><br><span class="line">    ax0 = fig.add_axes(rect, label = <span class="string">'ax0'</span>, **axprops)</span><br><span class="line">    imgP = plt.imread(<span class="string">'Portland.png'</span>)</span><br><span class="line">    ax0.imshow(imgP)</span><br><span class="line">    ax1 = fig.add_axes(rect, label = <span class="string">'ax1'</span>, frameon = <span class="keyword">False</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(numClust):</span><br><span class="line">        ptsInCurrCluster = datMat[nonzero(clustAssing[:,<span class="number">0</span>].A == i)[<span class="number">0</span>],:]</span><br><span class="line">        markerSytle = scatterMarkers[i%len(scatterMarkers)]</span><br><span class="line">        ax1.scatter(ptsInCurrCluster[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>], \</span><br><span class="line">            ptsInCurrCluster[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],\</span><br><span class="line">            marker = markerSytle, s=<span class="number">90</span>)</span><br><span class="line">    ax1.scatter(myCentroids[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>], myCentroids[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],\</span><br><span class="line">        marker = <span class="string">'+'</span>, s=<span class="number">300</span>)</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
 <ul>
-<li>运行结果如下，分别是划分为5个簇、7个簇的情况。多次运行可以找到最佳的分簇数目和方法。<img src="http://7xktmz.com1.z0.glb.clouddn.com/ch10-%E5%9C%B0%E5%9B%BE%E7%82%B9%E8%81%9A%E7%B1%BB.png" width="400px"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/ch10-%E5%9C%B0%E5%9B%BE%E7%82%B9%E8%81%9A%E7%B1%BB-7.png" width="400px"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/ch10-%E5%9C%B0%E5%9B%BE%E7%82%B9%E8%81%9A%E7%B1%BB-7-2.png" width="400px"></li>
+<li>运行结果如下，分别是划分为5个簇、7个簇的情况。多次运行可以找到最佳的分簇数目和方法。<img src="http://qiniu.forec.cn/ch10-%E5%9C%B0%E5%9B%BE%E7%82%B9%E8%81%9A%E7%B1%BB.png" width="400px"><br><img src="http://qiniu.forec.cn/ch10-%E5%9C%B0%E5%9B%BE%E7%82%B9%E8%81%9A%E7%B1%BB-7.png" width="400px"><br><img src="http://qiniu.forec.cn/ch10-%E5%9C%B0%E5%9B%BE%E7%82%B9%E8%81%9A%E7%B1%BB-7-2.png" width="400px"></li>
 </ul>
 <h1 id="K-均值聚类算法总结"><a href="#K-均值聚类算法总结" class="headerlink" title="K-均值聚类算法总结"></a>K-均值聚类算法总结</h1><blockquote>
 <p>无监督学习指事先不知道要寻找的内容，没有目标变量。聚类将数据点归到多个簇中，可以使用多种方法计算相似度，实际使用时也应多次运行取较优结果。K-均值算法是一种广泛使用的聚类算法，k是用户指定的要创建的簇的数目，该算法非常有效但容易受到初始簇质心的影响。可以使用二分K-均值聚类算法获得更好的效果。</p>
@@ -234,7 +234,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/02/21/machinelearning10/" data-id="cjjrxonqy006bzp2fb7l9wb9w" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/02/21/machinelearning10/" data-id="cjmj3zfkt006b2b2f4diimvgc" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -395,7 +395,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -415,7 +415,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -435,7 +435,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -455,7 +455,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -475,7 +475,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

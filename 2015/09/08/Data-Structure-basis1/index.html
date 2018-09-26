@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2015/09/08/Data-Structure-basis1/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="这篇文章中的C语言代码均为md编辑器中手打，仅作理解用，未经过编译测试。有错误请留言，将及时更正。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/data-structure-bases-1.png">
-<meta property="og:updated_time" content="2016-11-04T15:48:32.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/data-structure-bases-1.png">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.293Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基础数据结构（需求和树相关）">
 <meta name="twitter:description" content="这篇文章中的C语言代码均为md编辑器中手打，仅作理解用，未经过编译测试。有错误请留言，将及时更正。">
@@ -313,9 +313,9 @@
 <li>上面四种情况中，第一种和第四种是关于X的镜面对称，第二种和第三种是关于X的镜面对称。因此只需要考虑前两种情况，并拓展到后两种情况。下面对前两种情况分别分析，这两种情况的处理方法在其他平衡树中也多有使用。</li>
 </ul>
 </li>
-<li><p>对X左孩子的左子树插入。此时为（左-左）或（右-右）情况，发生在树的“外边”，可以通过一次单旋转完成调整。以下图片来源于网络。<br>下面的两张图分别是调整第一种和第四种情况的单旋转。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/算导.jpg" width="400px" alt="第一种情况单旋转"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/5.jpg" width="400px" alt="第四种情况单旋转"><br>下面的两张图分别是两种情况的实例，上面的图是第一种情况（右旋转），下面的图为第四种情况（左旋转）。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/2.jpg" width="400px" alt="第一种情况单旋转实例"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/7.jpg" width="400px" alt="第四种情况单旋转实例"><br>需要注意的是，<strong>当旋转修正树的部分结构时，树的其余部分必须知晓这部分变化</strong>。比如实例的第一张图中，6,7,8旋转后，5的右孩子必须指向7，来代替原来的8。</p>
+<li><p>对X左孩子的左子树插入。此时为（左-左）或（右-右）情况，发生在树的“外边”，可以通过一次单旋转完成调整。以下图片来源于网络。<br>下面的两张图分别是调整第一种和第四种情况的单旋转。<br><img src="http://qiniu.forec.cn/算导.jpg" width="400px" alt="第一种情况单旋转"><br><img src="http://qiniu.forec.cn/5.jpg" width="400px" alt="第四种情况单旋转"><br>下面的两张图分别是两种情况的实例，上面的图是第一种情况（右旋转），下面的图为第四种情况（左旋转）。<br><img src="http://qiniu.forec.cn/2.jpg" width="400px" alt="第一种情况单旋转实例"><br><img src="http://qiniu.forec.cn/7.jpg" width="400px" alt="第四种情况单旋转实例"><br>需要注意的是，<strong>当旋转修正树的部分结构时，树的其余部分必须知晓这部分变化</strong>。比如实例的第一张图中，6,7,8旋转后，5的右孩子必须指向7，来代替原来的8。</p>
 </li>
-<li>对X左孩子的右子树插入。此时为（左-右）或（右-左）情况，发生在树的“内侧”，可以通过双旋转修正。<br>如下图所示是一个双旋转过程（图片来源于Vamei）<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/1.png" width="400px" alt="双旋转举例"><br>下面两张图分别是LR旋转（针对左孩子的右子树插入）和RL旋转（针对右孩子的左子树插入）。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/3.jpg" width="400px" alt="LR旋转"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/4.jpg" width="400px" alt="RL旋转"><br>以LR旋转为例，B节点处不满足AVL树性质，对B-C支作左旋转，使得C成为C-B支新的根，之后A-C支右旋转，使得C成为整棵树的新根，满足AVL树性质。</li>
+<li>对X左孩子的右子树插入。此时为（左-右）或（右-左）情况，发生在树的“内侧”，可以通过双旋转修正。<br>如下图所示是一个双旋转过程（图片来源于Vamei）<br><img src="http://qiniu.forec.cn/1.png" width="400px" alt="双旋转举例"><br>下面两张图分别是LR旋转（针对左孩子的右子树插入）和RL旋转（针对右孩子的左子树插入）。<br><img src="http://qiniu.forec.cn/3.jpg" width="400px" alt="LR旋转"><br><img src="http://qiniu.forec.cn/4.jpg" width="400px" alt="RL旋转"><br>以LR旋转为例，B节点处不满足AVL树性质，对B-C支作左旋转，使得C成为C-B支新的根，之后A-C支右旋转，使得C成为整棵树的新根，满足AVL树性质。</li>
 </ul>
 <h2 id="AVL树的代码实现"><a href="#AVL树的代码实现" class="headerlink" title="AVL树的代码实现"></a>AVL树的代码实现</h2><ul>
 <li><p>节点声明  </p>
@@ -357,7 +357,7 @@
 <li>一棵有n个内节点的红黑树，其高度至多为2lg(n+1)，证明使用数学归纳法。</li>
 </ul>
 <ul>
-<li>旋转操作：insert和delete都可能使新的红黑树违反红黑性质。下图展示了左旋和右旋两种状态的切换<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/红黑树旋转操作.jpg" width="400px" alt="红黑树左右旋转"></li>
+<li>旋转操作：insert和delete都可能使新的红黑树违反红黑性质。下图展示了左旋和右旋两种状态的切换<br><img src="http://qiniu.forec.cn/红黑树旋转操作.jpg" width="400px" alt="红黑树左右旋转"></li>
 </ul>
 <h2 id="红黑树的代码实现"><a href="#红黑树的代码实现" class="headerlink" title="红黑树的代码实现"></a>红黑树的代码实现</h2><ul>
 <li><p>类型声明</p>
@@ -405,7 +405,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/09/08/Data-Structure-basis1/" data-id="cjjrxonsb009vzp2f8wo2n02r" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2015/09/08/Data-Structure-basis1/" data-id="cjmj3zfmd009v2b2fk606zw6g" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -566,7 +566,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -586,7 +586,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -606,7 +606,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -626,7 +626,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -646,7 +646,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

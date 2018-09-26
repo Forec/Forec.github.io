@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2016/11/24/os-concepts-7/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-7.jpg">
-<meta property="og:updated_time" content="2017-01-05T15:47:06.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/os-concepts-7.jpg">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.112Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（七）：死锁">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版死锁部分，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -210,7 +210,7 @@
 <li>如果分配图中存在环，且存在某个资源类型有多个实例，则系统可能处于进程死锁</li>
 </ul>
 </li>
-<li>一个带有死锁的资源分配图如下图所示：<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/resource-allocation-graph-with-deadlock.jpg" width="200px"></li>
+<li>一个带有死锁的资源分配图如下图所示：<br><img src="http://qiniu.forec.cn/resource-allocation-graph-with-deadlock.jpg" width="200px"></li>
 </ul>
 <h1 id="死锁处理"><a href="#死锁处理" class="headerlink" title="死锁处理"></a>死锁处理</h1><ul>
 <li>三种方法可以处理死锁：<ul>
@@ -246,7 +246,7 @@
 <li>向系统资源分配图中加入一种新类型的边，称为 <strong>需求边（claim edge）</strong> 。需求边 <code>Pi-&gt;Rj</code> 表示进程 Pi 可能在将来某时刻申请资源 Rj，需求边用虚线表示。当 Pi 申请资源 Rj 时，需求边 <code>Pi-&gt;Rj</code>变为申请边，当进程 Pi 释放资源 Rj 时，分配边 <code>Rj-&gt;Pi</code> 变成需求边；</li>
 <li>若进程 Pi 试图申请资源 Rj，则系统需要检查：如果需求边 <code>Pi-&gt;Rj</code> 变成分配边 <code>Rj-&gt;Pi</code> 后，资源分配图中不存在环（虚实线无所谓），则允许申请，否则进程 Pi 必须等待。</li>
 <li>系统检查是否存在环可使用 Tarjan 等求联通子图的 n² 级算法。</li>
-<li>一个资源分配图算法的实例如下图。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/resource-allocation-graph-algorithm.jpg" width="400px"></li>
+<li>一个资源分配图算法的实例如下图。<br><img src="http://qiniu.forec.cn/resource-allocation-graph-algorithm.jpg" width="400px"></li>
 </ul>
 </li>
 <li><strong>银行家（Banker’s）算法</strong> ：<ul>
@@ -339,7 +339,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/24/os-concepts-7/" data-id="cjjrxonps003xzp2f261n19d5" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/24/os-concepts-7/" data-id="cjmj3zfj5003x2b2foggjziiv" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -500,7 +500,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -520,7 +520,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -540,7 +540,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -560,7 +560,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -580,7 +580,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2015/12/25/Graph-Algorithms7-flow/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="简述最大流问题，给出一种解决最大流的最简单方法，及在二分图匹配中的应用。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/graph-flow.jpg">
-<meta property="og:updated_time" content="2017-02-08T13:13:56.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/graph-flow.jpg">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.335Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="最大流（一）">
 <meta name="twitter:description" content="简述最大流问题，给出一种解决最大流的最简单方法，及在二分图匹配中的应用。">
@@ -180,7 +180,7 @@
 </ul>
 </li>
 <li>流网络性质的解释：容量限制说明从一个顶点到另一个顶点的网络流不能超过设定的容量。反对称性说明从顶点u到顶点v的流是其反向流的负值。流守恒性说明从非源点或非汇点的顶点出发的总网络流为0，也可以说，除s和t外，进入一个顶点的总流为0，可以阐述为流进等于流出。</li>
-<li>最大流问题：给出一个具有源点s和汇点t的流网络G，找出从s到t的最大流值。举个例子说明，下图是一个简单的流网络，从源点s到汇点t的最大流为5，将有向边想象成城市间的公路，该流网络就转化为城市间的物流问题。另外，图中不存在双向边，假如为图中权值为6的有向边配备一条“反向通道”，该反向通道的权值为3，也就是城市间可以相互运输，则可以利用<strong>抵消处理</strong>将反向通道剔除。因为运输同一种物品，从u到v运送6个，从v到u运送3个，实质相当于从u到v运送6-3=3个，因此任意顶点间流传输问题都可以通过抵消转化为单向传输问题：只沿正向流的方向传输。<img src="http://7xktmz.com1.z0.glb.clouddn.com/%E6%9C%80%E5%A4%A7%E6%B5%81.jpg" width="200px"></li>
+<li>最大流问题：给出一个具有源点s和汇点t的流网络G，找出从s到t的最大流值。举个例子说明，下图是一个简单的流网络，从源点s到汇点t的最大流为5，将有向边想象成城市间的公路，该流网络就转化为城市间的物流问题。另外，图中不存在双向边，假如为图中权值为6的有向边配备一条“反向通道”，该反向通道的权值为3，也就是城市间可以相互运输，则可以利用<strong>抵消处理</strong>将反向通道剔除。因为运输同一种物品，从u到v运送6个，从v到u运送3个，实质相当于从u到v运送6-3=3个，因此任意顶点间流传输问题都可以通过抵消转化为单向传输问题：只沿正向流的方向传输。<img src="http://qiniu.forec.cn/%E6%9C%80%E5%A4%A7%E6%B5%81.jpg" width="200px"></li>
 <li>多个源点或多个汇点：考虑上一篇差分约束系统，我们通过构造了一个额外的源点s0得到了差分约束系统的最短路模型。在最大流问题中，如果出现多个源点或者多个汇点，可以为其增加一个超级源点s0或超级汇点t0,并将s0和所有源点si相连，权值为正无穷，将所有汇点ti和超级汇点t0相连，权值为正无穷。问题就转化为从超级源点s0到超级汇点t0的最大流问题。</li>
 <li>隐含求和记号简化流网络的表达：使用函数f，f的任意自变量都可以是顶点的集合，表示的值为自变量代表的元素所有可能求和情况，例如f(X,Y) = Sum{ f(x,y) ，x in X and y in Y }。因此流守恒可以表示为f(u,V) = 0，流的值|f| = f(s,V) = f(V,t)。对于下面几个恒等式，建议参考基尔霍夫第一第二定律证明。（1）对于所有的X包含于V，f(X, X) = 0，（2）对所有X，Y包含于V，f(X, Y) = -f(Y,X)，（3）对所有X,Y,Z包含于V，其中X and Y = None，有<code>f(X or Y, Z) = f(X, Z)+f(Y, Z)</code>，<code>f(Z, X or Y) = f(Z, X)+f(Z, Y)</code>。</li>
 </ul>
@@ -225,7 +225,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/12/25/Graph-Algorithms7-flow/" data-id="cjjrxonrz0094zp2f2tpn92hd" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2015/12/25/Graph-Algorithms7-flow/" data-id="cjmj3zfly00942b2f8boij6it" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -386,7 +386,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -406,7 +406,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -426,7 +426,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -446,7 +446,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -466,7 +466,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

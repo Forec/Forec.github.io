@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2016/02/25/machinelearning13/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="在低维下，数据更容易进行处理，其相关特征可能在数据中明确显示出来。PCA是降维技术中最广泛的一种。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/machine-learning-10.png">
-<meta property="og:updated_time" content="2017-08-22T07:30:14.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/machine-learning-10.png">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.216Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记（Chapter 13 - PCA简化）">
 <meta name="twitter:description" content="在低维下，数据更容易进行处理，其相关特征可能在数据中明确显示出来。PCA是降维技术中最广泛的一种。">
@@ -180,12 +180,12 @@
 </ul>
 <h1 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h1><ul>
 <li>PCA可以降低数据复杂性，识别最重要的多个特征，但有时不一定需要，并且可能损失有用信息。适用于数值型数据。</li>
-<li>对于下图的数据，要找出一条直线尽可能覆盖这些点，第一条坐标轴旋转到最大方差的方向，数据的最大方差给出了数据的最重要的信息。在选择了覆盖数据最大差异性的坐标轴之后，选择第二条坐标轴与第一条正交。<img src="http://7xktmz.com1.z0.glb.clouddn.com/pca%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE.png" width="400px">在下面的示例中，只需要一维信息，另一维信息只是对分类缺乏贡献的噪声数据。可以采用决策树，也可以使用SVM获得更好的分类间隔，但是分类超平面很难解释。PCA降维可以同时获得SVM和决策树的优点。<img src="http://7xktmz.com1.z0.glb.clouddn.com/pca%E9%99%8D%E7%BB%B42.png" width="400px"></li>
+<li>对于下图的数据，要找出一条直线尽可能覆盖这些点，第一条坐标轴旋转到最大方差的方向，数据的最大方差给出了数据的最重要的信息。在选择了覆盖数据最大差异性的坐标轴之后，选择第二条坐标轴与第一条正交。<img src="http://qiniu.forec.cn/pca%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE.png" width="400px">在下面的示例中，只需要一维信息，另一维信息只是对分类缺乏贡献的噪声数据。可以采用决策树，也可以使用SVM获得更好的分类间隔，但是分类超平面很难解释。PCA降维可以同时获得SVM和决策树的优点。<img src="http://qiniu.forec.cn/pca%E9%99%8D%E7%BB%B42.png" width="400px"></li>
 <li>PCA过程实现：第一个主成分从数据差异性最大的方向获取，可以通过数据集的<a href="http://pinkyjie.com/2010/08/31/covariance/" target="_blank" rel="external">协方差矩阵 Convariance</a>和<a href="http://www.tongji.edu.cn/~math/xxds/kcja/kcja_b/5-2.htm" target="_blank" rel="external">特征值</a>分析求得。下面pca函数的流程为，首先去除平均值，之后计算协方差矩阵<code>cov</code>，计算协方差矩阵的特征值和特征向量<code>linalg.eig</code>，将特征值从大到小排序，保留对应的最上面的N个特征向量，最后将数据转换到上述N个特征向量构建的新空间中。</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">(fileName, delim = <span class="string">'\t'</span>)</span>:</span></span><br><span class="line">    fr = open(fileName)</span><br><span class="line">    stringArr = [line.strip().split(delim) <span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines()]</span><br><span class="line">    datArr = [map(float, line) <span class="keyword">for</span> line <span class="keyword">in</span> stringArr]</span><br><span class="line">    <span class="keyword">return</span> mat(datArr)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pca</span><span class="params">(dataMat, topNfeat = <span class="number">999999</span>)</span>:</span></span><br><span class="line">    meanVals = mean(dataMat, axis = <span class="number">0</span>)</span><br><span class="line">    meanRemoved = dataMat - meanVals</span><br><span class="line">    covMat = cov(meanRemoved, rowvar = <span class="number">0</span>)   <span class="comment"># n*n</span></span><br><span class="line">    eigVals, eigVects = linalg.eig(mat(covMat))</span><br><span class="line">        <span class="comment"># 1*n, n*n</span></span><br><span class="line">    eigValInd = argsort(eigVals)</span><br><span class="line">    eigValInd = eigValInd[:-(topNfeat+<span class="number">1</span>):-<span class="number">1</span>]</span><br><span class="line">    redEigVects = eigVects[:,eigValInd]</span><br><span class="line">    lowDDataMat = meanRemoved * redEigVects</span><br><span class="line">    reconMat = (lowDDataMat * redEigVects.T) + meanVals</span><br><span class="line">    <span class="keyword">return</span> lowDDataMat, reconMat</span><br></pre></td></tr></table></figure>
 <ul>
-<li>运行示例如下，下图是构造出的第一主成分。<img src="http://7xktmz.com1.z0.glb.clouddn.com/pca%E9%99%8D%E7%BB%B4.png" width="400px"><br></li>
+<li>运行示例如下，下图是构造出的第一主成分。<img src="http://qiniu.forec.cn/pca%E9%99%8D%E7%BB%B4.png" width="400px"><br></li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>dataMat = pca.loadDataSet(<span class="string">'testSet.txt'</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>lowDMat, reconMat = pca.pca(dataMat, <span class="number">1</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>shape(lowDMat)</span><br><span class="line">(<span class="number">1000</span>, <span class="number">1</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>fig = plt.figure()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax.scatter(dataMat[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>], dataMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],\</span><br><span class="line">        marker = <span class="string">'^'</span>, s = <span class="number">90</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>ax.scatter(reconMat[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>], reconMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],\</span><br><span class="line">        marker = <span class="string">'o'</span>, s = <span class="number">50</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>plt.show()</span><br></pre></td></tr></table></figure>
 <h1 id="利用PCA对半导体制造数据降维"><a href="#利用PCA对半导体制造数据降维" class="headerlink" title="利用PCA对半导体制造数据降维"></a>利用PCA对半导体制造数据降维</h1><ul>
@@ -197,7 +197,7 @@
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span>dataMat = pca.replaceNanWithMean()</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>meanVals = mean(dataMat, axis=<span class="number">0</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>meanRemoved = dataMat - meanVals</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>covMat = cov(meanRemoved, rowvar=<span class="number">0</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>eigVals, eigVects = linalg.eig(mat(covMat))</span><br><span class="line">array([  <span class="number">5.34151979e+07</span>,   <span class="number">2.17466719e+07</span>,   <span class="number">8.24837662e+06</span>,</span><br><span class="line">         <span class="number">2.07388086e+06</span>,   <span class="number">1.31540439e+06</span>,   <span class="number">4.67693557e+05</span>,</span><br><span class="line">         <span class="number">2.90863555e+05</span>,   <span class="number">2.83668601e+05</span>,   <span class="number">2.37155830e+05</span>,</span><br><span class="line">         <span class="number">2.08513836e+05</span>,   <span class="number">1.96098849e+05</span>,   <span class="number">1.86856549e+05</span>,</span><br><span class="line">         ......</span><br><span class="line">         <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,</span><br><span class="line">         <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,</span><br><span class="line">         <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,   <span class="number">0.00000000e+00</span>,</span><br></pre></td></tr></table></figure>
 <ul>
-<li>下图是前二十个主成分占总方差的百分比，大部分方差都包含在前面几个主成分中，前6个特征覆盖了96.8%的方差。因此可以将590个特征缩减到这6个特征。现实中我们无法精确知道所需要的主成分数目，必须通过实验取不同值来确定。<img src="http://7xktmz.com1.z0.glb.clouddn.com/pca%E6%96%B9%E5%B7%AE%E5%8D%A0%E6%AF%94.png" width="400px"></li>
+<li>下图是前二十个主成分占总方差的百分比，大部分方差都包含在前面几个主成分中，前6个特征覆盖了96.8%的方差。因此可以将590个特征缩减到这6个特征。现实中我们无法精确知道所需要的主成分数目，必须通过实验取不同值来确定。<img src="http://qiniu.forec.cn/pca%E6%96%B9%E5%B7%AE%E5%8D%A0%E6%AF%94.png" width="400px"></li>
 </ul>
 <h1 id="PCA总结"><a href="#PCA总结" class="headerlink" title="PCA总结"></a>PCA总结</h1><blockquote>
 <p>降维技术使数据更易使用，并且它们往往能够去除数据中的噪声，通常作为预处理步骤，在算法应用前清洗数据。PCA可以从数据中识别主要特征，它通过沿着数据最大方差方向旋转坐标轴实现。如果要处理的数据过多无法放入内存，可以使用在线PCA分析，参考论文“Incremental Eigenanalysis for Classification”。</p>
@@ -212,7 +212,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/02/25/machinelearning13/" data-id="cjjrxonqt005zzp2f33stcs3h" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/02/25/machinelearning13/" data-id="cjmj3zfko005z2b2fr3jckqdn" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -373,7 +373,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -393,7 +393,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -413,7 +413,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -433,7 +433,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -453,7 +453,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

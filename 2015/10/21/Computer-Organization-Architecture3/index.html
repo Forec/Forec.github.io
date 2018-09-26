@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2015/10/21/Computer-Organization-Architecture3/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="简单的计算机体系模型。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/computer-organization-3.jpg">
-<meta property="og:updated_time" content="2016-11-22T11:07:04.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/computer-organization-3.jpg">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.107Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计组与体系结构笔记（三）">
 <meta name="twitter:description" content="简单的计算机体系模型。">
@@ -222,7 +222,7 @@
 <p>MARIE包含一个实际的工作计算机具备的全部功能部件，包括存储器和CPU。</p>
 </blockquote>
 <h2 id="体系结构、寄存器和总线"><a href="#体系结构、寄存器和总线" class="headerlink" title="体系结构、寄存器和总线"></a>体系结构、寄存器和总线</h2><ul>
-<li>MARIE有以下特点：使用二进制数和补码表示法，存储程序和采用字长度，按字编址，主存储器容量为4K字，16位数据，16位指令、4位操作吗和12位地址，一个16位的累加器（AC），一个16位的指令寄存器（IR），一个16位的存储器缓冲寄存器（MBR），一个12位的程序计数器（PC），一个12位的存储器地址寄存器（MAR），一个8位的输入寄存器和一个8位的输出寄存器。<img src="http://7xktmz.com1.z0.glb.clouddn.com/MARIE体系结构.jpg" alt="MARIE体系结构"></li>
+<li>MARIE有以下特点：使用二进制数和补码表示法，存储程序和采用字长度，按字编址，主存储器容量为4K字，16位数据，16位指令、4位操作吗和12位地址，一个16位的累加器（AC），一个16位的指令寄存器（IR），一个16位的存储器缓冲寄存器（MBR），一个12位的程序计数器（PC），一个12位的存储器地址寄存器（MAR），一个8位的输入寄存器和一个8位的输出寄存器。<img src="http://qiniu.forec.cn/MARIE体系结构.jpg" alt="MARIE体系结构"></li>
 <li>MARIE的7种寄存器<ul>
 <li>AC：<strong>累加器</strong>（accumalator）用来保持数据值，是通用寄存器。</li>
 <li>MAR：<strong>存储器地址寄存器</strong>（memory address register），用来保持被引用数据存储器地址。</li>
@@ -233,7 +233,7 @@
 <li>OutREG：输出寄存器（output register），用来保持将要输出到输出设备的数据。<br>其中，MAR、MBR、PC和IR寄存器为专用寄存器，不能作除上述规定外的其他目的。另外有一个状态或标志寄存器（status），保持显示各种状态信息。</li>
 </ul>
 </li>
-<li>MARIE的数据通道<img src="http://7xktmz.com1.z0.glb.clouddn.com/数据传输连接.jpg" alt="MARIE数据通道"></li>
+<li>MARIE的数据通道<img src="http://qiniu.forec.cn/数据传输连接.jpg" alt="MARIE数据通道"></li>
 </ul>
 <h2 id="指令系统体系结构"><a href="#指令系统体系结构" class="headerlink" title="指令系统体系结构"></a>指令系统体系结构</h2><blockquote>
 <p>指令系统体系结构（instruction set architecture，ISA）规定了计算机可以执行的每条指令和其格式。</p>
@@ -251,7 +251,7 @@
 <li>将PC中的内容复制到MAR：MAR&lt;——PC。</li>
 <li>CPU转向主存储器，提取由MAR给出的地址单元中的指令，并将指令放入指令寄存器IR，同时PC自动加1（MARIE按字编址，PC加一实际效果是下一个字的地址占据PC寄存器，如果MARIE按字节编制，则PC需要增量2,因为每条16位指令占据两个字节宽度），此时PC指向下一条指令：IR&lt;——M[MAR]，PC&lt;——PC+1。</li>
 <li>IR最右边的12位地址复制到MAR，对IR最左边4位译码：MAR&lt;——IR[11-0]，IR[15-12]。</li>
-<li>若需要，则CPU使用MAR中的地址转向存储器提取数据，并将数据放入MAR（可能是AC）中，然后执行指令。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/指令执行流程.jpg" alt="指令执行流程"></li>
+<li>若需要，则CPU使用MAR中的地址转向存储器提取数据，并将数据放入MAR（可能是AC）中，然后执行指令。<br><img src="http://qiniu.forec.cn/指令执行流程.jpg" alt="指令执行流程"></li>
 </ul>
 </li>
 <li><p>MARIE的中断和输入/输出：当CPU要执行输入输出指令时，通知I/O设备，之后继续处理其它任务，直到I/O设备准备就绪，此时I/O设备会向CPU发送中断请求信号，CPU响应和处理这个中断请求，完成I/O操作后CPU会继续正常的取指-译码-执行周期。大部分计算机中断处理方法为：在机器的每一个取指-译码-执行周期开始处，检查是否有中断请求存在，如果有中断请求则CPU先处理中断任务，否则正常执行。<strong>在CPU执行中断服务程序前，必须存储PC中的内容，CPU的所有寄存器中的内容，以及原始程序中原有的各种状态条件</strong>。中断服务完成后，CPU必须严格恢复到原始程序运行的真实环境。</p>
@@ -283,7 +283,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/10/21/Computer-Organization-Architecture3/" data-id="cjjrxonsi00a8zp2fpydh5dta" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2015/10/21/Computer-Organization-Architecture3/" data-id="cjmj3zfmj00a82b2fffggjb9h" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -444,7 +444,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -464,7 +464,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -484,7 +484,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -504,7 +504,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -524,7 +524,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2016/11/22/os-concepts-2/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/os-concepts-2.jpg">
-<meta property="og:updated_time" content="2017-01-06T11:23:02.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/os-concepts-2.jpg">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.040Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统（二）：进程与线程">
 <meta name="twitter:description" content="整理《Operating System Concepts》 第七版第三、四章的理论和概念，内容均为原书和中文版翻译的摘录，其中原书摘录部分由我 按个人理解简化、翻译为中文，可能存在一些不准确之处 。">
@@ -182,7 +182,7 @@
 <li><strong>终止（Terminated）</strong> ：进程完成执行</li>
 </ul>
 </li>
-<li>一次只有 <em>一个进程</em> 可以在 <em>一个处理器</em> 上 <em>运行</em> ，但可以有多个进程处于 <em>就绪</em> 或 <em>等待</em> 状态。进程状态转移如下图，图片根据原书内容制作。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/diagram-process-state.jpg" width="400px"></li>
+<li>一次只有 <em>一个进程</em> 可以在 <em>一个处理器</em> 上 <em>运行</em> ，但可以有多个进程处于 <em>就绪</em> 或 <em>等待</em> 状态。进程状态转移如下图，图片根据原书内容制作。<br><img src="http://qiniu.forec.cn/diagram-process-state.jpg" width="400px"></li>
 <li>每个进程在操作系统内部用 <strong>进程控制块（process control block，PCB）</strong> 来表示，它包含了与一个特定进程相关的信息。每个进程控制块包含：<ul>
 <li><strong>进程状态（process state）</strong> ：可为上述五种状态</li>
 <li><strong>程序计数器（program counter）</strong> ：指定进程要执行的下条指令地址</li>
@@ -197,11 +197,11 @@
 <li>新进程开始时处于就绪队列，它在就绪队列中等待直到被选中执行或 <strong>派遣（dispatched）</strong> 。一旦进程被分配 CPU 并开始执行，可能发生以下事件。在前两种情况中，经过一定时间的等待，进程最终会从等待状态切换回就绪状态，并放回到就绪队列中。<ul>
 <li>进程发出一个 I/O 请求并被放到 I/O 队列中</li>
 <li>进程创建一个新的子进程并等待其结束</li>
-<li>进程由于中断强制释放 CPU，并被放回到就绪队列中<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/process-scheduling-queue.jpg" width="400px"></li>
+<li>进程由于中断强制释放 CPU，并被放回到就绪队列中<br><img src="http://qiniu.forec.cn/process-scheduling-queue.jpg" width="400px"></li>
 </ul>
 </li>
 <li>操作系统从队列中选择进程的操作由 <strong>调度程序（scheduler）</strong> 执行。在批处理系统中，进程被放到大容量存储设备（如磁盘）的缓冲池（作业池）中等待执行。 <strong>长期调度程序（long-term scheduler）</strong> 或 <strong>作业调度程序（job scheduler）</strong> 从缓冲池选择进程、装入内存以准备执行，而 <strong>短期调度程序（short-term scheduler）</strong> 或 <strong>CPU 调度程序</strong> 从准备执行的进程中选择并分配 CPU。二者的区别主要体现在 <strong>执行的频率不同</strong> 。短期调度程序非常频繁地执行，为CPU选择新进程，如果短期调度需要 10ms 来确定执行一个运行 100ms 的进程，则 <code>10/(100+10) = 9%</code> 的CPU时间浪费在了调度工作上；而长期调度程序执行不频繁，可能数分钟调度一次，它控制 <strong>多道程序设计的程度（degree of multiprogramming）</strong> ，即内存中的进程数量。只有进程离开系统后才可能需要调度长期调度程序。</li>
-<li>有些系统没有/少有长期调度程序，如 UNIX 或 Windows 的分时系统通常没有长期调度程序，它们仅仅简单的将所有新进程放到内存中以供短期调度程序使用。有些系统如分时系统可能引入 <strong>中期调度系统（medium-term scheduler）</strong> ，它可以将进程从内存（或 CPU 竞争）中移出，从而降低多道程序设计的程度。之后，这些进程可以被重新调入内存并从中断处继续执行。这种行为称为 <strong>交换（swapping）</strong> 。有时因为内存要求的改变导致可用内存过度使用，此时便需要交换。<br><img src="http://7xktmz.com1.z0.glb.clouddn.com/addition-medium-term-scheduling.jpg" width="500px"><br><img src="http://7xktmz.com1.z0.glb.clouddn.com/swapped-state.jpg" width="500px"></li>
+<li>有些系统没有/少有长期调度程序，如 UNIX 或 Windows 的分时系统通常没有长期调度程序，它们仅仅简单的将所有新进程放到内存中以供短期调度程序使用。有些系统如分时系统可能引入 <strong>中期调度系统（medium-term scheduler）</strong> ，它可以将进程从内存（或 CPU 竞争）中移出，从而降低多道程序设计的程度。之后，这些进程可以被重新调入内存并从中断处继续执行。这种行为称为 <strong>交换（swapping）</strong> 。有时因为内存要求的改变导致可用内存过度使用，此时便需要交换。<br><img src="http://qiniu.forec.cn/addition-medium-term-scheduling.jpg" width="500px"><br><img src="http://qiniu.forec.cn/swapped-state.jpg" width="500px"></li>
 <li>将 CPU 切换到另一个进程需要保存当前进程状态并恢复另一个进程的状态，此任务称为 <strong>上下文切换（context switch）</strong> 。内核会将旧进程的状态保存在其 PCB 中，并装入调度后要执行的并已恢复的新进程的上下文。上下文切换的时间与硬件支持相关。</li>
 </ul>
 <h2 id="进程操作"><a href="#进程操作" class="headerlink" title="进程操作"></a>进程操作</h2><ul>
@@ -374,7 +374,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/11/22/os-concepts-2/" data-id="cjjrxonq1004czp2f0t6ah86e" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/11/22/os-concepts-2/" data-id="cjmj3zfjk004c2b2fexbrusk6" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -535,7 +535,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -555,7 +555,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -575,7 +575,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -595,7 +595,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -615,7 +615,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

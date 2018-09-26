@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2016/03/12/community-found/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="复杂网络是复杂系统的抽象，其中一个重要特征是网络中所呈现出的社区结构。许多网络是异构的，对于构成网络的不同类型节点所组成的子图称为网络中的社区。整理了几个传统的社区发现算法流程和大致原理，记录备忘。">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/community-found.png">
-<meta property="og:updated_time" content="2017-08-22T07:31:24.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/community-found.png">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.325Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="复杂网络传统社区发现算法概述">
 <meta name="twitter:description" content="复杂网络是复杂系统的抽象，其中一个重要特征是网络中所呈现出的社区结构。许多网络是异构的，对于构成网络的不同类型节点所组成的子图称为网络中的社区。整理了几个传统的社区发现算法流程和大致原理，记录备忘。">
@@ -199,8 +199,8 @@
 <li><p>切割图的目的在于 <strong>使被切掉的各边之和最小</strong> ，因为其代表着子图之间连接的相似度最低。</p>
 </li>
 <li>定义cut目标函数：\(cut(A1, A2, …, Ak) = \frac{1}{2} \cdot (\Sigma W(A_i, \overline{A_i}), i\in [1,k])\)。该目标函数可能会导致不好的分割，例如将某个图分成一个单一点和其余的n-1个点。</li>
-<li>定义RatioCut目标函数：<code>Ratiocut(A1, A2, ..., Ak) = (∑W(Ai, ~Ai)/|Ai|, i∈[1,k])/2</code>。其中|Ai|代表社区i中的节点数目。 <strong>最小化RatioCut等价于最小化f’Lf</strong> ，这里的<code>f = (f1, f2, ..., fn)∈R^n</code>，并且当节点vi∈A时，<code>fi = sqrt(|~A|/|A|)</code>，否则<code>fi = -sqrt(|A|/|~A|)</code>。根据上面提过的拉普拉斯矩阵性质，有<code>2f&#39;Lf = ∑wij(fi - fj)^2, i,j from 1 to N</code>。据此可以根据下面的推导得出，<code>min f&#39;Lf &lt;=&gt; min RatioCut</code>。<img src="http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC.png" width="500px"></li>
-<li>因为向量f是单位向量1，所以有<code>|f|^2 = ∑(fi^2) = n</code>，且<code>f&#39;·1(单位向量）= ∑(fi) = 0</code>。注意f是列向量，所以<code>f&#39;·f</code>是值，而<code>f·f&#39;</code>是一个NxN的矩阵。证明如下：<img src="http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC2.png" width="300px"><img src="http://7xktmz.com1.z0.glb.clouddn.com/laplace%E6%8E%A8%E5%AF%BC3.png" width="300px"></li>
+<li>定义RatioCut目标函数：<code>Ratiocut(A1, A2, ..., Ak) = (∑W(Ai, ~Ai)/|Ai|, i∈[1,k])/2</code>。其中|Ai|代表社区i中的节点数目。 <strong>最小化RatioCut等价于最小化f’Lf</strong> ，这里的<code>f = (f1, f2, ..., fn)∈R^n</code>，并且当节点vi∈A时，<code>fi = sqrt(|~A|/|A|)</code>，否则<code>fi = -sqrt(|A|/|~A|)</code>。根据上面提过的拉普拉斯矩阵性质，有<code>2f&#39;Lf = ∑wij(fi - fj)^2, i,j from 1 to N</code>。据此可以根据下面的推导得出，<code>min f&#39;Lf &lt;=&gt; min RatioCut</code>。<img src="http://qiniu.forec.cn/laplace%E6%8E%A8%E5%AF%BC.png" width="500px"></li>
+<li>因为向量f是单位向量1，所以有<code>|f|^2 = ∑(fi^2) = n</code>，且<code>f&#39;·1(单位向量）= ∑(fi) = 0</code>。注意f是列向量，所以<code>f&#39;·f</code>是值，而<code>f·f&#39;</code>是一个NxN的矩阵。证明如下：<img src="http://qiniu.forec.cn/laplace%E6%8E%A8%E5%AF%BC2.png" width="300px"><img src="http://qiniu.forec.cn/laplace%E6%8E%A8%E5%AF%BC3.png" width="300px"></li>
 <li>假定<code>L·f = λ·f</code>，这里L是Laplace矩阵，λ是矩阵L的一个特征值，f是L对应λ的特征向量。同时左乘f’，得到<code>f&#39;·L·f = λn</code>，因为n为定值，因此最小化<code>f&#39;·L·f</code>等价于最小化λ。因此需要寻找最小的特征值λ和对应的特征向量。因为Laplace矩阵最小的特征值为0，因此取第二小的特征值。更进一步，如果求出拉普拉斯矩阵的前K个特征向量，进行k-Means聚类得到k个簇，就从二聚类拓展到了k聚类。</li>
 <li>完整的算法描述如下<ul>
 <li>构造图W，将各数据点相连，边的权重表示数据间的相似度。</li>
@@ -286,7 +286,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2016/03/12/community-found/" data-id="cjjrxonro008azp2fepvw4pd7" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2016/03/12/community-found/" data-id="cjmj3zflm008a2b2f8povzqmx" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -447,7 +447,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -467,7 +467,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -487,7 +487,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -507,7 +507,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -527,7 +527,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>

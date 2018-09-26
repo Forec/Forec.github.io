@@ -14,8 +14,8 @@
 <meta property="og:url" content="http://forec.github.io/2015/08/14/ANSI-Unicode备忘/index.html">
 <meta property="og:site_name" content="Forec's Notes">
 <meta property="og:description" content="Unicode和ANSI编码的区别，URL中编码问题，C/C++/Java/Python对两种编码格式的转换">
-<meta property="og:image" content="http://7xktmz.com1.z0.glb.clouddn.com/unicode-ansi.jpg">
-<meta property="og:updated_time" content="2016-11-05T11:02:10.000Z">
+<meta property="og:image" content="http://qiniu.forec.cn/unicode-ansi.jpg">
+<meta property="og:updated_time" content="2018-09-26T06:08:29.131Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angry 的编码问题">
 <meta name="twitter:description" content="Unicode和ANSI编码的区别，URL中编码问题，C/C++/Java/Python对两种编码格式的转换">
@@ -212,13 +212,13 @@
 <p>Only alphanumerics [0-9a-zA-Z], the special characters “$-_.+!*’(),” [not including the quotes - ed], and reserved characters used for their reserved purposes may be used unencoded within a URL.  </p>
 </blockquote>
 <h3 id="不同情况下的编码"><a href="#不同情况下的编码" class="headerlink" title="不同情况下的编码"></a>不同情况下的编码</h3><h4 id="网址路径中存在非法字符"><a href="#网址路径中存在非法字符" class="headerlink" title="网址路径中存在非法字符"></a>网址路径中存在非法字符</h4><blockquote>
-<p>随机输入一个包含中文的网址<br>  <img src="http://7xktmz.com1.z0.glb.clouddn.com/url1.png" alt="维基百科：中国"><br>  打开开发者工具可以看到http请求的头信息<br>  <img src="http://7xktmz.com1.z0.glb.clouddn.com/url2.png" alt="头信息"><br>  测试的浏览器是firefox40.0，可以看到编码为UTF-8（图中E4 B8 AD E5 9C 8B为‘中国’的UTF-8编码）</p>
+<p>随机输入一个包含中文的网址<br>  <img src="http://qiniu.forec.cn/url1.png" alt="维基百科：中国"><br>  打开开发者工具可以看到http请求的头信息<br>  <img src="http://qiniu.forec.cn/url2.png" alt="头信息"><br>  测试的浏览器是firefox40.0，可以看到编码为UTF-8（图中E4 B8 AD E5 9C 8B为‘中国’的UTF-8编码）</p>
 </blockquote>
 <h4 id="发送的查询字符串中存在非法字符"><a href="#发送的查询字符串中存在非法字符" class="headerlink" title="发送的查询字符串中存在非法字符"></a>发送的查询字符串中存在非法字符</h4><blockquote>
 <p>在谷歌中搜索“火狐”，根据测试浏览器给出的编码方式仍然为UTF-8。<br>但是根据查找的资料(<a href="http://www.360doc.com/content/11/1223/16/2150778_174499703.shtml" target="_blank" rel="external">引用</a>)，这种情况下会使用操作系统的默认编码。测试系统为windows10，使用的默认编码不是GB2312而是UTF-8。在XP虚拟机中默认编码为GB2312，此时浏览器使用的编码方式为GB2312。 </p>
 </blockquote>
 <h4 id="GET方法生成的URL存在非法字符"><a href="#GET方法生成的URL存在非法字符" class="headerlink" title="GET方法生成的URL存在非法字符"></a>GET方法生成的URL存在非法字符</h4><blockquote>
-<p>直接搬过来，没有测试<br>  <img src="http://7xktmz.com1.z0.glb.clouddn.com/url3.png" alt="GET方法生成URL"></p>
+<p>直接搬过来，没有测试<br>  <img src="http://qiniu.forec.cn/url3.png" alt="GET方法生成URL"></p>
 </blockquote>
 <hr>
 <h1 id="代码实现转换"><a href="#代码实现转换" class="headerlink" title="代码实现转换"></a>代码实现转换</h1><h2 id="C语言-C"><a href="#C语言-C" class="headerlink" title="C语言/C++"></a>C语言/C++</h2><ul>
@@ -250,7 +250,7 @@
 
 
 
-    <a data-url="http://forec.github.io/2015/08/14/ANSI-Unicode备忘/" data-id="cjjrxonsq00aqzp2fiz9lxbsk" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://forec.github.io/2015/08/14/ANSI-Unicode备忘/" data-id="cjmj3zfmq00aq2b2fjkxhl4so" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -411,7 +411,7 @@
                             <a href="/2017/08/22/hadoop_knowledge/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/hadoop_knowledge.jpg)" alt="HDFS 组织及工作" class="thumbnail-image"></span>
     
     
 </a>
@@ -431,7 +431,7 @@
                             <a href="/2017/03/21/AlligatorEggs/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/alligator/title.png)" alt="从鳄鱼蛋看 λ 演算" class="thumbnail-image"></span>
     
     
 </a>
@@ -451,7 +451,7 @@
                             <a href="/2017/03/19/formal-languages-and-automata3/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata3.jpg)" alt="右线性语言" class="thumbnail-image"></span>
     
     
 </a>
@@ -471,7 +471,7 @@
                             <a href="/2017/03/18/formal-languages-and-automata2/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/formal-languages-and-automata1.jpg)" alt="有限自动机" class="thumbnail-image"></span>
     
     
 </a>
@@ -491,7 +491,7 @@
                             <a href="/2017/03/02/translation-adit-tum/" class="thumbnail">
     
     
-        <span style="background-image:url(http://7xktmz.com1.z0.glb.clouddn.com/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
+        <span style="background-image:url(http://qiniu.forec.cn/translation-adit-tum.png)" alt="三种实用 Monad" class="thumbnail-image"></span>
     
     
 </a>
